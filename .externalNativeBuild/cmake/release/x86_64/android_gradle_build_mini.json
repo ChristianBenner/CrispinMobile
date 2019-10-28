@@ -1,0 +1,27 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
+    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
+    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
+    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
+    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
+    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\CMakeLists.txt"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86_64\" --target clean"
+  ],
+  "libraries": {
+    "crispinni-Release-x86_64": {
+      "artifactName": "crispinni",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86_64\" --target crispinni",
+      "abi": "x86_64",
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\build\\intermediates\\cmake\\release\\obj\\x86_64\\libcrispinni.so"
+    },
+    "freetype-Release-x86_64": {
+      "artifactName": "freetype",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86_64\" --target freetype",
+      "abi": "x86_64",
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86_64\\freetype-2.9\\libfreetype.a"
+    }
+  }
+}

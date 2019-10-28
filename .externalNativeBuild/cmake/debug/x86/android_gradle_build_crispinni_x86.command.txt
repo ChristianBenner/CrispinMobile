@@ -1,0 +1,8 @@
+Executable : C:\Users\Chris\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+arguments : 
+--build
+C:\Users\Chris\Documents\GitHub\HordeSurvival\crispinmobile\.externalNativeBuild\cmake\debug\x86
+--target
+crispinni
+jvmArgs : 
+
