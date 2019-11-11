@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/src/main/cpp/nativeinterface
+# Install script for directory: C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp/nativeinterface
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/src/main/cpp/freetype-2.9
+# Install script for directory: C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp/freetype-2.9
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,25 +38,25 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/freetype2" TYPE DIRECTORY FILES "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/src/main/cpp/freetype-2.9/include/" REGEX "/internal$" EXCLUDE REGEX "/ftconfig\\.h$" EXCLUDE REGEX "/ftoption\\.h$" EXCLUDE)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/freetype2" TYPE DIRECTORY FILES "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp/freetype-2.9/include/" REGEX "/internal$" EXCLUDE REGEX "/ftconfig\\.h$" EXCLUDE REGEX "/ftoption\\.h$" EXCLUDE)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/freetype2/freetype/config" TYPE FILE FILES
-    "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/include/freetype/config/ftconfig.h"
-    "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/include/freetype/config/ftoption.h"
+    "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/include/freetype/config/ftconfig.h"
+    "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/include/freetype/config/ftoption.h"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/libfreetyped.a")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/libfreetyped.a")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   if(EXISTS "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype/freetype-config.cmake")
     file(DIFFERENT EXPORT_FILE_CHANGED FILES
          "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype/freetype-config.cmake"
-         "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config.cmake")
+         "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config.cmake")
     if(EXPORT_FILE_CHANGED)
       file(GLOB OLD_CONFIG_FILES "$ENV{DESTDIR}${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype/freetype-config-*.cmake")
       if(OLD_CONFIG_FILES)
@@ -65,9 +65,9 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
       endif()
     endif()
   endif()
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype" TYPE FILE FILES "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype" TYPE FILE FILES "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config.cmake")
   if("${CMAKE_INSTALL_CONFIG_NAME}" MATCHES "^([Dd][Ee][Bb][Uu][Gg])$")
-    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype" TYPE FILE FILES "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config-debug.cmake")
+    file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cmake/freetype" TYPE FILE FILES "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86/freetype-2.9/CMakeFiles/Export/lib/cmake/freetype/freetype-config-debug.cmake")
   endif()
 endif()
 

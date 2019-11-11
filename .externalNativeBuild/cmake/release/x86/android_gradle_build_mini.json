@@ -1,27 +1,27 @@
 {
   "buildFiles": [
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
     "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
     "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\CMakeLists.txt"
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\CMakeLists.txt"
   ],
   "cleanCommands": [
-    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86\" --target clean"
+    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\release\\x86\" --target clean"
   ],
   "libraries": {
     "freetype-Release-x86": {
       "artifactName": "freetype",
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86\" --target freetype",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\release\\x86\" --target freetype",
       "abi": "x86",
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86\\freetype-2.9\\libfreetype.a"
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\release\\x86\\freetype-2.9\\libfreetype.a"
     },
     "crispinni-Release-x86": {
       "artifactName": "crispinni",
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\release\\x86\" --target crispinni",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\release\\x86\" --target crispinni",
       "abi": "x86",
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\build\\intermediates\\cmake\\release\\obj\\x86\\libcrispinni.so"
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\build\\intermediates\\cmake\\release\\obj\\x86\\libcrispinni.so"
     }
   }
 }

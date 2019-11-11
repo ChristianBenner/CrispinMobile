@@ -1,546 +1,546 @@
 {
   "stringTable": {
-    "0": "C:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/.externalNativeBuild/cmake/debug/x86_64",
-    "1": "--target=x86_64-none-linux-android21 --gcc-toolchain=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/x86_64-4.9/prebuilt/windows-x86_64 --sysroot=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot -DFT2_BUILD_LIBRARY -Ifreetype-2.9/include -IC:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/src/main/cpp/freetype-2.9/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot/usr/include/x86_64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC",
-    "2": "--target=x86_64-none-linux-android21 --gcc-toolchain=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/x86_64-4.9/prebuilt/windows-x86_64 --sysroot=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot -Dcrispinni_EXPORTS -IC:/Users/Chris/Documents/GitHub/HordeSurvival/crispinmobile/src/main/cpp/freetype-2.9/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot/usr/include/x86_64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -std=c++11 -O0 -fno-limit-debug-info -fPIC"
+    "0": "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/debug/x86_64",
+    "1": "--target=x86_64-none-linux-android21 --gcc-toolchain=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/x86_64-4.9/prebuilt/windows-x86_64 --sysroot=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot -DFT2_BUILD_LIBRARY -Ifreetype-2.9/include -IC:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp/freetype-2.9/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot/usr/include/x86_64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -O0 -fno-limit-debug-info -fPIC",
+    "2": "--target=x86_64-none-linux-android21 --gcc-toolchain=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/x86_64-4.9/prebuilt/windows-x86_64 --sysroot=C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot -Dcrispinni_EXPORTS -IC:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp/freetype-2.9/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sources/cxx-stl/llvm-libc++abi/include -isystem C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/sysroot/usr/include/x86_64-linux-android -g -DANDROID -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -Wa,--noexecstack -Wformat -Werror=format-security -std=c++11 -std=c++11 -O0 -fno-limit-debug-info -fPIC"
   },
   "buildFiles": [
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
     "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
     "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\CMakeLists.txt"
+    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\CMakeLists.txt"
   ],
   "cleanCommands": [
-    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target clean"
+    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target clean"
   ],
   "libraries": {
     "crispinni-Debug-x86_64": {
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target crispinni",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target crispinni",
       "buildType": "debug",
       "toolchain": "1419153952",
       "abi": "x86_64",
       "artifactName": "crispinni",
       "files": [
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\nativeinterface\\funcs.cpp",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\nativeinterface\\funcs.cpp",
           "flagsOrdinal": 2,
           "workingDirectoryOrdinal": 0
         }
       ],
       "headers": [],
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\build\\intermediates\\cmake\\debug\\obj\\x86_64\\libcrispinni.so"
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\build\\intermediates\\cmake\\debug\\obj\\x86_64\\libcrispinni.so"
     },
     "freetype-Debug-x86_64": {
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target freetype",
+      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86_64\" --target freetype",
       "buildType": "debug",
       "toolchain": "1419153952",
       "abi": "x86_64",
       "artifactName": "freetype",
       "files": [
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\autofit\\autofit.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\autofit\\autofit.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbase.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbase.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbbox.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbbox.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbdf.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbdf.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbitmap.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftbitmap.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftcid.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftcid.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftfntfmt.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftfntfmt.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftfstype.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftfstype.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftgasp.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftgasp.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftglyph.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftglyph.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftgxval.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftgxval.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftinit.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftinit.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftlcdfil.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftlcdfil.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftmm.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftmm.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftotval.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftotval.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftpatent.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftpatent.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftpfr.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftpfr.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftstroke.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftstroke.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftsynth.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftsynth.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftsystem.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftsystem.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\fttype1.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\fttype1.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftwinfnt.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftwinfnt.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\bdf\\bdf.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\bdf\\bdf.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\bzip2\\ftbzip2.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\bzip2\\ftbzip2.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\cache\\ftcache.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\cache\\ftcache.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\cff\\cff.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\cff\\cff.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\cid\\type1cid.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\cid\\type1cid.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\gzip\\ftgzip.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\gzip\\ftgzip.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\lzw\\ftlzw.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\lzw\\ftlzw.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\pcf\\pcf.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\pcf\\pcf.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\pfr\\pfr.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\pfr\\pfr.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\psaux\\psaux.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\psaux\\psaux.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\pshinter\\pshinter.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\pshinter\\pshinter.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\psnames\\psnames.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\psnames\\psnames.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\raster\\raster.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\raster\\raster.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\sfnt\\sfnt.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\sfnt\\sfnt.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\smooth\\smooth.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\smooth\\smooth.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\truetype\\truetype.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\truetype\\truetype.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\type1\\type1.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\type1\\type1.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\type42\\type42.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\type42\\type42.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\winfonts\\winfnt.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\winfonts\\winfnt.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         },
         {
-          "src": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftdebug.c",
+          "src": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\src\\base\\ftdebug.c",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
         }
       ],
       "headers": [
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\ft2build.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\ft2build.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\freetype.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\freetype.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftadvanc.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftadvanc.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbbox.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbbox.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbdf.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbdf.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbitmap.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbitmap.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbzip2.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftbzip2.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftcache.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftcache.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftchapters.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftchapters.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftcid.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftcid.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftdriver.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftdriver.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fterrdef.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fterrdef.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fterrors.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fterrors.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftfntfmt.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftfntfmt.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgasp.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgasp.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftglyph.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftglyph.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgxval.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgxval.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgzip.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftgzip.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftimage.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftimage.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftincrem.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftincrem.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlcdfil.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlcdfil.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlist.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlist.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlzw.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftlzw.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmac.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmac.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmm.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmm.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmodapi.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmodapi.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmoderr.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftmoderr.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftotval.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftotval.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftoutln.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftoutln.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftparams.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftparams.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftpfr.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftpfr.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftrender.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftrender.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsizes.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsizes.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsnames.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsnames.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftstroke.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftstroke.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsynth.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsynth.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsystem.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftsystem.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fttrigon.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fttrigon.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fttypes.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\fttypes.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftwinfnt.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ftwinfnt.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\t1tables.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\t1tables.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ttnameid.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\ttnameid.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\tttables.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\tttables.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\tttags.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\tttags.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftconfig.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftconfig.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftheader.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftheader.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftmodule.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftmodule.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftoption.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftoption.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftstdlib.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\config\\ftstdlib.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\autohint.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\autohint.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\cffotypes.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\cffotypes.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\cfftypes.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\cfftypes.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftcalc.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftcalc.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftdebug.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftdebug.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftdrv.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftdrv.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftgloadr.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftgloadr.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\fthash.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\fthash.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftmemory.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftmemory.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftobjs.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftobjs.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftpic.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftpic.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftpsprop.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftpsprop.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftrfork.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftrfork.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftserv.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftserv.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftstream.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftstream.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\fttrace.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\fttrace.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftvalid.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\ftvalid.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\internal.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\internal.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\psaux.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\psaux.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\pshints.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\pshints.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\sfnt.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\sfnt.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\t1types.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\t1types.h",
           "workingDirectoryOrdinal": 0
         },
         {
-          "header": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\tttypes.h",
+          "header": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\include\\freetype\\internal\\tttypes.h",
           "workingDirectoryOrdinal": 0
         }
       ],
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\HordeSurvival\\crispinmobile\\.externalNativeBuild\\cmake\\debug\\x86_64\\freetype-2.9\\libfreetyped.a"
+      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86_64\\freetype-2.9\\libfreetyped.a"
     }
   },
   "toolchains": {
