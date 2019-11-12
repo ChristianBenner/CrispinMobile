@@ -125,7 +125,7 @@ public class Material
     {
         this(texture,
                 uvMultiplier,
-                DEFAULT_COLOUR);
+                new Colour());
     }
 
     /**
@@ -157,7 +157,7 @@ public class Material
     {
         this(texture,
                 DEFAULT_UV_MULTIPLIER,
-                DEFAULT_COLOUR);
+                new Colour());
     }
 
     /**
@@ -186,7 +186,7 @@ public class Material
     {
         this(null,
                 uvMultiplier,
-                DEFAULT_COLOUR);
+                new Colour());
     }
 
     /**
@@ -198,7 +198,7 @@ public class Material
     {
         this(null,
                 DEFAULT_UV_MULTIPLIER,
-                DEFAULT_COLOUR);
+                new Colour());
     }
 
     /**

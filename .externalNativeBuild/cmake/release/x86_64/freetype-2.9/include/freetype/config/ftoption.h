@@ -348,13 +348,13 @@ FT_BEGIN_HEADER
   /*                                                                       */
   /*   Resource forks which include fonts data are stored sometimes in     */
   /*   locations which users or developers don't expected.  In some cases, */
-  /*   resource forks position with some offset from the head of a file.  In  */
+  /*   resource forks start with some offset from the head of a file.  In  */
   /*   other cases, the actual resource fork is stored in file different   */
   /*   from what the user specifies.  If this option is activated,         */
   /*   FreeType tries to guess whether such offsets or different file      */
   /*   names must be used.                                                 */
   /*                                                                       */
-  /*   Note that direction, direct access of resource forks is controlled via */
+  /*   Note that normal, direct access of resource forks is controlled via */
   /*   the FT_CONFIG_OPTION_MAC_FONTS option.                              */
   /*                                                                       */
 #ifdef FT_CONFIG_OPTION_MAC_FONTS

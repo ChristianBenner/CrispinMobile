@@ -9,7 +9,7 @@ set(CMAKE_IMPORT_FILE_VERSION 1)
 set_property(TARGET freetype APPEND PROPERTY IMPORTED_CONFIGURATIONS RELEASE)
 set_target_properties(freetype PROPERTIES
   IMPORTED_LINK_INTERFACE_LANGUAGES_RELEASE "C"
-  IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE "C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/platforms/android-18/arch-arm/usr/lib/libz.so"
+  IMPORTED_LINK_INTERFACE_LIBRARIES_RELEASE "C:/Users/chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/sysroot/usr/lib/arm-linux-androideabi/libz.a"
   IMPORTED_LOCATION_RELEASE "${_IMPORT_PREFIX}/lib/libfreetype.a"
   )
 

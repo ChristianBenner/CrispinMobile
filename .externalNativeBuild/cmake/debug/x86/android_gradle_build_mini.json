@@ -1,27 +1,27 @@
 {
   "buildFiles": [
-    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
-    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
-    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
-    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
-    "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\CMakeLists.txt"
+    "C:\\Users\\chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\android.toolchain.cmake",
+    "C:\\Users\\chris\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\build\\cmake\\platforms.cmake",
+    "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\CMakeLists.txt",
+    "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\nativeinterface\\CMakeLists.txt",
+    "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\freetype-2.9\\builds\\cmake\\FindHarfBuzz.cmake",
+    "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\src\\main\\cpp\\CMakeLists.txt"
   ],
   "cleanCommands": [
-    "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target clean"
+    "C:\\Users\\chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target clean"
   ],
   "libraries": {
     "crispinni-Debug-x86": {
       "artifactName": "crispinni",
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target crispinni",
+      "buildCommand": "C:\\Users\\chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target crispinni",
       "abi": "x86",
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\build\\intermediates\\cmake\\debug\\obj\\x86\\libcrispinni.so"
+      "output": "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\build\\intermediates\\cmake\\debug\\obj\\x86\\libcrispinni.so"
     },
     "freetype-Debug-x86": {
       "artifactName": "freetype",
-      "buildCommand": "C:\\Users\\Chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target freetype",
+      "buildCommand": "C:\\Users\\chris\\AppData\\Local\\Android\\Sdk\\cmake\\3.10.2.4988404\\bin\\cmake.exe --build \"C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\" --target freetype",
       "abi": "x86",
-      "output": "C:\\Users\\Chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\\freetype-2.9\\libfreetyped.a"
+      "output": "C:\\Users\\chris\\Documents\\GitHub\\SkateboardBuilderApp\\CrispinMobile\\.externalNativeBuild\\cmake\\debug\\x86\\freetype-2.9\\libfreetyped.a"
     }
   }
 }

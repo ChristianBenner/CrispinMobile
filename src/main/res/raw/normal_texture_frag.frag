@@ -36,14 +36,14 @@ void main()
     vec3 R = reflect(-vLightDir, vNormal);
     float cosAlpha = clamp(dot(E, R), 0.0, 1.0);
 
-    vec3 colour = uColour.rgb;
+   // vec3 colour = uColour.rgba;
 
     // Multi texture test
  //   gl_FragColor = vec4((texture2D(uTexture, vTextureCoordinates).rgb + texture2D(uSpecularMap, vTextureCoordinates).rgb) / 2.0, 1.0);
 
-    vec2 flippedTex = vec2(-vTextureCoordinates.x, vTextureCoordinates.y);
+    vec2 flippedTex = vec2(vTextureCoordinates.x, -vTextureCoordinates.y);
     // Specular map test
-  gl_FragColor = texture2D(uTexture, flippedTex) * vec4(ambientColour +
+  gl_FragColor = uColour * texture2D(uTexture, flippedTex) * vec4(ambientColour +
         diffuseColour * lightColour * lightIntensity * cosTheta / (distance*distance) +
         ((specularColour * lightColour * lightIntensity * pow(cosAlpha, 5.0) / (distance*distance)) * texture2D(uSpecularMap, flippedTex).r), 1.0);
 

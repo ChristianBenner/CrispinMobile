@@ -1,7 +1,7 @@
-Executable : C:\Users\Chris\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+Executable : C:\Users\chris\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
 arguments : 
 --build
-C:\Users\Chris\Documents\GitHub\SkateboardBuilderApp\CrispinMobile\.externalNativeBuild\cmake\debug\arm64-v8a
+C:\Users\chris\Documents\GitHub\SkateboardBuilderApp\CrispinMobile\.externalNativeBuild\cmake\debug\arm64-v8a
 --target
 crispinni
 jvmArgs : 

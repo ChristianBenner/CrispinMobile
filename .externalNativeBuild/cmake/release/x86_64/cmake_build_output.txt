@@ -1,11 +1,11 @@
-Check for working C compiler: C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe
-Check for working C compiler: C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe -- works
+Check for working C compiler: C:/Users/chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe
+Check for working C compiler: C:/Users/chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang.exe -- works
 Detecting C compiler ABI info
 Detecting C compiler ABI info - done
 Detecting C compile features
 Detecting C compile features - done
-Check for working CXX compiler: C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe
-Check for working CXX compiler: C:/Users/Chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe -- works
+Check for working CXX compiler: C:/Users/chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe
+Check for working CXX compiler: C:/Users/chris/AppData/Local/Android/Sdk/ndk-bundle/toolchains/llvm/prebuilt/windows-x86_64/bin/clang++.exe -- works
 Detecting CXX compiler ABI info
 Detecting CXX compiler ABI info - done
 Detecting CXX compile features
@@ -13,15 +13,15 @@ Detecting CXX compile features - done
 Adding freetype library
 Building with ZLIB
 Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
-Creating directory C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config
-Creating file C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config/ftconfig.h
+Creating directory C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config
+Creating file C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config/ftconfig.h
 Looking for unistd.h
 Looking for unistd.h - found
 Looking for fcntl.h
 Looking for fcntl.h - found
 Looking for stdint.h
 Looking for stdint.h - found
-Creating file C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config/ftoption.h
+Creating file C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/x86_64/freetype-2.9/include/freetype/config/ftoption.h
 Added freetype library
 Finished CMake Setup
 Adding Crispin Native Interface library

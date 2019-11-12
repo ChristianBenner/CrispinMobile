@@ -1,4 +1,4 @@
-# Install script for directory: C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp
+# Install script for directory: C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/src/main/cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,8 +39,8 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/freetype-2.9/cmake_install.cmake")
-  include("C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/nativeinterface/cmake_install.cmake")
+  include("C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/freetype-2.9/cmake_install.cmake")
+  include("C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/nativeinterface/cmake_install.cmake")
 
 endif()
 
@@ -52,5 +52,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/Chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/chris/Documents/GitHub/SkateboardBuilderApp/CrispinMobile/.externalNativeBuild/cmake/release/armeabi-v7a/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
