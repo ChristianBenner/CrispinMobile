@@ -1,5 +1,8 @@
-package com.games.crispin.crispinmobile.Rendering.UserInterface;
+package com.games.crispin.crispinmobile.UserInterface;
 
+import android.graphics.Point;
+
+import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
@@ -8,17 +11,22 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
+import java.util.ArrayList;
+
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
 public class Button implements UIObject
 {
+    private ArrayList<TouchListener> buttonListeners = new ArrayList<>();
+
     private Text text;
     private Plane plane;
 
     private Point3D position;
     private Scale2D size;
+    private boolean clicked = false;
 
     public Button(Font font, String text)
     {
@@ -33,6 +41,16 @@ public class Button implements UIObject
         updatePosition();
     }
 
+    public Button(Texture texture)
+    {
+        this.size = new Scale2D(200.0f, 200.0f);
+        this.position = new Point3D();
+        plane = new Plane(size);
+
+        setImage(texture);
+        updatePosition();
+    }
+
     public Button(int resourceId)
     {
         this.size = new Scale2D(200.0f, 200.0f);
@@ -41,6 +59,85 @@ public class Button implements UIObject
 
         setImage(resourceId);
         updatePosition();
+    }
+
+    public void addButtonListener(TouchListener listener)
+    {
+        buttonListeners.add(listener);
+    }
+
+    public void removeButtonListener(TouchListener listener)
+    {
+        buttonListeners.remove(listener);
+    }
+
+    public boolean isClicked()
+    {
+        return clicked;
+    }
+
+    public void sendClickEvent(Point2D position)
+    {
+        clicked = true;
+        final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
+        for(final TouchListener buttonListener : buttonListeners)
+        {
+            buttonListener.touchEvent(CLICK_EVENT);
+        }
+    }
+
+    public void sendReleaseEvent(Point2D position)
+    {
+        clicked = false;
+        final TouchEvent RELEASE_EVENT = new TouchEvent(this, TouchEvent.Event.RELEASE, position);
+        for(final TouchListener buttonListener : buttonListeners)
+        {
+            buttonListener.touchEvent(RELEASE_EVENT);
+        }
+    }
+
+    public void sendDownEvent(Point2D position)
+    {
+        // Send the drag touch event
+        final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
+        for(final TouchListener buttonListener : buttonListeners)
+        {
+            buttonListener.touchEvent(DOWN_EVENT);
+        }
+    }
+
+    public boolean interacts(Point2D pointer)
+    {
+        Point2D pos = new Point2D();
+        pos.x = pointer.x;
+        pos.y = Crispin.getSurfaceHeight() - pointer.y;
+
+        // Check if the pointer is inside the button
+        if(pos.x > position.x && pos.x < position.x + getWidth() &&
+                pos.y < position.y + getHeight() && pos.y > position.y)
+        {
+            System.out.println("INTERSECTS");
+            return true;
+        }
+
+        System.out.println("Point: " + pointer + ", Pos: " + position + ", Size: " + size);
+        System.out.println("DOES NOT INTERSECT");
+        return false;
+    }
+
+    public void setBorder(Border border)
+    {
+        this.plane.setBorder(border);
+    }
+
+    public void removeBorder()
+    {
+        this.plane.removeBorder();
+    }
+
+    public void setImage(Texture texture)
+    {
+        plane.setImage(texture);
     }
 
     public void setImage(int resourceId)
@@ -115,8 +212,37 @@ public class Button implements UIObject
     }
 
     @Override
+    public void setSize(Scale2D size)
+    {
+        this.size = size;
+        updatePosition();
+    }
+
+    /**
+     * Get the size of the UI object
+     *
+     * @return The size of the UI object
+     * @since 1.0
+     */
+    @Override
+    public Scale2D getSize()
+    {
+        return size;
+    }
+
+    @Override
     public void setColour(Colour colour) {
-        this.text.setColour(colour);
+        if(text != null)
+        {
+            this.text.setColour(colour);
+        }
+
+        this.plane.setColour(colour);
+    }
+
+    public void setAlpha(float alpha)
+    {
+        this.setOpacity(alpha);
     }
 
     public void setBackgroundColour(Colour colour)
@@ -136,13 +262,29 @@ public class Button implements UIObject
 
     @Override
     public void setOpacity(float alpha) {
-        this.text.setOpacity(alpha);
+        if(this.text != null)
+        {
+            this.text.setOpacity(alpha);
+        }
+
         this.plane.setOpacity(alpha);
     }
 
     @Override
     public float getOpacity() {
         return this.plane.getOpacity();
+    }
+
+    /**
+     * Disable specific borders on the object
+     *
+     * @param flags The border flags
+     * @since 1.0
+     */
+    @Override
+    public void setDisabledBorders(int flags)
+    {
+
     }
 
     @Override

@@ -4,8 +4,11 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 
+import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Utilities.Logger;
 import com.games.crispin.crispinmobile.Utilities.Scene;
@@ -376,6 +379,15 @@ public class Crispin
 
             // Set the renderer to the scene manager
             glSurfaceView.setRenderer(sceneManager);
+
+            glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    sceneManager.onTouch(event.getAction(), new Point2D(event.getX(),
+                            event.getY()));
+                    return true;
+                }
+            });
 
             // Set the application view to the graphics view
             appCompatActivity.setContentView(glSurfaceView);

@@ -1,14 +1,11 @@
-package com.games.crispin.crispinmobile.Rendering.UserInterface;
+package com.games.crispin.crispinmobile.UserInterface;
 
-import com.games.crispin.crispinmobile.Geometry.Geometry;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
-import com.games.crispin.crispinmobile.Geometry.Scale3D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Models.Square;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.games.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
@@ -17,24 +14,39 @@ import static android.opengl.GLES20.glEnable;
 
 public class Plane implements UIObject
 {
-    private static final float BORDER_SIZE_PIXELS = 5;
     protected Point2D position;
     protected Scale2D size;
-    private float borderSize;
 
     protected Square plane;
-    private Square border;
+
     private boolean borderEnabled;
+    private int disabledBorderFlags;
 
     protected Plane(Point2D position, Scale2D size)
     {
         this.position = position;
         this.size = size;
-        this.borderSize = BORDER_SIZE_PIXELS;
         this.borderEnabled = false;
 
         plane = new Square(true);
+        disabledBorderFlags = Border.NONE;
+
+        // Because we don't have an image on by default, ignore texel data in rendering
         plane.getMaterial().setIgnoreTexelData(true);
+
+        updatePosition();
+    }
+
+    public Plane(Texture texture,
+                 Point2D position,
+                 Scale2D size)
+    {
+        this.position = position;
+        this.size = size;
+        this.borderEnabled = false;
+
+        plane = new Square(true);
+        setImage(texture);
 
         updatePosition();
     }
@@ -44,10 +56,59 @@ public class Plane implements UIObject
         this(new Point2D(), size);
     }
 
+    public Plane(Texture texture)
+    {
+        this(texture, new Point2D(), new Scale2D());
+    }
+
+    public Plane(Texture texture,
+                 Point2D position)
+    {
+        this(texture, position, new Scale2D());
+    }
+
+    public Plane(Texture texture,
+                 Scale2D size)
+    {
+        this(texture, new Point2D(), size);
+    }
+
+    public Plane()
+    {
+        this(new Point2D(), new Scale2D());
+    }
+
+    public void setImage(Texture texture)
+    {
+        plane.getMaterial().setIgnoreTexelData(false);
+        plane.getMaterial().setTexture(texture);
+    }
+
     public void setImage(int resourceId)
     {
         plane.getMaterial().setIgnoreTexelData(false);
         plane.getMaterial().setTexture(new Texture(resourceId));
+    }
+
+    private Border border;
+
+    public void setBorder(Border border)
+    {
+        if(border == null)
+        {
+            this.borderEnabled = false;
+        }
+        else
+        {
+            this.border = border;
+            this.borderEnabled = true;
+            this.border.updatePosition(this);
+        }
+    }
+
+    public void removeBorder()
+    {
+        this.borderEnabled = false;
     }
 
     // recalculate positions
@@ -55,17 +116,11 @@ public class Plane implements UIObject
     {
         if(borderEnabled)
         {
-            this.border.setScale(size);
-            this.border.setPosition(position);
-            this.plane.setScale(new Scale2D(size.x - (borderSize * 2f),
-                    size.y - (borderSize * 2f)));
-            this.plane.setPosition(Geometry.translate(position, borderSize, borderSize));
+            this.border.updatePosition(this);
         }
-        else
-        {
-            this.plane.setScale(new Scale2D(size.x, size.y));
-            this.plane.setPosition(position);
-        }
+
+        this.plane.setScale(new Scale2D(size.x, size.y));
+        this.plane.setPosition(position);
     }
 
     /**
@@ -190,6 +245,31 @@ public class Plane implements UIObject
     }
 
     /**
+     * Set the size of the UI object
+     *
+     * @param size  The new size of the UI object
+     * @since 1.0
+     */
+    @Override
+    public void setSize(Scale2D size)
+    {
+        this.size = size;
+        updatePosition();
+    }
+
+    /**
+     * Get the size of the UI object
+     *
+     * @return The size of the UI object
+     * @since 1.0
+     */
+    @Override
+    public Scale2D getSize()
+    {
+        return size;
+    }
+
+    /**
      * Set the colour of the UI object
      *
      * @param colour    The new colour for the UI object
@@ -198,18 +278,40 @@ public class Plane implements UIObject
     @Override
     public void setColour(Colour colour)
     {
-        this.plane.getMaterial().setColour(colour);
+        this.plane.setColour(colour);
+        this.setBorderAlpha(colour.getAlpha());
     }
 
+    /**
+     * Set the colour of the border. If the object doesn't have a border, one will be created.
+     *
+     * @param colour    The colour of the border
+     * @since 1.0
+     */
     public void setBorderColour(Colour colour)
     {
+        // If a border does not exist yet, create one
         if(border == null)
         {
-            border = new Square(false);
-            border.setPosition(position);
+            border = new Border();
+            border.updatePosition(this);
         }
 
-        this.border.getMaterial().setColour(colour);
+        this.border.setColour(colour);
+    }
+
+    /**
+     * Set the alpha channel intensity of the border
+     *
+     * @param alpha The alpha channel intensity
+     * @since 1.0
+     */
+    public void setBorderAlpha(float alpha)
+    {
+        if(border != null)
+        {
+            this.border.setAlpha(alpha);
+        }
     }
 
     /**
@@ -221,7 +323,18 @@ public class Plane implements UIObject
     @Override
     public Colour getColour()
     {
-        return this.plane.getMaterial().getColour();
+        return this.plane.getColour();
+    }
+
+    /**
+     * Set the alpha channel intensity of the UI object
+     *
+     * @param alpha The new alpha channel intensity for the UI object
+     * @since 1.0
+     */
+    public void setAlpha(float alpha)
+    {
+        this.setOpacity(alpha);
     }
 
     /**
@@ -233,12 +346,8 @@ public class Plane implements UIObject
     @Override
     public void setOpacity(float alpha)
     {
-        this.plane.getMaterial().getColour().setAlpha(alpha);
-
-        if (borderEnabled)
-        {
-            this.border.getMaterial().getColour().setAlpha(alpha);
-        }
+        this.plane.setAlpha(alpha);
+        this.setBorderAlpha(alpha);
     }
 
     /**
@@ -254,6 +363,18 @@ public class Plane implements UIObject
     }
 
     /**
+     * Disable specific borders on the object
+     *
+     * @param flags The border flags
+     * @since 1.0
+     */
+    @Override
+    public void setDisabledBorders(int flags)
+    {
+        this.disabledBorderFlags = flags;
+    }
+
+    /**
      * Draw function designed to be overridden
      *
      * @since 1.0
@@ -264,7 +385,7 @@ public class Plane implements UIObject
         glDisable(GL_DEPTH_TEST);
         if(borderEnabled)
         {
-            border.render(camera);
+            border.draw(camera, disabledBorderFlags);
         }
         plane.render(camera);
         glEnable(GL_DEPTH_TEST);

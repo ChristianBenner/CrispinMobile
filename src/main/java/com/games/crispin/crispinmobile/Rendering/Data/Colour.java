@@ -59,6 +59,9 @@ public class Colour
     // Default blue value if one is not provided
     private static final float DEFAULT_BLUE_VALUE = 1.0f;
 
+    // Maximum channel intensity integers
+    private static final int MAXIMUM_INTEGER_CHANNEL_INTENSITY = 255;
+
     // Red channel value
     private float red;
 
@@ -121,6 +124,41 @@ public class Colour
                 DEFAULT_GREEN_VALUE,
                 DEFAULT_BLUE_VALUE,
                 DEFAULT_ALPHA_VALUE);
+    }
+
+    /**
+     * Construct a colour object with RGBA values. Provide integers 0-255 for channel intensities.
+     *
+     * @param red   The red colour value (0 for no red, 255 for maximum red)
+     * @param green The green colour value (0 for no green, 255 for maximum green)
+     * @param blue  The blue colour value (0 for no blue, 255 for maximum blue)
+     * @param alpha The alpha colour value (0 for no alpha, 255 for maximum alpha)
+     * @since   1.0
+     */
+    public Colour(int red,
+                  int green,
+                  int blue,
+                  int alpha)
+    {
+        this((float)red / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float)green / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float)blue / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float)alpha / MAXIMUM_INTEGER_CHANNEL_INTENSITY);
+    }
+
+    /**
+     * Construct a colour object with RGB values. Provide integers 0-255 for channel intensities.
+     *
+     * @param red   The red colour value (0 for no red, 255 for maximum red)
+     * @param green The green colour value (0 for no green, 255 for maximum green)
+     * @param blue  The blue colour value (0 for no blue, 255 for maximum blue)
+     * @since   1.0
+     */
+    public Colour(int red,
+                  int green,
+                  int blue)
+    {
+        this(red, green, blue, MAXIMUM_INTEGER_CHANNEL_INTENSITY);
     }
 
     /**

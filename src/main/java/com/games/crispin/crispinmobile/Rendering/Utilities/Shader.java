@@ -481,7 +481,7 @@ public class Shader
         {
             Logger.error(TAG, "OpenGLES failed to compile " +
                     typeToString(type) +
-                    "shader program");
+                    " shader program");
         }
 
         return SHADER;

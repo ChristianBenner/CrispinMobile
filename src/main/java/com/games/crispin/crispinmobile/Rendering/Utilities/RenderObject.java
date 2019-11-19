@@ -1,5 +1,6 @@
 package com.games.crispin.crispinmobile.Rendering.Utilities;
 
+import android.graphics.Color;
 import android.opengl.Matrix;
 
 import com.games.crispin.crispinmobile.Geometry.Point2D;
@@ -8,6 +9,7 @@ import com.games.crispin.crispinmobile.Geometry.Rotation2D;
 import com.games.crispin.crispinmobile.Geometry.Rotation3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Geometry.Scale3D;
+import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.games.crispin.crispinmobile.Rendering.Shaders.NormalShader;
 import com.games.crispin.crispinmobile.Rendering.Shaders.NormalTextureShader;
@@ -523,6 +525,7 @@ public class RenderObject
      * colour. Your model must contain texel data in order to support material textures.
      *
      * @param material  The material to apply to the render object
+     * @see Material
      * @since 1.0
      */
     public void setMaterial(Material material)
@@ -534,11 +537,82 @@ public class RenderObject
      * Get the material applied to the render object
      *
      * @return The material attached to the render object
+     * @see Material
      * @since 1.0
      */
     public Material getMaterial()
     {
         return this.material;
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param colour    The colour to set the object
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(Colour colour)
+    {
+        this.material.setColour(colour);
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param r The intensity of the red channel (0.0-1.0)
+     * @param g The intensity of the green channel (0.0-1.0)
+     * @param b The intensity of the blue channel (0.0-1.0)
+     * @param a The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(float r,
+                          float g,
+                          float b,
+                          float a)
+    {
+        this.material.setColour(new Colour(r, g, b, a));
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param r The intensity of the red channel (0.0-1.0)
+     * @param g The intensity of the green channel (0.0-1.0)
+     * @param b The intensity of the blue channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(float r,
+                          float g,
+                          float b)
+    {
+        this.material.setColour(new Colour(r, g, b));
+    }
+
+    /**
+     * Set the alpha channel intensity of the object
+     *
+     * @param alpha The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setAlpha(float alpha)
+    {
+        this.material.setAlpha(alpha);
+    }
+
+    /**
+     * Get the colour of the object
+     *
+     * @return The colour of the object
+     * @see Colour
+     * @since 1.0
+     */
+    public Colour getColour()
+    {
+        return this.material.getColour();
     }
 
     /**
@@ -934,6 +1008,150 @@ public class RenderObject
         }
 
         updateModelMatrix();
+
+        shader.enableIt();
+
+        // Matrix upload for a lighting enabled shader is slightly different
+        if(shader.isLightingShader())
+        {
+            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT,
+                    false,
+                    camera.getPerspectiveMatrix(),
+                    0);
+
+            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT,
+                    false,
+                    camera.getViewMatrix(),
+                    0);
+
+            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT,
+                    false,
+                    modelMatrix,
+                    0);
+        }
+        else
+        {
+            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.multiplyMM(modelViewMatrix,
+                    0,
+                    camera.getViewMatrix(),
+                    0,
+                    modelMatrix,
+                    0);
+
+            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.multiplyMM(modelViewProjectionMatrix,
+                    0,
+                    camera.getPerspectiveMatrix(),
+                    0,
+                    modelViewMatrix,
+                    0);
+
+            glUniformMatrix4fv(shader.getMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT,
+                    false,
+                    modelViewProjectionMatrix,
+                    0);
+        }
+
+        // If the shader colour uniform handle is not invalid, upload the colour data
+        if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
+        {
+            glUniform4f(shader.getColourUniformHandle(),
+                    material.getColour().getRed(),
+                    material.getColour().getGreen(),
+                    material.getColour().getBlue(),
+                    material.getColour().getAlpha());
+        }
+
+        // If the shader texture uniform handle is not invalid, upload the texture unit
+        if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
+            glUniform1i(shader.getTextureUniformHandle(), 0);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        // If the shader supports a specular map and the material has one, supply it to the
+        // shader.
+        if(shader.getSpecularMapUniformHandle() !=
+                INVALID_UNIFORM_HANDLE && material.hasSpecularMap())
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
+            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        // If the shader supports a normal map and the material has one, supply it to the shader
+        if(shader.getNormalMapUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasNormalMap())
+        {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
+            glUniform1i(shader.getNormalMapUniformHandle(), 2);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        handleAttributes(true);
+
+        // Draw the vertex data with the specified render method
+        switch (renderMethod)
+        {
+            case POINTS:
+                glDrawArrays(GL_POINTS, 0, VERTEX_COUNT);
+                break;
+            case LINES:
+                glDrawArrays(GL_LINES, 0, VERTEX_COUNT);
+                break;
+            case TRIANGLES:
+                glDrawArrays(GL_TRIANGLES, 0, VERTEX_COUNT);
+                break;
+        }
+
+        handleAttributes(false);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        shader.disableIt();
+    }
+
+    public void renderTestModelMatrix(Camera3D camera, float[] modelMatrix)
+    {
+        // If the shader is null, create a shader for the object
+        if(shader == null)
+        {
+            updateShader();
+        }
+
+        //updateModelMatrix();
 
         shader.enableIt();
 

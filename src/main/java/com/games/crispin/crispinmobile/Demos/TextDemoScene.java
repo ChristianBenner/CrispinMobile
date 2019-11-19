@@ -4,8 +4,8 @@ import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.R;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
-import com.games.crispin.crispinmobile.Rendering.UserInterface.LinearLayout;
-import com.games.crispin.crispinmobile.Rendering.UserInterface.Text;
+import com.games.crispin.crispinmobile.UserInterface.LinearLayout;
+import com.games.crispin.crispinmobile.UserInterface.Text;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
 import com.games.crispin.crispinmobile.Utilities.Scene;
@@ -182,5 +182,11 @@ public class TextDemoScene extends Scene
       //  linearLayout.draw(camera2D);
 
        // demo.draw(camera2D);
+    }
+
+    @Override
+    public void touch(int type, Point2D position)
+    {
+
     }
 }

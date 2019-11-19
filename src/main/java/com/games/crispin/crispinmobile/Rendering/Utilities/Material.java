@@ -496,4 +496,15 @@ public class Material
                         colour.getAlpha()
                 };
     }
+
+    /**
+     * Set the alpha colour channel intensity
+     *
+     * @param alpha The intensity of the alpha colour channel (0.0 to 1.0)
+     * @since   1.0
+     */
+    public void setAlpha(float alpha)
+    {
+        this.colour.setAlpha(alpha);
+    }
 }

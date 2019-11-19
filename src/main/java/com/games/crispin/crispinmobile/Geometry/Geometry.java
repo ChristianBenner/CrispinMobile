@@ -34,6 +34,21 @@ public class Geometry
     }
 
     /**
+     * Get the vector between two 2D points.
+     *
+     * @param from  The first 2D point
+     * @param to    The second 2D point
+     * @return      A vector with a direction from the first point to the second.
+     * @since 1.0
+     */
+    public static Vector2D getVectorBetween(Point2D from, Point2D to)
+    {
+        return new Vector2D(
+                to.x - from.x,
+                to.y - from.y);
+    }
+
+    /**
      * Get the ray between two points
      *
      * @param from  The first 3D point (and also the origin of the ray)

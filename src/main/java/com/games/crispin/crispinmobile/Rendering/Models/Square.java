@@ -11,7 +11,7 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * @version     %I%, %G%
  * @see         RenderObject
  * @see         Square
- * @see         com.games.crispin.crispinmobile.Rendering.UserInterface.Text
+ * @see         com.games.crispin.crispinmobile.UserInterface.Text
  * @since       1.0
  */
 public class Square extends RenderObject

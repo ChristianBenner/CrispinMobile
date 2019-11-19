@@ -1,4 +1,4 @@
-package com.games.crispin.crispinmobile.Rendering.UserInterface;
+package com.games.crispin.crispinmobile.UserInterface;
 
 import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Geometry;
@@ -373,6 +373,29 @@ public class Text implements UIObject
      *
      * @param font          The font to fetch the character data from
      * @param textString    Text string to generate
+     * @param wrapWords     True to wrap text by words, else wrap text by characters. For text to
+     *                      wrap there must also be a defined maxLineWidth.
+     * @param centerText    True to center the text in the middle of the maxLineWidth
+     * @since   1.0
+     */
+    public Text(Font font,
+                String textString,
+                boolean wrapWords,
+                boolean centerText)
+    {
+        this(font,
+                textString,
+                wrapWords,
+                centerText,
+                0.0f,
+                DEFAULT_SCALE);
+    }
+
+    /**
+     * Construct a text user interface object
+     *
+     * @param font          The font to fetch the character data from
+     * @param textString    Text string to generate
      * @param maxLineWidth  Max line width to generate the text in. If the characters exceed the
      *                      line width, the text will be wrapped. The way the text wrapped is
      *                      determined on the wrapWords parameter.
@@ -458,6 +481,24 @@ public class Text implements UIObject
     public float getHeight()
     {
         return this.height;
+    }
+
+    @Override
+    public void setSize(Scale2D size)
+    {
+        Logger.info("You cannot change the width and height of a text object");
+    }
+
+    /**
+     * Get the size of the UI object
+     *
+     * @return The size of the UI object
+     * @since 1.0
+     */
+    @Override
+    public Scale2D getSize()
+    {
+        return new Scale2D(this.width, this.height);
     }
 
     /**
@@ -1147,6 +1188,7 @@ public class Text implements UIObject
      */
     public void enableWiggle(float amountPixels, WiggleSpeed_E wiggleSpeed)
     {
+        this.wiggleTime = 0.0f;
         this.wiggleAmountPixels = amountPixels;
         this.wiggle = true;
 
@@ -1179,6 +1221,18 @@ public class Text implements UIObject
     public void disableWiggle()
     {
         this.wiggle = false;
+    }
+
+    /**
+     * Disable specific borders on the object
+     *
+     * @param flags The border flags
+     * @since 1.0
+     */
+    @Override
+    public void setDisabledBorders(int flags)
+    {
+
     }
 
     /**

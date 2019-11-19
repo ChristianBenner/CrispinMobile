@@ -13,7 +13,7 @@ import static android.opengl.GLES30.GL_LUMINANCE;
  * Font is a class designed to load a set of characters from a font resource file. The class will
  * load a series of characters that can be used by UI components in the library such as Text.
  *
- * @see         com.games.crispin.crispinmobile.Rendering.UserInterface.Text
+ * @see         com.games.crispin.crispinmobile.UserInterface.Text
  * @author      Christian Benner
  * @version     %I%, %G%
  * @since       1.0

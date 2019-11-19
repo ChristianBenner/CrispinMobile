@@ -7,6 +7,6 @@ varying vec2 aTextureCoordinates;
 
 void main()
 {
-    vec4 sampledCol = vec4(1.0f, 1.0f, 1.0f, texture2D(uTexture, aTextureCoordinates).r);
+    vec4 sampledCol = vec4(1.0, 1.0, 1.0, texture2D(uTexture, aTextureCoordinates).r);
     gl_FragColor = uColour * sampledCol;
 }

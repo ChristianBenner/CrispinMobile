@@ -1,7 +1,7 @@
 package com.games.crispin.crispinmobile.Rendering.Shaders;
 
 import com.games.crispin.crispinmobile.R;
-import com.games.crispin.crispinmobile.Rendering.UserInterface.Text;
+import com.games.crispin.crispinmobile.UserInterface.Text;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**

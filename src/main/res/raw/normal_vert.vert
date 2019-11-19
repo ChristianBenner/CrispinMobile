@@ -25,7 +25,7 @@ void main()
     vEyeDirection = vec3(0.0, 0.0, 0.0) - vertexPosCameraSpace;
 
     // Light position Camera space
-    vec3 lightPosCameraSpace = (uView * vec4(0.0f, 0.0f, 4.0f, 1.0f)).xyz;
+    vec3 lightPosCameraSpace = (uView * vec4(0.0, 0.0, 4.0, 1.0)).xyz;
 
     // Light direction
     vLightDir = lightPosCameraSpace + vEyeDirection;

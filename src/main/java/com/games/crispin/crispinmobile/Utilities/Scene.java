@@ -1,5 +1,7 @@
 package com.games.crispin.crispinmobile.Utilities;
 
+import com.games.crispin.crispinmobile.Geometry.Point2D;
+
 /**
  * Scene base class. This provides functions that are controlled by the SceneManager object in
  * different ways.
@@ -44,4 +46,7 @@ public abstract class Scene
      * @since           1.0
      */
     public abstract void render();
+
+    // Single pointer motion event
+    public abstract void touch(int type, Point2D position);
 }

@@ -1,9 +1,12 @@
 package com.games.crispin.crispinmobile.Utilities;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.opengl.GLSurfaceView;
 import android.view.MotionEvent;
+import android.view.View;
 
+import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -192,6 +195,22 @@ public class SceneManager implements GLSurfaceView.Renderer
             // relevant so it should be freed.
             ShaderCache.removeAll();
             TextureCache.removeAll();
+        }
+    }
+
+    /**
+     * Feed a touch event to the current scene
+     *
+     * @param type  The type of touch event
+     * @param position  The position of the pointer
+     * @since 1.0
+     */
+    public void onTouch(int type, Point2D position)
+    {
+        // Only pass to current scene if the scene is initialised
+        if(currentScene != null)
+        {
+            currentScene.touch(type, position);
         }
     }
 

@@ -12,15 +12,15 @@ void main()
     // Diffuse
     vec3 lightColour = vec3(1.0, 1.0, 1.0);
     vec3 ambientColour = vec3(0.5, 0.5, 0.5) * uColour.rgb;
-    vec3 diffuseColour = vec3(1.0f, 1.0f, 1.0f);
+    vec3 diffuseColour = vec3(1.0, 1.0, 1.0);
     vec3 specularColour = vec3(1.0, 1.0, 1.0);
-    float lightIntensity = 65.0f;
+    float lightIntensity = 65.0;
 
     float distance = length(vLightDir - vPosition);
     vec3 n = normalize(vNormal);
     vec3 l = normalize(vLightDir);
 
-    float cosTheta = clamp(dot(n, l), 0.0f, 1.0f);
+    float cosTheta = clamp(dot(n, l), 0.0, 1.0);
 
     // Specular
     vec3 E = normalize(vEyeDirection);
