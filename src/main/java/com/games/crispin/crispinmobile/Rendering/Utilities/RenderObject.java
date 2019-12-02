@@ -7,8 +7,10 @@ import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Rotation2D;
 import com.games.crispin.crispinmobile.Geometry.Rotation3D;
+import com.games.crispin.crispinmobile.Geometry.RotationMatrix;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Geometry.Scale3D;
+import com.games.crispin.crispinmobile.Geometry.Vector3D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.games.crispin.crispinmobile.Rendering.Shaders.NormalShader;
@@ -181,8 +183,8 @@ public class RenderObject
     // Position of the object
     private Point3D position;
 
-    // Objects rotation
-    private Rotation3D rotation;
+    // Rotation matrix that specifies how the object should be rotated
+    private RotationMatrix rotationMatrix;
 
     // Material to apply to the object
     protected Material material;
@@ -276,13 +278,12 @@ public class RenderObject
     {
         this.scale = new Scale3D();
         this.position = new Point3D();
-        this.rotation = new Rotation3D();
-
         this.renderMethod = renderMethod;
         this.elementsPerPosition = positionBuffer == null ? 0 : elementsPerPosition;
         this.elementsPerTexel = texelBuffer == null ? 0 : elementsPerTexel;
         this.elementsPerColour = colourBuffer == null ? 0 : elementsPerColour;
         this.elementsPerNormal = normalBuffer == null ? 0 : elementsPerNormal;
+        this.rotationMatrix = new RotationMatrix();
 
         // Solve the attribute order here
         AttributeOrder_t attributeOrder = resolveAttributeOrder(
@@ -446,12 +447,12 @@ public class RenderObject
         this.renderMethod = renderMethod;
         this.scale = new Scale3D();
         this.position = new Point3D();
-        this.rotation = new Rotation3D();
         this.totalStrideBytes = 0;
         this.elementsPerPosition = elementsPerPosition;
         this.elementsPerTexel = elementsPerTexel;
         this.elementsPerColour = elementsPerColour;
         this.elementsPerNormal = elementsPerNormal;
+        this.rotationMatrix = new RotationMatrix();
 
         // Resolve the data stride
         resolveStride(numVerticesPerGroup);
@@ -831,64 +832,23 @@ public class RenderObject
     /**
      * Set the rotation of the object
      *
-     * @param rotation  The new rotation for the object
+     * @param rotationMatrix    The new rotation matrix for the object
      * @since 1.0
      */
-    public void setRotation(Rotation3D rotation)
+    public void setRotation(RotationMatrix rotationMatrix)
     {
-        this.rotation = rotation;
+        this.rotationMatrix = rotationMatrix;
     }
 
     /**
-     * Set the rotation of the object
+     * Get the rotation matrix of the object
      *
-     * @param x Degrees to rotate around the x-axis
-     * @param y Degrees to rotate around the y-axis
-     * @param z Degrees to rotate around the z-axis
+     * @return The rotation matrix of the object
      * @since 1.0
      */
-    public void setRotation(float x,
-                            float y,
-                            float z)
+    public RotationMatrix getRotation()
     {
-        setRotation(x, y);
-        this.rotation.z = z;
-    }
-
-    /**
-     * Set the rotation of the object
-     *
-     * @param rotation  The new rotation for the object
-     * @since 1.0
-     */
-    public void setRotation(Rotation2D rotation)
-    {
-        this.rotation.x = rotation.x;
-        this.rotation.y = rotation.y;
-    }
-
-    /**
-     * Set the rotation of the object
-     *
-     * @param x Degrees to rotate around the x-axis
-     * @param y Degrees to rotate around the y-axis
-     * @since 1.0
-     */
-    public void setRotation(float x, float y)
-    {
-        this.rotation.x = x;
-        this.rotation.y = y;
-    }
-
-    /**
-     * Get the rotation of the object
-     *
-     * @return The rotation on the object
-     * @since 1.0
-     */
-    public Rotation3D getRotation()
-    {
-        return this.rotation;
+        return this.rotationMatrix;
     }
 
     /**
@@ -993,13 +953,7 @@ public class RenderObject
         shader.disableIt();
     }
 
-    /**
-     * Render the object to the display using a 3D camera object
-     *
-     * @param camera    3-Dimensional camera object. Render the object in the cameras view
-     * @since 1.0
-     */
-    public void render(Camera3D camera)
+    public void newRender(Camera3D camera)
     {
         // If the shader is null, create a shader for the object
         if(shader == null)
@@ -1008,150 +962,6 @@ public class RenderObject
         }
 
         updateModelMatrix();
-
-        shader.enableIt();
-
-        // Matrix upload for a lighting enabled shader is slightly different
-        if(shader.isLightingShader())
-        {
-            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
-                    UNIFORM_UPLOAD_COUNT,
-                    false,
-                    camera.getPerspectiveMatrix(),
-                    0);
-
-            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
-                    UNIFORM_UPLOAD_COUNT,
-                    false,
-                    camera.getViewMatrix(),
-                    0);
-
-            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
-                    UNIFORM_UPLOAD_COUNT,
-                    false,
-                    modelMatrix,
-                    0);
-        }
-        else
-        {
-            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-            Matrix.multiplyMM(modelViewMatrix,
-                    0,
-                    camera.getViewMatrix(),
-                    0,
-                    modelMatrix,
-                    0);
-
-            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-            Matrix.multiplyMM(modelViewProjectionMatrix,
-                    0,
-                    camera.getPerspectiveMatrix(),
-                    0,
-                    modelViewMatrix,
-                    0);
-
-            glUniformMatrix4fv(shader.getMatrixUniformHandle(),
-                    UNIFORM_UPLOAD_COUNT,
-                    false,
-                    modelViewProjectionMatrix,
-                    0);
-        }
-
-        // If the shader colour uniform handle is not invalid, upload the colour data
-        if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform4f(shader.getColourUniformHandle(),
-                    material.getColour().getRed(),
-                    material.getColour().getGreen(),
-                    material.getColour().getBlue(),
-                    material.getColour().getAlpha());
-        }
-
-        // If the shader texture uniform handle is not invalid, upload the texture unit
-        if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
-            glUniform1i(shader.getTextureUniformHandle(), 0);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
-
-        // If the shader supports a specular map and the material has one, supply it to the
-        // shader.
-        if(shader.getSpecularMapUniformHandle() !=
-                INVALID_UNIFORM_HANDLE && material.hasSpecularMap())
-        {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
-            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
-
-        // If the shader supports a normal map and the material has one, supply it to the shader
-        if(shader.getNormalMapUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasNormalMap())
-        {
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
-            glUniform1i(shader.getNormalMapUniformHandle(), 2);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
-
-        handleAttributes(true);
-
-        // Draw the vertex data with the specified render method
-        switch (renderMethod)
-        {
-            case POINTS:
-                glDrawArrays(GL_POINTS, 0, VERTEX_COUNT);
-                break;
-            case LINES:
-                glDrawArrays(GL_LINES, 0, VERTEX_COUNT);
-                break;
-            case TRIANGLES:
-                glDrawArrays(GL_TRIANGLES, 0, VERTEX_COUNT);
-                break;
-        }
-
-        handleAttributes(false);
-
-        glBindTexture(GL_TEXTURE_2D, 0);
-
-        shader.disableIt();
-    }
-
-    public void renderTestModelMatrix(Camera3D camera, float[] modelMatrix)
-    {
-        // If the shader is null, create a shader for the object
-        if(shader == null)
-        {
-            updateShader();
-        }
-
-        //updateModelMatrix();
 
         shader.enableIt();
 
@@ -1295,51 +1105,15 @@ public class RenderObject
      */
     protected void updateModelMatrix()
     {
-        Matrix.setIdentityM(modelMatrix,
-                0);
-        Matrix.translateM(modelMatrix,
-                0,
-                position.x,
-                position.y,
-                position.z);
-        Matrix.scaleM(modelMatrix,
-                0,
-                scale.x,
-                scale.y,
-                scale.z);
+        // A matrix for translating and scaling the model view
+        float[] trasnlationAndScale = new float[16];
 
-        // Check if the rotation hasn't changed in the x-axis
-        if(rotation.x != 0.0f)
-        {
-            Matrix.rotateM(modelMatrix,
-                    0,
-                    rotation.x,
-                    ROTATION_AXIS_MULTIPLIER,
-                    0.0f,
-                    0.0f);
-        }
-
-        // Check if the rotation hasn't changed in the y-axis
-        if(rotation.y != 0.0f)
-        {
-            Matrix.rotateM(modelMatrix,
-                    0,
-                    rotation.y,
-                    0.0f,
-                    ROTATION_AXIS_MULTIPLIER,
-                    0.0f);
-        }
-
-        // Check if the rotation hasn't changed in the z-axis
-        if(rotation.z != 0.0f)
-        {
-            Matrix.rotateM(modelMatrix,
-                    0,
-                    rotation.z,
-                    0.0f,
-                    0.0f,
-                    ROTATION_AXIS_MULTIPLIER);
-        }
+        // Create the model matrix
+        Matrix.setIdentityM(trasnlationAndScale, 0);
+        Matrix.translateM(trasnlationAndScale, 0, position.x, position.y, position.z);
+        Matrix.scaleM(trasnlationAndScale, 0, scale.x, scale.y, scale.z);
+        Matrix.multiplyMM(modelMatrix, 0, trasnlationAndScale, 0,
+                rotationMatrix.getRotationMatrix(), 0);
     }
 
     /**
