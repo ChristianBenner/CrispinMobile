@@ -16,40 +16,45 @@ public class Button extends InteractableUIObject {
     private Text text;
     private Plane plane;
 
-    private Point3D position;
+    private Point2D position;
     private Scale2D size;
 
     public Button(Font font, String text)
     {
-        this.size = new Scale2D(200.0f, 200.0f);
-        this.position = new Point3D();
+        this.position = new Point2D();
+        this.size = new Scale2D();
+
         this.text = new Text(font, text, true, true, 200.0f);
         this.text.showBounds();
         plane = new Plane(size);
         plane.setColour(Colour.CYAN);
         plane.setBorderColour(Colour.BLUE);
 
-        updatePosition();
+        setSize(new Scale2D(200.0f, 200.0f));
+        setPosition(new Point2D());
     }
 
     public Button(Texture texture)
     {
-        this.size = new Scale2D(200.0f, 200.0f);
-        this.position = new Point3D();
+        this.position = new Point2D();
+        this.size = new Scale2D();
         plane = new Plane(size);
 
+        setSize(new Scale2D(200.0f, 200.0f));
+        setPosition(new Point2D());
         setImage(texture);
-        updatePosition();
     }
 
     public Button(int resourceId)
     {
-        this.size = new Scale2D(200.0f, 200.0f);
-        this.position = new Point3D();
+        this.position = new Point2D();
+        this.size = new Scale2D();
+
         plane = new Plane(size);
 
+        setSize(new Scale2D(200.0f, 200.0f));
+        setPosition(new Point2D());
         setImage(resourceId);
-        updatePosition();
     }
 
     public void setBorder(Border border)
@@ -75,6 +80,7 @@ public class Button extends InteractableUIObject {
     private void updatePosition()
     {
         this.plane.setPosition(position);
+        this.plane.setSize(size);
 
         if(text != null)
         {
@@ -84,64 +90,58 @@ public class Button extends InteractableUIObject {
     }
 
     @Override
-    public void setPosition(Point3D position) {
-        this.position = position;
-        updatePosition();
-    }
-
-    @Override
-    public void setPosition(float x, float y, float z) {
-        this.position.x = x;
-        this.position.y = y;
-        this.position.z = z;
-        updatePosition();
-    }
-
-    @Override
-    public void setPosition(Point2D position) {
+    public void setPosition(Point2D position)
+    {
         this.position.x = position.x;
         this.position.y = position.y;
         updatePosition();
     }
 
     @Override
-    public void setPosition(float x, float y) {
+    public void setPosition(float x,
+                            float y) {
         this.position.x = x;
         this.position.y = y;
         updatePosition();
     }
 
     @Override
-    public Point2D getPosition() {
+    public Point2D getPosition()
+    {
         return position;
     }
 
     @Override
-    public void setWidth(float width) {
+    public void setWidth(float width)
+    {
         this.size.x = width;
         updatePosition();
     }
 
     @Override
-    public float getWidth() {
+    public float getWidth()
+    {
         return size.x;
     }
 
     @Override
-    public void setHeight(float height) {
+    public void setHeight(float height)
+    {
         this.size.y = height;
         updatePosition();
     }
 
     @Override
-    public float getHeight() {
+    public float getHeight()
+    {
         return size.y;
     }
 
     @Override
     public void setSize(Scale2D size)
     {
-        this.size = size;
+        this.size.x = size.x;
+        this.size.y = size.y;
         updatePosition();
     }
 
@@ -158,12 +158,8 @@ public class Button extends InteractableUIObject {
     }
 
     @Override
-    public void setColour(Colour colour) {
-        if(text != null)
-        {
-            this.text.setColour(colour);
-        }
-
+    public void setColour(Colour colour)
+    {
         this.plane.setColour(colour);
     }
 
@@ -183,12 +179,14 @@ public class Button extends InteractableUIObject {
     }
 
     @Override
-    public Colour getColour() {
-        return this.text.getColour();
+    public Colour getColour()
+    {
+        return this.plane.getColour();
     }
 
     @Override
-    public void setOpacity(float alpha) {
+    public void setOpacity(float alpha)
+    {
         if(this.text != null)
         {
             this.text.setOpacity(alpha);
@@ -198,7 +196,8 @@ public class Button extends InteractableUIObject {
     }
 
     @Override
-    public float getOpacity() {
+    public float getOpacity()
+    {
         return this.plane.getOpacity();
     }
 
@@ -215,7 +214,8 @@ public class Button extends InteractableUIObject {
     }
 
     @Override
-    public void draw(Camera2D camera) {
+    public void draw(Camera2D camera)
+    {
         glDisable(GL_DEPTH_TEST);
         this.plane.draw(camera);
 

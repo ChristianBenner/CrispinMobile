@@ -243,7 +243,7 @@ public class Text implements UIObject
     private static final float SIN_WAVE_DIVIDE = 2.0f;
 
     // Position of the text
-    private Point3D position;
+    private Point2D position;
 
     // Width of the text
     private float width;
@@ -672,7 +672,7 @@ public class Text implements UIObject
                     }
 
                     FontSquare square = new FontSquare(new Material(theChar.texture, Colour.BLACK),
-                            position, new Point2D(CHAR_X, CHAR_Y));
+                            new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
                     square.useCustomShader(textShader);
                     square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
                     squares.add(square);
@@ -799,7 +799,7 @@ public class Text implements UIObject
 
                 // Create the render object square
                 FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
-                        Colour.BLACK), position, new Point2D(CHAR_X, CHAR_Y));
+                        Colour.BLACK), new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
 
                 // Force the use of the text shader (optimised for text rendering)
                 square.useCustomShader(textShader);
@@ -899,7 +899,7 @@ public class Text implements UIObject
             // Create the render object square
             FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
                     Colour.BLACK),
-                    position,
+                    new Point3D(position, 0.0f),
                     new Point2D(CHAR_X, CHAR_Y));
 
             // Force the use of the text shader (optimised for text rendering)
@@ -1076,52 +1076,6 @@ public class Text implements UIObject
         for(int i = 0; i < squares.size(); i++)
         {
             squares.get(i).setTextPosition(this.position);
-        }
-    }
-
-    /**
-     * If the new position for the text is different to the current, set the new position and do a
-     * position update. The position of the text is based from the bottom left point.
-     *
-     * @param position  The new position
-     * @since 1.0
-     */
-    @Override
-    public void setPosition(Point3D position)
-    {
-        // Only update the position if the position has changed
-        if(this.position.x != position.x ||
-            this.position.y != position.y ||
-            this.position.z != position.z)
-        {
-            this.position = position;
-            updateSquarePositions();
-        }
-    }
-
-    /**
-     * If the new position for the text is different to the current, set the new position and do a
-     * position update. The position of the text is based from the bottom left point.
-     *
-     * @param x The new x-coordinate
-     * @param y The new y-coordinate
-     * @param z The new z-coordinate
-     * @since 1.0
-     */
-    @Override
-    public void setPosition(float x,
-                            float y,
-                            float z)
-    {
-        // Only update the position if the position has changed
-        if(this.position.x != x ||
-                this.position.y != y ||
-                this.position.z != z)
-        {
-            this.position.x = x;
-            this.position.y = y;
-            this.position.z = z;
-            updateSquarePositions();
         }
     }
 

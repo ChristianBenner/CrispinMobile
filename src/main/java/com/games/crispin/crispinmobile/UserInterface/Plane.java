@@ -24,8 +24,9 @@ public class Plane implements UIObject
 
     protected Plane(Point2D position, Scale2D size)
     {
-        this.position = position;
-        this.size = size;
+        this.position = new Point2D();
+        this.size = new Scale2D();
+
         this.borderEnabled = false;
 
         plane = new Square(true);
@@ -34,21 +35,23 @@ public class Plane implements UIObject
         // Because we don't have an image on by default, ignore texel data in rendering
         plane.getMaterial().setIgnoreTexelData(true);
 
-        updatePosition();
+        setPosition(position);
+        setSize(size);
     }
 
     public Plane(Texture texture,
                  Point2D position,
                  Scale2D size)
     {
-        this.position = position;
-        this.size = size;
+        this.position = new Point2D();
+        this.size = new Scale2D();
         this.borderEnabled = false;
 
         plane = new Square(true);
         setImage(texture);
 
-        updatePosition();
+        setPosition(position);
+        setSize(size);
     }
 
     public Plane(Scale2D size)
@@ -130,40 +133,10 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setPosition(Point3D position)
-    {
-        this.position = position;
-        updatePosition();
-    }
-
-    /**
-     * Set the position of the user interface
-     *
-     * @param x The x-coordinate
-     * @param y The y-coordinate
-     * @param z The z-coordinate
-     * @since 1.0
-     */
-    @Override
-    public void setPosition(float x,
-                            float y,
-                            float z)
-    {
-        this.position.x = x;
-        this.position.y = y;
-        updatePosition();
-    }
-
-    /**
-     * Set the position of the user interface
-     *
-     * @param position  The new position for the user interface
-     * @since 1.0
-     */
-    @Override
     public void setPosition(Point2D position)
     {
-        this.position = position;
+        this.position.x = position.x;
+        this.position.y = position.y;
         updatePosition();
     }
 
@@ -253,7 +226,8 @@ public class Plane implements UIObject
     @Override
     public void setSize(Scale2D size)
     {
-        this.size = size;
+        this.size.x = size.x;
+        this.size.y = size.y;
         updatePosition();
     }
 

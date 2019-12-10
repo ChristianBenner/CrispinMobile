@@ -1,7 +1,6 @@
 package com.games.crispin.crispinmobile.UserInterface;
 
 import com.games.crispin.crispinmobile.Geometry.Point2D;
-import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
@@ -16,26 +15,6 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
  */
 public interface UIObject
 {
-    /**
-     * Set the position of the user interface
-     *
-     * @param position  The new position for the user interface
-     * @since 1.0
-     */
-    void setPosition(Point3D position);
-
-    /**
-     * Set the position of the user interface
-     *
-     * @param x The x-coordinate
-     * @param y The y-coordinate
-     * @param z The z-coordinate
-     * @since 1.0
-     */
-    void setPosition(float x,
-                     float y,
-                     float z);
-
     /**
      * Set the position of the user interface
      *
@@ -96,7 +75,7 @@ public interface UIObject
     /**
      * Set the size of the UI object
      *
-     * @param Size  The new size of the UI object
+     * @param size  The new size of the UI object
      * @since 1.0
      */
     void setSize(Scale2D size);

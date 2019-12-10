@@ -2,6 +2,7 @@ package com.games.crispin.crispinmobile.Demos;
 
 import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
+import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.R;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.UserInterface.LinearLayout;
@@ -137,7 +138,7 @@ public class TextDemoScene extends Scene
                 wrappedCenteredText.getPosition().y - wiggleText.getHeight() -
                         (PADDING_PIXELS * WIGGLE_MULTIPLIER));
 
-        linearLayout = new LinearLayout(new Point2D(0.0f, 0.0f), Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight(), false);
+        linearLayout = new LinearLayout(new Point2D(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight()), false);
 
         for(int i = 0; i < 10; i++)
         {

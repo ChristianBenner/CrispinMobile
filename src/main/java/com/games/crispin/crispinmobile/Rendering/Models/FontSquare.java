@@ -86,7 +86,7 @@ public class FontSquare extends Square
      */
     public void setTextPosition(Point3D textPosition)
     {
-        this.textPosition = textPosition;
+        setTextPosition(textPosition.x, textPosition.y, textPosition.z);
         updatePosition();
     }
 
@@ -118,8 +118,7 @@ public class FontSquare extends Square
      */
     public void setTextPosition(Point2D textPosition)
     {
-        this.textPosition.x = textPosition.x;
-        this.textPosition.y = textPosition.y;
+        setTextPosition(textPosition.x, textPosition.y);
         updatePosition();
     }
 
@@ -158,7 +157,7 @@ public class FontSquare extends Square
      */
     public void setCharacterOffset(Point2D characterOffset)
     {
-        this.characterOffset = characterOffset;
+        setCharacterOffset(characterOffset.x, characterOffset.y);
         updatePosition();
     }
 

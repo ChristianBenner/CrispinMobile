@@ -605,6 +605,18 @@ public class RenderObject
     }
 
     /**
+     * Get the alpha channel intensity of the object
+     *
+     * @return  The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public float getAlpha()
+    {
+        return this.material.getAlpha();
+    }
+
+    /**
      * Get the colour of the object
      *
      * @return The colour of the object
@@ -624,7 +636,7 @@ public class RenderObject
      */
     public void setPosition(Point3D position)
     {
-        this.position = position;
+        setPosition(position.x, position.y, position.z);
     }
 
     /**
@@ -688,7 +700,7 @@ public class RenderObject
      */
     public void setScale(Scale3D scale)
     {
-        this.scale = scale;
+        setScale(scale.x, scale.y, scale.z);
     }
 
     /**

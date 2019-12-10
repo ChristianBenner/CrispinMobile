@@ -47,7 +47,6 @@ public class Dropdown implements UIObject
 
         expandImg = new Image(R.drawable.expandicon, 100, 100);
         expandImg.setPosition(collapsedBox.getPosition().x + collapsedBox.getSize().x - expandImg.getSize().x, collapsedBox.getPosition().y);
-
     }
 
     public void expand()
@@ -92,47 +91,44 @@ public class Dropdown implements UIObject
     }
 
     @Override
-    public void setPosition(Point3D position) {
+    public void setPosition(Point2D position)
+    {
 
     }
 
     @Override
-    public void setPosition(float x, float y, float z) {
+    public void setPosition(float x, float y)
+    {
 
     }
 
     @Override
-    public void setPosition(Point2D position) {
-
-    }
-
-    @Override
-    public void setPosition(float x, float y) {
-
-    }
-
-    @Override
-    public Point2D getPosition() {
+    public Point2D getPosition()
+    {
         return null;
     }
 
     @Override
-    public void setWidth(float width) {
+    public void setWidth(float width)
+    {
 
     }
 
     @Override
-    public float getWidth() {
+    public float getWidth()
+    {
         return 0;
     }
 
     @Override
-    public void setHeight(float height) {
+    public void setHeight(float height)
+    {
 
     }
 
     @Override
-    public float getHeight() {
+    public float getHeight()
+    {
         return 0;
     }
 
@@ -143,27 +139,32 @@ public class Dropdown implements UIObject
     }
 
     @Override
-    public Scale2D getSize() {
+    public Scale2D getSize()
+    {
         return null;
     }
 
     @Override
-    public void setColour(Colour colour) {
+    public void setColour(Colour colour)
+    {
 
     }
 
     @Override
-    public Colour getColour() {
+    public Colour getColour()
+    {
         return null;
     }
 
     @Override
-    public void setOpacity(float alpha) {
+    public void setOpacity(float alpha)
+    {
 
     }
 
     @Override
-    public float getOpacity() {
+    public float getOpacity()
+    {
         return 0;
     }
 
@@ -185,7 +186,8 @@ public class Dropdown implements UIObject
     }
 
     @Override
-    public void draw(Camera2D camera) {
+    public void draw(Camera2D camera)
+    {
         if(expanded)
         {
             for(int i = 0; i < items.size(); i++)

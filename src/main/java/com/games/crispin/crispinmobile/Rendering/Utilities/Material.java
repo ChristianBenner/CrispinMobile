@@ -84,15 +84,18 @@ public class Material
                     Scale2D uvMultiplier,
                     Colour colour)
     {
-        setTexture(texture);
-        setUvMultiplier(uvMultiplier);
-        setColour(colour);
+        this.uvMultiplier = new Scale2D();
+        this.colour = new Colour();
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
         this.ignoreColourData = false;
         this.ignoreNormalData = false;
         this.specularMap = null;
         this.normalMap = null;
+
+        setTexture(texture);
+        setUvMultiplier(uvMultiplier);
+        setColour(colour);
     }
 
     /**
@@ -334,7 +337,8 @@ public class Material
      */
     public void setUvMultiplier(Scale2D uvMultiplier)
     {
-        this.uvMultiplier = uvMultiplier;
+        this.uvMultiplier.x = uvMultiplier.x;
+        this.uvMultiplier.y = uvMultiplier.y;
     }
 
     /**
@@ -465,7 +469,10 @@ public class Material
      */
     public void setColour(Colour colour)
     {
-        this.colour = colour;
+        this.colour.setRed(colour.getRed());
+        this.colour.setGreen(colour.getGreen());
+        this.colour.setBlue(colour.getBlue());
+        this.colour.setAlpha(colour.getAlpha());
     }
 
     /**
@@ -506,5 +513,16 @@ public class Material
     public void setAlpha(float alpha)
     {
         this.colour.setAlpha(alpha);
+    }
+
+    /**
+     * Get the alpha colour channel intensity
+     *
+     * @return  The intensity of the alpha colour channel (0.0 to 1.0)
+     * @since   1.0
+     */
+    public float getAlpha()
+    {
+        return colour.getAlpha();
     }
 }
