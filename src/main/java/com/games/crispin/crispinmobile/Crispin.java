@@ -108,7 +108,7 @@ public class Crispin
      */
     public static Context getApplicationContext()
     {
-        // Check if the engine is freeTypeInitialised before accessing the context
+        // Check if the engine is initialised before accessing the context
         if(isInit())
         {
             return crispinInstance.CONTEXT;
@@ -127,11 +127,29 @@ public class Crispin
      */
     public static void setScene(Scene.Constructor sceneConstructor)
     {
-        // Check if the engine is freeTypeInitialised before accessing the scene manager
+        // Check if the engine is initialised before accessing the scene manager
         if(isInit())
         {
             crispinInstance.sceneManager.setScene(sceneConstructor);
         }
+    }
+
+    /**
+     * Retrieve the currently active scene
+     *
+     * @see     SceneManager
+     * @see     Scene
+     * @since   1.0
+     */
+    public static Scene getCurrentScene()
+    {
+        // Check if the engine is initialised before accessing the scene manager
+        if(isInit())
+        {
+            return crispinInstance.sceneManager.getCurrentScene();
+        }
+
+        return null;
     }
 
     /**

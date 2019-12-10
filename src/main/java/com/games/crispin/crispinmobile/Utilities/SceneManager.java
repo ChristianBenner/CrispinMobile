@@ -8,6 +8,9 @@ import android.view.View;
 
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
+import com.games.crispin.crispinmobile.UserInterface.Button;
+
+import java.util.ArrayList;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -188,6 +191,9 @@ public class SceneManager implements GLSurfaceView.Renderer
         }
         else
         {
+            // Remove the current scenes UI from the UIHandler
+            UIHandler.removeAll();
+
             currentSceneConstructor = sceneConstructor;
             currentScene = null;
 
@@ -196,6 +202,18 @@ public class SceneManager implements GLSurfaceView.Renderer
             ShaderCache.removeAll();
             TextureCache.removeAll();
         }
+    }
+
+    /**
+     * Get the currently active scene
+     *
+     * @see     SceneManager
+     * @see     Scene
+     * @since   1.0
+     */
+    public Scene getCurrentScene()
+    {
+        return currentScene;
     }
 
     /**
@@ -211,6 +229,10 @@ public class SceneManager implements GLSurfaceView.Renderer
         if(currentScene != null)
         {
             currentScene.touch(type, position);
+
+            // Send the touch event to the UI handler to activate touch on the ui elements on the
+            // current scene
+            UIHandler.sendTouchEvent(type, position);
         }
     }
 

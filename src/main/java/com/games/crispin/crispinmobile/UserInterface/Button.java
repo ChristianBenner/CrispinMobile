@@ -1,8 +1,5 @@
 package com.games.crispin.crispinmobile.UserInterface;
 
-import android.graphics.Point;
-
-import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
@@ -11,22 +8,16 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
-import java.util.ArrayList;
-
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
-public class Button implements UIObject
-{
-    private ArrayList<TouchListener> buttonListeners = new ArrayList<>();
-
+public class Button extends InteractableUIObject {
     private Text text;
     private Plane plane;
 
     private Point3D position;
     private Scale2D size;
-    private boolean clicked = false;
 
     public Button(Font font, String text)
     {
@@ -59,70 +50,6 @@ public class Button implements UIObject
 
         setImage(resourceId);
         updatePosition();
-    }
-
-    public void addButtonListener(TouchListener listener)
-    {
-        buttonListeners.add(listener);
-    }
-
-    public void removeButtonListener(TouchListener listener)
-    {
-        buttonListeners.remove(listener);
-    }
-
-    public boolean isClicked()
-    {
-        return clicked;
-    }
-
-    public void sendClickEvent(Point2D position)
-    {
-        clicked = true;
-        final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
-        for(final TouchListener buttonListener : buttonListeners)
-        {
-            buttonListener.touchEvent(CLICK_EVENT);
-        }
-    }
-
-    public void sendReleaseEvent(Point2D position)
-    {
-        clicked = false;
-        final TouchEvent RELEASE_EVENT = new TouchEvent(this, TouchEvent.Event.RELEASE, position);
-        for(final TouchListener buttonListener : buttonListeners)
-        {
-            buttonListener.touchEvent(RELEASE_EVENT);
-        }
-    }
-
-    public void sendDownEvent(Point2D position)
-    {
-        // Send the drag touch event
-        final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
-        for(final TouchListener buttonListener : buttonListeners)
-        {
-            buttonListener.touchEvent(DOWN_EVENT);
-        }
-    }
-
-    public boolean interacts(Point2D pointer)
-    {
-        Point2D pos = new Point2D();
-        pos.x = pointer.x;
-        pos.y = Crispin.getSurfaceHeight() - pointer.y;
-
-        // Check if the pointer is inside the button
-        if(pos.x > position.x && pos.x < position.x + getWidth() &&
-                pos.y < position.y + getHeight() && pos.y > position.y)
-        {
-            System.out.println("INTERSECTS");
-            return true;
-        }
-
-        System.out.println("Point: " + pointer + ", Pos: " + position + ", Size: " + size);
-        System.out.println("DOES NOT INTERSECT");
-        return false;
     }
 
     public void setBorder(Border border)
