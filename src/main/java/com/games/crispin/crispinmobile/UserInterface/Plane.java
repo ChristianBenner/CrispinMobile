@@ -22,7 +22,7 @@ public class Plane implements UIObject
     private boolean borderEnabled;
     private int disabledBorderFlags;
 
-    protected Plane(Point2D position, Scale2D size)
+    public Plane(Point2D position, Scale2D size)
     {
         this.position = new Point2D();
         this.size = new Scale2D();

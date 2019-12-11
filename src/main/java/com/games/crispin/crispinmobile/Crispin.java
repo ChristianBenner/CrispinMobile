@@ -330,6 +330,23 @@ public class Crispin
     }
 
     /**
+     * Get the target refresh rate. This is the target refresh rate for both the logic and draw
+     * calls.
+     *
+     * @return  A float of the target refresh rate
+     * @since   1.0
+     */
+    public static float getTargetRefreshRate()
+    {
+        if(isInit())
+        {
+            return crispinInstance.sceneManager.getTargetRefreshRate();
+        }
+
+        return 0.0f;
+    }
+
+    /**
      * Checks whether or not the engine has been freeTypeInitialised. If the engine hasn't been freeTypeInitialised
      * then an error message is printed.
      *

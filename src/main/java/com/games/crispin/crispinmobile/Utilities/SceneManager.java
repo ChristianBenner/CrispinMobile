@@ -373,6 +373,18 @@ public class SceneManager implements GLSurfaceView.Renderer
     }
 
     /**
+     * Get the target refresh rate. This is the target refresh rate for both the logic and draw
+     * calls.
+     *
+     * @return  A float of the target refresh rate
+     * @since   1.0
+     */
+    public float getTargetRefreshRate()
+    {
+        return targetRefreshRate;
+    }
+
+    /**
      * The method is overridden from <code>GLSurfaceView.Renderer</code>, it is called when the
      * surface gets created. At this position OpenGL ES memory has been destroyed so its a good time
      * to re-initialise components that depend on this memory.
