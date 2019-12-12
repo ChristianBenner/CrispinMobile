@@ -12,7 +12,8 @@ import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
-public class Button extends InteractableUIObject {
+public class Button extends InteractableUIObject
+{
     private Text text;
     private Plane plane;
 

@@ -1,5 +1,6 @@
 package com.games.crispin.crispinmobile.UserInterface;
 
+import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
@@ -7,10 +8,11 @@ import com.games.crispin.crispinmobile.R;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
+import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
 import java.util.ArrayList;
 
-public class Dropdown implements UIObject
+public class Dropdown extends InteractableUIObject
 {
     class Item
     {
@@ -33,6 +35,9 @@ public class Dropdown implements UIObject
 
     private int disabledBorderFlags;
 
+    private Texture expandIcon;
+    private Texture collapseIcon;
+
     public Dropdown()
     {
         items = new ArrayList<>();
@@ -41,22 +46,27 @@ public class Dropdown implements UIObject
         expanded = false;
         disabledBorderFlags = NO_BORDERS;
 
-        collapsedBox = new Plane(new Point2D(200.0f, 400.0f), new Scale2D(800.0f, 100.0f));
+        collapsedBox = new Plane(new Point2D(Crispin.getSurfaceWidth() * 0.1f, Crispin.getSurfaceHeight() - 500.0f), new Scale2D(Crispin.getSurfaceWidth() * 0.8f, 100.0f));
         collapsedBox.setBorder(new Border(Colour.BLACK, 4));
         collapsedBox.setColour(Colour.LIGHT_GREY);
 
-        expandImg = new Image(R.drawable.expandicon, 100, 100);
+        expandIcon = new Texture(R.drawable.expandicon);
+        collapseIcon = new Texture(R.drawable.collapseicon);
+
+        expandImg = new Image(expandIcon, 100, 100);
         expandImg.setPosition(collapsedBox.getPosition().x + collapsedBox.getSize().x - expandImg.getSize().x, collapsedBox.getPosition().y);
     }
 
     public void expand()
     {
         this.expanded = true;
+        expandImg.setImage(collapseIcon);
     }
 
     public void collapse()
     {
         this.expanded = false;
+        expandImg.setImage(expandIcon);
     }
 
     // returns id of item
@@ -93,79 +103,81 @@ public class Dropdown implements UIObject
     @Override
     public void setPosition(Point2D position)
     {
-
+        collapsedBox.setPosition(position);
     }
 
     @Override
     public void setPosition(float x, float y)
     {
-
+        collapsedBox.setPosition(x, y);
     }
 
     @Override
     public Point2D getPosition()
     {
-        return null;
+        return collapsedBox.getPosition();
     }
 
     @Override
     public void setWidth(float width)
     {
-
+        collapsedBox.setWidth(width);
+        expandImg.setPosition(collapsedBox.getPosition().x + collapsedBox.getSize().x - expandImg.getSize().x, collapsedBox.getPosition().y);
     }
 
     @Override
     public float getWidth()
     {
-        return 0;
+        return collapsedBox.getWidth();
     }
 
     @Override
     public void setHeight(float height)
     {
-
+        expandImg.setPosition(collapsedBox.getPosition().x + collapsedBox.getSize().x - expandImg.getSize().x, collapsedBox.getPosition().y);
+        expandImg.setHeight(collapsedBox.getHeight());
     }
 
     @Override
     public float getHeight()
     {
-        return 0;
+        return collapsedBox.getHeight();
     }
 
     @Override
     public void setSize(Scale2D size)
     {
-
+        collapsedBox.setSize(size);
     }
 
     @Override
     public Scale2D getSize()
     {
-        return null;
+        return collapsedBox.getSize();
     }
 
     @Override
     public void setColour(Colour colour)
     {
-
+        collapsedBox.setColour(colour);
     }
 
     @Override
     public Colour getColour()
     {
-        return null;
+        return collapsedBox.getColour();
     }
 
     @Override
     public void setOpacity(float alpha)
     {
-
+        collapsedBox.setAlpha(alpha);
     }
 
     @Override
     public float getOpacity()
     {
-        return 0;
+        return collapsedBox.getOpacity();
     }
 
     /**
