@@ -81,6 +81,15 @@ public interface UIObject
     void setSize(Scale2D size);
 
     /**
+     * Set the size of the UI object
+     *
+     * @param width     The new width for the object
+     * @param height    The new height for the object
+     * @since 1.0
+     */
+    void setSize(float width, float height);
+
+    /**
      * Get the size of the UI object
      *
      * @return The size of the UI object

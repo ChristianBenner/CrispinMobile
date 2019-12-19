@@ -142,6 +142,7 @@ public class LinearLayout implements UIObject
     public void setWidth(float width)
     {
         this.size.x = width;
+        updatePosition();
     }
 
     @Override
@@ -154,6 +155,7 @@ public class LinearLayout implements UIObject
     public void setHeight(float height)
     {
         this.size.y = height;
+        updatePosition();
     }
 
     @Override
@@ -161,11 +163,31 @@ public class LinearLayout implements UIObject
         return size.y;
     }
 
+    /**
+     * Set the size of the UI object
+     *
+     * @param size  The new size of the UI object
+     * @since 1.0
+     */
     @Override
     public void setSize(Scale2D size)
     {
-        this.size.x = size.x;
-        this.size.y = size.y;
+        this.setSize(size.x, size.y);
+    }
+
+    /**
+     * Set the size of the UI object
+     *
+     * @param width     The new width for the object
+     * @param height    The new height for the object
+     * @since 1.0
+     */
+    @Override
+    public void setSize(float width, float height)
+    {
+        this.size.x = width;
+        this.size.y = height;
+        updatePosition();
     }
 
     /**

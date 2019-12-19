@@ -15,7 +15,7 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * @version     %I%, %G%
  * @since       1.0
  */
-public class OBJThreadTest implements Runnable
+public class ThreadedOBJLoader implements Runnable
 {
     // The resource ID of the model
     private int resourceId;
@@ -26,15 +26,32 @@ public class OBJThreadTest implements Runnable
     // Whether or not the model has been loaded or not
     private boolean complete = false;
 
+    // LoadEvent that gets called when the OBJ has loaded
+    private LoadListener loadListener;
+
     /**
-     * Create an OBJThreadTest obj to load an OBJ model on another thread
+     * Load a model on another thread without having to create the ThreadedOBJLoader object
      *
      * @param resourceId    The OBJ model file resource ID
      * @since   1.0
      */
-    public OBJThreadTest(int resourceId)
+    public static void loadModel(int resourceId, LoadListener loadListener)
+    {
+        ThreadedOBJLoader threadedModelLoader = new ThreadedOBJLoader(resourceId, loadListener);
+        threadedModelLoader.run();
+    }
+
+    /**
+     * Create an ThreadedOBJLoader obj to load an OBJ model on another thread
+     *
+     * @param resourceId    The OBJ model file resource ID
+     * @param loadListener  The load listener that listens to load events
+     * @since   1.0
+     */
+    public ThreadedOBJLoader(int resourceId, LoadListener loadListener)
     {
         this.resourceId = resourceId;
+        this.loadListener = loadListener;
     }
 
     /**
@@ -46,6 +63,7 @@ public class OBJThreadTest implements Runnable
     public void run()
     {
         renderObject = OBJModelLoader.readObjFile(resourceId);
+        this.loadListener.onLoad(renderObject);
         complete = true;
     }
 

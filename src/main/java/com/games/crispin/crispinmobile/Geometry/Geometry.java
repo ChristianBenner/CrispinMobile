@@ -18,6 +18,30 @@ package com.games.crispin.crispinmobile.Geometry;
 public class Geometry
 {
     /**
+     * Invert a Point2D object. This flips the x and y co-ordinate polarity
+     *
+     * @param point2D   The point to invert
+     * @return  Inverted Point
+     * @since   1.0
+     */
+    public static Point2D invert(Point2D point2D)
+    {
+        return new Point2D(-point2D.x, -point2D.y);
+    }
+
+    /**
+     * Invert a Point3D object. This flips the x, y and z co-ordinate polarity
+     *
+     * @param point3D   The point to invert
+     * @return  Inverted Point
+     * @since   1.0
+     */
+    public static Point3D invert(Point3D point3D)
+    {
+        return new Point3D(-point3D.x, -point3D.y, -point3D.z);
+    }
+
+    /**
      * Get the vector between two points.
      *
      * @param from  The first 3D point

@@ -18,7 +18,7 @@ import java.io.InputStream;
  * @version     %I%, %G%
  * @since       1.0
  */
-public class OBJModelLoader
+public class  OBJModelLoader
 {
     // Tag used in logging output
     private static final String TAG = "OBJModelLoader";

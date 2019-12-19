@@ -35,6 +35,17 @@ public class Point2D
     }
 
     /**
+     * Copy a points values to a new point object
+     *
+     * @param point The point object to copy
+     * @since   1.0
+     */
+    public Point2D(Point2D point)
+    {
+        this(point.x, point.y);
+    }
+
+    /**
      * Construct a 2D point object with default values (x: 0.0, y: 0.0)
      *
      * @since           1.0

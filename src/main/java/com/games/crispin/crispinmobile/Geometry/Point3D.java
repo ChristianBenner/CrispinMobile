@@ -35,6 +35,17 @@ public class Point3D extends Point2D
     }
 
     /**
+     * Copy a points values to a new point object
+     *
+     * @param point The point object to copy
+     * @since   1.0
+     */
+    public Point3D(Point3D point)
+    {
+        this(point.x, point.y, point.z);
+    }
+
+    /**
      * Construct a 3D point object with an existing 2D point
      *
      * @param point2D A Point2D object containing x and y values

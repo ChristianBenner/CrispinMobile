@@ -1,6 +1,9 @@
-package com.games.crispin.crispinmobile.Geometry;
+package com.games.crispin.crispinmobile.Rendering.Utilities;
 
 import android.opengl.Matrix;
+
+import com.games.crispin.crispinmobile.Geometry.Point3D;
+import com.games.crispin.crispinmobile.Geometry.Vector3D;
 
 public class RotationMatrix
 {

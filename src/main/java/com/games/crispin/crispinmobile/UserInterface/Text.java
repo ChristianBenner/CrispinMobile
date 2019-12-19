@@ -461,6 +461,18 @@ public class Text implements UIObject
     }
 
     /**
+     * Set the maximum line width. Will cause the text to be regenerated
+     *
+     * @param maxLineWidth  The new maximum line width
+     * @since 1.0
+     */
+    public void setMaxLineWidth(float maxLineWidth)
+    {
+        this.maxLineWidth = maxLineWidth;
+        generateText();
+    }
+
+    /**
      * Get the width of the text
      *
      * @return  The width of the text string. If the text comprises of multiple lines, the width
@@ -483,8 +495,27 @@ public class Text implements UIObject
         return this.height;
     }
 
+    /**
+     * Set the size of the UI object
+     *
+     * @param size  The new size of the UI object
+     * @since 1.0
+     */
     @Override
     public void setSize(Scale2D size)
+    {
+        Logger.info("You cannot change the width and height of a text object");
+    }
+
+    /**
+     * Set the size of the UI object
+     *
+     * @param width     The new width for the object
+     * @param height    The new height for the object
+     * @since 1.0
+     */
+    @Override
+    public void setSize(float width, float height)
     {
         Logger.info("You cannot change the width and height of a text object");
     }
@@ -611,7 +642,6 @@ public class Text implements UIObject
                 // Add the temp line
                 lines.add(tempLine);
 
-                // Create a new line object that has a length of 0
                 tempLine = new Line();
             }
         }
@@ -624,23 +654,6 @@ public class Text implements UIObject
         {
             float theX = centerText ? (maxLineWidth - lines.get(pLine).length) /
                     CENTER_LINE_DIVIDE : 0.0f;
-
-
-
-            ////////////////////////////
-            System.out.print("TTT LINE: '");
-            for(int i = 0; i < lines.get(pLine).words.size(); i++)
-            {
-                for(int w = 0; w < lines.get(pLine).words.get(i).characters.size(); w++)
-                {
-                    System.out.print("0x" + String.format("%02X", lines.get(pLine).words.get(i).characters.get(w).getAscii()) + " ");
-                }
-            }
-            System.out.println("' x: " + theX);
-            ////////////////////////////
-
-
-
 
             ArrayList<Word> pWords = lines.get(pLine).getWords();
 

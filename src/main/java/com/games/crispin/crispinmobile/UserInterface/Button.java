@@ -138,11 +138,30 @@ public class Button extends InteractableUIObject
         return size.y;
     }
 
+    /**
+     * Set the size of the UI object
+     *
+     * @param size  The new size of the UI object
+     * @since 1.0
+     */
     @Override
     public void setSize(Scale2D size)
     {
-        this.size.x = size.x;
-        this.size.y = size.y;
+        this.setSize(size.x, size.y);
+    }
+
+    /**
+     * Set the size of the UI object
+     *
+     * @param width     The new width for the object
+     * @param height    The new height for the object
+     * @since 1.0
+     */
+    @Override
+    public void setSize(float width, float height)
+    {
+        this.size.x = width;
+        this.size.y = height;
         updatePosition();
     }
 
@@ -210,6 +229,24 @@ public class Button extends InteractableUIObject
      */
     @Override
     public void setDisabledBorders(int flags)
+    {
+
+    }
+
+    @Override
+    protected void clickEvent(Point2D position)
+    {
+        // Play click sound
+    }
+
+    @Override
+    protected void dragEvent(Point2D position)
+    {
+
+    }
+
+    @Override
+    protected void releaseEvent(Point2D position)
     {
 
     }

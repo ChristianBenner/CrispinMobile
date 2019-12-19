@@ -36,6 +36,9 @@ public abstract class InteractableUIObject implements UIObject
     public void sendClickEvent(Point2D position)
     {
         clicked = true;
+
+        clickEvent(position);
+
         final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
         for(final TouchListener buttonListener : touchListeners)
         {
@@ -46,6 +49,9 @@ public abstract class InteractableUIObject implements UIObject
     public void sendReleaseEvent(Point2D position)
     {
         clicked = false;
+
+        releaseEvent(position);
+
         final TouchEvent RELEASE_EVENT = new TouchEvent(this, TouchEvent.Event.RELEASE, position);
         for(final TouchListener buttonListener : touchListeners)
         {
@@ -55,6 +61,8 @@ public abstract class InteractableUIObject implements UIObject
 
     public void sendDownEvent(Point2D position)
     {
+        dragEvent(position);
+
         // Send the drag touch event
         final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
         for(final TouchListener buttonListener : touchListeners)
@@ -62,6 +70,11 @@ public abstract class InteractableUIObject implements UIObject
             buttonListener.touchEvent(DOWN_EVENT);
         }
     }
+
+    // This is something that an interactable UI needs to inherit and control
+    protected abstract void clickEvent(Point2D pointerPosition);
+    protected abstract void dragEvent(Point2D pointerPosition);
+    protected abstract void releaseEvent(Point2D pointerPosition);
 
     public static boolean interacts(UIObject uiObject, Point2D pointer)
     {

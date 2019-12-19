@@ -7,6 +7,7 @@ import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Models.Square;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.games.crispin.crispinmobile.Utilities.Logger;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
@@ -226,8 +227,21 @@ public class Plane implements UIObject
     @Override
     public void setSize(Scale2D size)
     {
-        this.size.x = size.x;
-        this.size.y = size.y;
+        this.setSize(size.x, size.y);
+    }
+
+    /**
+     * Set the size of the UI object
+     *
+     * @param width     The new width for the object
+     * @param height    The new height for the object
+     * @since 1.0
+     */
+    @Override
+    public void setSize(float width, float height)
+    {
+        this.size.x = width;
+        this.size.y = height;
         updatePosition();
     }
 
