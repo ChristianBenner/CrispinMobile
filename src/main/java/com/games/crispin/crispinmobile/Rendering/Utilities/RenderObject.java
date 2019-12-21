@@ -1138,6 +1138,115 @@ public class RenderObject
         shader.disableIt();
     }
 
+    public void render(Camera2D camera, ModelMatrix modelMatrix)
+    {
+        // If the shader is null, create a shader for the object
+        if(shader == null)
+        {
+            updateShader();
+        }
+
+        shader.enableIt();
+
+        float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+        Matrix.multiplyMM(modelViewMatrix,
+                0,
+                camera.getOrthoMatrix(),
+                0,
+                modelMatrix.getModelMatrix(),
+                0);
+
+        glUniformMatrix4fv(shader.getMatrixUniformHandle(),
+                UNIFORM_UPLOAD_COUNT,
+                false,
+                modelViewMatrix,
+                0);
+
+        // If the shader colour uniform handle is not invalid, upload the colour data
+        if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
+        {
+            glUniform4f(shader.getColourUniformHandle(),
+                    material.getColour().getRed(),
+                    material.getColour().getGreen(),
+                    material.getColour().getBlue(),
+                    material.getColour().getAlpha());
+        }
+
+        // If the shader texture uniform handle is not invalid, upload the texture unit
+        if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
+            glUniform1i(shader.getTextureUniformHandle(), 0);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        // If the shader supports a specular map and the material has one, supply it to the
+        // shader.
+        if(shader.getSpecularMapUniformHandle() !=
+                INVALID_UNIFORM_HANDLE && material.hasSpecularMap())
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
+            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        // If the shader supports a normal map and the material has one, supply it to the shader
+        if(shader.getNormalMapUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasNormalMap())
+        {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
+            glUniform1i(shader.getNormalMapUniformHandle(), 2);
+
+            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+            // data
+            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+            {
+                glUniform2f(shader.getUvMultiplierUniformHandle(),
+                        material.getUvMultiplier().x,
+                        material.getUvMultiplier().y);
+            }
+        }
+
+        handleAttributes(true);
+
+        // Draw the vertex data with the specified render method
+        switch (renderMethod)
+        {
+            case POINTS:
+                glDrawArrays(GL_POINTS, 0, VERTEX_COUNT);
+                break;
+            case LINES:
+                glDrawArrays(GL_LINES, 0, VERTEX_COUNT);
+                break;
+            case TRIANGLES:
+                glDrawArrays(GL_TRIANGLES, 0, VERTEX_COUNT);
+                break;
+        }
+
+        handleAttributes(false);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        shader.disableIt();
+    }
 
     public void render(Camera3D camera, ModelMatrix modelMatrix)
     {

@@ -550,6 +550,17 @@ public class Text implements UIObject
     }
 
     /**
+     * Get the text string of the object
+     *
+     * @return  The current text string
+     * @since   1.0
+     */
+    public String getTextString()
+    {
+        return textString;
+    }
+
+    /**
      * Overridden from the UI object base class. Disabled as you cant change the width of a text
      * object
      *
@@ -684,7 +695,7 @@ public class Text implements UIObject
                         height = CHAR_Y + CHAR_HEIGHT;
                     }
 
-                    FontSquare square = new FontSquare(new Material(theChar.texture, Colour.BLACK),
+                    FontSquare square = new FontSquare(new Material(theChar.texture, colour),
                             new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
                     square.useCustomShader(textShader);
                     square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
@@ -812,7 +823,7 @@ public class Text implements UIObject
 
                 // Create the render object square
                 FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
-                        Colour.BLACK), new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
+                        colour), new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
 
                 // Force the use of the text shader (optimised for text rendering)
                 square.useCustomShader(textShader);
@@ -911,7 +922,7 @@ public class Text implements UIObject
 
             // Create the render object square
             FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
-                    Colour.BLACK),
+                    colour),
                     new Point3D(position, 0.0f),
                     new Point2D(CHAR_X, CHAR_Y));
 
@@ -973,6 +984,8 @@ public class Text implements UIObject
             else
                 SpaceLeft := SpaceLeft - (Width(Word) + SpaceWidth)
          */
+
+        squares.clear();
 
         float spaceLeft = maxLineWidth;
         String[] words = textString.split("\\s+");

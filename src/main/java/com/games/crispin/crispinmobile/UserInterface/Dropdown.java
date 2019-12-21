@@ -179,7 +179,7 @@ public class Dropdown extends InteractableUIObject
     @Override
     protected void clickEvent(Point2D position)
     {
-
+        selectedId = NO_ITEM_SELECTED;
     }
 
     @Override
@@ -203,6 +203,8 @@ public class Dropdown extends InteractableUIObject
                 if(InteractableUIObject.interacts(item.plane, position))
                 {
                     selectedId = item.id;
+
+                    baseText.setText(item.text.getTextString());
                 }
             }
         }
