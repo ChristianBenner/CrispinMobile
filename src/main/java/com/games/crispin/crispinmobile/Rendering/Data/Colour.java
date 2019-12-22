@@ -113,6 +113,21 @@ public class Colour
     }
 
     /**
+     * Construct a colour object using an existing colour object
+     * 1.0)
+     *
+     * @param   colour  An existing colour object to copy
+     * @since   1.0
+     */
+    public Colour(Colour colour)
+    {
+        this(colour.getRed(),
+                colour.getGreen(),
+                colour.getBlue(),
+                colour.getAlpha());
+    }
+
+    /**
      * Construct a colour object with default RGBA values (Red: 1.0, Green: 1.0, Blue: 1.0, Alpha:
      * 1.0)
      *

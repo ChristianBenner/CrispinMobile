@@ -98,6 +98,16 @@ public class Dropdown extends InteractableUIObject
         this("Select an item");
     }
 
+    protected void enabled()
+    {
+
+    }
+
+    protected void disabled()
+    {
+
+    }
+
     public void setStateIcons(Texture expandIcon, Texture collapseIcon)
     {
         this.expandIcon = expandIcon;

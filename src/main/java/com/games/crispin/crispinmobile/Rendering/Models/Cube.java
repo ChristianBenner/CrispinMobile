@@ -1,6 +1,7 @@
 package com.games.crispin.crispinmobile.Rendering.Models;
 
 import com.games.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.games.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
@@ -12,7 +13,7 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * @see         RenderObject
  * @since       1.0
  */
-public class Cube extends RenderObject
+public class Cube extends Model
 {
     // The number of position components in the position data (3 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 3;

@@ -11,6 +11,29 @@ public abstract class InteractableUIObject implements UIObject
     private ArrayList<TouchListener> touchListeners = new ArrayList<>();
 
     private boolean clicked = false;
+    private boolean enabled = true;
+
+    public void setEnabled(boolean state)
+    {
+        if(enabled != state)
+        {
+            enabled = state;
+
+            if(enabled)
+            {
+                enabled();
+            }
+            else
+            {
+                disabled();
+            }
+        }
+    }
+
+    public boolean isEnabled()
+    {
+        return enabled;
+    }
 
     public void addTouchListener(TouchListener listener)
     {
@@ -35,14 +58,17 @@ public abstract class InteractableUIObject implements UIObject
 
     public void sendClickEvent(Point2D position)
     {
-        clicked = true;
-
-        clickEvent(position);
-
-        final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
-        for(final TouchListener buttonListener : touchListeners)
+        if(enabled)
         {
-            buttonListener.touchEvent(CLICK_EVENT);
+            clicked = true;
+
+            clickEvent(position);
+
+            final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
+            for (final TouchListener buttonListener : touchListeners)
+            {
+                buttonListener.touchEvent(CLICK_EVENT);
+            }
         }
     }
 
@@ -61,13 +87,16 @@ public abstract class InteractableUIObject implements UIObject
 
     public void sendDownEvent(Point2D position)
     {
-        dragEvent(position);
-
-        // Send the drag touch event
-        final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
-        for(final TouchListener buttonListener : touchListeners)
+        if(enabled)
         {
-            buttonListener.touchEvent(DOWN_EVENT);
+            dragEvent(position);
+
+            // Send the drag touch event
+            final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
+            for(final TouchListener buttonListener : touchListeners)
+            {
+                buttonListener.touchEvent(DOWN_EVENT);
+            }
         }
     }
 
@@ -75,6 +104,8 @@ public abstract class InteractableUIObject implements UIObject
     protected abstract void clickEvent(Point2D pointerPosition);
     protected abstract void dragEvent(Point2D pointerPosition);
     protected abstract void releaseEvent(Point2D pointerPosition);
+    protected abstract void enabled();
+    protected abstract void disabled();
 
     public static boolean interacts(UIObject uiObject, Point2D pointer)
     {

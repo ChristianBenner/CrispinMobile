@@ -14,21 +14,28 @@ public class Rotation2D
     // Tag used in logging output
     private static final String TAG = "Rotation2D";
 
-    // The x rotation multiplier
+    // The angle to rotate
+    public float angle;
+
+    // The x axis multiplier
     public float x;
 
-    // The y rotation multiplier
+    // The y axis multiplier
     public float y;
 
     /**
      * Construct a 2D rotation object
      *
-     * @param x The x rotation multiplier
-     * @param y The y rotation multiplier
+     * @param angle The angle to rotate
+     * @param x The x axis multiplier
+     * @param y The y axis multiplier
      * @since 1.0
      */
-    public Rotation2D(float x, float y)
+    public Rotation2D(float angle,
+                      float x,
+                      float y)
     {
+        this.angle = angle;
         this.x = x;
         this.y = y;
     }
@@ -40,8 +47,7 @@ public class Rotation2D
      */
     public Rotation2D()
     {
-        this.x = 0.0f;
-        this.y = 0.0f;
+        this(0.0f, 0.0f, 0.0f);
     }
 
     /**
@@ -53,6 +59,6 @@ public class Rotation2D
     @Override
     public String toString()
     {
-        return TAG + "[x:" + x + ",y:" + y + "]";
+        return TAG + "[angle " + angle + ",x:" + x + ",y:" + y + "]";
     }
 }

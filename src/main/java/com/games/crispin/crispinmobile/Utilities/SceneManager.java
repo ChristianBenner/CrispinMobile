@@ -191,14 +191,12 @@ public class SceneManager implements GLSurfaceView.Renderer
         }
         else
         {
-            // Remove the current scenes UI from the UIHandler
-            UIHandler.removeAll();
-
             currentSceneConstructor = sceneConstructor;
             currentScene = null;
 
-            // Clear the shader and texture cache. The data in the previous scene is no longer
-            // relevant so it should be freed.
+            // Clear the cache that are associated with individual scenes. The memory in the
+            // previous scene is no longer relevant so it should be freed.
+            UIHandler.removeAll();
             ShaderCache.removeAll();
             TextureCache.removeAll();
         }

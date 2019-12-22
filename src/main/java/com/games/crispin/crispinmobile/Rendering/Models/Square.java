@@ -1,6 +1,7 @@
 package com.games.crispin.crispinmobile.Rendering.Models;
 
 import com.games.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.games.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
@@ -14,7 +15,7 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * @see         com.games.crispin.crispinmobile.UserInterface.Text
  * @since       1.0
  */
-public class Square extends RenderObject
+public class Square extends Model
 {
     // The number of position components in the position data (2 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 2;

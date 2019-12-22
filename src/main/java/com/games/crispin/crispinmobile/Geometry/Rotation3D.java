@@ -20,16 +20,18 @@ public class Rotation3D extends Rotation2D
     /**
      * Construct a 3D rotation object
      *
+     * @param angle The angle to rotate
      * @param x The x rotation multiplier
      * @param y The y rotation multiplier
      * @param z The z rotation multiplier
      * @since 1.0
      */
-    public Rotation3D(float x,
+    public Rotation3D(float angle,
+                      float x,
                       float y,
                       float z)
     {
-        super(x, y);
+        super(angle, x, y);
         this.z = z;
     }
 
@@ -53,6 +55,6 @@ public class Rotation3D extends Rotation2D
     @Override
     public String toString()
     {
-        return TAG + "[x:" + x + ",y:" + y + ",z:" + z + "]";
+        return TAG + "[angle: " + angle + ",x:" + x + ",y:" + y + ",z:" + z + "]";
     }
 }

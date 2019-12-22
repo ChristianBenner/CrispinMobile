@@ -4,6 +4,8 @@ import android.opengl.Matrix;
 
 import com.games.crispin.crispinmobile.Geometry.Geometry;
 import com.games.crispin.crispinmobile.Geometry.Point3D;
+import com.games.crispin.crispinmobile.Geometry.Rotation2D;
+import com.games.crispin.crispinmobile.Geometry.Rotation3D;
 import com.games.crispin.crispinmobile.Geometry.Scale3D;
 
 public class ModelMatrix
@@ -28,6 +30,21 @@ public class ModelMatrix
         Matrix.rotateM(modelMatrix, 0, angle, x, y, z);
     }
 
+    public void rotate(Rotation3D rotation3D)
+    {
+        rotate(rotation3D.angle, rotation3D.x, rotation3D.y, rotation3D.z);
+    }
+
+    public void rotate(float angle, float x, float y)
+    {
+        Matrix.rotateM(modelMatrix, 0, angle, x, y, 0.0f);
+    }
+
+    public void rotate(Rotation2D rotation2D)
+    {
+        rotate(rotation2D.angle, rotation2D.x, rotation2D.y);
+    }
+
     public void translate(Point3D point3D)
     {
         Matrix.translateM(modelMatrix, 0, point3D.x, point3D.y, point3D.z);
@@ -38,6 +55,11 @@ public class ModelMatrix
         translate(point3D);
         rotate(angle, x, y, z);
         translate(Geometry.invert(point3D));
+    }
+
+    public void rotateAroundPoint(Point3D point3D, Rotation3D rotation3D)
+    {
+        rotateAroundPoint(point3D, rotation3D.angle, rotation3D.x, rotation3D.y, rotation3D.z);
     }
 
     public void scale(Scale3D scale3D)

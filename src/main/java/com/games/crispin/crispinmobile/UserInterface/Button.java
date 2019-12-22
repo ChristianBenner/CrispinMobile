@@ -14,22 +14,48 @@ import static android.opengl.GLES20.glEnable;
 
 public class Button extends InteractableUIObject
 {
+    private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
+    private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.CYAN;
+    private static final Colour DEFAULT_COLOUR_TEXT = Colour.BLACK;
+    private static final Colour DEFAULT_DISABLED_COLOUR_BORDER = Colour.GREY;
+    private static final Colour DEFAULT_DISABLED_COLOUR_BACKGROUND = Colour.LIGHT_GREY;
+    private static final Colour DEFAULT_DISABLED_COLOUR_TEXT = Colour.GREY;
+
+    private Font font;
+    private String textString;
+
     private Text text;
     private Plane plane;
 
     private Point2D position;
     private Scale2D size;
 
-    public Button(Font font, String text)
+    private Colour colourBorder;
+    private Colour colourBackground;
+    private Colour colourText;
+    private Colour disabledColourBorder;
+    private Colour disabledColourBackground;
+    private Colour disabledColourText;
+
+    public Button(Font font, String textString)
     {
+        this.font = font;
+        this.textString = textString;
+        this.colourBorder = DEFAULT_COLOUR_BORDER;
+        this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
+        this.colourText = DEFAULT_COLOUR_TEXT;
+        this.disabledColourBorder = DEFAULT_DISABLED_COLOUR_BORDER;
+        this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
+        this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;
+
         this.position = new Point2D();
         this.size = new Scale2D();
+        this.text = new Text(font, textString, true, true, size.x);
 
-        this.text = new Text(font, text, true, true, 200.0f);
-        this.text.showBounds();
         plane = new Plane(size);
-        plane.setColour(Colour.CYAN);
-        plane.setBorderColour(Colour.BLUE);
+        plane.setColour(colourBackground);
+        plane.setBorderColour(colourBorder);
+        text.setColour(colourText);
 
         setSize(new Scale2D(200.0f, 200.0f));
         setPosition(new Point2D());
@@ -39,6 +65,13 @@ public class Button extends InteractableUIObject
     {
         this.position = new Point2D();
         this.size = new Scale2D();
+        this.colourBorder = DEFAULT_COLOUR_BORDER;
+        this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
+        this.colourText = DEFAULT_COLOUR_TEXT;
+        this.disabledColourBorder = DEFAULT_DISABLED_COLOUR_BORDER;
+        this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
+        this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;
+
         plane = new Plane(size);
 
         setSize(new Scale2D(200.0f, 200.0f));
@@ -50,6 +83,12 @@ public class Button extends InteractableUIObject
     {
         this.position = new Point2D();
         this.size = new Scale2D();
+        this.colourBorder = DEFAULT_COLOUR_BORDER;
+        this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
+        this.colourText = DEFAULT_COLOUR_TEXT;
+        this.disabledColourBorder = DEFAULT_DISABLED_COLOUR_BORDER;
+        this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
+        this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;
 
         plane = new Plane(size);
 
@@ -58,8 +97,61 @@ public class Button extends InteractableUIObject
         setImage(resourceId);
     }
 
+    protected void enabled()
+    {
+        if(text != null)
+        {
+            text.setColour(colourText);
+        }
+
+        plane.setBorderColour(colourBorder);
+        plane.setColour(colourBackground);
+    }
+
+    protected void disabled()
+    {
+        if(text != null)
+        {
+            text.setColour(disabledColourText);
+        }
+
+        plane.setBorderColour(disabledColourBorder);
+        plane.setColour(disabledColourBackground);
+    }
+
+    public void setDisabledBorderColour(Colour colour)
+    {
+        disabledColourBorder = new Colour(colour);
+    }
+
+    public void setDisabledTextColour(Colour colour)
+    {
+        disabledColourText = new Colour(colour);
+    }
+
+    public void setDisabledColour(Colour colour)
+    {
+        disabledColourBackground = new Colour(colour);
+    }
+
+    public Colour getDisabledBorderColour()
+    {
+        return disabledColourBorder;
+    }
+
+    public Colour getDisabledTextColour()
+    {
+        return disabledColourText;
+    }
+
+    public Colour getDisabledColour()
+    {
+        return disabledColourBackground;
+    }
+
     public void setBorder(Border border)
     {
+        colourBorder = border.getColour();
         this.plane.setBorder(border);
     }
 
@@ -115,6 +207,11 @@ public class Button extends InteractableUIObject
     @Override
     public void setWidth(float width)
     {
+        if(text != null)
+        {
+            this.text = new Text(font, textString, true, true, width);
+        }
+
         this.size.x = width;
         updatePosition();
     }
@@ -162,6 +259,12 @@ public class Button extends InteractableUIObject
     {
         this.size.x = width;
         this.size.y = height;
+
+        if(text != null)
+        {
+            this.text = new Text(font, textString, true, true, width);
+        }
+
         updatePosition();
     }
 
@@ -180,7 +283,8 @@ public class Button extends InteractableUIObject
     @Override
     public void setColour(Colour colour)
     {
-        this.plane.setColour(colour);
+        colourBackground = colour;
+        this.plane.setColour(colourBackground);
     }
 
     public void setAlpha(float alpha)
@@ -188,37 +292,51 @@ public class Button extends InteractableUIObject
         this.setOpacity(alpha);
     }
 
-    public void setBackgroundColour(Colour colour)
+    public void setTextColour(Colour colour)
     {
-        this.plane.setColour(colour);
+        colourText = colour;
+
+        if(text != null)
+        {
+            text.setColour(colourText);
+        }
+    }
+
+    public Colour getTextColour()
+    {
+        return colourText;
     }
 
     public void setBorderColour(Colour colour)
     {
-        this.plane.setBorderColour(colour);
+        colourBorder = colour;
+        plane.setBorderColour(colourBorder);
     }
 
     @Override
     public Colour getColour()
     {
-        return this.plane.getColour();
+        return colourBackground;
     }
 
     @Override
     public void setOpacity(float alpha)
     {
-        if(this.text != null)
+        colourBackground.setAlpha(alpha);
+        colourText.setAlpha(alpha);
+
+        if(text != null)
         {
-            this.text.setOpacity(alpha);
+            text.setColour(colourText);
         }
 
-        this.plane.setOpacity(alpha);
+        plane.setColour(colourBackground);
     }
 
     @Override
     public float getOpacity()
     {
-        return this.plane.getOpacity();
+        return colourBackground.getAlpha();
     }
 
     /**
