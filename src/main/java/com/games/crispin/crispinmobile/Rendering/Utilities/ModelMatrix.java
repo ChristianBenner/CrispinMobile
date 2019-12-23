@@ -84,6 +84,11 @@ public class ModelMatrix
         Matrix.scaleM(modelMatrix, 0, scale3D.x, scale3D.y, scale3D.z);
     }
 
+    public void scale(float scale)
+    {
+        Matrix.scaleM(modelMatrix, 0, scale, scale, scale);
+    }
+
     public float[] getModelMatrix()
     {
         return modelMatrix;
