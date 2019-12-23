@@ -4,6 +4,7 @@ import android.content.res.Resources;
 
 import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Rendering.Data.RenderObjectData;
+import com.games.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 import java.io.InputStream;
@@ -115,7 +116,7 @@ public class  OBJModelLoader
      * @see     RenderObject
      * @since   1.0
      */
-    public static RenderObject readObjFile(int resourceId)
+    public static Model readObjFile(int resourceId)
     {
         // Attempt to open and read an OBJ file
         try
@@ -130,7 +131,7 @@ public class  OBJModelLoader
 
             byte[] theFile = new byte[inputStream.available()];
             inputStream.read(theFile);
-            RenderObject ro = processObj(theFile);
+            Model ro = processObj(theFile);
 
             // End of time measurement
             long end = System.nanoTime();
@@ -157,7 +158,7 @@ public class  OBJModelLoader
      * @see     RenderObject
      * @since   1.0
      */
-    private static RenderObject processObj(byte[] theFile)
+    private static Model processObj(byte[] theFile)
     {
         RenderObjectData renderObjectData = new RenderObjectData();
 

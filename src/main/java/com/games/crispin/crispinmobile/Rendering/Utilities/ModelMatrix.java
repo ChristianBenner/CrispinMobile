@@ -18,6 +18,12 @@ public class ModelMatrix
         reset();
     }
 
+    public ModelMatrix(float modelMatrix[])
+    {
+        this.modelMatrix = modelMatrix;
+       // reset();
+    }
+
     // transformations
 
     public void reset()
@@ -50,11 +56,22 @@ public class ModelMatrix
         Matrix.translateM(modelMatrix, 0, point3D.x, point3D.y, point3D.z);
     }
 
+    public void translate(float x, float y, float z)
+    {
+        Matrix.translateM(modelMatrix, 0, x, y, z);
+    }
+
+    public void rotateAroundPoint(float x, float y, float z, float angle, float rx, float ry,
+                                  float rz)
+    {
+        translate(x, y, z);
+        rotate(angle, rx, ry, rz);
+        translate(-x, -y, -z);
+    }
+
     public void rotateAroundPoint(Point3D point3D, float angle, float x, float y, float z)
     {
-        translate(point3D);
-        rotate(angle, x, y, z);
-        translate(Geometry.invert(point3D));
+        rotateAroundPoint(point3D.x, point3D.y, point3D.z, angle, x, y, z);
     }
 
     public void rotateAroundPoint(Point3D point3D, Rotation3D rotation3D)

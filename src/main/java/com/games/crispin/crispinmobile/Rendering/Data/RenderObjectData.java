@@ -1,5 +1,6 @@
 package com.games.crispin.crispinmobile.Rendering.Data;
 
+import com.games.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.games.crispin.crispinmobile.Utilities.Logger;
 
@@ -324,7 +325,7 @@ public class RenderObjectData
      * @return  A RenderObject built from the processed data
      * @since   1.0
      */
-    public RenderObject processData()
+    public Model processData()
     {
         final int NUMBER_OF_FACE_DATA = faceDataArray.size() / dataStride;
 
@@ -405,7 +406,7 @@ public class RenderObjectData
         }
 
         // Create and return a render object using the data format and the vertex data
-        return new RenderObject(vertexDataBuffer,
+        return new Model(vertexDataBuffer,
                 RenderObject.RenderMethod.TRIANGLES,
                 RenderObject.AttributeOrder_t.POSITION_THEN_TEXEL_THEN_NORMAL,
                 NUMBER_OF_FACE_DATA,

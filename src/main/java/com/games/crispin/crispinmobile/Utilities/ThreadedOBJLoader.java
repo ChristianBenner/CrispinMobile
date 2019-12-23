@@ -1,5 +1,6 @@
 package com.games.crispin.crispinmobile.Utilities;
 
+import com.games.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.games.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
@@ -21,7 +22,7 @@ public class ThreadedOBJLoader implements Runnable
     private int resourceId;
 
     // The render object
-    private RenderObject renderObject;
+    private Model model;
 
     // Whether or not the model has been loaded or not
     private boolean complete = false;
@@ -62,8 +63,8 @@ public class ThreadedOBJLoader implements Runnable
     @Override
     public void run()
     {
-        renderObject = OBJModelLoader.readObjFile(resourceId);
-        this.loadListener.onLoad(renderObject);
+        model = OBJModelLoader.readObjFile(resourceId);
+        this.loadListener.onLoad(model);
         complete = true;
     }
 
@@ -84,8 +85,8 @@ public class ThreadedOBJLoader implements Runnable
      * @return  The state of the model loading. True if the model has finished loading, else false
      * @since   1.0
      */
-    public RenderObject getRenderObject()
+    public Model getRenderObject()
     {
-        return renderObject;
+        return model;
     }
 }

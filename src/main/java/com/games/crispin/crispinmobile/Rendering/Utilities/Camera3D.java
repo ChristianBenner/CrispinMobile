@@ -324,7 +324,7 @@ public class Camera3D
     private void updatePerspective()
     {
         // The aspect ratio of the frustrum
-        final float ASPECT_RATIO = (float) Crispin.getSurfaceWidth()/Crispin.getSurfaceHeight();
+        final float ASPECT_RATIO = (float) Crispin.getSurfaceWidth() / Crispin.getSurfaceHeight();
 
         // Generate perspective matrix
         Matrix.perspectiveM(perspectiveMatrix,
