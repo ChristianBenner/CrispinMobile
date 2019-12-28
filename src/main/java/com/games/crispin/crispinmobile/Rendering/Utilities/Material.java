@@ -164,6 +164,20 @@ public class Material
     }
 
     /**
+     * Construct the material object. The constructor sets the texture of the material.
+     *
+     * @param resourceId    The resource ID for the texture to load
+     * @see                 Texture
+     * @since               1.0
+     */
+    public Material(int resourceId)
+    {
+        this(new Texture(resourceId),
+                DEFAULT_UV_MULTIPLIER,
+                new Colour());
+    }
+
+    /**
      * Construct the material object. The constructor sets the colour of the material.
      *
      * @param colour        A texture to apply over the render object
