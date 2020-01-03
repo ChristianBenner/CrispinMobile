@@ -10,7 +10,6 @@ import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Models.FontSquare;
 import com.games.crispin.crispinmobile.Rendering.Shaders.TextShader;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.games.crispin.crispinmobile.Utilities.Logger;
 

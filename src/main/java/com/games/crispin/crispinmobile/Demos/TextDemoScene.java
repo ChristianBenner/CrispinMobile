@@ -8,7 +8,7 @@ import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.games.crispin.crispinmobile.UserInterface.Text;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
+import com.games.crispin.crispinmobile.UserInterface.Font;
 import com.games.crispin.crispinmobile.Utilities.Scene;
 
 /**
@@ -142,7 +142,7 @@ public class TextDemoScene extends Scene
 
         for(int i = 0; i < 10; i++)
         {
-            linearLayout.add(new Text(AILERON_REGULAR, "Test", false, false, 0.0f));
+//            linearLayout.add(new Text(AILERON_REGULAR, "Test", false, false, 0.0f));
         }
 
         demo = new Text(AILERON_REGULAR, "Demo Text");

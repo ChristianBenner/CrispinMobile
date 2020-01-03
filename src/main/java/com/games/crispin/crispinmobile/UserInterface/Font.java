@@ -1,6 +1,7 @@
-package com.games.crispin.crispinmobile.Rendering.Utilities;
+package com.games.crispin.crispinmobile.UserInterface;
 
 import com.games.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
+import com.games.crispin.crispinmobile.Rendering.Utilities.TextureOptions;
 import com.games.crispin.crispinmobile.Utilities.FileResourceReader;
 
 import java.util.HashMap;

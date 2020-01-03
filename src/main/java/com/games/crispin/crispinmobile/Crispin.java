@@ -41,6 +41,9 @@ public class Crispin
     // Application context
     private final Context CONTEXT;
 
+    // Application activity
+    private final AppCompatActivity ACTIVITY;
+
     // Graphics library surface view
     private GLSurfaceView glSurfaceView;
 
@@ -112,6 +115,24 @@ public class Crispin
         if(isInit())
         {
             return crispinInstance.CONTEXT;
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the application activity
+     *
+     * @return  The application activity
+     * @see     AppCompatActivity
+     * @since   1.0
+     */
+    public static Context getActivity()
+    {
+        // Check if the engine is initialised before accessing the activity
+        if(isInit())
+        {
+            return crispinInstance.ACTIVITY;
         }
 
         return null;
@@ -394,6 +415,9 @@ public class Crispin
         // Get the application context
         this.CONTEXT = appCompatActivity.getApplicationContext();
 
+        // Set the activity
+        this.ACTIVITY = appCompatActivity;
+
         // Check if OpenGL ES is supported before continuing
         if(isOpenGLESSupported())
         {
@@ -457,6 +481,9 @@ public class Crispin
     {
         // Get the application context
         this.CONTEXT = appCompatActivity.getApplicationContext();
+
+        // Set the activity
+        this.ACTIVITY = appCompatActivity;
 
         // Check if OpenGL ES is supported before continuing
         if(isOpenGLESSupported())

@@ -1,11 +1,9 @@
 package com.games.crispin.crispinmobile.UserInterface;
 
 import com.games.crispin.crispinmobile.Geometry.Point2D;
-import com.games.crispin.crispinmobile.Geometry.Point3D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.games.crispin.crispinmobile.Rendering.Utilities.Font;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
@@ -15,7 +13,7 @@ import static android.opengl.GLES20.glEnable;
 public class Button extends InteractableUIObject
 {
     private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
-    private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.CYAN;
+    private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.WHITE;
     private static final Colour DEFAULT_COLOUR_TEXT = Colour.BLACK;
     private static final Colour DEFAULT_DISABLED_COLOUR_BORDER = Colour.GREY;
     private static final Colour DEFAULT_DISABLED_COLOUR_BACKGROUND = Colour.LIGHT_GREY;
