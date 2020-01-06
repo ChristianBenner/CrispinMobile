@@ -197,6 +197,21 @@ public class Dropdown extends InteractableUIObject
 
     }
 
+    // Force the selected item to be a specified id
+    public void selectItemInList(int id)
+    {
+        boolean foundItem = false;
+        for(int i = 0; i < items.size() && !foundItem; i++)
+        {
+            if(items.get(i).id == id)
+            {
+                selectedId = id;
+                baseText.setText(items.get(i).text.getTextString());
+                foundItem = true;
+            }
+        }
+    }
+
     @Override
     protected void releaseEvent(Point2D position)
     {

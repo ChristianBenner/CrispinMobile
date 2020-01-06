@@ -3,6 +3,8 @@ package com.games.crispin.crispinmobile.Utilities;
 import android.content.Context;
 import android.graphics.Point;
 import android.opengl.GLSurfaceView;
+import android.os.Looper;
+import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -11,6 +13,8 @@ import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.UserInterface.Button;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -213,6 +217,8 @@ public class SceneManager implements GLSurfaceView.Renderer
     {
         return currentScene;
     }
+
+    private Queue<Pair<Integer, Point2D>> touchEventQueue = new LinkedList<>();
 
     /**
      * Feed a touch event to the current scene

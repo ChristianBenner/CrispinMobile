@@ -4,6 +4,7 @@ import com.games.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
 import com.games.crispin.crispinmobile.Rendering.Utilities.TextureOptions;
 import com.games.crispin.crispinmobile.Utilities.FileResourceReader;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,14 +35,16 @@ public class Font
     private int size;
 
     /**
-     * Load a font using the resource ID of the font file
+     * Load a font using the resource ID of the font file. Also load a list of special characters
+     * that are outside of the default range
      *
-     * @param resourceId    The font file resource ID
-     * @param size          The size of font to load. The larger the size, the higher detail the
-     *                      font is, however this uses more video memory (larger textures).
+     * @param resourceId        The font file resource ID
+     * @param size              The size of font to load. The larger the size, the higher detail the
+     *                          font is, however this uses more video memory (larger textures).
+     * @param specialCharacters A list of extra characters to load outside of the default range
      * @since   1.0
      */
-    public Font(int resourceId, int size)
+    public Font(int resourceId, int size, ArrayList<Character> specialCharacters)
     {
         characters = new HashMap<>();
         this.size = size;
@@ -63,6 +66,31 @@ public class Font
             // Load the character and store in the map
             characters.put(i, new FreeTypeCharData(sixtyTest, size, (byte)i, textureOptions));
         }
+
+        // If special characters have been provided, load them
+        if(specialCharacters != null)
+        {
+            // Load the special characters
+            for(Character specialCharacter : specialCharacters)
+            {
+                // Load the character and store in the map
+                characters.put(specialCharacter, new FreeTypeCharData(sixtyTest, size,
+                        (byte)((char)specialCharacter), textureOptions));
+            }
+        }
+    }
+
+    /**
+     * Load a font using the resource ID of the font file
+     *
+     * @param resourceId    The font file resource ID
+     * @param size          The size of font to load. The larger the size, the higher detail the
+     *                      font is, however this uses more video memory (larger textures).
+     * @since   1.0
+     */
+    public Font(int resourceId, int size)
+    {
+        this(resourceId, size, null);
     }
 
     /**
