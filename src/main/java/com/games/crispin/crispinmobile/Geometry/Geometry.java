@@ -227,6 +227,37 @@ public class Geometry
     }
 
     /**
+     * Scale a given direction by a multiplier
+     *
+     * @param scale Scale multiplier (multiplies all dimensions x and y)
+     * @return      The scaled vector
+     * @since 1.0
+     */
+    public static Vector2D scaleVector(Vector2D vector, float scale)
+    {
+        return new Vector2D(
+                vector.x * scale,
+                vector.y * scale);
+    }
+
+    /**
+     * Scale each dimension of a given direction by a specific multiplier
+     *
+     * @param x Scale multiplier for the x dimension
+     * @param y Scale multiplier for the y dimension
+     * @return  The scaled vector
+     * @since 1.0
+     */
+    public static Vector2D scaleVector(Vector2D vector,
+                                       float x,
+                                       float y)
+    {
+        return new Vector2D(
+                vector.x * x,
+                vector.y * y);
+    }
+
+    /**
      * Get the intersection point between a ray and a plane
      *
      * @param ray   The virtual ray

@@ -442,8 +442,7 @@ public class Crispin
             glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
-                    sceneManager.onTouch(event.getAction(), new Point2D(event.getX(),
-                            event.getY()));
+                    sceneManager.addTouchEvent(event);
                     return true;
                 }
             });

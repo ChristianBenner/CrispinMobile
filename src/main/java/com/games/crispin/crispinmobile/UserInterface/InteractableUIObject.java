@@ -111,7 +111,7 @@ public abstract class InteractableUIObject implements UIObject
     {
         Point2D pos = new Point2D();
         pos.x = pointer.x;
-        pos.y = Crispin.getSurfaceHeight() - pointer.y;
+        pos.y = pointer.y;
 
         // Check if the pointer is inside the button
         if(pos.x > uiObject.getPosition().x && pos.x < uiObject.getPosition().x +
