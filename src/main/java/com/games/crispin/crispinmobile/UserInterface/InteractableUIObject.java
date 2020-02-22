@@ -30,6 +30,13 @@ public abstract class InteractableUIObject implements UIObject
         }
     }
 
+    public void removeAllTouchListeners()
+    {
+        touchListeners.clear();
+
+        UIHandler.removeUI(this);
+    }
+
     public boolean isEnabled()
     {
         return enabled;
@@ -37,18 +44,25 @@ public abstract class InteractableUIObject implements UIObject
 
     public void addTouchListener(TouchListener listener)
     {
+
         touchListeners.add(listener);
 
-        // Add the piece of UI to the UIHandler
-        UIHandler.addUI(this);
+        if(touchListeners.size() == 1)
+        {
+            // Add the piece of UI to the UIHandler
+            UIHandler.addUI(this);
+        }
     }
 
     public void removeTouchListener(TouchListener listener)
     {
         touchListeners.remove(listener);
 
-        // Remove the UI from the UIHandler
-        UIHandler.removeUI(this);
+        if(touchListeners.isEmpty())
+        {
+            // Remove the UI from the UIHandler
+            UIHandler.removeUI(this);
+        }
     }
 
     public boolean isClicked()
@@ -65,6 +79,7 @@ public abstract class InteractableUIObject implements UIObject
             clickEvent(position);
 
             final TouchEvent CLICK_EVENT = new TouchEvent(this, TouchEvent.Event.CLICK, position);
+
             for (final TouchListener buttonListener : touchListeners)
             {
                 buttonListener.touchEvent(CLICK_EVENT);

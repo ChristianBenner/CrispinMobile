@@ -314,7 +314,7 @@ public class Texture
         glBindTexture(GL_TEXTURE_2D, 0);
 
         // Register the texture with the shader cache
-        TextureCache.registerTexture(this);
+        TextureCache.registerTexture(resourceId, this);
     }
 
     /**

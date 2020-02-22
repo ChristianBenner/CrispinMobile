@@ -439,6 +439,7 @@ public class Crispin
             // Set the renderer to the scene manager
             glSurfaceView.setRenderer(sceneManager);
 
+            // Add an on touch listener that will feed the scene manager any motion events
             glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {

@@ -1,8 +1,12 @@
 package com.games.crispin.crispinmobile.Utilities;
 
+import android.util.Pair;
+
 import com.games.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cache shader programs so that they are only loaded once no matter how many times the shader file
@@ -19,16 +23,38 @@ public class ShaderCache
     private static final String TAG = "ShaderCache";
 
     // The array of shader programs
-    private static ArrayList<Shader> shaderArray = new ArrayList<>();
+    private static Map<Integer, Shader> shaderArray = new HashMap<>();
+
+    // Pairing function
+    private static int generateUniqueId(int a, int b)
+    {
+        return (((a + b) * (a + b + 1)) / 2) + b;
+    }
+
+    public static boolean existsInCache(int vertexShaderResourceId,
+                                  int fragmentShaderResourceId)
+    {
+        return shaderArray.containsKey(generateUniqueId(vertexShaderResourceId,
+                fragmentShaderResourceId));
+    }
+
+    public static Shader getShader(int vertexShaderResourceId,
+                                   int fragmentShaderResourceId)
+    {
+        return shaderArray.get(generateUniqueId(vertexShaderResourceId,
+                fragmentShaderResourceId));
+    }
 
     /**
      * Register a shader program in the cache
      *
      * @since 1.0
      */
-    public static void registerShader(Shader shader)
+    public static void registerShader(int vertexShaderResource,
+                                      int fragmentShaderResource,
+                                      Shader shader)
     {
-        shaderArray.add(shader);
+        shaderArray.put(generateUniqueId(vertexShaderResource, fragmentShaderResource), shader);
     }
 
     /**
@@ -40,9 +66,9 @@ public class ShaderCache
     {
         // Iterate through the shader array, destroying all of the shaders. This will also remove
         // shader from OpenGL controlled memory.
-        for(Shader shader : shaderArray)
+        for (Map.Entry<Integer,Shader> shader : shaderArray.entrySet())
         {
-            shader.destroy();
+            shader.getValue().destroy();
         }
 
         shaderArray.clear();
@@ -58,12 +84,12 @@ public class ShaderCache
     public static void reinitialiseAll()
     {
         // Iterate through the shader array, reconstructing all of them
-        for(int i = 0; i < shaderArray.size(); i++)
+        for (Map.Entry<Integer,Shader> shader : shaderArray.entrySet())
         {
             // Attempt to reconstruct
             try
             {
-                shaderArray.get(i).reconstruct();
+                shader.getValue().reconstruct();
             }
             catch(Exception e)
             {

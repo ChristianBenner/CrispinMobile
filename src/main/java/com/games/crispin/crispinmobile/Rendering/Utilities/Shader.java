@@ -340,14 +340,6 @@ public class Shader
         // Create a new shader program using the vertex shader code and fragment shader code
         programId = createProgram(vertexShaderCode, fragmentShaderCode);
 
-        // Register the shader to the cache so that the engine can handle the re-init call.
-        // It is important that the engine handles this call, because the shader memory (all
-        // OpenGL ES memory) is cleared when the Android activity 'onSurfaceCreated' is called.
-        // This happens on screen rotation or when re-opening the application. The re-init call
-        // will re-create the shader's OpenGL ES memory parts. This means that the user doesn't need
-        // to worry about this and can just create new shader's in the constructor of their scenes.
-        ShaderCache.registerShader(this);
-
         lightingShader = false;
 
         // Set the default values of all of the different handles to undefined
@@ -395,6 +387,14 @@ public class Shader
     {
         this(FileResourceReader.readRawResource(vertexShaderResourceId),
                 FileResourceReader.readRawResource(fragmentShaderResourceId));
+
+        // Register the shader to the cache so that the engine can handle the re-init call.
+        // It is important that the engine handles this call, because the shader memory (all
+        // OpenGL ES memory) is cleared when the Android activity 'onSurfaceCreated' is called.
+        // This happens on screen rotation or when re-opening the application. The re-init call
+        // will re-create the shader's OpenGL ES memory parts. This means that the user doesn't need
+        // to worry about this and can just create new shader's in the constructor of their scenes.
+        ShaderCache.registerShader(vertexShaderResourceId, fragmentShaderResourceId, this);
     }
 
     /**

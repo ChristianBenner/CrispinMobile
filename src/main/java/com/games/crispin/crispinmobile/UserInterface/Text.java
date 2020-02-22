@@ -984,6 +984,8 @@ public class Text implements UIObject
                 SpaceLeft := SpaceLeft - (Width(Word) + SpaceWidth)
          */
 
+        width = 0.0f;
+
         squares.clear();
 
         float spaceLeft = maxLineWidth;

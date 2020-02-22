@@ -2,6 +2,7 @@ package com.games.crispin.crispinmobile.Rendering.Utilities;
 
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
+import com.games.crispin.crispinmobile.Utilities.TextureCache;
 
 /**
  * The material class is designed to hold rendering information that can be used on objects.
@@ -172,7 +173,7 @@ public class Material
      */
     public Material(int resourceId)
     {
-        this(new Texture(resourceId),
+        this(TextureCache.loadTexture(resourceId),
                 DEFAULT_UV_MULTIPLIER,
                 new Colour());
     }

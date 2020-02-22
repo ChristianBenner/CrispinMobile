@@ -15,6 +15,12 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class NormalTextureShader extends Shader
 {
+    // The resource ID of the vertex file
+    public static final int VERTEX_FILE = R.raw.normal_texture_vert;
+
+    // The resource ID of the fragment file
+    public static final int FRAGMENT_FILE = R.raw.normal_texture_frag;
+
     /**
      * Create the NormalTextureShader. This compiles the pre-defined vertex and fragment
      * shader's, and links the attributes to the shader base class for a common form of user
@@ -24,7 +30,7 @@ public class NormalTextureShader extends Shader
      */
     public NormalTextureShader()
     {
-        super(R.raw.normal_texture_vert, R.raw.normal_texture_frag);
+        super(VERTEX_FILE, FRAGMENT_FILE);
 
         lightingShader = true;
 

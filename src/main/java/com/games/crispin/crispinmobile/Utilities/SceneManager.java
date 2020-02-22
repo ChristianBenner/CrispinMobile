@@ -278,7 +278,15 @@ public class SceneManager implements GLSurfaceView.Renderer
     {
         // Adds a touch event to the blocking queue so that it can be processed on the OpenGL thread
         // in a safe way
-        if(touchEventQueue.add(event) == false)
+        try
+        {
+            if(touchEventQueue.add(event) == false)
+            {
+                System.err.println("Error, touch event queue is full. It has exceeded that size of " +
+                        "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
+            }
+        }
+        catch (Exception e)
         {
             System.err.println("Error, touch event queue is full. It has exceeded that size of " +
                     "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");

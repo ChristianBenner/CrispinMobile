@@ -1,5 +1,7 @@
 package com.games.crispin.crispinmobile.Geometry;
 
+import com.games.crispin.crispinmobile.Rendering.Models.Square;
+
 /**
  * Geometry class provides some public static functions for useful calculations and operations based
  * on vectors and points.
@@ -119,6 +121,23 @@ public class Geometry
         // area of triangle = base * height so height = triangle / base
         float distanceFromPointToRay = areaOfTriangleTimesTwo / lengthOfBase;
         return distanceFromPointToRay;
+    }
+
+    /**
+     * Get the distance between two points using pythagoras theorem
+     *
+     * @param first     The first point
+     * @param second    The second point
+     * @return          Distance between the two given points
+     * @since 1.0
+     */
+    public static float getDistance(Point2D first, Point2D second)
+    {
+        float a = first.x - second.x;
+        float b = first.y - second.y;
+
+        // c^2 = a^2 + b^2
+        return (float)Math.sqrt((a * a) + (b * b));
     }
 
     /**
