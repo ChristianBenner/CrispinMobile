@@ -1,5 +1,7 @@
 package com.games.crispin.crispinmobile.Geometry;
 
+import com.games.crispin.crispinmobile.Rendering.Models.Square;
+
 /**
  * Geometry class provides some public static functions for useful calculations and operations based
  * on vectors and points.
@@ -122,6 +124,23 @@ public class Geometry
     }
 
     /**
+     * Get the distance between two points using pythagoras theorem
+     *
+     * @param first     The first point
+     * @param second    The second point
+     * @return          Distance between the two given points
+     * @since 1.0
+     */
+    public static float getDistance(Point2D first, Point2D second)
+    {
+        float a = first.x - second.x;
+        float b = first.y - second.y;
+
+        // c^2 = a^2 + b^2
+        return (float)Math.sqrt((a * a) + (b * b));
+    }
+
+    /**
      * Translate a point by a vector
      *
      * @param point3D   The point to translate
@@ -224,6 +243,37 @@ public class Geometry
                 vector.x * x,
                 vector.y * y,
                 vector.z * z);
+    }
+
+    /**
+     * Scale a given direction by a multiplier
+     *
+     * @param scale Scale multiplier (multiplies all dimensions x and y)
+     * @return      The scaled vector
+     * @since 1.0
+     */
+    public static Vector2D scaleVector(Vector2D vector, float scale)
+    {
+        return new Vector2D(
+                vector.x * scale,
+                vector.y * scale);
+    }
+
+    /**
+     * Scale each dimension of a given direction by a specific multiplier
+     *
+     * @param x Scale multiplier for the x dimension
+     * @param y Scale multiplier for the y dimension
+     * @return  The scaled vector
+     * @since 1.0
+     */
+    public static Vector2D scaleVector(Vector2D vector,
+                                       float x,
+                                       float y)
+    {
+        return new Vector2D(
+                vector.x * x,
+                vector.y * y);
     }
 
     /**

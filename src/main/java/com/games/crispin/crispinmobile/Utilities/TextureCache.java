@@ -3,6 +3,8 @@ package com.games.crispin.crispinmobile.Utilities;
 import com.games.crispin.crispinmobile.Rendering.Utilities.Texture;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cache textures so that they are only loaded once no matter how many times the texture file
@@ -19,16 +21,37 @@ public class TextureCache
     private static final String TAG = "TextureCache";
 
     // Array of textures
-    private static ArrayList<Texture> textures = new ArrayList<>();
+    private static Map<Integer, Texture> textures = new HashMap<>();
+
+    public static Texture loadTexture(int resourceId)
+    {
+        if(containsTexture(resourceId))
+        {
+            return getTexture(resourceId);
+        }
+
+        Texture newTexture = new Texture(resourceId);
+        return newTexture;
+    }
+
+    public static boolean containsTexture(int resourceId)
+    {
+        return textures.containsKey(resourceId);
+    }
+
+    public static Texture getTexture(int resourceId)
+    {
+        return textures.get(resourceId);
+    }
 
     /**
      * Register a texture in the cache
      *
      * @since 1.0
      */
-    public static void registerTexture(Texture texture)
+    public static void registerTexture(int resourceId, Texture texture)
     {
-        textures.add(texture);
+        textures.put(resourceId, texture);
     }
 
     /**
@@ -39,9 +62,9 @@ public class TextureCache
     public static void removeAll()
     {
         // Remove the texture from graphics memory
-        for(int i = 0; i < textures.size(); i++)
+        for (Map.Entry<Integer,Texture> texture : textures.entrySet())
         {
-            textures.get(i).destroy();
+            texture.getValue().destroy();
         }
 
         textures.clear();
@@ -58,12 +81,12 @@ public class TextureCache
     public static void reinitialiseAll()
     {
         // Iterate through the textures array, re-initialising all of them
-        for(int i = 0; i < textures.size(); i++)
+        for (Map.Entry<Integer,Texture> texture : textures.entrySet())
         {
             // Attempt to reload the texture
             try
             {
-                textures.get(i).reload();
+                texture.getValue().reload();
             }
             catch(Exception e)
             {

@@ -1,5 +1,6 @@
 package com.games.crispin.crispinmobile.Rendering.Utilities;
 
+import static android.opengl.GLES20.GL_LINEAR;
 import static android.opengl.GLES30.GL_NEAREST;
 import static android.opengl.GLES30.GL_REPEAT;
 import static android.opengl.GLES30.GL_RGBA;
@@ -16,28 +17,31 @@ import static android.opengl.GLES30.GL_UNSIGNED_BYTE;
 public class TextureOptions
 {
     // Default minify filter
-    private static final int DEFAULT_MIN_FILTER = GL_NEAREST;
+    public static final int DEFAULT_MIN_FILTER = GL_NEAREST;
 
     // Default magnifying filter
-    private static final int DEFAULT_MAG_FILTER = GL_NEAREST;
+    public static final int DEFAULT_MAG_FILTER = GL_NEAREST;
+
+    // Linear filter
+    public static final int LINEAR_FILTER = GL_LINEAR;
 
     // Default internal colour format
-    private static final int DEFAULT_INTERNAL_FORMAT = GL_RGBA;
+    public static final int DEFAULT_INTERNAL_FORMAT = GL_RGBA;
 
     // Default colour format
-    private static final int DEFAULT_FORMAT = GL_RGBA;
+    public static final int DEFAULT_FORMAT = GL_RGBA;
 
     // Default texture wrap s-coordinate parameter
-    private static final int DEFAULT_TEXTURE_WRAP_S = GL_REPEAT;
+    public static final int DEFAULT_TEXTURE_WRAP_S = GL_REPEAT;
 
     // Default texture wrap t-coordinate parameter
-    private static final int DEFAULT_TEXTURE_WRAP_T = GL_REPEAT;
+    public static final int DEFAULT_TEXTURE_WRAP_T = GL_REPEAT;
 
     // Default colour data type
-    private static final int DEFAULT_TYPE = GL_UNSIGNED_BYTE;
+    public static final int DEFAULT_TYPE = GL_UNSIGNED_BYTE;
 
     // Default monochrome state
-    private static final boolean DEFAULT_MONOCHROME = false;
+    public static final boolean DEFAULT_MONOCHROME = false;
 
     // The minify filter
     public int minFilter = DEFAULT_MIN_FILTER;

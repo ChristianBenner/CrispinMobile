@@ -439,13 +439,11 @@ public class Crispin
             // Set the renderer to the scene manager
             glSurfaceView.setRenderer(sceneManager);
 
-            glSurfaceView.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    sceneManager.onTouch(event.getAction(), new Point2D(event.getX(),
-                            event.getY()));
-                    return true;
-                }
+            // Add an on touch listener that will feed the scene manager any motion events
+            glSurfaceView.setOnTouchListener((v, event) ->
+            {
+                sceneManager.addTouchEvent(event);
+                return true;
             });
 
             // Set the application view to the graphics view

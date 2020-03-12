@@ -114,4 +114,18 @@ public class Font
     {
         return characters.get(character);
     }
+
+    /**
+     * Destroy all of the textures for the characters (deletes video memory)
+     *
+     * @since   1.0
+     */
+    public void unload()
+    {
+        // Loop through all the characters destroying each texture
+        for(FreeTypeCharData freeTypeCharData : characters.values())
+        {
+            freeTypeCharData.getTexture().destroy();
+        }
+    }
 }

@@ -184,7 +184,7 @@ public class FontSquare extends Square
      */
     public Point2D getCharacterOffset()
     {
-        return this.characterOffset;
+        return new Point2D(this.characterOffset);
     }
 
     /**

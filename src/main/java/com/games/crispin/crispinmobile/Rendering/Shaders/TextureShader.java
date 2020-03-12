@@ -14,6 +14,12 @@ import com.games.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class TextureShader extends Shader
 {
+    // The resource ID of the vertex file
+    public static final int VERTEX_FILE = R.raw.texture_vert;
+
+    // The resource ID of the fragment file
+    public static final int FRAGMENT_FILE = R.raw.texture_frag;
+
     /**
      * Create the TextureShader. This compiles the pre-defined vertex and fragment shader's, and
      * links the attributes to the shader base class for a common form of user interaction.
@@ -22,13 +28,14 @@ public class TextureShader extends Shader
      */
     public TextureShader()
     {
-        super(R.raw.texture_vert, R.raw.texture_frag);
+        super(VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
         textureAttributeHandle = getAttribute("vTextureCoordinates");
         matrixUniformHandle = getUniform("uMatrix");
         colourUniformHandle = getUniform("uColour");
         uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+        uvOffsetUniformHandle = getUniform("uUVOffset");
         textureUniformHandle = getUniform("uTexture");
     }
 }

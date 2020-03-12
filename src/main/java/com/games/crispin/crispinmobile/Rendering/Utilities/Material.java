@@ -1,7 +1,9 @@
 package com.games.crispin.crispinmobile.Rendering.Utilities;
 
+import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Geometry.Scale2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
+import com.games.crispin.crispinmobile.Utilities.TextureCache;
 
 /**
  * The material class is designed to hold rendering information that can be used on objects.
@@ -24,6 +26,9 @@ public class Material
 
     // Default uv multiplier
     private static final Scale2D DEFAULT_UV_MULTIPLIER = new Scale2D();
+
+    // Default uv offset
+    private static final Point2D DEFAULT_UV_OFFSET = new Point2D();
 
     // Default colour
     private static final Colour DEFAULT_COLOUR = Colour.WHITE;
@@ -51,6 +56,9 @@ public class Material
 
     // The UV multiplier for the texture
     private Scale2D uvMultiplier;
+
+    // UV offset for the texture
+    private Point2D uvOffset;
 
     // The colour
     private Colour colour;
@@ -82,9 +90,11 @@ public class Material
      */
     public Material(Texture texture,
                     Scale2D uvMultiplier,
+                    Point2D uvOffset,
                     Colour colour)
     {
         this.uvMultiplier = new Scale2D();
+        this.uvOffset = new Point2D();
         this.colour = new Colour();
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
@@ -95,6 +105,7 @@ public class Material
 
         setTexture(texture);
         setUvMultiplier(uvMultiplier);
+        setUvOffset(uvOffset);
         setColour(colour);
     }
 
@@ -111,6 +122,7 @@ public class Material
     {
         this(texture,
                 DEFAULT_UV_MULTIPLIER,
+                DEFAULT_UV_OFFSET,
                 colour);
     }
 
@@ -128,6 +140,7 @@ public class Material
     {
         this(texture,
                 uvMultiplier,
+                DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -146,6 +159,7 @@ public class Material
     {
         this(null,
                 uvMultiplier,
+                DEFAULT_UV_OFFSET,
                 colour);
     }
 
@@ -160,6 +174,7 @@ public class Material
     {
         this(texture,
                 DEFAULT_UV_MULTIPLIER,
+                DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -172,8 +187,9 @@ public class Material
      */
     public Material(int resourceId)
     {
-        this(new Texture(resourceId),
+        this(TextureCache.loadTexture(resourceId),
                 DEFAULT_UV_MULTIPLIER,
+                DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -188,6 +204,7 @@ public class Material
     {
         this(null,
                 DEFAULT_UV_MULTIPLIER,
+                DEFAULT_UV_OFFSET,
                 colour);
     }
 
@@ -203,6 +220,7 @@ public class Material
     {
         this(null,
                 uvMultiplier,
+                DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -215,6 +233,7 @@ public class Material
     {
         this(null,
                 DEFAULT_UV_MULTIPLIER,
+                DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -346,6 +365,21 @@ public class Material
      * UV co-ordinates and multiplies them by the stated amount. This can be used in scaling
      * multiplying or scaling textures on an object face.
      *
+     * @param sMultiplier   The new multiplier for the S co-ordinate
+     * @param tMultiplier   The new multiplier for the T co-ordinate
+     * @since               1.0
+     */
+    public void setUvMultiplier(float sMultiplier, float tMultiplier)
+    {
+        this.uvMultiplier.x = sMultiplier;
+        this.uvMultiplier.y = tMultiplier;
+    }
+
+    /**
+     * Set the UV co-ordinate multiplier. The UV co-ordinate multiplier takes the current texel data
+     * UV co-ordinates and multiplies them by the stated amount. This can be used in scaling
+     * multiplying or scaling textures on an object face.
+     *
      * @param uvMultiplier  The new UV co-ordinate multiplier
      * @since               1.0
      */
@@ -358,13 +392,54 @@ public class Material
     /**
      * Get the UV co-ordinate multiplier
      *
-     * @return  A boolean of the state of ignoring colour data
+     * @return  Scale2D of the UV multiplier
      * @see     Scale2D
      * @since   1.0
      */
     public Scale2D getUvMultiplier()
     {
         return this.uvMultiplier;
+    }
+
+    /**
+     * Set the UV co-ordinate offset. The UV co-ordinate offsets takes the current texel data
+     * UV co-ordinates and offsets them by the stated amount. This can be used to only display a
+     * specific portion of a texture.
+     *
+     * @param sOffset   The new offset for the S co-ordinate
+     * @param tOffset   The new offset for the T co-ordinate
+     * @since           1.0
+     */
+    public void setUvOffset(float sOffset, float tOffset)
+    {
+        this.uvOffset.x = sOffset;
+        this.uvOffset.y = tOffset;
+    }
+
+    /**
+     * Set the UV co-ordinate offset. The UV co-ordinate offsets takes the current texel data
+     * UV co-ordinates and offsets them by the stated amount. This can be used to only display a
+     * specific portion of a texture.
+     *
+     * @param uvOffset  The new UV co-ordinate offset
+     * @since           1.0
+     */
+    public void setUvOffset(Point2D uvOffset)
+    {
+        this.uvOffset.x = uvOffset.x;
+        this.uvOffset.y = uvOffset.y;
+    }
+
+    /**
+     * Get the UV co-ordinate offset
+     *
+     * @return  Point2D of the UV offset
+     * @see     Scale2D
+     * @since   1.0
+     */
+    public Point2D getUvOffset()
+    {
+        return this.uvOffset;
     }
 
     /**

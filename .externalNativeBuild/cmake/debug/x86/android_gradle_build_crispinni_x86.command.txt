@@ -1,0 +1,8 @@
+Executable : C:\Users\chris\AppData\Local\Android\Sdk\cmake\3.10.2.4988404\bin\cmake.exe
+arguments : 
+--build
+C:\Users\chris\Documents\GitHub\TowerDefenceEvolution\CrispinMobile\.externalNativeBuild\cmake\debug\x86
+--target
+crispinni
+jvmArgs : 
+

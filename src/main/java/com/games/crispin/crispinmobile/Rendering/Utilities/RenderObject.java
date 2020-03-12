@@ -17,6 +17,7 @@ import com.games.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourS
 import com.games.crispin.crispinmobile.Rendering.Shaders.TextureShader;
 import com.games.crispin.crispinmobile.Utilities.Logger;
 import com.games.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
+import com.games.crispin.crispinmobile.Utilities.ShaderCache;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -654,6 +655,14 @@ public class RenderObject
                 modelViewMatrix,
                 0);
 
+        // If the shader UV offset uniform handle is not invalid, upload the UV offset data
+        if(shader.getUvOffsetUniformHandle() != INVALID_UNIFORM_HANDLE)
+        {
+            glUniform2f(shader.getUvOffsetUniformHandle(),
+                    material.getUvOffset().x,
+                    material.getUvOffset().y);
+        }
+
         // If the shader colour uniform handle is not invalid, upload the colour data
         if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
         {
@@ -806,21 +815,29 @@ public class RenderObject
                     material.getColour().getAlpha());
         }
 
+        // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+        // data
+        if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
+        {
+            glUniform2f(shader.getUvMultiplierUniformHandle(),
+                    material.getUvMultiplier().x,
+                    material.getUvMultiplier().y);
+        }
+
+        // If the shader UV offset uniform handle is not invalid, upload the UV offset data
+        if(shader.getUvOffsetUniformHandle() != INVALID_UNIFORM_HANDLE)
+        {
+            glUniform2f(shader.getUvOffsetUniformHandle(),
+                    material.getUvOffset().x,
+                    material.getUvOffset().y);
+        }
+
         // If the shader texture uniform handle is not invalid, upload the texture unit
         if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
         {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
             glUniform1i(shader.getTextureUniformHandle(), 0);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
         }
 
         // If the shader supports a specular map and the material has one, supply it to the
@@ -831,15 +848,6 @@ public class RenderObject
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
             glUniform1i(shader.getSpecularMapUniformHandle(), 1);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
         }
 
         // If the shader supports a normal map and the material has one, supply it to the shader
@@ -848,15 +856,6 @@ public class RenderObject
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
             glUniform1i(shader.getNormalMapUniformHandle(), 2);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
         }
 
         handleAttributes(true);
@@ -931,7 +930,17 @@ public class RenderObject
             else if(supportsNormals && supportsTexture)
             {
                 System.out.println("NORMAL AND TEXTURE SHADER");
-                shader = new NormalTextureShader();
+
+                if(ShaderCache.existsInCache(NormalTextureShader.VERTEX_FILE,
+                        NormalTextureShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(NormalTextureShader.VERTEX_FILE,
+                            NormalTextureShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new NormalTextureShader();
+                }
             }
             else if(supportsNormals && supportsColourPerAttrib)
             {
@@ -940,27 +949,81 @@ public class RenderObject
             else if(supportsNormals)
             {
                 System.out.println("NORMAL SHADER");
-                shader = new NormalShader();
+
+                if(ShaderCache.existsInCache(NormalShader.VERTEX_FILE,
+                        NormalShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(NormalShader.VERTEX_FILE,
+                            NormalShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new NormalShader();
+                }
             }
             else if(supportsColourPerAttrib && supportsTexture)
             {
+                System.out.println("TextureAttributeColourShader");
+
                 // A colour attribute and texture shader
-                shader = new TextureAttributeColourShader();
+                if(ShaderCache.existsInCache(TextureAttributeColourShader.VERTEX_FILE,
+                        TextureAttributeColourShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(TextureAttributeColourShader.VERTEX_FILE,
+                            TextureAttributeColourShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new TextureAttributeColourShader();
+                }
             }
             else if(supportsTexture)
             {
+                System.out.println("TEXTURE SHADER");
+
                 // Just a texture shader
-                shader = new TextureShader();
+                if(ShaderCache.existsInCache(TextureShader.VERTEX_FILE,
+                        TextureShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(TextureShader.VERTEX_FILE,
+                            TextureShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new TextureShader();
+                }
             }
             else if(supportsColourPerAttrib)
             {
+                System.out.println("AttributeColourShader");
+
                 // Just a colour attribute shader
-                shader = new AttributeColourShader();
+                if(ShaderCache.existsInCache(AttributeColourShader.VERTEX_FILE,
+                        AttributeColourShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(AttributeColourShader.VERTEX_FILE,
+                            AttributeColourShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new AttributeColourShader();
+                }
             }
             else
             {
+                System.out.println("UniformColourShader");
+
                 // Just use a colour shader
-                shader = new UniformColourShader();
+                if(ShaderCache.existsInCache(UniformColourShader.VERTEX_FILE,
+                        UniformColourShader.FRAGMENT_FILE))
+                {
+                    shader = ShaderCache.getShader(UniformColourShader.VERTEX_FILE,
+                            UniformColourShader.FRAGMENT_FILE);
+                }
+                else
+                {
+                    shader = new UniformColourShader();
+                }
             }
         }
     }

@@ -37,7 +37,7 @@ public class Shader
     private static final String TAG = "Shader";
 
     // Undefined handle value
-    private static int UNDEFINED_HANDLE = -1;
+    protected static int UNDEFINED_HANDLE = -1;
 
     // Vertex shader code
     private String vertexShaderCode;
@@ -78,6 +78,8 @@ public class Shader
     // UV Multiplier Uniform handle
     protected int uvMultiplierUniformHandle;
 
+    protected int uvOffsetUniformHandle;
+
     // Projection matrix uniform handle
     protected int projectionMatrixUniformHandle;
 
@@ -89,6 +91,11 @@ public class Shader
 
     // Is the shader a lighting shader
     protected boolean lightingShader;
+
+    public boolean validHandle(int handle)
+    {
+        return handle != UNDEFINED_HANDLE;
+    }
 
     /**
      * Enable the shader program. Should be used before making render calls to objects that you wish
@@ -268,6 +275,17 @@ public class Shader
     }
 
     /**
+     * Get the UV offset uniform handle
+     *
+     * @return  Integer ID of the UV offset uniform handle
+     * @since   1.0
+     */
+    public int getUvOffsetUniformHandle()
+    {
+        return uvOffsetUniformHandle;
+    }
+
+    /**
      * Get the projection matrix uniform handle
      *
      * @return  Integer ID of the projection matrix uniform handle
@@ -340,14 +358,6 @@ public class Shader
         // Create a new shader program using the vertex shader code and fragment shader code
         programId = createProgram(vertexShaderCode, fragmentShaderCode);
 
-        // Register the shader to the cache so that the engine can handle the re-init call.
-        // It is important that the engine handles this call, because the shader memory (all
-        // OpenGL ES memory) is cleared when the Android activity 'onSurfaceCreated' is called.
-        // This happens on screen rotation or when re-opening the application. The re-init call
-        // will re-create the shader's OpenGL ES memory parts. This means that the user doesn't need
-        // to worry about this and can just create new shader's in the constructor of their scenes.
-        ShaderCache.registerShader(this);
-
         lightingShader = false;
 
         // Set the default values of all of the different handles to undefined
@@ -361,6 +371,7 @@ public class Shader
         normalMapUniformHandle = UNDEFINED_HANDLE;
         matrixUniformHandle = UNDEFINED_HANDLE;
         uvMultiplierUniformHandle = UNDEFINED_HANDLE;
+        uvOffsetUniformHandle = UNDEFINED_HANDLE;
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
         viewMatrixUniformHandle = UNDEFINED_HANDLE;
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
@@ -395,6 +406,14 @@ public class Shader
     {
         this(FileResourceReader.readRawResource(vertexShaderResourceId),
                 FileResourceReader.readRawResource(fragmentShaderResourceId));
+
+        // Register the shader to the cache so that the engine can handle the re-init call.
+        // It is important that the engine handles this call, because the shader memory (all
+        // OpenGL ES memory) is cleared when the Android activity 'onSurfaceCreated' is called.
+        // This happens on screen rotation or when re-opening the application. The re-init call
+        // will re-create the shader's OpenGL ES memory parts. This means that the user doesn't need
+        // to worry about this and can just create new shader's in the constructor of their scenes.
+        ShaderCache.registerShader(vertexShaderResourceId, fragmentShaderResourceId, this);
     }
 
     /**

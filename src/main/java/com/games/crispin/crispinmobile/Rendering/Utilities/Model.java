@@ -53,7 +53,6 @@ public class Model extends RenderObject
         scale = new Scale3D();
         rotationPoint = new Point3D();
         rotationPointAngle = new Rotation3D();
-
     }
 
     public Model(float[] positionBuffer,

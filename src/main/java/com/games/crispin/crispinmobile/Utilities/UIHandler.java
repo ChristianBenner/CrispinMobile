@@ -45,17 +45,20 @@ public class UIHandler
     {
         for(int i = 0; i < uiObjects.size(); i++)
         {
-            switch (type) {
-                case MotionEvent.ACTION_DOWN:
-                    if (InteractableUIObject.interacts(uiObjects.get(i), position)) {
-                        uiObjects.get(i).sendClickEvent(position);
-                    }
-                    break;
-                case MotionEvent.ACTION_UP:
-                    if (uiObjects.get(i).isClicked()) {
-                        uiObjects.get(i).sendReleaseEvent(position);
-                    }
-                    break;
+            if(uiObjects.get(i).isEnabled())
+            {
+                switch (type) {
+                    case MotionEvent.ACTION_DOWN:
+                        if (InteractableUIObject.interacts(uiObjects.get(i), position)) {
+                            uiObjects.get(i).sendClickEvent(position);
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        if (uiObjects.get(i).isClicked()) {
+                            uiObjects.get(i).sendReleaseEvent(position);
+                        }
+                        break;
+                }
             }
         }
     }

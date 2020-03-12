@@ -281,7 +281,7 @@ public class Text implements UIObject
     private TextShader textShader;
 
     // Array of font square render objects (render objects designed to handle character strings)
-    private ArrayList<FontSquare> squares;
+    protected ArrayList<FontSquare> squares;
 
     // Timing used in wiggle calculation
     private float wiggleTime;
@@ -984,6 +984,8 @@ public class Text implements UIObject
                 SpaceLeft := SpaceLeft - (Width(Word) + SpaceWidth)
          */
 
+        width = 0.0f;
+
         squares.clear();
 
         float spaceLeft = maxLineWidth;
@@ -1037,12 +1039,12 @@ public class Text implements UIObject
      */
     public void setColour(Colour colour)
     {
-        this.colour = colour;
+        this.colour = new Colour(colour);
 
         // Iterate through all of the characters setting their new material colours
         for(int i = 0; i < squares.size(); i++)
         {
-            squares.get(i).getMaterial().setColour(colour);
+            squares.get(i).getMaterial().setColour(this.colour);
         }
     }
 

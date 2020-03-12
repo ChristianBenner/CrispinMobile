@@ -8,6 +8,7 @@ import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.games.crispin.crispinmobile.Crispin;
 import com.games.crispin.crispinmobile.Geometry.Point2D;
 import com.games.crispin.crispinmobile.Rendering.Data.Colour;
 import com.games.crispin.crispinmobile.UserInterface.Button;
@@ -15,6 +16,8 @@ import com.games.crispin.crispinmobile.UserInterface.Button;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -78,6 +81,9 @@ public class SceneManager implements GLSurfaceView.Renderer
     // Number of frames to skip before re-calculating delta time value
     private static final int FRAMES_TO_CALCULATE = 15;
 
+    // Max size of the touch event blocking queue
+    private static final int TOUCH_EVENT_BLOCKING_QUEUE_SIZE = 10;
+
     // The current scene
     private Scene currentScene;
 
@@ -119,6 +125,9 @@ public class SceneManager implements GLSurfaceView.Renderer
 
     // Time paused in nanoseconds during the timing calculations
     private long timePausedInNanos;
+
+    // Touch event thread sync queue
+    private BlockingQueue<MotionEvent> touchEventQueue;
 
     /**
      * Retrieve the singleton instance of the scene manager. The scene manager can only be
@@ -203,6 +212,7 @@ public class SceneManager implements GLSurfaceView.Renderer
             UIHandler.removeAll();
             ShaderCache.removeAll();
             TextureCache.removeAll();
+            FontCache.removeAll();
         }
     }
 
@@ -218,25 +228,76 @@ public class SceneManager implements GLSurfaceView.Renderer
         return currentScene;
     }
 
-    private Queue<Pair<Integer, Point2D>> touchEventQueue = new LinkedList<>();
-
     /**
-     * Feed a touch event to the current scene
+     * Feed the touch events to the current scene and the user interface handler
      *
-     * @param type  The type of touch event
-     * @param position  The position of the pointer
      * @since 1.0
      */
-    public void onTouch(int type, Point2D position)
+    public void sendTouchEvents()
     {
         // Only pass to current scene if the scene is initialised
         if(currentScene != null)
         {
-            currentScene.touch(type, position);
+            while (!touchEventQueue.isEmpty())
+            {
+                try
+                {
+                    // Retrieve the event from the queue
+                    MotionEvent event = touchEventQueue.take();
 
-            // Send the touch event to the UI handler to activate touch on the ui elements on the
-            // current scene
-            UIHandler.sendTouchEvent(type, position);
+                    // Retrieve the action of the event
+                    int action = event.getAction();
+
+                    // Retrieve the position of the event
+                    Point2D position = new Point2D(event.getX(), Crispin.getSurfaceHeight() -
+                            event.getY());
+
+                    if(event.getAction() == MotionEvent.ACTION_DOWN)
+                    {
+                        System.out.println("Event Y: " + event.getY());
+                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " +
+                                position.y + ")");
+                    }
+
+                    // Provide the current scene with the motion event information
+                    currentScene.touch(action, position);
+
+                    // Send the touch event to the UI handler to activate touch on the ui elements on the
+                    // current scene
+                    UIHandler.sendTouchEvent(action, position);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    /**
+     * Add a touch event to the touch event blocking queue. This is so that the touch event can run
+     * on the correct thread (the OpenGL thread used elsewhere in scenes) and so that it can be
+     * accomplished in a thread safe manner.
+     *
+     * @param event  The motion event
+     * @since 1.0
+     */
+    public void addTouchEvent(MotionEvent event)
+    {
+        // Adds a touch event to the blocking queue so that it can be processed on the OpenGL thread
+        // in a safe way
+        try
+        {
+            if(touchEventQueue.add(event) == false)
+            {
+                System.err.println("Error, touch event queue is full. It has exceeded that size of " +
+                        "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
+            }
+        }
+        catch (Exception e)
+        {
+            System.err.println("Error, touch event queue is full. It has exceeded that size of " +
+                    "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
         }
     }
 
@@ -479,7 +540,11 @@ public class SceneManager implements GLSurfaceView.Renderer
 
         updateCount++;
 
+        // Run the current scenes update function
         currentScene.update(deltaTime);
+
+        // Send the touch events to the current scene
+        sendTouchEvents();
 
         // Always clear the buffer bit
         glClear(GL_COLOR_BUFFER_BIT);
@@ -549,6 +614,7 @@ public class SceneManager implements GLSurfaceView.Renderer
         surfaceHeight = 0;
         startSceneSpecified = false;
         targetRefreshRate = DEFAULT_REFRESH_RATE;
+        touchEventQueue = new LinkedBlockingQueue<>(TOUCH_EVENT_BLOCKING_QUEUE_SIZE);
         resetTimingValues();
     }
 
