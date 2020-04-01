@@ -15,37 +15,81 @@ public class AnimatedSquare extends Square
     private int animationDurationMs;
     private int animationFrameDurationMs;
     private long lastFrameStart = 0;
+    private boolean repeat;
+    private boolean reverseFrameCount;
 
     public AnimatedSquare(Material material, int spriteHeight, int animationDurationMs)
     {
         super(material);
+        this.repeat = true;
+        this.reverseFrameCount = false;
         this.material = material;
-        this.spriteHeight = spriteHeight;
-
-        if(spriteHeight == 0)
-        {
-            spriteHeight = 1;
-        }
-
-        frames = material.getTexture().getHeight() / spriteHeight;
-        step = 1f / frames;
-
         this.animationDurationMs = animationDurationMs;
-        this.animationFrameDurationMs = animationDurationMs / frames;
-        lastFrameStart = System.currentTimeMillis();
 
-        material.setUvMultiplier(1f, step);
+        setSpriteHeight(spriteHeight);
+    }
+
+    // false to repeat the animation (go to frame 0 after the last frame)
+    // true to traverse back through the frames back to 0
+    public void setReverse(boolean reverse)
+    {
+        this.repeat = !reverse;
+    }
+
+    // true to repeat the animation (go to frame 0 after the last frame)
+    // false to traverse back through the frames back to 0
+    public void setRepeat(boolean repeat)
+    {
+        this.repeat = repeat;
+    }
+
+    public int getCurrentFrame()
+    {
+        return currentFrame;
+    }
+
+    public int getFrames()
+    {
+        return frames;
     }
 
     public void updateAnimation()
     {
         if(System.currentTimeMillis() > lastFrameStart + animationFrameDurationMs)
         {
-            currentFrame++;
-            if(currentFrame >= frames)
+            if(repeat)
             {
-                currentFrame = 0;
+                currentFrame++;
+
+                if(currentFrame >= frames)
+                {
+                    currentFrame = 0;
+                }
             }
+            else
+            {
+                if(reverseFrameCount)
+                {
+                    if(currentFrame == 1)
+                    {
+                        reverseFrameCount = false;
+                        currentFrame = 0;
+                    }
+                    else
+                    {
+                        currentFrame--;
+                    }
+                }
+                else
+                {
+                    currentFrame++;
+                    if(currentFrame >= frames - 1)
+                    {
+                        reverseFrameCount = true;
+                    }
+                }
+            }
+
 
             material.setUvOffset(0.0f, step * currentFrame);
 
@@ -56,8 +100,20 @@ public class AnimatedSquare extends Square
     public void setSpriteHeight(int height)
     {
         // Calculate frames from sprite height
-        frames = material.getTexture().getHeight() / height;
         this.spriteHeight = height;
+
+        if(spriteHeight == 0)
+        {
+            spriteHeight = 1;
+        }
+
+        frames = material.getTexture().getHeight() / spriteHeight;
+        step = 1f / frames;
+
+        this.animationFrameDurationMs = animationDurationMs / frames;
+        lastFrameStart = System.currentTimeMillis();
+
+        material.setUvMultiplier(1f, step);
     }
 
     public void setMaterial(Material material, int spriteHeight)

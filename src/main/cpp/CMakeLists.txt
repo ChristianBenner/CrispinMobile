@@ -10,7 +10,15 @@ project(CrispinMobile)
 message("Adding freetype library")
 add_subdirectory(freetype-2.9)
 message("Added freetype library")
-message("Finished CMake Setup")
+
+message("Adding Oboe audio library")
+add_subdirectory(oboe)
+include_directories(oboe/include)
+message("Added Oboe audio library")
+
 message("Adding Crispin Native Interface library")
 add_subdirectory(nativeinterface)
 message("Added Crispin Native Interface library")
+
+
+message("Finished CMake Setup")

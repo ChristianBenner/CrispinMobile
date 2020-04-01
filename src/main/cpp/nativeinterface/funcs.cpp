@@ -5,6 +5,7 @@
 #include <zlib.h>
 #include <sstream>
 #include <android/log.h>
+#include <oboe/Oboe.h>
 
 // Tag used for logging
 static const char* TAG = "CrispinNI";
