@@ -14,10 +14,16 @@ import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
-public class LinearLayout implements UIObject
+public class LinearLayout extends Plane
 {
     private static float DEFAULT_PADDING_X = 10.0f;
     private static float DEFAULT_PADDING_Y = 10.0f;
+
+    public enum Orientation
+    {
+        VERTICAL,
+        HORIZONTAL
+    }
 
     private boolean vertical;
     private ArrayList<UIObject> uiObjects;
@@ -30,27 +36,19 @@ public class LinearLayout implements UIObject
     private boolean automaticWidth;
     private boolean automaticHeight;
 
-    private Plane background;
     private boolean showBackground;
-
-    private Point2D position;
-    private Scale2D size;
 
     public LinearLayout(Point2D position, Scale2D size, boolean vertical)
     {
-        this.position = new Point2D();
-        this.size = new Scale2D();
         this.padding = new Scale2D();
-
         this.vertical = vertical;
         this.showBackground = false;
-        this.background = new Plane(position, size);
-        background.setBorderColour(Colour.BLACK);
 
         this.automaticWidth = size.x == 0.0f;
         this.automaticHeight = size.y == 0.0f;
 
         uiObjects = new ArrayList<>();
+
         endX = 0.0f;
         endY = 0.0f;
 
@@ -92,6 +90,11 @@ public class LinearLayout implements UIObject
         uiObjects.add(uiObject);
     }
 
+    public Scale2D getPadding()
+    {
+        return padding;
+    }
+
     public void setPadding(Scale2D padding)
     {
         this.padding.x = padding.x;
@@ -100,67 +103,71 @@ public class LinearLayout implements UIObject
         updateUIElementPositions();
     }
 
-    private void updatePosition()
+    public void setOrientation(Orientation orientation)
     {
-        // Resize plane
-        background.setPosition(position);
-
-        if(!automaticHeight)
+        if(orientation == Orientation.VERTICAL)
         {
-            background.setSize(size);
+            vertical = true;
         }
-
-        if(automaticWidth)
+        else
         {
-            size.x = Crispin.getSurfaceWidth() - position.x;
+            vertical = false;
         }
 
         updateUIElementPositions();
     }
 
+    /**
+     * Set the position of the user interface
+     *
+     * @param position  The new position for the user interface
+     * @since 1.0
+     */
     @Override
     public void setPosition(Point2D position)
     {
-        this.setPosition(position.x, position.y);
+        super.setPosition(position);
+        updateUIElementPositions();
     }
 
+    /**
+     * Set the position of the user interface
+     *
+     * @param x The x-coordinate
+     * @param y The y-coordinate
+     * @since 1.0
+     */
     @Override
     public void setPosition(float x, float y)
     {
-        this.position.x = x;
-        this.position.y = y;
-        updatePosition();
+        super.setPosition(x, y);
+        updateUIElementPositions();
     }
 
-    @Override
-    public Point2D getPosition()
-    {
-        return position;
-    }
-
+    /**
+     * Set the width of the UI object
+     *
+     * @param width The new width of the object
+     * @since 1.0
+     */
     @Override
     public void setWidth(float width)
     {
-        this.size.x = width;
-        updatePosition();
+        super.setWidth(width);
+        updateUIElementPositions();
     }
 
-    @Override
-    public float getWidth()
-    {
-        return size.x;
-    }
-
+    /**
+     * Set the height of the UI object
+     *
+     * @param height    The new width of the object
+     * @since 1.0
+     */
     @Override
     public void setHeight(float height)
     {
-        this.size.y = height;
-        updatePosition();
-    }
-
-    @Override
-    public float getHeight() {
-        return size.y;
+        super.setHeight(height);
+        updateUIElementPositions();
     }
 
     /**
@@ -172,7 +179,8 @@ public class LinearLayout implements UIObject
     @Override
     public void setSize(Scale2D size)
     {
-        this.setSize(size.x, size.y);
+        super.setSize(size.x, size.y);
+        updateUIElementPositions();
     }
 
     /**
@@ -185,32 +193,15 @@ public class LinearLayout implements UIObject
     @Override
     public void setSize(float width, float height)
     {
-        this.size.x = width;
-        this.size.y = height;
-        updatePosition();
+        super.setSize(width, height);
+        updateUIElementPositions();
     }
 
-    /**
-     * Get the size of the UI object
-     *
-     * @return The size of the UI object
-     * @since 1.0
-     */
     @Override
-    public Scale2D getSize()
-    {
-        return new Scale2D();
-    }
-
     public void setColour(Colour colour)
     {
         this.showBackground = true;
-        this.background.setColour(colour);
-    }
-
-    @Override
-    public Colour getColour() {
-        return null;
+        super.setColour(colour);
     }
 
     private void updateUIElementPositions()
@@ -220,9 +211,24 @@ public class LinearLayout implements UIObject
         cursorX = 0.0f;
         cursorY = 0.0f;
 
-        for(UIObject uiObject : uiObjects)
+        if(uiObjects != null)
         {
-            positionUIObject(uiObject);
+            for(UIObject uiObject : uiObjects)
+            {
+                positionUIObject(uiObject);
+            }
+        }
+    }
+
+    private float getRemainingSpace()
+    {
+        if(vertical)
+        {
+            return getHeight() - (padding.y * 2.0f) - cursorY;
+        }
+        else
+        {
+            return getWidth() - (padding.x * 2.0f) - cursorX;
         }
     }
 
@@ -235,6 +241,8 @@ public class LinearLayout implements UIObject
             final float POS_Y = position.y + cursorY + padding.y;
 
             cursorY += padding.y + uiObject.getHeight();
+
+            uiObject.setPosition(padding.x + POS_X, POS_Y);
         }
         else
         {
@@ -247,8 +255,8 @@ public class LinearLayout implements UIObject
             }
 
             // UI start position
-            final float POS_X = position.x + cursorX;
-            final float POS_Y = position.y + cursorY;
+            final float POS_X = padding.x + position.x + cursorX;
+            final float POS_Y = padding.y + position.y + cursorY;
 
             // Set the end of the UI object as the new cursorX
             cursorX += padding.x + uiObject.getWidth();
@@ -268,7 +276,7 @@ public class LinearLayout implements UIObject
                 if(automaticHeight && NEW_HEIGHT > size.y)
                 {
                     size.y = NEW_HEIGHT;
-                    background.setHeight(size.y);
+                    super.setHeight(size.y);
                 }
             }
 
@@ -278,14 +286,14 @@ public class LinearLayout implements UIObject
 
     public void add(UIObject uiObject)
     {
-        uiObject.setOpacity(background.getOpacity());
+        uiObject.setOpacity(super.getOpacity());
         this.uiObjects.add(uiObject);
         positionUIObject(uiObject);
     }
 
     public void setOpacity(float alpha)
     {
-        background.setOpacity(alpha);
+        super.setOpacity(alpha);
 
         for(int i = 0; i < uiObjects.size(); i++)
         {
@@ -317,7 +325,7 @@ public class LinearLayout implements UIObject
 
         if(showBackground)
         {
-            background.draw(camera);
+            super.draw(camera);
         }
 
         // Iterate through the ui objects drawing them

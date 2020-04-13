@@ -211,6 +211,22 @@ public class Geometry
     }
 
     /**
+     * Translate a point by another point
+     *
+     * @param pointOne  The first point
+     * @param pointTwo  The second point
+     * @return          The translated point
+     * @since 1.0
+     */
+    public static Point2D translate(Point2D pointOne,
+                                    Point2D pointTwo)
+    {
+        return new Point2D(
+                pointOne.x + pointTwo.x,
+                pointOne.y + pointTwo.y);
+    }
+
+    /**
      * Scale a given direction by a multiplier
      *
      * @param scale Scale multiplier (multiplies all dimensions x, y and z)

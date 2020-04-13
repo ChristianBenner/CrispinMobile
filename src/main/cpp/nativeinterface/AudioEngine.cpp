@@ -1,8 +1,7 @@
 
 #include <memory>
 #include "AudioEngine.h"
-#include "../oboe/apps/fxlab/app/src/main/cpp/logging_macros.h"
-#include "../oboe/apps/OboeTester/app/src/main/cpp/flowunits/SawtoothOscillator.h"
+#include "../oboe/src/common/OboeDebug.h"
 
 void AudioEngine::start()
 {
