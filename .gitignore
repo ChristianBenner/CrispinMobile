@@ -1,2 +1,12 @@
-/build
-src/main/cpp/oboe/
+crispinmobile/build
+crispinmobile/.cxx
+crispinmobile/libs
+crispinmobile/src/main/cpp
+crispinmobile/src/main/freetype*
+crispinmobile/src/main/oboe*
+crispinmobile/src/main/CMakeFiles
+crispinmobile/src/main/nativeinterface
+.externalNativeBuild
+.idea
+.gradle
+gradle
