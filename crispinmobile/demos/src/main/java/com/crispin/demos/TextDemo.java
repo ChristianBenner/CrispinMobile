@@ -1,4 +1,4 @@
-package com.crispin.textdemo;
+package com.crispin.demos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,9 +6,9 @@ import android.os.Bundle;
 import android.view.Window;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Demos.TextDemoScene;
+import com.crispin.demos.scenes.TextDemoScene;
 
-public class MainActivity extends AppCompatActivity {
+public class TextDemo extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

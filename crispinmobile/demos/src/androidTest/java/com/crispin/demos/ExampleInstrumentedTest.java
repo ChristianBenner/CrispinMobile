@@ -1,4 +1,4 @@
-package com.crispin.textdemo;
+package com.crispin.demos;
 
 import android.content.Context;
 

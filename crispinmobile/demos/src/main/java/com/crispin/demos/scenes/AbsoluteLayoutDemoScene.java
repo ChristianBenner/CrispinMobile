@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Demos;
+package com.crispin.demos.scenes;
 
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.R;
@@ -7,9 +7,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.AbsoluteLayout;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
-import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Text;
-import com.crispin.crispinmobile.UserInterface.UIObject;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 
