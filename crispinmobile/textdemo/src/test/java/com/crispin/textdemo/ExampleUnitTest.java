@@ -1,4 +1,4 @@
-package com.crispin.test;
+package com.crispin.textdemo;
 
 import org.junit.Test;
 
