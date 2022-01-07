@@ -9,7 +9,7 @@ crispinmobile/src/main/nativeinterface
 .externalNativeBuild
 .idea
 .gradle
-gradle
+gradle/wrapper/gradle-wrapper.jar
 *.iml
 /local.properties
 /.idea/caches
