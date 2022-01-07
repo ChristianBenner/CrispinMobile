@@ -6,20 +6,14 @@ cmake_minimum_required(VERSION 3.10.2)
 # Create project wide CMake
 project(CrispinMobile)
 
-#include(DownloadProject.cmake)
-#download_project(PROJ           freetype
-#        GIT_REPOSITORY https://gitlab.freedesktop.org/freetype/freetype.git
-#        GIT_TAG        VER-2-11-1
-#        )
-
 # Add the library sub directories (each have their own CMakeLists.txt)
 message("Adding freetype library")
-add_subdirectory(freetype-2.9)
+add_subdirectory(freetype)
 message("Added freetype library")
 
 message("Adding Oboe audio library")
-add_subdirectory(oboe-1.6.1)
-include_directories(oboe-1.6.1/include)
+add_subdirectory(oboe)
+include_directories(oboe/include)
 message("Added Oboe audio library")
 
 message("Adding Crispin Native Interface library")

@@ -1,7 +1,7 @@
 
 #include <memory>
 #include "AudioEngine.h"
-#include "../oboe-1.6.1/src/common/OboeDebug.h"
+#include "../oboe/src/common/OboeDebug.h"
 
 void AudioEngine::start()
 {
