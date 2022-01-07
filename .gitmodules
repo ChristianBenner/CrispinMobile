@@ -2,7 +2,7 @@
 	path = crispinmobile/src/main/cpp/freetype
 	url = https://gitlab.freedesktop.org/freetype/freetype.git
 	branch = VER-2-11-1
-[submodule "crispinmobile/src/oboe"]
-	path = crispinmobile/src/oboe
+[submodule "crispinmobile/src/main/cpp/oboe"]
+	path = crispinmobile/src/main/cpp/oboe
 	url = https://github.com/google/oboe.git
 	branch = 1.6.1
