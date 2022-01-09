@@ -1,11 +1,13 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.GL_POINTS;
-import static android.opengl.GLES20.GL_TEXTURE1;
-import static android.opengl.GLES20.GL_TEXTURE2;
-import static android.opengl.GLES20.glUniform2f;
-import static android.opengl.GLES20.glUniform4f;
+import static android.opengl.GLES30.GL_LINES;
+import static android.opengl.GLES30.GL_POINTS;
+import static android.opengl.GLES30.GL_TEXTURE1;
+import static android.opengl.GLES30.GL_TEXTURE2;
+import static android.opengl.GLES30.glUniform1f;
+import static android.opengl.GLES30.glUniform2f;
+import static android.opengl.GLES30.glUniform3f;
+import static android.opengl.GLES30.glUniform4f;
 import static android.opengl.GLES30.GL_FLOAT;
 import static android.opengl.GLES30.GL_TEXTURE0;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -21,7 +23,9 @@ import static android.opengl.GLES30.glVertexAttribPointer;
 
 import android.opengl.Matrix;
 
+import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.NormalShader;
 import com.crispin.crispinmobile.Rendering.Shaders.NormalTextureShader;
@@ -34,6 +38,7 @@ import com.crispin.crispinmobile.Utilities.ShaderCache;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.HashSet;
 
 /**
  * Render object is a base class for any graphical object. It handles an objects shader (based on
@@ -741,7 +746,9 @@ public class RenderObject
         shader.disableIt();
     }
 
-    public void render(Camera3D camera, ModelMatrix modelMatrix)
+    public void render(Camera3D camera,
+                       ModelMatrix modelMatrix,
+                       final HashSet<Light> lightGroup)
     {
         // If the shader is null, create a shader for the object
         if(shader == null)
@@ -751,51 +758,123 @@ public class RenderObject
 
         shader.enableIt();
 
-        // Matrix upload for a lighting enabled shader is slightly different
-        if(shader.isLightingShader())
-        {
+        if(lightGroup != null && shader.validHandle(shader.getLightPositionUniformHandle())){
+            for(Light light : lightGroup) {
+                glUniform3f(shader.getLightPositionUniformHandle(), light.getX(), light.getY(),
+                        light.getZ());
+                break; // TEMP just use first light in group todo: Multi-light rendering
+            }
+        }
+
+        if(lightGroup != null && shader.validHandle(shader.getLightColourUniformHandle())) {
+            // TEMP just use first light in group
+            for(Light light : lightGroup) {
+                glUniform3f(shader.getLightColourUniformHandle(), light.getRed(), light.getGreen(),
+                        light.getBlue());
+                break; // TEMP just use first light in group todo: Multi-light rendering
+            }
+        }
+
+        if(lightGroup != null && shader.validHandle(shader.getLightIntensityUniformHandle())) {
+            // TEMP just use first light in group
+            for(Light light : lightGroup) {
+                glUniform1f(shader.getLightIntensityUniformHandle(), light.getIntensity());
+                break; // TEMP just use first light in group todo: Multi-light rendering
+            }
+        }
+
+        if(lightGroup != null && shader.validHandle(shader.getLightAmbienceStrengthHandle())) {
+            // TEMP just use first light in group
+            for(Light light : lightGroup) {
+                glUniform1f(shader.getLightAmbienceStrengthHandle(), light.getAmbienceStrength());
+                break; // TEMP just use first light in group todo: Multi-light rendering
+            }
+        }
+
+        if(lightGroup != null && shader.validHandle(shader.getLightSpecularStrengthHandle())) {
+            // TEMP just use first light in group
+            for(Light light : lightGroup) {
+                glUniform1f(shader.getLightSpecularStrengthHandle(), light.getSpecularStrength());
+                break; // TEMP just use first light in group todo: Multi-light rendering
+            }
+        }
+
+        if(shader.validHandle(shader.getViewPositionUniformHandle())) {
+            final Point3D cameraPos = camera.getPosition();
+            glUniform3f(shader.getViewPositionUniformHandle(), cameraPos.x, cameraPos.y,
+                    cameraPos.z);
+        }
+
+        if(shader.validHandle(shader.getProjectionMatrixUniformHandle())) {
             glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
                     UNIFORM_UPLOAD_COUNT,
                     false,
                     camera.getPerspectiveMatrix(),
                     0);
+        }
 
+        if(shader.validHandle(shader.getViewMatrixUniformHandle())) {
             glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
                     UNIFORM_UPLOAD_COUNT,
                     false,
                     camera.getViewMatrix(),
                     0);
+        }
 
+        if(shader.validHandle(shader.getModelMatrixUniformHandle())) {
             glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
                     UNIFORM_UPLOAD_COUNT,
                     false,
                     modelMatrix.getModelMatrix(),
                     0);
         }
-        else
-        {
-            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-            Matrix.multiplyMM(modelViewMatrix,
-                    0,
-                    camera.getViewMatrix(),
-                    0,
-                    modelMatrix.getModelMatrix(),
-                    0);
 
-            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-            Matrix.multiplyMM(modelViewProjectionMatrix,
-                    0,
-                    camera.getPerspectiveMatrix(),
-                    0,
-                    modelViewMatrix,
-                    0);
 
-            glUniformMatrix4fv(shader.getMatrixUniformHandle(),
-                    UNIFORM_UPLOAD_COUNT,
-                    false,
-                    modelViewProjectionMatrix,
-                    0);
-        }
+//        // Matrix upload for a lighting enabled shader is slightly different
+//        if(shader.isLightingShader())
+//        {
+//            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
+//                    UNIFORM_UPLOAD_COUNT,
+//                    false,
+//                    camera.getPerspectiveMatrix(),
+//                    0);
+//
+//            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
+//                    UNIFORM_UPLOAD_COUNT,
+//                    false,
+//                    camera.getViewMatrix(),
+//                    0);
+//
+//            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
+//                    UNIFORM_UPLOAD_COUNT,
+//                    false,
+//                    modelMatrix.getModelMatrix(),
+//                    0);
+//        }
+//        else
+//        {
+//            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+//            Matrix.multiplyMM(modelViewMatrix,
+//                    0,
+//                    camera.getViewMatrix(),
+//                    0,
+//                    modelMatrix.getModelMatrix(),
+//                    0);
+//
+//            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+//            Matrix.multiplyMM(modelViewProjectionMatrix,
+//                    0,
+//                    camera.getPerspectiveMatrix(),
+//                    0,
+//                    modelViewMatrix,
+//                    0);
+//
+//            glUniformMatrix4fv(shader.getMatrixUniformHandle(),
+//                    UNIFORM_UPLOAD_COUNT,
+//                    false,
+//                    modelViewProjectionMatrix,
+//                    0);
+//        }
 
         // If the shader colour uniform handle is not invalid, upload the colour data
         if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
@@ -850,6 +929,8 @@ public class RenderObject
             glUniform1i(shader.getNormalMapUniformHandle(), 2);
         }
 
+
+
         handleAttributes(true);
 
         // Draw the vertex data with the specified render method
@@ -871,6 +952,11 @@ public class RenderObject
         glBindTexture(GL_TEXTURE_2D, 0);
 
         shader.disableIt();
+    }
+
+    public void render(Camera3D camera, ModelMatrix modelMatrix)
+    {
+        render(camera, modelMatrix, null);
     }
 
     /**
@@ -942,8 +1028,7 @@ public class RenderObject
             {
                 System.out.println("NORMAL SHADER");
 
-                if(ShaderCache.existsInCache(NormalShader.VERTEX_FILE,
-                        NormalShader.FRAGMENT_FILE))
+                if(ShaderCache.existsInCache(NormalShader.VERTEX_FILE, NormalShader.FRAGMENT_FILE))
                 {
                     shader = ShaderCache.getShader(NormalShader.VERTEX_FILE,
                             NormalShader.FRAGMENT_FILE);

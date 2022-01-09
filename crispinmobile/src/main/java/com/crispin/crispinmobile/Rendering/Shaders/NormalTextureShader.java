@@ -36,14 +36,20 @@ public class NormalTextureShader extends Shader
 
         positionAttributeHandle = getAttribute("aPosition");
         normalAttributeHandle = getAttribute("aNormal");
+        textureAttributeHandle = getAttribute("aTextureCoordinates");
         colourUniformHandle = getUniform("uColour");
+        lightPositionUniformHandle = getUniform("uLightPosition");
+        viewPositionUniformHandle = getUniform("uViewPosition");
+        lightColourUniformHandle = getUniform("uLightColour");
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");
         modelMatrixUniformHandle = getUniform("uModel");
         textureUniformHandle = getUniform("uTexture");
-        textureAttributeHandle = getAttribute("aTextureCoordinates");
         uvMultiplierUniformHandle = getUniform("uUvMultiplier");
         specularMapUniformHandle = getUniform("uSpecularMap");
         normalMapUniformHandle = getUniform("uNormalMap");
+        lightIntensityUniformHandle = getUniform("uLightIntensity");
+        lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
+        lightSpecularStrengthHandle = getUniform("uSpecularStrength");
     }
 }

@@ -30,12 +30,14 @@ public class TextureShader extends Shader
     {
         super(VERTEX_FILE, FRAGMENT_FILE);
 
-        positionAttributeHandle = getAttribute("vPosition");
-        textureAttributeHandle = getAttribute("vTextureCoordinates");
-        matrixUniformHandle = getUniform("uMatrix");
+        positionAttributeHandle = getAttribute("aPosition");
+        textureAttributeHandle = getAttribute("aTextureCoordinates");
         colourUniformHandle = getUniform("uColour");
-        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
-        uvOffsetUniformHandle = getUniform("uUVOffset");
+        projectionMatrixUniformHandle = getUniform("uProjection");
+        viewMatrixUniformHandle = getUniform("uView");
+        modelMatrixUniformHandle = getUniform("uModel");
         textureUniformHandle = getUniform("uTexture");
+        uvOffsetUniformHandle = getUniform("uUVOffset");
+        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
     }
 }

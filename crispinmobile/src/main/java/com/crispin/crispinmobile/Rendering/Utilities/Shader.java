@@ -79,9 +79,10 @@ public class Shader
     // Matrix uniform handle
     protected int matrixUniformHandle;
 
-    // UV Multiplier Uniform handle
+    // UV multiplier uniform handle
     protected int uvMultiplierUniformHandle;
 
+    // UV offset uniform handle
     protected int uvOffsetUniformHandle;
 
     // Projection matrix uniform handle
@@ -92,6 +93,24 @@ public class Shader
 
     // Model matrix uniform handle
     protected int modelMatrixUniformHandle;
+
+    // Light position uniform handle
+    protected int lightPositionUniformHandle;
+
+    // Light colour uniform handle
+    protected int lightColourUniformHandle;
+
+    // View position uniform handle
+    protected int viewPositionUniformHandle;
+
+    // Light intensity uniform handle
+    protected int lightIntensityUniformHandle;
+
+    // Light ambience strength handle
+    protected int lightAmbienceStrengthHandle;
+
+    // Light specular strength handle
+    protected int lightSpecularStrengthHandle;
 
     // Is the shader a lighting shader
     protected boolean lightingShader;
@@ -323,6 +342,66 @@ public class Shader
     }
 
     /**
+     * Get the light position uniform handle
+     *
+     * @return  Integer ID of the light position uniform handle
+     * @since   1.0
+     */
+    public int getLightPositionUniformHandle() {
+        return lightPositionUniformHandle;
+    }
+
+    /**
+     * Get the light colour uniform handle
+     *
+     * @return  Integer ID of the light colour uniform handle
+     * @since   1.0
+     */
+    public int getLightColourUniformHandle() {
+        return lightColourUniformHandle;
+    }
+
+    /**
+     * Get the view position uniform handle
+     *
+     * @return  Integer ID of the view position uniform handle
+     * @since   1.0
+     */
+    public int getViewPositionUniformHandle() {
+        return viewPositionUniformHandle;
+    }
+
+    /**
+     * Get the light intensity uniform handle
+     *
+     * @return  Integer ID of the light intensity uniform handle
+     * @since   1.0
+     */
+    public int getLightIntensityUniformHandle() {
+        return lightIntensityUniformHandle;
+    }
+
+    /**
+     * Get the light ambience strength uniform handle
+     *
+     * @return  Integer ID of the light ambience strength uniform handle
+     * @since   1.0
+     */
+    public int getLightAmbienceStrengthHandle() {
+        return lightAmbienceStrengthHandle;
+    }
+
+    /**
+     * Get the light specular strength uniform handle
+     *
+     * @return  Integer ID of the light specular strength uniform handle
+     * @since   1.0
+     */
+    public int getLightSpecularStrengthHandle() {
+        return lightSpecularStrengthHandle;
+    }
+
+    /**
      * Set the state of the lighting shader variable. If the shader supports lighting then this
      * should be set to true, else false.
      * @param state Set to true if the shader supports lighting. This will enable different upload
@@ -379,6 +458,12 @@ public class Shader
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
         viewMatrixUniformHandle = UNDEFINED_HANDLE;
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
+        lightPositionUniformHandle = UNDEFINED_HANDLE;
+        lightColourUniformHandle = UNDEFINED_HANDLE;
+        viewPositionUniformHandle = UNDEFINED_HANDLE;
+        lightIntensityUniformHandle = UNDEFINED_HANDLE;
+        lightAmbienceStrengthHandle = UNDEFINED_HANDLE;
+        lightSpecularStrengthHandle = UNDEFINED_HANDLE;
     }
 
     /**

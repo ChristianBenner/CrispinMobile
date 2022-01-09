@@ -1,18 +1,19 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import android.opengl.Matrix;
-
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
+import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+
+import java.util.HashSet;
 
 public class Model extends RenderObject
 {
@@ -167,6 +168,17 @@ public class Model extends RenderObject
     public Point3D getPosition()
     {
         return position;
+    }
+
+    /**
+     * Set the scale
+     *
+     * @param scale The scale to apply to the object in all dimensions (xyz)
+     * @since 1.0
+     */
+    public void setScale(float scale)
+    {
+        setScale(scale, scale, scale);
     }
 
     /**
@@ -489,5 +501,11 @@ public class Model extends RenderObject
     {
         updateModelMatrix();
         super.render(camera3D, modelMatrix);
+    }
+
+    public void render(Camera3D camera3D, final HashSet<Light> lightGroup)
+    {
+        updateModelMatrix();
+        super.render(camera3D, modelMatrix, lightGroup);
     }
 }

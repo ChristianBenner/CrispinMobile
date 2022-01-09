@@ -1,7 +1,5 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
-import static android.opengl.GLES20.glUniform3f;
-
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
@@ -22,9 +20,6 @@ public class NormalShader extends Shader
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.normal_frag;
 
-    // Light position uniform handle
-    protected int lightPositionUniformHandle;
-
     /**
      * Create the NormalShader. This compiles the pre-defined vertex and fragment
      * shader's, and links the attributes to the shader base class for a common form of user
@@ -42,12 +37,13 @@ public class NormalShader extends Shader
         normalAttributeHandle = getAttribute("aNormal");
         colourUniformHandle = getUniform("uColour");
         lightPositionUniformHandle = getUniform("uLightPosition");
+        viewPositionUniformHandle = getUniform("uViewPosition");
+        lightColourUniformHandle = getUniform("uLightColour");
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");
         modelMatrixUniformHandle = getUniform("uModel");
-    }
-
-    public void setLightPosition(float x, float y, float z) {
-        glUniform3f(lightPositionUniformHandle, x, y, z);
+        lightIntensityUniformHandle = getUniform("uLightIntensity");
+        lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
+        lightSpecularStrengthHandle = getUniform("uSpecularStrength");
     }
 }
