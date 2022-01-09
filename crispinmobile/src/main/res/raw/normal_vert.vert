@@ -4,6 +4,7 @@ uniform mat4 uMatrix;
 uniform mat4 uProjection;
 uniform mat4 uView;
 uniform mat4 uModel;
+uniform vec3 uLightPosition;
 
 attribute vec4 aPosition;
 attribute vec3 aNormal;
@@ -25,7 +26,7 @@ void main()
     vEyeDirection = vec3(0.0, 0.0, 0.0) - vertexPosCameraSpace;
 
     // Light position Camera space
-    vec3 lightPosCameraSpace = (uView * vec4(0.0, 0.0, 4.0, 1.0)).xyz;
+    vec3 lightPosCameraSpace = (uView * vec4(uLightPosition, 1.0)).xyz;
 
     // Light direction
     vLightDir = lightPosCameraSpace + vEyeDirection;

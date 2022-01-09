@@ -4,7 +4,7 @@ import android.content.res.Resources;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Rendering.Data.RenderObjectData;
-import com.crispin.crispinmobile.Rendering.Utilities.Model;
+import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 import java.io.InputStream;

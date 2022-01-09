@@ -1,6 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Model;
+import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.Logger;
 

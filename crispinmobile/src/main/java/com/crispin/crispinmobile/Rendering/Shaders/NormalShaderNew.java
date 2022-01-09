@@ -1,6 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
-import static android.opengl.GLES20.glUniform3f;
+import static android.opengl.GLES30.glUniform3f;
 
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
@@ -14,16 +14,22 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  * @see         Shader
  * @since       1.0
  */
-public class NormalShader extends Shader
+public class NormalShaderNew extends Shader
 {
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.normal_vert;
+    public static final int VERTEX_FILE = R.raw.normal_vert_new;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.normal_frag;
+    public static final int FRAGMENT_FILE = R.raw.normal_frag_new;
 
     // Light position uniform handle
     protected int lightPositionUniformHandle;
+
+    // View position uniform handle
+    protected int viewPositionUniformHandle;
+
+    // Light colour uniform handle
+    protected int lightColourUniformHandle;
 
     /**
      * Create the NormalShader. This compiles the pre-defined vertex and fragment
@@ -32,7 +38,7 @@ public class NormalShader extends Shader
      *
      * @since   1.0
      */
-    public NormalShader()
+    public NormalShaderNew()
     {
         super(VERTEX_FILE, FRAGMENT_FILE);
 
@@ -42,6 +48,8 @@ public class NormalShader extends Shader
         normalAttributeHandle = getAttribute("aNormal");
         colourUniformHandle = getUniform("uColour");
         lightPositionUniformHandle = getUniform("uLightPosition");
+        viewPositionUniformHandle = getUniform("uViewPosition");
+        lightColourUniformHandle = getUniform("uLightColour");
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");
         modelMatrixUniformHandle = getUniform("uModel");
@@ -49,5 +57,13 @@ public class NormalShader extends Shader
 
     public void setLightPosition(float x, float y, float z) {
         glUniform3f(lightPositionUniformHandle, x, y, z);
+    }
+
+    public void setViewPosition(float x, float y, float z) {
+        glUniform3f(viewPositionUniformHandle, x, y, z);
+    }
+
+    public void setLightColour(float r, float g, float b) {
+        glUniform3f(lightColourUniformHandle, r, g, b);
     }
 }

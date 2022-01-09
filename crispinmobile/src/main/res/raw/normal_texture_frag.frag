@@ -13,6 +13,21 @@ varying vec2 vTextureCoordinates;
 
 void main()
 {
+//    vec3 lightColour = vec3(1.0, 1.0, 1.0);
+//
+//    // Ambient colour
+//    float ambientStrength = 0.1;
+//    vec3 ambient = ambientStrength * lightColour;
+//    vec3 result = ambient * uColour.rgb;
+//    gl_FragColor = vec4(result, 1.0);
+
+
+
+
+
+
+
+
     // Diffuse
     vec3 lightColour = vec3(1.0, 1.0, 1.0);
     vec3 ambientColour = vec3(0.5, 0.5, 0.5) * uColour.rgb;

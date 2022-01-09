@@ -1,7 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**

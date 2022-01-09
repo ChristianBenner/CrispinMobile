@@ -1,28 +1,5 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import android.opengl.Matrix;
-
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Geometry;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Rotation3D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
-import com.crispin.crispinmobile.Rendering.Shaders.NormalShader;
-import com.crispin.crispinmobile.Rendering.Shaders.NormalTextureShader;
-import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
-import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
-import com.crispin.crispinmobile.Utilities.Logger;
-import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
-import com.crispin.crispinmobile.Utilities.ShaderCache;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import static android.opengl.GLES20.GL_LINES;
 import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.GL_TEXTURE1;
@@ -39,9 +16,24 @@ import static android.opengl.GLES30.glDisableVertexAttribArray;
 import static android.opengl.GLES30.glDrawArrays;
 import static android.opengl.GLES30.glEnableVertexAttribArray;
 import static android.opengl.GLES30.glUniform1i;
-import static android.opengl.GLES30.glUniform4fv;
 import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribPointer;
+
+import android.opengl.Matrix;
+
+import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.NormalShader;
+import com.crispin.crispinmobile.Rendering.Shaders.NormalTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
+import com.crispin.crispinmobile.Utilities.Logger;
+import com.crispin.crispinmobile.Utilities.ShaderCache;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
 
 /**
  * Render object is a base class for any graphical object. It handles an objects shader (based on

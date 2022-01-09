@@ -4,6 +4,8 @@ import com.crispin.crispinmobile.Utilities.FileResourceReader;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
 
+import static android.opengl.GLES30.glGetShaderInfoLog;
+import static android.opengl.GLES30.GL_INFO_LOG_LENGTH;
 import static android.opengl.GLES30.GL_COMPILE_STATUS;
 import static android.opengl.GLES30.GL_FRAGMENT_SHADER;
 import static android.opengl.GLES30.GL_INVALID_VALUE;
@@ -21,6 +23,8 @@ import static android.opengl.GLES30.glGetUniformLocation;
 import static android.opengl.GLES30.glLinkProgram;
 import static android.opengl.GLES30.glShaderSource;
 import static android.opengl.GLES30.glUseProgram;
+
+import android.opengl.GLES30;
 
 /**
  * Shader class is used to load and compile and manage GLSL shader programs from a file or
@@ -498,9 +502,12 @@ public class Shader
         // Check compilation
         if(!isCompiled(SHADER))
         {
-            Logger.error(TAG, "OpenGLES failed to compile " +
-                    typeToString(type) +
-                    " shader program");
+            final int[] maxLength = new int[1];
+            glGetShaderiv(SHADER, GL_INFO_LOG_LENGTH, maxLength, 0);
+            final String compilationLog = glGetShaderInfoLog(SHADER);
+            Logger.error(TAG, "OpenGLES failed to compile " + typeToString(type) +
+                    " shader program. \n-- Shader Compilation Log Start --\n" + compilationLog +
+                    "\n-- Shader Compilation Log End --");
         }
 
         return SHADER;
