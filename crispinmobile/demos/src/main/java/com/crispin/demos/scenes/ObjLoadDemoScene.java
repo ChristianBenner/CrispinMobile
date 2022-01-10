@@ -20,6 +20,10 @@ public class ObjLoadDemoScene extends Scene
     private Camera3D modelCamera;
 
     public ObjLoadDemoScene() {
+        // Load the monkey model. Note that we are using the ThreadedOBJLoader here. This means that
+        // the application can continue whilst loading the model. This is especially useful for
+        // loading large models in some situations. If you do not wish to use a threaded loader,
+        // call OBJModelLoader.readObjFile(resourceId) instead.
         ThreadedOBJLoader.loadModel(R.raw.monkey, loadListener -> {
             this.monkey = loadListener;
             this.monkey.setColour(1.0f, 0.5f, 0.31f);

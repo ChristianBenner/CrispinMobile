@@ -13,6 +13,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
@@ -25,7 +26,6 @@ public class LightingDemoScene extends Scene
 
     // A model for a light bulb
     private Model lightBulb;
-    private Material lightBulbMaterial;
 
     // Render object model matrix
     private ModelMatrix lightModelMatrix;
@@ -34,7 +34,7 @@ public class LightingDemoScene extends Scene
     private Camera3D modelCamera;
 
     // Light start position
-    private final Point3D LIGHT_START_POS = new Point3D(0.0f, 5.0f, 5.0f);
+    private final Point3D LIGHT_START_POS = new Point3D(0.0f, 5.0f, 4.0f);
 
     // Light object containing position and colour data
     private Light light;
@@ -47,19 +47,27 @@ public class LightingDemoScene extends Scene
         Crispin.setBackgroundColour(Colour.BLACK);
 
         light = new Light(LIGHT_START_POS);
-        light.setAmbienceStrength(0.05f);
+        light.setAmbienceStrength(0.1f);
+        light.setSpecularStrength(3.0f);
+        light.setIntensity(2.0f);
 
         lightGroup = new HashSet<>();
         lightGroup.add(light);
 
-        ThreadedOBJLoader.loadModel(R.raw.torus, loadListener -> {
+        // Load the torus donut shape used to demo lighting
+        Material torusWoodMaterial = new Material(R.drawable.tiledwood16);
+        torusWoodMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.tiledwood16_specular));
+        torusWoodMaterial.setUvMultiplier(16.0f, 4.0f);
+        ThreadedOBJLoader.loadModel(R.raw.torus_uv, loadListener -> {
             this.torus = loadListener;
+            this.torus.setMaterial(torusWoodMaterial);
             this.torus.setColour(1.0f, 0.5f, 0.31f);
             this.torus.setRotation(20.0f, 1.0f, 0.0f, 0.0f);
             this.torus.translate(0.0f, 0.0f, 0.0f);
         });
 
-        lightBulbMaterial = new Material(R.drawable.lightbulbtex);
+        // Load the light bulb model (used to show light position)
+        Material lightBulbMaterial = new Material(R.drawable.lightbulbtex);
         ThreadedOBJLoader.loadModel(R.raw.lightbulb, loadListener -> {
             this.lightBulb = loadListener;
             this.lightBulb.setMaterial(lightBulbMaterial);
