@@ -27,8 +27,8 @@ import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
-import com.crispin.crispinmobile.Rendering.Shaders.NormalShader;
-import com.crispin.crispinmobile.Rendering.Shaders.NormalTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingMaterialShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
@@ -758,46 +758,68 @@ public class RenderObject
 
         shader.enableIt();
 
-        if(lightGroup != null && shader.validHandle(shader.getLightPositionUniformHandle())){
-            for(Light light : lightGroup) {
-                glUniform3f(shader.getLightPositionUniformHandle(), light.getX(), light.getY(),
-                        light.getZ());
-                break; // TEMP just use first light in group todo: Multi-light rendering
+        if(shader.validHandle(shader.getLightPositionUniformHandle())){
+            if(lightGroup != null) {
+                for(Light light : lightGroup) {
+                    glUniform3f(shader.getLightPositionUniformHandle(), light.getX(), light.getY(),
+                            light.getZ());
+                    break; // TEMP just use first light in group todo: Multi-light rendering
+                }
+            } else {
+                // TEMP just use first light in group todo: Multi-light rendering
+                glUniform3f(shader.getLightPositionUniformHandle(), 0.0f, 0.0f, 0.0f);
             }
         }
 
-        if(lightGroup != null && shader.validHandle(shader.getLightColourUniformHandle())) {
-            // TEMP just use first light in group
-            for(Light light : lightGroup) {
-                glUniform3f(shader.getLightColourUniformHandle(), light.getRed(), light.getGreen(),
-                        light.getBlue());
-                break; // TEMP just use first light in group todo: Multi-light rendering
+        if(shader.validHandle(shader.getLightColourUniformHandle())) {
+            if (lightGroup != null) {
+                for(Light light : lightGroup) {
+                    glUniform3f(shader.getLightColourUniformHandle(), light.getRed(),
+                            light.getGreen(), light.getBlue());
+                    break; // TEMP just use first light in group todo: Multi-light rendering
+                }
+            } else {
+                // TEMP just use first light in group todo: Multi-light rendering
+                glUniform3f(shader.getLightColourUniformHandle(), 1.0f, 1.0f, 1.0f);
             }
         }
 
-        if(lightGroup != null && shader.validHandle(shader.getLightIntensityUniformHandle())) {
-            // TEMP just use first light in group
-            for(Light light : lightGroup) {
-                glUniform1f(shader.getLightIntensityUniformHandle(), light.getIntensity());
-                break; // TEMP just use first light in group todo: Multi-light rendering
+        if(shader.validHandle(shader.getLightIntensityUniformHandle())) {
+            if (lightGroup != null) {
+                for(Light light : lightGroup) {
+                    glUniform1f(shader.getLightIntensityUniformHandle(), light.getIntensity());
+                    break; // TEMP just use first light in group todo: Multi-light rendering
+                }
+            } else {
+                // TEMP just use first light in group todo: Multi-light rendering
+                glUniform1f(shader.getLightIntensityUniformHandle(), 0.0f);
             }
         }
 
-        if(lightGroup != null && shader.validHandle(shader.getLightAmbienceStrengthHandle())) {
-            // TEMP just use first light in group
-            for(Light light : lightGroup) {
-                glUniform1f(shader.getLightAmbienceStrengthHandle(), light.getAmbienceStrength());
-                break; // TEMP just use first light in group todo: Multi-light rendering
+        if(shader.validHandle(shader.getLightAmbienceStrengthHandle())) {
+            if (lightGroup != null) {
+                for(Light light : lightGroup) {
+                    glUniform1f(shader.getLightAmbienceStrengthHandle(), light.getAmbienceStrength());
+                    break; // TEMP just use first light in group todo: Multi-light rendering
+                }
+            } else {
+                // TEMP just use first light in group todo: Multi-light rendering
+                glUniform1f(shader.getLightAmbienceStrengthHandle(), 1.0f);
             }
         }
 
-        if(lightGroup != null && shader.validHandle(shader.getLightSpecularStrengthHandle())) {
-            // TEMP just use first light in group
-            for(Light light : lightGroup) {
-                glUniform1f(shader.getLightSpecularStrengthHandle(), light.getSpecularStrength());
-                break; // TEMP just use first light in group todo: Multi-light rendering
+        if(shader.validHandle(shader.getLightSpecularStrengthHandle())) {
+            if (lightGroup != null) {
+                for(Light light : lightGroup) {
+                    glUniform1f(shader.getLightSpecularStrengthHandle(), light.getSpecularStrength());
+                    break; // TEMP just use first light in group todo: Multi-light rendering
+                }
+            } else {
+                // TEMP just use first light in group todo: Multi-light rendering
+                glUniform1f(shader.getLightSpecularStrengthHandle(), 0.0f);
             }
         }
+
 
         if(shader.validHandle(shader.getViewPositionUniformHandle())) {
             final Point3D cameraPos = camera.getPosition();
@@ -1009,15 +1031,15 @@ public class RenderObject
             {
                 System.out.println("NORMAL AND TEXTURE SHADER");
 
-                if(ShaderCache.existsInCache(NormalTextureShader.VERTEX_FILE,
-                        NormalTextureShader.FRAGMENT_FILE))
+                if(ShaderCache.existsInCache(LightingMaterialShader.VERTEX_FILE,
+                        LightingMaterialShader.FRAGMENT_FILE))
                 {
-                    shader = ShaderCache.getShader(NormalTextureShader.VERTEX_FILE,
-                            NormalTextureShader.FRAGMENT_FILE);
+                    shader = ShaderCache.getShader(LightingMaterialShader.VERTEX_FILE,
+                            LightingMaterialShader.FRAGMENT_FILE);
                 }
                 else
                 {
-                    shader = new NormalTextureShader();
+                    shader = new LightingMaterialShader();
                 }
             }
             else if(supportsNormals && supportsColourPerAttrib)
@@ -1028,14 +1050,14 @@ public class RenderObject
             {
                 System.out.println("NORMAL SHADER");
 
-                if(ShaderCache.existsInCache(NormalShader.VERTEX_FILE, NormalShader.FRAGMENT_FILE))
+                if(ShaderCache.existsInCache(LightingShader.VERTEX_FILE, LightingShader.FRAGMENT_FILE))
                 {
-                    shader = ShaderCache.getShader(NormalShader.VERTEX_FILE,
-                            NormalShader.FRAGMENT_FILE);
+                    shader = ShaderCache.getShader(LightingShader.VERTEX_FILE,
+                            LightingShader.FRAGMENT_FILE);
                 }
                 else
                 {
-                    shader = new NormalShader();
+                    shader = new LightingShader();
                 }
             }
             else if(supportsColourPerAttrib && supportsTexture)

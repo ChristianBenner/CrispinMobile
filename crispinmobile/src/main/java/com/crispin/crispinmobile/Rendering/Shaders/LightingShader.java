@@ -12,13 +12,13 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  * @see         Shader
  * @since       1.0
  */
-public class NormalShader extends Shader
+public class LightingShader extends Shader
 {
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.normal_vert;
+    public static final int VERTEX_FILE = R.raw.lighting_vert;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.normal_frag;
+    public static final int FRAGMENT_FILE = R.raw.lighting_frag;
 
     /**
      * Create the NormalShader. This compiles the pre-defined vertex and fragment
@@ -27,7 +27,7 @@ public class NormalShader extends Shader
      *
      * @since   1.0
      */
-    public NormalShader()
+    public LightingShader()
     {
         super(VERTEX_FILE, FRAGMENT_FILE);
 

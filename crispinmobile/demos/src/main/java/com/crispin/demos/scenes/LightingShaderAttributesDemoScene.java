@@ -6,11 +6,20 @@ import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Models.Model;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingMaterialShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.UserInterface.Border;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Text;
+import com.crispin.crispinmobile.UserInterface.TouchEvent;
+import com.crispin.crispinmobile.UserInterface.TouchListener;
+import com.crispin.crispinmobile.Utilities.OBJModelCache;
+import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
@@ -24,22 +33,29 @@ public class LightingShaderAttributesDemoScene extends Scene
     // Amount that the information text should fade in per cycle
     private final float INFO_TEXT_FADE_STEP_AMOUNT = 0.03f;
 
-    private final long WELCOME_SCENE_DURATION_MS = 3000;
-    private final long WELCOME_SCENE_MODEL_APPEAR_START_MS = 2000;
+    private final long WELCOME_SCENE_DURATION_MS = 4000L;
 
-    private final float LIGHT_INTENSITY_STEP_AMOUNT = 0.005f;
+    private final long WELCOME_SCENE_MODEL_APPEAR_START_MS = 2000L;
+
+    private final long LIGHT_INTENSITY_SCENE_DURATION_MS = 3000L;
 
     private final float LIGHT_INTENSITY_CEILING = 1.0f;
 
-    private final float LIGHT_SPECULAR_STEP_AMOUNT = 0.02f;
-
-    private final float LIGHT_SPECULAR_CEILING = 4.0f;
-
-    private final float LIGHT_AMBIENT_STEP_AMOUNT = 0.002f;
+    private final long LIGHT_AMBIENT_SCENE_DURATION_MS = 3000L;
 
     private final float LIGHT_AMBIENT_CEILING = 0.2f;
 
-    private final float POSITIONING_SCENE_DURATION_MS = 4000;
+    private final long LIGHT_SPECULAR_SCENE_DURATION_MS = 3000L;
+
+    private final float LIGHT_SPECULAR_CEILING = 4.0f;
+
+    private final long POSITIONING_SCENE_DURATION_MS = 4000L;
+
+    private final long COLOUR_SCENE_DURATION_MS = 8000L;
+
+    private final long RESET_LIGHT_SCENE_DURATION_MS = 4000L;
+
+    private final float BUTTON_PADDING = 20.0f;
 
     private final int STAGE_INTRODUCTION = 0;
     private final int STAGE_INTENSITY_TEST = 1;
@@ -47,7 +63,9 @@ public class LightingShaderAttributesDemoScene extends Scene
     private final int STAGE_POSITIONING_TEST = 3;
     private final int STAGE_SPECULAR_TEST = 4;
     private final int STAGE_COLOUR_TEST = 5;
-    private final int STAGE_MAX = 6;
+    private final int STAGE_RESET_POSITION = 6;
+    private final int STAGE_RESET_LIGHT = 7;
+    private final int STAGE_MAX = 8;
 
     // A model for our torus (donut) shape
     private Model torus;
@@ -61,14 +79,11 @@ public class LightingShaderAttributesDemoScene extends Scene
     // Camera for user interface rendering
     private Camera2D uiView;
 
-    // Font for information text
+    // Font for the information text
     private Font informationFont;
 
     // Should the text fade in
     private boolean fadeInInformationText;
-
-    // Should the text fade out
-    private boolean fadeOutInformationText;
 
     // Light object containing position and colour data
     private Light light;
@@ -83,12 +98,17 @@ public class LightingShaderAttributesDemoScene extends Scene
 
     private HashMap<Integer, Text> stageInfoText;
 
+    private Button toggleShader;
+    private boolean useMaterialShader;
+
     private float lightXCount;
     private float lightZCount;
     private float redColourRad;
     private float greenColourRad;
     private float blueColourRad;
     private boolean moveToPosition;
+    private boolean resetX;
+    private boolean resetZ;
 
     public LightingShaderAttributesDemoScene() {
         Crispin.setBackgroundColour(Colour.BLACK);
@@ -106,26 +126,23 @@ public class LightingShaderAttributesDemoScene extends Scene
         putStageText(stageInfoText, STAGE_AMBIENT_TEST, "Ambience!");
         putStageText(stageInfoText, STAGE_COLOUR_TEST, "Colour!");
         putStageText(stageInfoText, STAGE_POSITIONING_TEST, "Positioning!");
+        putStageText(stageInfoText, STAGE_RESET_POSITION, "Resetting Position");
+        putStageText(stageInfoText, STAGE_RESET_LIGHT, "Turning the lights off...");
 
         fadeInInformationText = true;
-        fadeOutInformationText = false;
 
         light = new Light();
         light.setAmbienceStrength(0.0f);
         light.setIntensity(0.0f);
         light.setSpecularStrength(0.0f);
-        lightXCount = 0.0f;
-        lightZCount = 0.0f;
-        redColourRad = (float)Math.PI / 2.0f;
-        greenColourRad = 0.0f;
-        blueColourRad = (float)Math.PI / 2.0f;
-        moveToPosition = true;
+        resetLightingValues();
 
         lightGroup = new HashSet<>();
         lightGroup.add(light);
 
         // Load the torus donut shape used to demo lighting
         Material torusWoodMaterial = new Material(R.drawable.tiledwood16);
+        useMaterialShader = true;
         torusWoodMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.tiledwood16_specular));
         torusWoodMaterial.setUvMultiplier(16.0f, 4.0f);
         ThreadedOBJLoader.loadModel(R.raw.torus_uv, loadListener -> {
@@ -136,9 +153,40 @@ public class LightingShaderAttributesDemoScene extends Scene
             this.torus.setAlpha(0.0f);
         });
 
+        toggleShader = new Button(new Font(R.raw.aileron_regular, 48),
+                "Toggle Shader");
+        toggleShader.setPosition(Crispin.getSurfaceWidth() - BUTTON_PADDING -
+                toggleShader.getWidth(), Crispin.getSurfaceHeight() - BUTTON_PADDING -
+                toggleShader.getHeight());
+        toggleShader.setAlpha(0.0f);
+        toggleShader.setTextColour(Colour.ORANGE);
+        toggleShader.setColour(Colour.BLACK);
+        toggleShader.setBorder(new Border(Colour.ORANGE, 5));
+        toggleShader.addTouchListener(e -> {
+            if(e.getEvent() == TouchEvent.Event.CLICK) {
+                useMaterialShader = !useMaterialShader;
+                if(torus != null) {
+                    if(useMaterialShader) {
+                        torus.useCustomShader(new LightingMaterialShader());
+                    } else {
+                        torus.useCustomShader(new LightingShader());
+                    }
+                }
+
+                if(lightBulb != null) {
+                    if(useMaterialShader) {
+                        lightBulb.useCustomShader(new LightingMaterialShader());
+                    } else {
+                        lightBulb.useCustomShader(new LightingShader());
+                    }
+                }
+            }
+        });
+
         // Load the light bulb model (used to show light position)
-        Material lightBulbMaterial = new Material(R.drawable.lightbulbtex);
-        ThreadedOBJLoader.loadModel(R.raw.lightbulb, loadListener -> {
+        Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
+        lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
+        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
             this.lightBulb = loadListener;
             this.lightBulb.setMaterial(lightBulbMaterial);
             this.lightBulb.setScale(0.3f);
@@ -152,8 +200,8 @@ public class LightingShaderAttributesDemoScene extends Scene
     }
 
     private void putStageText(HashMap<Integer, Text> textHashMap, int stage, String text) {
-        Text stageText = new Text(informationFont, text, true, true,
-                Crispin.getSurfaceWidth());
+        Text stageText = new Text(informationFont, text,
+                true, true, Crispin.getSurfaceWidth());
         stageText.setColour(Colour.ORANGE);
         stageText.setPosition(0.0f, Crispin.getSurfaceHeight() * 0.8f);
         stageText.setOpacity(0.0f);
@@ -193,16 +241,19 @@ public class LightingShaderAttributesDemoScene extends Scene
                 }
                 break;
             case STAGE_INTENSITY_TEST:
-                light.setIntensity(light.getIntensity() + (LIGHT_INTENSITY_STEP_AMOUNT * deltaTime));
-                if(light.getIntensity() >= LIGHT_INTENSITY_CEILING) {
+                light.setIntensity(((float)currentStageDurationMs() /
+                        (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING);
+
+                if(currentStageDurationMs() >= LIGHT_INTENSITY_SCENE_DURATION_MS) {
                     light.setIntensity(LIGHT_INTENSITY_CEILING);
                     nextStage();
                 }
                 break;
             case STAGE_AMBIENT_TEST:
-                light.setAmbienceStrength(light.getAmbienceStrength() +
-                        (LIGHT_AMBIENT_STEP_AMOUNT * deltaTime));
-                if(light.getAmbienceStrength() >= LIGHT_AMBIENT_CEILING) {
+                light.setAmbienceStrength(((float)currentStageDurationMs() /
+                        (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING);
+
+                if(currentStageDurationMs() >= LIGHT_AMBIENT_SCENE_DURATION_MS) {
                     light.setAmbienceStrength(LIGHT_AMBIENT_CEILING);
                     nextStage();
                 }
@@ -226,9 +277,10 @@ public class LightingShaderAttributesDemoScene extends Scene
                 break;
             case STAGE_SPECULAR_TEST:
                 updateBulbPosition(deltaTime);
-                light.setSpecularStrength(light.getSpecularStrength() +
-                        (LIGHT_SPECULAR_STEP_AMOUNT * deltaTime));
-                if(light.getSpecularStrength() >= LIGHT_SPECULAR_CEILING) {
+                light.setSpecularStrength(((float)currentStageDurationMs() /
+                        (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING);
+
+                if(currentStageDurationMs() >= LIGHT_SPECULAR_SCENE_DURATION_MS) {
                     light.setSpecularStrength(LIGHT_SPECULAR_CEILING);
                     nextStage();
                 }
@@ -236,12 +288,79 @@ public class LightingShaderAttributesDemoScene extends Scene
             case STAGE_COLOUR_TEST:
                 updateBulbPosition(deltaTime);
                 redColourRad += 0.01f * deltaTime;
-                greenColourRad += 0.02f * deltaTime;
-                blueColourRad -= 0.01f * deltaTime;
-                float redChannel = ((float)Math.sin(redColourRad) + 1.0f) * 0.7f;
-                float greenChannel = ((float)Math.sin(greenColourRad) + 1.0f) * 0.7f;
-                float blueChannel = ((float)Math.sin(blueColourRad) + 1.0f) * 0.7f;
+                if(redColourRad % Math.PI > 0.0f) {
+                    greenColourRad += 0.03f * deltaTime;
+                }
+                if(redColourRad % Math.PI / 2.0f > 0.0f) {
+                    blueColourRad += 0.02f * deltaTime;
+                }
+                float redChannel = ((float)Math.cos(redColourRad) + 1.0f) / 2.0f;
+                float greenChannel = ((float)Math.cos(greenColourRad) + 1.0f) / 2.0f;
+                float blueChannel = ((float)Math.cos(blueColourRad) + 1.0f) / 2.0f;
                 light.setColour(redChannel, greenChannel, blueChannel);
+
+                if(currentStageDurationMs() >= COLOUR_SCENE_DURATION_MS) {
+                    nextStage();
+                }
+                break;
+            case STAGE_RESET_POSITION:
+                if(resetX) {
+                    if(lightXCount % (float)Math.PI < (float)Math.PI / 2.0f) {
+                        lightXCount -= 0.01f * deltaTime;
+                        if((float)Math.sin(lightXCount) <= 0.0f) {
+                            resetX = false;
+                            lightXCount = 0.0f;
+                        }
+                    } else {
+                        lightXCount += 0.01f * deltaTime;
+                        if((float)Math.sin(lightXCount) >= 0.0f) {
+                            resetX = false;
+                            lightXCount = 0.0f;
+                        }
+                    }
+                }
+
+                if(resetZ) {
+                    if(lightZCount % (float)Math.PI < (float)Math.PI / 2.0f) {
+                        lightZCount -= 0.01f * deltaTime;
+                        if((float)Math.sin(lightZCount) <= 0.0f) {
+                            resetZ = false;
+                            lightZCount = 0.0f;
+                        }
+                    } else {
+                        lightZCount += 0.01f * deltaTime;
+                        if((float)Math.sin(lightZCount) >= 0.0f) {
+                            resetZ = false;
+                            lightZCount = 0.0f;
+                        }
+                    }
+                }
+
+                if(lightXCount == 0.0f && lightZCount == 0.0f) {
+                    nextStage();
+                }
+
+                lightBulb.setPosition((float)Math.sin(lightXCount), 1.0f,
+                        (float)Math.sin(lightZCount));
+                break;
+            case STAGE_RESET_LIGHT:
+                light.setIntensity(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
+                        (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING));
+                light.setAmbienceStrength(LIGHT_AMBIENT_CEILING -
+                        (((float)currentStageDurationMs() /
+                                (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING));
+                light.setSpecularStrength(LIGHT_SPECULAR_CEILING -
+                        (((float)currentStageDurationMs() /
+                        (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING));
+
+                if(currentStageDurationMs() >= RESET_LIGHT_SCENE_DURATION_MS) {
+                    resetLightingValues();
+                    light.setIntensity(0.0f);
+                    light.setAmbienceStrength(0.0f);
+                    light.setSpecularStrength(0.0f);
+                    light.setColour(1.0f, 1.0f, 1.0f);
+                    nextStage();
+                }
                 break;
         }
 
@@ -251,7 +370,7 @@ public class LightingShaderAttributesDemoScene extends Scene
     @Override
     public void render() {
         if(torus != null) {
-            lightBulb.render(modelCamera);
+            lightBulb.render(modelCamera, lightGroup);
         }
 
         if(torus != null) {
@@ -261,6 +380,8 @@ public class LightingShaderAttributesDemoScene extends Scene
         if(stageInfoText.containsKey(currentStage)) {
             stageInfoText.get(currentStage).draw(uiView);
         }
+
+        toggleShader.draw(uiView);
     }
 
     @Override
@@ -286,14 +407,18 @@ public class LightingShaderAttributesDemoScene extends Scene
                     currentText.setOpacity(1.0f);
                     fadeInInformationText = false;
                 }
-            } else if (fadeOutInformationText) {
-                currentText.setOpacity(currentText.getOpacity() -
-                        (INFO_TEXT_FADE_STEP_AMOUNT * deltaTime));
-                if(currentText.getOpacity() < 0.0f) {
-                    currentText.setOpacity(0.0f);
-                    fadeOutInformationText = false;
-                }
             }
         }
+    }
+
+    private void resetLightingValues() {
+        lightXCount = 0.0f;
+        lightZCount = 0.0f;
+        redColourRad = 0.0f;
+        greenColourRad = 0.0f;
+        blueColourRad = 0.0f;
+        moveToPosition = true;
+        resetX = true;
+        resetZ = true;
     }
 }
