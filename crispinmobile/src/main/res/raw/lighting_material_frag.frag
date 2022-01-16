@@ -1,8 +1,13 @@
 #version 300 es
 precision mediump float;
 
-out vec4 FragColor;
+in vec3 vFragPos;
+in vec3 vNormal;
+in vec2 vTextureCoordinates;
 
+uniform sampler2D uTexture;
+uniform sampler2D uSpecularMap;
+uniform sampler2D uNormalMap;
 uniform vec4 uColour;
 uniform vec3 uLightPosition;
 uniform vec3 uViewPosition;
@@ -11,13 +16,7 @@ uniform float uLightIntensity;
 uniform float uLightAmbienceStrength;
 uniform float uSpecularStrength;
 
-uniform sampler2D uTexture;
-uniform sampler2D uSpecularMap;
-uniform sampler2D uNormalMap;
-
-in vec3 vFragPos;
-in vec3 vNormal;
-in vec2 vTextureCoordinates;
+out vec4 FragColor;
 
 void main()
 {

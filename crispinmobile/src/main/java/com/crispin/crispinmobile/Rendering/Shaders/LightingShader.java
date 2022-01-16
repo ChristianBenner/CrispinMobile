@@ -33,15 +33,20 @@ public class LightingShader extends Shader
 
         lightingShader = true;
 
+        // Attributes
         positionAttributeHandle = getAttribute("aPosition");
         normalAttributeHandle = getAttribute("aNormal");
+
+        // Vertex uniforms
+        projectionMatrixUniformHandle = getUniform("uProjection");
+        viewMatrixUniformHandle = getUniform("uView");
+        modelMatrixUniformHandle = getUniform("uModel");
+
+        // Fragment uniforms
         colourUniformHandle = getUniform("uColour");
         lightPositionUniformHandle = getUniform("uLightPosition");
         viewPositionUniformHandle = getUniform("uViewPosition");
         lightColourUniformHandle = getUniform("uLightColour");
-        projectionMatrixUniformHandle = getUniform("uProjection");
-        viewMatrixUniformHandle = getUniform("uView");
-        modelMatrixUniformHandle = getUniform("uModel");
         lightIntensityUniformHandle = getUniform("uLightIntensity");
         lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
         lightSpecularStrengthHandle = getUniform("uSpecularStrength");

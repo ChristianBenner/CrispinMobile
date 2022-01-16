@@ -1,6 +1,9 @@
 #version 300 es
 precision mediump float;
 
+in vec3 vFragPos;
+in vec3 vNormal;
+
 out vec4 FragColor;
 
 uniform vec4 uColour;
@@ -10,9 +13,6 @@ uniform vec3 uLightColour;
 uniform float uLightIntensity;
 uniform float uLightAmbienceStrength;
 uniform float uSpecularStrength;
-
-in vec3 vFragPos;
-in vec3 vNormal;
 
 void main()
 {

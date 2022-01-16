@@ -34,20 +34,25 @@ public class LightingMaterialShader extends Shader
 
         lightingShader = true;
 
+        // Attributes
         positionAttributeHandle = getAttribute("aPosition");
         normalAttributeHandle = getAttribute("aNormal");
         textureAttributeHandle = getAttribute("aTextureCoordinates");
+
+        // Vertex shader uniforms
+        projectionMatrixUniformHandle = getUniform("uProjection");
+        viewMatrixUniformHandle = getUniform("uView");
+        modelMatrixUniformHandle = getUniform("uModel");
+        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+
+        // Fragment shader uniforms
+        textureUniformHandle = getUniform("uTexture");
+        specularMapUniformHandle = getUniform("uSpecularMap");
+        normalMapUniformHandle = getUniform("uNormalMap");
         colourUniformHandle = getUniform("uColour");
         lightPositionUniformHandle = getUniform("uLightPosition");
         viewPositionUniformHandle = getUniform("uViewPosition");
         lightColourUniformHandle = getUniform("uLightColour");
-        projectionMatrixUniformHandle = getUniform("uProjection");
-        viewMatrixUniformHandle = getUniform("uView");
-        modelMatrixUniformHandle = getUniform("uModel");
-        textureUniformHandle = getUniform("uTexture");
-        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
-        specularMapUniformHandle = getUniform("uSpecularMap");
-        normalMapUniformHandle = getUniform("uNormalMap");
         lightIntensityUniformHandle = getUniform("uLightIntensity");
         lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
         lightSpecularStrengthHandle = getUniform("uSpecularStrength");
