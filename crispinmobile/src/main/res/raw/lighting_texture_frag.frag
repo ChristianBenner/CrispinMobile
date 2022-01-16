@@ -18,13 +18,17 @@ struct Light {
 
 in vec3 vFragPos;
 in vec3 vNormal;
-
-out vec4 FragColor;
+in vec2 vTextureCoordinates;
 
 uniform vec4 uColour;
 uniform vec3 uViewPosition;
+uniform sampler2D uTexture;
+uniform sampler2D uSpecularMap;
+uniform sampler2D uNormalMap;
 uniform Material uMaterial;
 uniform Light uLight;
+
+out vec4 FragColor;
 
 void main()
 {
@@ -46,8 +50,9 @@ void main()
     // Specular lighting calculation
     vec3 viewDirection = normalize(uViewPosition - vFragPos);
     vec3 reflectDirection = reflect(-lightDirection, normal);
-    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
+    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess)  * texture(uSpecularMap, vTextureCoordinates).r;
     vec3 specular = uMaterial.specular * uLight.specular * viewRefractionStrength * uLight.colour * distanceIntensityModifier;
 
-    FragColor = vec4((ambient + diffuse + specular), 1.0) * uColour;
+    vec4 lightingResult = vec4((ambient + diffuse + specular), 1.0);
+    FragColor = texture(uTexture, vTextureCoordinates) * lightingResult * uColour;
 }

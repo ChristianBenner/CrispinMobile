@@ -4,6 +4,9 @@ import com.crispin.crispinmobile.Utilities.FileResourceReader;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
 
+import static android.opengl.GLES30.GL_LINK_STATUS;
+import static android.opengl.GLES30.glGetProgramInfoLog;
+import static android.opengl.GLES30.glGetProgramiv;
 import static android.opengl.GLES30.glGetShaderInfoLog;
 import static android.opengl.GLES30.GL_INFO_LOG_LENGTH;
 import static android.opengl.GLES30.GL_COMPILE_STATUS;
@@ -24,8 +27,6 @@ import static android.opengl.GLES30.glLinkProgram;
 import static android.opengl.GLES30.glShaderSource;
 import static android.opengl.GLES30.glUseProgram;
 
-import android.opengl.GLES30;
-
 /**
  * Shader class is used to load and compile and manage GLSL shader programs from a file or
  * string. It can be used to load vertex/fragment shader programs. The class is designed to be
@@ -42,6 +43,9 @@ public class Shader
 
     // Undefined handle value
     protected static int UNDEFINED_HANDLE = -1;
+
+    // Name used in logging
+    private String name;
 
     // Vertex shader code
     private String vertexShaderCode;
@@ -112,6 +116,18 @@ public class Shader
     // Light specular strength handle
     protected int lightSpecularStrengthHandle;
 
+    // Material diffuse strength uniform handle
+    protected int materialDiffuseUniformHandle;
+
+    // Material ambience strength uniform handle
+    protected int materialAmbientUniformHandle;
+
+    // Material specular strength uniform handle
+    protected int materialSpecularUniformHandle;
+
+    // Material shininess uniform handle
+    protected int materialShininessUniformHandle;
+
     // Is the shader a lighting shader
     protected boolean lightingShader;
 
@@ -149,7 +165,7 @@ public class Shader
      */
     public void reconstruct()
     {
-        programId = createProgram(vertexShaderCode, fragmentShaderCode);
+        programId = createProgram(name, vertexShaderCode, fragmentShaderCode);
     }
 
     /**
@@ -402,6 +418,43 @@ public class Shader
     }
 
     /**
+     * Get the material diffuse strength uniform handle
+     *
+     * @return  Integer ID of the light intensity uniform handle
+     * @since   1.0
+     */
+    public int getMaterialDiffuseUniformHandle() {
+        return materialDiffuseUniformHandle;
+    }
+
+    /**
+     * Get the material ambient strength uniform handle
+     *
+     * @return  Integer ID of the light ambience strength uniform handle
+     * @since   1.0
+     */
+    public int getMaterialAmbientUniformHandle() {
+        return materialAmbientUniformHandle;
+    }
+
+    /**
+     * Get the material specular strength uniform handle
+     *
+     * @return  Integer ID of the light specular strength uniform handle
+     * @since   1.0
+     */
+    public int getMaterialSpecularUniformHandle() {
+        return materialSpecularUniformHandle;
+    }
+
+    /**
+     * Get the material shininess uniform handle
+     *
+     * @return  Integer ID of the material shininess uniform handle
+     * @since   1.0
+     */
+    public int getMaterialShininessUniformHandle() { return materialShininessUniformHandle; }
+    /**
      * Set the state of the lighting shader variable. If the shader supports lighting then this
      * should be set to true, else false.
      * @param state Set to true if the shader supports lighting. This will enable different upload
@@ -433,13 +486,14 @@ public class Shader
      *                              GLSL shader programming language.
      * @since                       1.0
      */
-    protected Shader(String vertexShaderCode, String fragmentShaderCode)
+    protected Shader(String name, String vertexShaderCode, String fragmentShaderCode)
     {
+        this.name = name;
         this.vertexShaderCode = vertexShaderCode;
         this.fragmentShaderCode = fragmentShaderCode;
 
         // Create a new shader program using the vertex shader code and fragment shader code
-        programId = createProgram(vertexShaderCode, fragmentShaderCode);
+        programId = createProgram(name, vertexShaderCode, fragmentShaderCode);
 
         lightingShader = false;
 
@@ -461,9 +515,9 @@ public class Shader
         lightPositionUniformHandle = UNDEFINED_HANDLE;
         lightColourUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
-        lightIntensityUniformHandle = UNDEFINED_HANDLE;
-        lightAmbienceStrengthHandle = UNDEFINED_HANDLE;
-        lightSpecularStrengthHandle = UNDEFINED_HANDLE;
+        materialDiffuseUniformHandle = UNDEFINED_HANDLE;
+        materialAmbientUniformHandle = UNDEFINED_HANDLE;
+        materialSpecularUniformHandle = UNDEFINED_HANDLE;
     }
 
     /**
@@ -476,9 +530,9 @@ public class Shader
      *                              in GLSL shader programming language.
      * @since                       1.0
      */
-    protected Shader(byte[] vertexShaderCode, byte[] fragmentShaderCode)
+    protected Shader(String name, byte[] vertexShaderCode, byte[] fragmentShaderCode)
     {
-        this(new String(vertexShaderCode), new String(fragmentShaderCode));
+        this(name, new String(vertexShaderCode), new String(fragmentShaderCode));
     }
 
     /**
@@ -491,9 +545,9 @@ public class Shader
      *                                  in GLSL shader programming language.
      * @since                           1.0
      */
-    protected Shader(int vertexShaderResourceId, int fragmentShaderResourceId)
+    protected Shader(String name, int vertexShaderResourceId, int fragmentShaderResourceId)
     {
-        this(FileResourceReader.readRawResource(vertexShaderResourceId),
+        this(name, FileResourceReader.readRawResource(vertexShaderResourceId),
                 FileResourceReader.readRawResource(fragmentShaderResourceId));
 
         // Register the shader to the cache so that the engine can handle the re-init call.
@@ -510,6 +564,7 @@ public class Shader
      * are: create and compile vertex and fragment shaders, create program ID, attach vertex and
      * fragment shaders to program, then link the program.
      *
+     * @param name                  Shader name string for logging
      * @param vertexShaderCode      String containing vertex shader code. Must be written in GLSL
      *                              shader programming language.
      * @param fragmentShaderCode    String containing fragment shader code. Must be written in GLSL
@@ -517,35 +572,53 @@ public class Shader
      * @return                      Program ID integer
      * @since                       1.0
      */
-    private static int createProgram(String vertexShaderCode, String fragmentShaderCode)
+    private static int createProgram(String name,
+                                     String vertexShaderCode,
+                                     String fragmentShaderCode)
     {
         // Create a vertex shader
-        final int VERTEX_SHADER_ID = createShader(GL_VERTEX_SHADER, vertexShaderCode);
+        final int vertexShaderId = createShader(name, GL_VERTEX_SHADER, vertexShaderCode);
 
         // Create a fragment shader
-        final int FRAGMENT_SHADER_ID = createShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
+        final int fragmentShaderId = createShader(name, GL_FRAGMENT_SHADER, fragmentShaderCode);
 
         // Create the shader program
-        final int PROGRAM_ID = glCreateProgram();
+        final int programId = glCreateProgram();
 
         // Throw exception on failure
-        if (PROGRAM_ID == 0)
+        if (programId == 0)
         {
-            Logger.error(TAG, "OpenGLES failed to generate a program object");
+            Logger.error(TAG, "Failed to generate a program object");
         }
 
         // Attach the vertex and fragment shaders to the program
-        glAttachShader(PROGRAM_ID, VERTEX_SHADER_ID);
-        glAttachShader(PROGRAM_ID, FRAGMENT_SHADER_ID);
+        glAttachShader(programId, vertexShaderId);
+        glAttachShader(programId, fragmentShaderId);
 
         // Link the shaders
-        glLinkProgram(PROGRAM_ID);
+        glLinkProgram(programId);
 
         // Delete the vertex and fragment shaders from OpenGL ES memory
-        glDeleteShader(VERTEX_SHADER_ID);
-        glDeleteShader(FRAGMENT_SHADER_ID);
+        glDeleteShader(vertexShaderId);
+        glDeleteShader(fragmentShaderId);
 
-        return PROGRAM_ID;
+        // Check for linking errors
+        if(isLinked(programId)) {
+            Logger.info("Linked shader program '" + name + "' successfully");
+        } else {
+            final int[] maxLength = new int[1];
+            glGetProgramiv(programId, GL_INFO_LOG_LENGTH, maxLength, 0);
+            final String linkLog = glGetProgramInfoLog(programId);
+            if(!linkLog.isEmpty()) {
+                Logger.error(TAG, "Failed to link '" + name +
+                        "' shader program. \n-- Shader Program Link Log Start --\n" + linkLog +
+                        "\n-- Shader Program Link Log End --");
+            } else {
+                Logger.error(TAG, "Failed to link '" + name + "' " + " shader program.");
+            }
+        }
+
+        return programId;
     }
 
     /**
@@ -555,47 +628,49 @@ public class Shader
      * shader program, it creates an individual shader such as a vertex shader or fragment shader.
      * To create a shader program, use the 'createProgram' method.
      *
+     * @param name          Shader name string for logging
      * @param type          The type of shader as specified in OpenGL ES. For example:
      *                      GL_VERTEX_SHADER or GL_FRAGMENT_SHADER.
      * @param shaderCode    String containing the shader code. Must be written in GLSL shader
      *                      programming language.
      * @return              Return
-     * @see                 #createProgram(String, String)
+     * @see                 #createProgram(String, String, String)
      * @see                 android.opengl.GLES20
      * @since               1.0
      */
-    private static int createShader(int type, String shaderCode)
+    private static int createShader(String name, int type, String shaderCode)
     {
         // Create a shader of the specified type and get the ID
-        final int SHADER = glCreateShader(type);
+        final int shader = glCreateShader(type);
 
         // Check if the shader ID is invalid
-        if (SHADER == 0)
+        if (shader == 0)
         {
             // Failed to generate shader object
-            Logger.error(TAG, "OpenGLES failed to generate " +
-                    typeToString(type) +
-                    " shader object");
+            Logger.error(TAG, "Failed to generate " + typeToString(type) + " shader object");
         }
 
         // Upload the source to the shader
-        glShaderSource(SHADER, shaderCode);
+        glShaderSource(shader, shaderCode);
 
         // Compile that shader object
-        glCompileShader(SHADER);
+        glCompileShader(shader);
 
         // Check compilation
-        if(!isCompiled(SHADER))
+        if(!isCompiled(shader))
         {
-            final int[] maxLength = new int[1];
-            glGetShaderiv(SHADER, GL_INFO_LOG_LENGTH, maxLength, 0);
-            final String compilationLog = glGetShaderInfoLog(SHADER);
-            Logger.error(TAG, "OpenGLES failed to compile " + typeToString(type) +
-                    " shader program. \n-- Shader Compilation Log Start --\n" + compilationLog +
-                    "\n-- Shader Compilation Log End --");
+            final String compilationLog = glGetShaderInfoLog(shader);
+            if(!compilationLog.isEmpty()) {
+                Logger.error(TAG, "Failed to compile '" + name + "' " + typeToString(type) +
+                        " shader program. \n-- Shader Compilation Log Start --\n" + compilationLog +
+                        "\n-- Shader Compilation Log End --");
+            } else {
+                Logger.error(TAG, "Failed to compile '" + name + "' " + typeToString(type) +
+                        " shader program.");
+            }
         }
 
-        return SHADER;
+        return shader;
     }
 
     /**
@@ -607,17 +682,33 @@ public class Shader
      */
     private static boolean isCompiled(int shaderID)
     {
-        // Place to store the vertex shader compilation status
+        // Place to store the shader compilation status
         final int[] SHADER_COMPILATION_STATUS = new int[1];
 
-        // Get the vertex shader compilation status
-        glGetShaderiv(shaderID,
-                GL_COMPILE_STATUS,
-                SHADER_COMPILATION_STATUS,
-                0);
+        // Get the shader compilation status
+        glGetShaderiv(shaderID, GL_COMPILE_STATUS, SHADER_COMPILATION_STATUS, 0);
 
         // Return true if shader compilation successful
         return SHADER_COMPILATION_STATUS[0] == GL_TRUE;
+    }
+
+    /**
+     * Get the link status of a shader program
+     *
+     * @param programID ID of the shader program
+     * @return          True if the program is linked, false if not.
+     * @since           1.0
+     */
+    private static boolean isLinked(int programID)
+    {
+        // Place to store the program link status
+        final int[] PROGRAM_LINK_STATUS = new int[1];
+
+        // Get the program link status
+        glGetProgramiv(programID, GL_LINK_STATUS, PROGRAM_LINK_STATUS, 0);
+
+        // Return true if program link was successful
+        return PROGRAM_LINK_STATUS[0] == GL_TRUE;
     }
 
     /**
@@ -625,7 +716,7 @@ public class Shader
      *
      * @param type  The type of shader as specified in OpenGL ES. For example:
      *              GL_VERTEX_SHADER or GL_FRAGMENT_SHADER.
-     * @see         android.opengl.GLES20
+     * @see         android.opengl.GLES30
      * @return      Returns string of shader type specified
      * @since       1.0
      */

@@ -7,6 +7,9 @@ import static android.opengl.GLES20.glUniform1i;
 
 public class LineShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "LineShader";
+
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.line_vert;
 
@@ -15,7 +18,7 @@ public class LineShader extends Shader
 
     public LineShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
         matrixUniformHandle = getUniform("uMatrix");

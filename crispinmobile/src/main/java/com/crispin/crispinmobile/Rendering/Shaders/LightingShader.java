@@ -14,6 +14,9 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class LightingShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "LightingShader";
+
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.lighting_vert;
 
@@ -29,7 +32,7 @@ public class LightingShader extends Shader
      */
     public LightingShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         lightingShader = true;
 
@@ -44,11 +47,15 @@ public class LightingShader extends Shader
 
         // Fragment uniforms
         colourUniformHandle = getUniform("uColour");
-        lightPositionUniformHandle = getUniform("uLightPosition");
         viewPositionUniformHandle = getUniform("uViewPosition");
-        lightColourUniformHandle = getUniform("uLightColour");
-        lightIntensityUniformHandle = getUniform("uLightIntensity");
-        lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
-        lightSpecularStrengthHandle = getUniform("uSpecularStrength");
+        materialAmbientUniformHandle = getUniform("uMaterial.ambient");
+        materialDiffuseUniformHandle = getUniform("uMaterial.diffuse");
+        materialSpecularUniformHandle = getUniform("uMaterial.specular");
+        materialShininessUniformHandle = getUniform("uMaterial.shininess");
+        lightPositionUniformHandle = getUniform("uLight.position");
+        lightColourUniformHandle = getUniform("uLight.colour");
+        lightIntensityUniformHandle = getUniform("uLight.intensity");
+        lightAmbienceStrengthHandle = getUniform("uLight.ambient");
+        lightSpecularStrengthHandle = getUniform("uLight.specular");
     }
 }

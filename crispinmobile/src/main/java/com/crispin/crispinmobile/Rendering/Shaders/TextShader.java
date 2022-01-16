@@ -16,6 +16,9 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class TextShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "TextShader";
+
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.text_vert;
 
@@ -30,7 +33,7 @@ public class TextShader extends Shader
      */
     public TextShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
         textureAttributeHandle = getAttribute("vTextureCoordinates");

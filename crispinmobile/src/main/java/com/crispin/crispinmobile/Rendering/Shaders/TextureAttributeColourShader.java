@@ -14,6 +14,9 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class TextureAttributeColourShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "TextureAttributeColourShader";
+
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.texture_attribute_colour_vert;
 
@@ -29,7 +32,7 @@ public class TextureAttributeColourShader extends Shader
      */
     public TextureAttributeColourShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
         colourAttributeHandle = getAttribute("vColour");

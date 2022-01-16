@@ -1,5 +1,17 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
+import static android.opengl.GLES20.GL_TEXTURE0;
+import static android.opengl.GLES20.GL_TEXTURE1;
+import static android.opengl.GLES20.GL_TEXTURE2;
+import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.glActiveTexture;
+import static android.opengl.GLES20.glBindTexture;
+import static android.opengl.GLES20.glUniform1i;
+import static android.opengl.GLES20.glUniform2f;
+import static android.opengl.GLES20.glUniform4f;
+import static android.opengl.GLES30.glUniform1f;
+import static android.opengl.GLES30.glUniform3f;
+
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
@@ -30,8 +42,8 @@ public class Material
     // Default uv offset
     private static final Point2D DEFAULT_UV_OFFSET = new Point2D();
 
-    // Default colour
-    private static final Colour DEFAULT_COLOUR = Colour.WHITE;
+    // Default shininess
+    public static final float DEFAULT_SHININESS = 32.0f;
 
     // Flag position for ignoring position data
     public static final int IGNORE_POSITION_DATA_FLAG = 1;
@@ -46,22 +58,34 @@ public class Material
     public static final int IGNORE_NORMAL_DATA_FLAG = 8;
 
     // The material texture
-    private Texture texture;
+    public Texture texture;
 
     // The specular map texture
-    private Texture specularMap;
+    public Texture specularMap;
 
     // The normal map texture
-    private Texture normalMap;
+    public Texture normalMap;
 
     // The UV multiplier for the texture
-    private Scale2D uvMultiplier;
+    public Scale2D uvMultiplier;
 
     // UV offset for the texture
-    private Point2D uvOffset;
+    public Point2D uvOffset;
 
     // The colour
-    private Colour colour;
+    public Colour colour;
+
+    // Strength of the ambient lighting
+    public Colour ambientStrength;
+
+    // Strength of the diffuse lighting
+    public Colour diffuseStrength;
+
+    // Strength of the specular/reflective lighting
+    public Colour specularStrength;
+
+    // How shiny the object appears when lit
+    public float shininess;
 
     // Ignore position data in rendering
     private boolean ignorePositionData;
@@ -96,6 +120,10 @@ public class Material
         this.uvMultiplier = new Scale2D();
         this.uvOffset = new Point2D();
         this.colour = new Colour();
+        this.ambientStrength = new Colour();
+        this.diffuseStrength = new Colour();
+        this.specularStrength = new Colour();
+        this.shininess = DEFAULT_SHININESS;
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
         this.ignoreColourData = false;
@@ -484,7 +512,7 @@ public class Material
      * @see             Texture
      * @since           1.0
      */
-    public void setSpecularMap(Texture texture)
+    public void setSpecularMap(final Texture texture)
     {
         this.specularMap = texture;
     }
@@ -556,62 +584,83 @@ public class Material
      * @see             Colour
      * @since           1.0
      */
-    public void setColour(Colour colour)
+    public void setColour(final Colour colour)
     {
-        this.colour.setRed(colour.getRed());
-        this.colour.setGreen(colour.getGreen());
-        this.colour.setBlue(colour.getBlue());
-        this.colour.setAlpha(colour.getAlpha());
+        this.colour.red = colour.red;
+        this.colour.green = colour.green;
+        this.colour.blue = colour.blue;
     }
 
     /**
-     * Get the uniform colour of the material.
+     * Sets the material related uniforms on a given shader
      *
-     * @return  The uniform colour of the material
-     * @see     Colour
-     * @since   1.0
+     * @param shader    Shader to set uniforms on
+     * @see             Colour
+     * @since           1.0
      */
-    public Colour getColour()
-    {
-        return this.colour;
-    }
+    public void setUniforms(final Shader shader) {
+        if(shader.validHandle(shader.getMaterialAmbientUniformHandle())) {
+            glUniform3f(shader.getMaterialAmbientUniformHandle(), ambientStrength.red,
+                    ambientStrength.green, ambientStrength.blue);
+        }
 
-    /**
-     * Get the colour data as an array of floats
-     *
-     * @return  An array of floats containing the colour data in format RGBA
-     * @since   1.0
-     */
-    public float[] getColourData()
-    {
-        return new float[]
-                {
-                        colour.getRed(),
-                        colour.getGreen(),
-                        colour.getBlue(),
-                        colour.getAlpha()
-                };
-    }
+        if(shader.validHandle(shader.getMaterialDiffuseUniformHandle())) {
+            glUniform3f(shader.getMaterialDiffuseUniformHandle(), diffuseStrength.red,
+                    diffuseStrength.green, diffuseStrength.blue);
+        }
 
-    /**
-     * Set the alpha colour channel intensity
-     *
-     * @param alpha The intensity of the alpha colour channel (0.0 to 1.0)
-     * @since   1.0
-     */
-    public void setAlpha(float alpha)
-    {
-        this.colour.setAlpha(alpha);
-    }
+        if(shader.validHandle(shader.getMaterialSpecularUniformHandle())) {
+            glUniform3f(shader.getMaterialSpecularUniformHandle(), specularStrength.red,
+                    specularStrength.green, specularStrength.blue);
+        }
 
-    /**
-     * Get the alpha colour channel intensity
-     *
-     * @return  The intensity of the alpha colour channel (0.0 to 1.0)
-     * @since   1.0
-     */
-    public float getAlpha()
-    {
-        return colour.getAlpha();
+        if(shader.validHandle(shader.getMaterialShininessUniformHandle())) {
+            glUniform1f(shader.getMaterialShininessUniformHandle(), shininess);
+        }
+
+        // If the shader colour uniform handle is not invalid, upload the colour data
+        if(shader.validHandle(shader.getColourUniformHandle()))
+        {
+            glUniform4f(shader.getColourUniformHandle(), colour.red, colour.green, colour.blue,
+                    colour.alpha);
+        }
+
+        // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
+        // data
+        if(shader.validHandle(shader.getUvMultiplierUniformHandle()))
+        {
+            glUniform2f(shader.getUvMultiplierUniformHandle(), uvMultiplier.x, uvMultiplier.y);
+        }
+
+        // If the shader UV offset uniform handle is not invalid, upload the UV offset data
+        if(shader.validHandle(shader.getUvOffsetUniformHandle()))
+        {
+            glUniform2f(shader.getUvOffsetUniformHandle(), uvOffset.x, uvOffset.y);
+        }
+
+        // If the shader texture uniform handle is not invalid, upload the texture unit
+        if(shader.validHandle(shader.getTextureUniformHandle()) && hasTexture())
+        {
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, texture.getId());
+            glUniform1i(shader.getTextureUniformHandle(), 0);
+        }
+
+        // If the shader supports a specular map and the material has one, supply it to the
+        // shader.
+        if(shader.validHandle(shader.getSpecularMapUniformHandle()) && hasSpecularMap())
+        {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, specularMap.getId());
+            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
+        }
+
+        // If the shader supports a normal map and the material has one, supply it to the shader
+        if(shader.validHandle(shader.getNormalMapUniformHandle()) && hasNormalMap())
+        {
+            glActiveTexture(GL_TEXTURE2);
+            glBindTexture(GL_TEXTURE_2D, normalMap.getId());
+            glUniform1i(shader.getNormalMapUniformHandle(), 2);
+        }
     }
 }

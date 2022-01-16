@@ -320,8 +320,8 @@ public class Button extends InteractableUIObject
     @Override
     public void setOpacity(float alpha)
     {
-        colourBackground.setAlpha(alpha);
-        colourText.setAlpha(alpha);
+        colourBackground.alpha = alpha;
+        colourText.alpha = alpha;
 
         if(text != null)
         {
@@ -334,7 +334,7 @@ public class Button extends InteractableUIObject
     @Override
     public float getOpacity()
     {
-        return colourBackground.getAlpha();
+        return colourBackground.alpha;
     }
 
     /**

@@ -59,10 +59,10 @@ public class Particle
         this.size = size;
         this.maxLifeTime = life;
         this.currentLifeTime = life;
-        this.colour.setRed(colourR);
-        this.colour.setGreen(colourG);
-        this.colour.setBlue(colourB);
-        this.colour.setAlpha(colourA);
+        this.colour.red = colourR;
+        this.colour.green = colourG;
+        this.colour.blue = colourB;
+        this.colour.alpha = colourA;
         this.angle = angle;
     }
 }

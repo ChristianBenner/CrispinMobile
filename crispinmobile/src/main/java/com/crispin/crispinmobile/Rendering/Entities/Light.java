@@ -28,26 +28,26 @@ public class Light
     private final float DEFAULT_SPECULAR_STRENGTH = 0.5f;
 
     // The position of the light source
-    private float x;
-    private float y;
-    private float z;
+    public float x;
+    public float y;
+    public float z;
 
     // The colour of the light
-    private float red;
-    private float green;
-    private float blue;
+    public float red;
+    public float green;
+    public float blue;
 
     // Intensity of the light
-    private float intensity;
+    public float intensity;
 
     // Lights ambient strength (when the light is present how does it effect the entire scene
     // no matter how far away it is). By default this is DEFAULT_AMBIENT_STRENGTH
-    private float ambienceStrength;
+    public float ambienceStrength;
 
     // Strength of the specular glint. This gives the object a shiny look. Note that this can also
     // be controlled with specular texture maps on object materials (the advantage of that is that
     // an objects surface can appear with varying levels of shininess)
-    private float specularStrength;
+    public float specularStrength;
 
     public Light(float x,
                  float y,
@@ -86,12 +86,12 @@ public class Light
     }
 
     public Light(final Point3D position, final Colour colour) {
-        this(position.x, position.y, position.z, colour.getRed(), colour.getGreen(),
-                colour.getBlue());
+        this(position.x, position.y, position.z, colour.red, colour.green,
+                colour.blue);
     }
 
     public Light(final Point2D position, final Colour colour) {
-        this(position.x, position.y, colour.getRed(), colour.getGreen(), colour.getBlue());
+        this(position.x, position.y, colour.red, colour.green, colour.blue);
     }
 
     public Light(final Point3D position) {
@@ -126,22 +126,10 @@ public class Light
         return new Point2D(x, y);
     }
 
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
-    }
-
-    public float getZ() {
-        return z;
-    }
-
     public void setColour(final Colour colour) {
-        red = colour.getRed();
-        green = colour.getGreen();
-        blue = colour.getBlue();
+        red = colour.red;
+        green = colour.green;
+        blue = colour.blue;
     }
 
     public void setColour(float red, float green, float blue) {
@@ -152,18 +140,6 @@ public class Light
 
     public Colour getColour() {
         return new Colour(red, green, blue);
-    }
-
-    public float getRed() {
-        return red;
-    }
-
-    public float getGreen() {
-        return green;
-    }
-
-    public float getBlue() {
-        return blue;
     }
 
     public void setIntensity(float intensity) {

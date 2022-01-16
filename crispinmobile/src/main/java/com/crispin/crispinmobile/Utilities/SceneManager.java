@@ -550,10 +550,10 @@ public class SceneManager implements GLSurfaceView.Renderer
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.getRed(),
-                backgroundColour.getGreen(),
-                backgroundColour.getBlue(),
-                backgroundColour.getAlpha());
+        glClearColor(backgroundColour.red,
+                backgroundColour.green,
+                backgroundColour.blue,
+                backgroundColour.alpha);
 
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise
         // disable in OpenGL ES

@@ -28,7 +28,7 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingMaterialShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
@@ -579,7 +579,7 @@ public class RenderObject
      */
     public void setAlpha(float alpha)
     {
-        this.material.setAlpha(alpha);
+        this.material.colour.alpha = alpha;
     }
 
     /**
@@ -591,7 +591,7 @@ public class RenderObject
      */
     public float getAlpha()
     {
-        return this.material.getAlpha();
+        return this.material.colour.alpha;
     }
 
     /**
@@ -603,7 +603,7 @@ public class RenderObject
      */
     public Colour getColour()
     {
-        return this.material.getColour();
+        return this.material.colour;
     }
 
     /**
@@ -664,10 +664,10 @@ public class RenderObject
         if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
         {
             glUniform4f(shader.getColourUniformHandle(),
-                    material.getColour().getRed(),
-                    material.getColour().getGreen(),
-                    material.getColour().getBlue(),
-                    material.getColour().getAlpha());
+                    material.colour.red,
+                    material.colour.green,
+                    material.colour.blue,
+                    material.colour.alpha);
         }
 
         // If the shader texture uniform handle is not invalid, upload the texture unit
@@ -761,8 +761,7 @@ public class RenderObject
         if(shader.validHandle(shader.getLightPositionUniformHandle())){
             if(lightGroup != null) {
                 for(Light light : lightGroup) {
-                    glUniform3f(shader.getLightPositionUniformHandle(), light.getX(), light.getY(),
-                            light.getZ());
+                    glUniform3f(shader.getLightPositionUniformHandle(), light.x, light.y, light.z);
                     break; // TEMP just use first light in group todo: Multi-light rendering
                 }
             } else {
@@ -774,8 +773,8 @@ public class RenderObject
         if(shader.validHandle(shader.getLightColourUniformHandle())) {
             if (lightGroup != null) {
                 for(Light light : lightGroup) {
-                    glUniform3f(shader.getLightColourUniformHandle(), light.getRed(),
-                            light.getGreen(), light.getBlue());
+                    glUniform3f(shader.getLightColourUniformHandle(), light.red, light.green,
+                            light.blue);
                     break; // TEMP just use first light in group todo: Multi-light rendering
                 }
             } else {
@@ -787,7 +786,7 @@ public class RenderObject
         if(shader.validHandle(shader.getLightIntensityUniformHandle())) {
             if (lightGroup != null) {
                 for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightIntensityUniformHandle(), light.getIntensity());
+                    glUniform1f(shader.getLightIntensityUniformHandle(), light.intensity);
                     break; // TEMP just use first light in group todo: Multi-light rendering
                 }
             } else {
@@ -799,7 +798,7 @@ public class RenderObject
         if(shader.validHandle(shader.getLightAmbienceStrengthHandle())) {
             if (lightGroup != null) {
                 for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightAmbienceStrengthHandle(), light.getAmbienceStrength());
+                    glUniform1f(shader.getLightAmbienceStrengthHandle(), light.ambienceStrength);
                     break; // TEMP just use first light in group todo: Multi-light rendering
                 }
             } else {
@@ -811,7 +810,7 @@ public class RenderObject
         if(shader.validHandle(shader.getLightSpecularStrengthHandle())) {
             if (lightGroup != null) {
                 for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightSpecularStrengthHandle(), light.getSpecularStrength());
+                    glUniform1f(shader.getLightSpecularStrengthHandle(), light.specularStrength);
                     break; // TEMP just use first light in group todo: Multi-light rendering
                 }
             } else {
@@ -820,6 +819,8 @@ public class RenderObject
             }
         }
 
+        // Set all material uniforms
+        material.setUniforms(shader);
 
         if(shader.validHandle(shader.getViewPositionUniformHandle())) {
             final Point3D cameraPos = camera.getPosition();
@@ -897,60 +898,6 @@ public class RenderObject
 //                    modelViewProjectionMatrix,
 //                    0);
 //        }
-
-        // If the shader colour uniform handle is not invalid, upload the colour data
-        if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform4f(shader.getColourUniformHandle(),
-                    material.getColour().getRed(),
-                    material.getColour().getGreen(),
-                    material.getColour().getBlue(),
-                    material.getColour().getAlpha());
-        }
-
-        // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-        // data
-        if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform2f(shader.getUvMultiplierUniformHandle(),
-                    material.getUvMultiplier().x,
-                    material.getUvMultiplier().y);
-        }
-
-        // If the shader UV offset uniform handle is not invalid, upload the UV offset data
-        if(shader.getUvOffsetUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform2f(shader.getUvOffsetUniformHandle(),
-                    material.getUvOffset().x,
-                    material.getUvOffset().y);
-        }
-
-        // If the shader texture uniform handle is not invalid, upload the texture unit
-        if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
-            glUniform1i(shader.getTextureUniformHandle(), 0);
-        }
-
-        // If the shader supports a specular map and the material has one, supply it to the
-        // shader.
-        if(shader.getSpecularMapUniformHandle() !=
-                INVALID_UNIFORM_HANDLE && material.hasSpecularMap())
-        {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
-            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
-        }
-
-        // If the shader supports a normal map and the material has one, supply it to the shader
-        if(shader.getNormalMapUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasNormalMap())
-        {
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
-            glUniform1i(shader.getNormalMapUniformHandle(), 2);
-        }
-
 
 
         handleAttributes(true);
@@ -1031,15 +978,15 @@ public class RenderObject
             {
                 System.out.println("NORMAL AND TEXTURE SHADER");
 
-                if(ShaderCache.existsInCache(LightingMaterialShader.VERTEX_FILE,
-                        LightingMaterialShader.FRAGMENT_FILE))
+                if(ShaderCache.existsInCache(LightingTextureShader.VERTEX_FILE,
+                        LightingTextureShader.FRAGMENT_FILE))
                 {
-                    shader = ShaderCache.getShader(LightingMaterialShader.VERTEX_FILE,
-                            LightingMaterialShader.FRAGMENT_FILE);
+                    shader = ShaderCache.getShader(LightingTextureShader.VERTEX_FILE,
+                            LightingTextureShader.FRAGMENT_FILE);
                 }
                 else
                 {
-                    shader = new LightingMaterialShader();
+                    shader = new LightingTextureShader();
                 }
             }
             else if(supportsNormals && supportsColourPerAttrib)

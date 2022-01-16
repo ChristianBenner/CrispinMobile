@@ -126,17 +126,14 @@ public class Line
     {
         lineShader.enableIt();
         glLineWidth(lineWidth);
-        glUniform4f(lineShader.getColourUniformHandle(), colour.getRed(), colour.getGreen(),
-                colour.getBlue(), colour.getAlpha());
+        glUniform4f(lineShader.getColourUniformHandle(), colour.red, colour.green, colour.blue,
+                colour.alpha);
 
         glUniformMatrix4fv(lineShader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT, false,
                 camera.getOrthoMatrix(), 0);
 
-        glUniform4f(lineShader.getColourUniformHandle(),
-                colour.getRed(),
-                colour.getGreen(),
-                colour.getBlue(),
-                colour.getAlpha());
+        glUniform4f(lineShader.getColourUniformHandle(), colour.red, colour.green, colour.blue,
+                colour.alpha);
 
         vertexBuffer.position(0);
         glEnableVertexAttribArray(lineShader.getPositionAttributeHandle());

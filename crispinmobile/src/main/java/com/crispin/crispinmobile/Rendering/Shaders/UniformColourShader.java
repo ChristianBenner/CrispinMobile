@@ -15,6 +15,9 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  */
 public class UniformColourShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "UniformColourShader";
+
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.uniform_colour_vert;
 
@@ -29,7 +32,7 @@ public class UniformColourShader extends Shader
      */
     public UniformColourShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
         colourUniformHandle = getUniform("uColour");

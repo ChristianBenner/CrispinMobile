@@ -267,7 +267,7 @@ public class Plane implements UIObject
     public void setColour(Colour colour)
     {
         this.plane.setColour(colour);
-        this.setBorderAlpha(colour.getAlpha());
+        this.setBorderAlpha(colour.alpha);
     }
 
     /**
@@ -347,7 +347,7 @@ public class Plane implements UIObject
     @Override
     public float getOpacity()
     {
-        return this.plane.getMaterial().getColour().getAlpha();
+        return this.plane.getMaterial().colour.alpha;
     }
 
     /**

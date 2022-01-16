@@ -63,16 +63,16 @@ public class Colour
     private static final int MAXIMUM_INTEGER_CHANNEL_INTENSITY = 255;
 
     // Red channel value
-    private float red;
+    public float red;
 
     // Green channel value
-    private float green;
+    public float green;
 
     // Blue channel value
-    private float blue;
+    public float blue;
 
     // Alpha channel value
-    private float alpha;
+    public float alpha;
 
     /**
      * Construct a colour object with RGBA values
@@ -83,15 +83,12 @@ public class Colour
      * @param alpha The alpha colour value (0.0 for no alpha, 1.0 for maximum alpha)
      * @since 1.0
      */
-    public Colour(float red,
-                  float green,
-                  float blue,
-                  float alpha)
+    public Colour(float red, float green, float blue, float alpha)
     {
-        setRed(red);
-        setGreen(green);
-        setBlue(blue);
-        setAlpha(alpha);
+        this.red = red;
+        this.green = green;
+        this.blue = blue;
+        this.alpha = alpha;
     }
 
     /**
@@ -102,14 +99,9 @@ public class Colour
      * @param blue  The blue colour value (0.0 for no blue, 1.0 for maximum blue)
      * @since   1.0
      */
-    public Colour(float red,
-                  float green,
-                  float blue)
+    public Colour(float red, float green, float blue)
     {
-        this(red,
-                green,
-                blue,
-                DEFAULT_ALPHA_VALUE);
+        this(red, green, blue, DEFAULT_ALPHA_VALUE);
     }
 
     /**
@@ -119,12 +111,9 @@ public class Colour
      * @param   colour  An existing colour object to copy
      * @since   1.0
      */
-    public Colour(Colour colour)
+    public Colour(final Colour colour)
     {
-        this(colour.getRed(),
-                colour.getGreen(),
-                colour.getBlue(),
-                colour.getAlpha());
+        this(colour.red, colour.green, colour.blue, colour.alpha);
     }
 
     /**
@@ -135,10 +124,7 @@ public class Colour
      */
     public Colour()
     {
-        this(DEFAULT_RED_VALUE,
-                DEFAULT_GREEN_VALUE,
-                DEFAULT_BLUE_VALUE,
-                DEFAULT_ALPHA_VALUE);
+        this(DEFAULT_RED_VALUE, DEFAULT_GREEN_VALUE, DEFAULT_BLUE_VALUE, DEFAULT_ALPHA_VALUE);
     }
 
     /**
@@ -150,10 +136,7 @@ public class Colour
      * @param alpha The alpha colour value (0 for no alpha, 255 for maximum alpha)
      * @since   1.0
      */
-    public Colour(int red,
-                  int green,
-                  int blue,
-                  int alpha)
+    public Colour(int red, int green, int blue, int alpha)
     {
         this((float)red / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
                 (float)green / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
@@ -169,98 +152,8 @@ public class Colour
      * @param blue  The blue colour value (0 for no blue, 255 for maximum blue)
      * @since   1.0
      */
-    public Colour(int red,
-                  int green,
-                  int blue)
+    public Colour(int red, int green, int blue)
     {
         this(red, green, blue, MAXIMUM_INTEGER_CHANNEL_INTENSITY);
-    }
-
-    /**
-     * Set the value for the red channel (range 0.0 to 1.0)
-     *
-     * @param red   New value for the red channel
-     * @since   1.0
-     */
-    public void setRed(float red)
-    {
-        this.red = red;
-    }
-
-    /**
-     * Get the value of the red channel
-     *
-     * @return  Floating point from 0.0-1.0 representing the intensity of the red channel
-     * @since   1.0
-     */
-    public float getRed()
-    {
-        return this.red;
-    }
-
-    /**
-     * Set the value for the green channel (range 0.0 to 1.0)
-     *
-     * @param green New value for the green channel
-     * @since   1.0
-     */
-    public void setGreen(float green)
-    {
-        this.green = green;
-    }
-
-    /**
-     * Get the value of the green channel
-     *
-     * @return  Floating point from 0.0-1.0 representing the intensity of the green channel
-     * @since   1.0
-     */
-    public float getGreen()
-    {
-        return this.green;
-    }
-
-    /**
-     * Set the value for the blue channel (range 0.0 to 1.0)
-     *
-     * @param blue  New value for the blue channel
-     * @since   1.0
-     */
-    public void setBlue(float blue)
-    {
-        this.blue = blue;
-    }
-
-    /**
-     * Get the value of the blue channel
-     *
-     * @return  Floating point from 0.0-1.0 representing the intensity of the blue channel
-     * @since   1.0
-     */
-    public float getBlue()
-    {
-        return this.blue;
-    }
-
-    /**
-     * Set the value for the alpha channel (range 0.0 to 1.0)
-     *
-     * @param alpha New value for the alpha channel
-     * @since   1.0
-     */
-    public void setAlpha(float alpha)
-    {
-        this.alpha = alpha;
-    }
-
-    /**
-     * Get the value of the alpha channel
-     *
-     * @return  Floating point from 0.0-1.0 representing the intensity of the alpha channel
-     * @since   1.0
-     */
-    public float getAlpha()
-    {
-        return this.alpha;
     }
 }

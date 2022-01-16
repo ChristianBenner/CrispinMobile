@@ -91,9 +91,9 @@ public class IntroScene extends Scene
 
     public void modifyBackgroundColour(float amount)
     {
-        backgroundColour.setRed(backgroundColour.getRed() + amount);
-        backgroundColour.setGreen(backgroundColour.getGreen() + amount);
-        backgroundColour.setBlue(backgroundColour.getBlue() + amount);
+        backgroundColour.red += amount;
+        backgroundColour.green += amount;
+        backgroundColour.blue += amount;
         background.setColour(backgroundColour);
     }
 
@@ -107,7 +107,7 @@ public class IntroScene extends Scene
             modifyBackgroundColour(TRANSITION_RATE * deltaTime);
 
             // Check if its time to fade back out to white
-            if(backgroundColour.getRed() >= 1.0f)
+            if(backgroundColour.red >= 1.0f)
             {
                 backgroundTransitionState = TRANSITION_STATE.FADE_OUT;
             }
@@ -117,7 +117,7 @@ public class IntroScene extends Scene
             // Over time, change the background colour to black
             modifyBackgroundColour(-TRANSITION_RATE * deltaTime);
 
-            if(backgroundColour.getRed() <= 0.0f)
+            if(backgroundColour.red <= 0.0f)
             {
                 backgroundTransitionState = TRANSITION_STATE.COMPLETED;
             }

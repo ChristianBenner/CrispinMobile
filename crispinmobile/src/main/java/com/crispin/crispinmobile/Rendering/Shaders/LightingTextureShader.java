@@ -13,13 +13,16 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
  * @see         Shader
  * @since       1.0
  */
-public class LightingMaterialShader extends Shader
+public class LightingTextureShader extends Shader
 {
+    // Tag for the logger
+    private static final String TAG = "LightingTextureShader";
+
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.lighting_material_vert;
+    public static final int VERTEX_FILE = R.raw.lighting_texture_vert;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.lighting_material_frag;
+    public static final int FRAGMENT_FILE = R.raw.lighting_texture_frag;
 
     /**
      * Create the NormalTextureShader. This compiles the pre-defined vertex and fragment
@@ -28,9 +31,9 @@ public class LightingMaterialShader extends Shader
      *
      * @since   1.0
      */
-    public LightingMaterialShader()
+    public LightingTextureShader()
     {
-        super(VERTEX_FILE, FRAGMENT_FILE);
+        super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         lightingShader = true;
 
@@ -39,22 +42,26 @@ public class LightingMaterialShader extends Shader
         normalAttributeHandle = getAttribute("aNormal");
         textureAttributeHandle = getAttribute("aTextureCoordinates");
 
-        // Vertex shader uniforms
+        // Vertex uniforms
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");
         modelMatrixUniformHandle = getUniform("uModel");
         uvMultiplierUniformHandle = getUniform("uUvMultiplier");
 
-        // Fragment shader uniforms
+        // Fragment uniforms
+        colourUniformHandle = getUniform("uColour");
+        viewPositionUniformHandle = getUniform("uViewPosition");
         textureUniformHandle = getUniform("uTexture");
         specularMapUniformHandle = getUniform("uSpecularMap");
         normalMapUniformHandle = getUniform("uNormalMap");
-        colourUniformHandle = getUniform("uColour");
-        lightPositionUniformHandle = getUniform("uLightPosition");
-        viewPositionUniformHandle = getUniform("uViewPosition");
-        lightColourUniformHandle = getUniform("uLightColour");
-        lightIntensityUniformHandle = getUniform("uLightIntensity");
-        lightAmbienceStrengthHandle = getUniform("uLightAmbienceStrength");
-        lightSpecularStrengthHandle = getUniform("uSpecularStrength");
+        materialAmbientUniformHandle = getUniform("uMaterial.ambient");
+        materialDiffuseUniformHandle = getUniform("uMaterial.diffuse");
+        materialSpecularUniformHandle = getUniform("uMaterial.specular");
+        materialShininessUniformHandle = getUniform("uMaterial.shininess");
+        lightPositionUniformHandle = getUniform("uLight.position");
+        lightColourUniformHandle = getUniform("uLight.colour");
+        lightIntensityUniformHandle = getUniform("uLight.intensity");
+        lightAmbienceStrengthHandle = getUniform("uLight.ambient");
+        lightSpecularStrengthHandle = getUniform("uLight.specular");
     }
 }

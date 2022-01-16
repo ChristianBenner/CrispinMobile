@@ -451,7 +451,8 @@ public class Model extends RenderObject
      */
     public void translate(Point2D point)
     {
-        this.position.translate(point);
+        this.position.x += point.x;
+        this.position.y += point.y;
     }
 
     /**

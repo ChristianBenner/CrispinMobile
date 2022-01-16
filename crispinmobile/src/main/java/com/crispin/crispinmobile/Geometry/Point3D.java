@@ -1,19 +1,23 @@
 package com.crispin.crispinmobile.Geometry;
 
 /**
- * Point3D provides a singular object that can represent three dimensions (x, y and z). It is
- * a subclass of the Point2D class. Along with the data on three dimensions, it contains useful
- * methods that can be used to operate on the data.
+ * Point3D provides a singular object that can represent three dimensions (x, y and z). Along with
+ * the data on three dimensions, it contains useful methods that can be used to operate on the data.
  *
  * @author      Christian Benner
  * @version     %I%, %G%
- * @see         Point2D
  * @since       1.0
  */
-public class Point3D extends Point2D
+public class Point3D
 {
     // Tag used in logging output
     private static final String TAG = "Point3D";
+
+    // The x-coordinate
+    public float x;
+
+    // The y-coordinate
+    public float y;
 
     // The z-coordinate
     public float z;
@@ -26,11 +30,10 @@ public class Point3D extends Point2D
      * @param z The z co-ordinate
      * @since 1.0
      */
-    public Point3D(float x,
-                   float y,
-                   float z)
+    public Point3D(float x, float y, float z)
     {
-        super(x, y);
+        this.x = x;
+        this.y = y;
         this.z = z;
     }
 

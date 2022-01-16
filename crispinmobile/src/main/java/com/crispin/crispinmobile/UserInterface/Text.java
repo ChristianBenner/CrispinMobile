@@ -334,7 +334,7 @@ public class Text implements UIObject
         height = 0.0f;
 
         textShader = new TextShader();
-        position = new Point3D();
+        position = new Point2D();
         squares = new ArrayList<>();
 
         setText(textString);
@@ -1069,7 +1069,7 @@ public class Text implements UIObject
     @Override
     public void setOpacity(float alpha)
     {
-        this.colour.setAlpha(alpha);
+        this.colour.alpha = alpha;
         setColour(this.colour);
     }
 
@@ -1082,7 +1082,7 @@ public class Text implements UIObject
     @Override
     public float getOpacity()
     {
-        return this.colour.getAlpha();
+        return this.colour.alpha;
     }
 
     /**

@@ -7,19 +7,15 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingMaterialShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
-import com.crispin.crispinmobile.UserInterface.TouchListener;
-import com.crispin.crispinmobile.Utilities.OBJModelCache;
-import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
@@ -167,7 +163,7 @@ public class LightingShaderAttributesDemoScene extends Scene
                 useMaterialShader = !useMaterialShader;
                 if(torus != null) {
                     if(useMaterialShader) {
-                        torus.useCustomShader(new LightingMaterialShader());
+                        torus.useCustomShader(new LightingTextureShader());
                     } else {
                         torus.useCustomShader(new LightingShader());
                     }
@@ -175,7 +171,7 @@ public class LightingShaderAttributesDemoScene extends Scene
 
                 if(lightBulb != null) {
                     if(useMaterialShader) {
-                        lightBulb.useCustomShader(new LightingMaterialShader());
+                        lightBulb.useCustomShader(new LightingTextureShader());
                     } else {
                         lightBulb.useCustomShader(new LightingShader());
                     }
