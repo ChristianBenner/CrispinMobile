@@ -11,17 +11,17 @@ import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 
-public class AbsoluteLayoutDemoScene extends Scene
+public class AbsoluteLayoutDemo extends Scene
 {
-    private AbsoluteLayout absoluteLayout;
+    private com.crispin.crispinmobile.UserInterface.AbsoluteLayout absoluteLayout;
     private Button button;
     private Text text;
 
     private Camera2D camera;
 
-    public AbsoluteLayoutDemoScene()
+    public AbsoluteLayoutDemo()
     {
-        absoluteLayout = new AbsoluteLayout();
+        absoluteLayout = new com.crispin.crispinmobile.UserInterface.AbsoluteLayout();
         absoluteLayout.setColour(Colour.BLUE);
         absoluteLayout.setPosition(100.0f, 700.0f);
         absoluteLayout.setSize(600.0f, 600.0f);

@@ -8,7 +8,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
-public class ObjLoadDemoScene extends Scene
+public class ObjLoadDemo extends Scene
 {
     // Monkey model
     private Model monkey;
@@ -19,7 +19,7 @@ public class ObjLoadDemoScene extends Scene
     // Camera for 3D model rendering
     private Camera3D modelCamera;
 
-    public ObjLoadDemoScene() {
+    public ObjLoadDemo() {
         // Load the monkey model. Note that we are using the ThreadedOBJLoader here. This means that
         // the application can continue whilst loading the model. This is especially useful for
         // loading large models in some situations. If you do not wish to use a threaded loader,

@@ -18,7 +18,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
  * @version %I%, %G%
  * @since   1.0
  */
-public class TextDemoScene extends Scene
+public class TextDemo extends Scene
 {
     // Padding between text
     private static final int PADDING_PIXELS = 50;
@@ -36,42 +36,42 @@ public class TextDemoScene extends Scene
     private static final String STANDARD_TEXT_STRING = "This is standard text. It doesn't even " +
             "have a max line length.";
 
-    // Text string for the text object with standard formatting that has a maximum line length
+    // TextDemo string for the text object with standard formatting that has a maximum line length
     private static final String STANDARD_MAX_LENGTH_TEXT_STRING = "This is standard text. It has " +
             "a max line length so it will wrap characters when it reaches it's maximum line length";
 
-    // Text string for the text object with centered text format
+    // TextDemo string for the text object with centered text format
     private static final String CENTERED_TEXT_STRING = "This text has the centered format applied" +
             " to it!";
 
-    // Text string for the text object with wrapped format
+    // TextDemo string for the text object with wrapped format
     private static final String WRAPPED_TEXT_STRING = "This text has the word wrap format applied" +
             " to it!";
 
-    // Text string for the text object with both wrapped and centered formatting
+    // TextDemo string for the text object with both wrapped and centered formatting
     private static final String WRAPPED_CENTERED_TEXT_STRING = "This text has both word wrap and " +
             "centering formats.";
 
-    // Text string for the text object that wiggles
+    // TextDemo string for the text object that wiggles
     private static final String WIGGLE_TEXT_STRING = "Wiggle wiggle wiggle!";
 
     // Standard text
-    private Text standardText;
+    private com.crispin.crispinmobile.UserInterface.Text standardText;
 
     // Standard text with a maximum length
-    private Text standardTextMaxLength;
+    private com.crispin.crispinmobile.UserInterface.Text standardTextMaxLength;
 
     // Centered text
-    private Text centeredText;
+    private com.crispin.crispinmobile.UserInterface.Text centeredText;
 
     // Wrapped text
-    private Text wrappedText;
+    private com.crispin.crispinmobile.UserInterface.Text wrappedText;
 
     // Wrapped and centered text
-    private Text wrappedCenteredText;
+    private com.crispin.crispinmobile.UserInterface.Text wrappedCenteredText;
 
-    // Text that wiggles
-    private Text wiggleText;
+    // TextDemo that wiggles
+    private com.crispin.crispinmobile.UserInterface.Text wiggleText;
 
     // 2-dimensional camera
     private Camera2D camera2D;
@@ -79,14 +79,14 @@ public class TextDemoScene extends Scene
     // Linear layout for the text tests
     private LinearLayout linearLayout;
 
-    private Text demo;
+    private com.crispin.crispinmobile.UserInterface.Text demo;
 
     /**
      * Construct the text demo scene
      *
      * @since 1.0
      */
-    public TextDemoScene()
+    public TextDemo()
     {
         Crispin.setBackgroundColour(Colour.DARK_GREY);
 
@@ -97,21 +97,21 @@ public class TextDemoScene extends Scene
         final Font AILERON_REGULAR = new Font(R.raw.aileron_regular, FONT_SIZE);
 
         // Construct the text objects
-        standardText = new Text(AILERON_REGULAR, STANDARD_TEXT_STRING);
-        standardTextMaxLength = new Text(AILERON_REGULAR, STANDARD_MAX_LENGTH_TEXT_STRING,
+        standardText = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, STANDARD_TEXT_STRING);
+        standardTextMaxLength = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, STANDARD_MAX_LENGTH_TEXT_STRING,
                 Crispin.getSurfaceWidth());
-        centeredText = new Text(AILERON_REGULAR, CENTERED_TEXT_STRING,false,true,
+        centeredText = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, CENTERED_TEXT_STRING,false,true,
                 Crispin.getSurfaceWidth());
-        wrappedText = new Text(AILERON_REGULAR, WRAPPED_TEXT_STRING,true,false,
+        wrappedText = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, WRAPPED_TEXT_STRING,true,false,
                 Crispin.getSurfaceWidth());
-        wrappedCenteredText = new Text(AILERON_REGULAR, WRAPPED_CENTERED_TEXT_STRING,true,
+        wrappedCenteredText = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, WRAPPED_CENTERED_TEXT_STRING,true,
                 true, Crispin.getSurfaceWidth());
-        wiggleText = new Text(AILERON_REGULAR, WIGGLE_TEXT_STRING,true,true,
+        wiggleText = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, WIGGLE_TEXT_STRING,true,true,
                 Crispin.getSurfaceWidth());
 
         // Enable wiggle on the wiggle text object
         wiggleText.enableWiggle(PADDING_PIXELS * WIGGLE_MULTIPLIER,
-                Text.WiggleSpeed_E.VERY_FAST);
+                com.crispin.crispinmobile.UserInterface.Text.WiggleSpeed_E.VERY_FAST);
 
         standardText.setColour(Colour.RED);
         standardTextMaxLength.setColour(Colour.LIGHT_GREY);
@@ -142,14 +142,14 @@ public class TextDemoScene extends Scene
 
         for(int i = 0; i < 10; i++)
         {
-//            linearLayout.add(new Text(AILERON_REGULAR, "Test", false, false, 0.0f));
+//            linearLayout.add(new TextDemo(AILERON_REGULAR, "Test", false, false, 0.0f));
         }
 
-        demo = new Text(AILERON_REGULAR, "Demo Text");
+        demo = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, "Demo TextDemo");
         demo.setPosition(0.0f, 0.0f);
 
-        System.out.println("Standard Text Height: " + standardText.getHeight());
-        System.out.println("Standard Text Max: " + standardTextMaxLength.getHeight());
+        System.out.println("Standard TextDemo Height: " + standardText.getHeight());
+        System.out.println("Standard TextDemo Max: " + standardTextMaxLength.getHeight());
     }
 
     /**

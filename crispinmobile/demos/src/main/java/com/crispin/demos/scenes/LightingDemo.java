@@ -24,7 +24,7 @@ import com.crispin.demos.R;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class LightingShaderAttributesDemoScene extends Scene
+public class LightingDemo extends Scene
 {
     // Amount that the information text should fade in per cycle
     private final float INFO_TEXT_FADE_STEP_AMOUNT = 0.03f;
@@ -106,7 +106,7 @@ public class LightingShaderAttributesDemoScene extends Scene
     private boolean resetX;
     private boolean resetZ;
 
-    public LightingShaderAttributesDemoScene() {
+    public LightingDemo() {
         Crispin.setBackgroundColour(Colour.BLACK);
 
         currentStage = STAGE_INTRODUCTION;

@@ -9,22 +9,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.IntroScene;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.Light;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
-import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
-import com.crispin.crispinmobile.UserInterface.TouchListener;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.scenes.LightingDemoScene;
-import com.crispin.demos.scenes.LightingShaderAttributesDemoScene;
-import com.crispin.demos.scenes.ObjLoadDemoScene;
-import com.crispin.demos.scenes.TextDemoScene;
+import com.crispin.demos.scenes.LightingDemo;
+import com.crispin.demos.scenes.MaterialDemo;
+import com.crispin.demos.scenes.ObjLoadDemo;
+import com.crispin.demos.scenes.TextDemo;
 
 class DemoMasterScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
@@ -36,7 +33,7 @@ class DemoMasterScene extends Scene {
 
     private Camera2D camera2D;
     private LinearLayout linearLayout;
-    private Text selectDemoText;
+    private com.crispin.crispinmobile.UserInterface.Text selectDemoText;
 
     public DemoMasterScene() {
         Crispin.setBackgroundColour(Colour.LIGHT_GREY);
@@ -45,12 +42,12 @@ class DemoMasterScene extends Scene {
 
         linearLayout = new LinearLayout(new Point2D(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));
-        linearLayout.add(createDemoButton("Lighting", LightingDemoScene::new));
-        linearLayout.add(createDemoButton("Lighting Attributes", LightingShaderAttributesDemoScene::new));
-        linearLayout.add(createDemoButton("Object Load", ObjLoadDemoScene::new));
-        linearLayout.add(createDemoButton("Text", TextDemoScene::new));
+        linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
+        linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
+        linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
+        linearLayout.add(createDemoButton("TextDemo", TextDemo::new));
 
-        selectDemoText = new Text(titleFont, "Select a Demo", true, true,
+        selectDemoText = new com.crispin.crispinmobile.UserInterface.Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);
         selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING);
     }
