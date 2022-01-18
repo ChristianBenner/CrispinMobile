@@ -38,7 +38,7 @@ import com.crispin.crispinmobile.Utilities.ShaderCache;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
-import java.util.HashSet;
+import java.util.ArrayList;
 
 /**
  * Render object is a base class for any graphical object. It handles an objects shader (based on
@@ -748,7 +748,7 @@ public class RenderObject
 
     public void render(Camera3D camera,
                        ModelMatrix modelMatrix,
-                       final HashSet<Light> lightGroup)
+                       final ArrayList<Light> lightGroup)
     {
         // If the shader is null, create a shader for the object
         if(shader == null)
@@ -758,64 +758,57 @@ public class RenderObject
 
         shader.enableIt();
 
-        if(shader.validHandle(shader.getLightPositionUniformHandle())){
-            if(lightGroup != null) {
-                for(Light light : lightGroup) {
-                    glUniform3f(shader.getLightPositionUniformHandle(), light.x, light.y, light.z);
-                    break; // TEMP just use first light in group todo: Multi-light rendering
-                }
-            } else {
-                // TEMP just use first light in group todo: Multi-light rendering
-                glUniform3f(shader.getLightPositionUniformHandle(), 0.0f, 0.0f, 0.0f);
+        if(lightGroup != null) {
+            if(shader.validHandle(shader.getNumLightsUniformHandle())) {
+                glUniform1i(shader.getNumLightsUniformHandle(), lightGroup.size());
             }
-        }
 
-        if(shader.validHandle(shader.getLightColourUniformHandle())) {
-            if (lightGroup != null) {
-                for(Light light : lightGroup) {
-                    glUniform3f(shader.getLightColourUniformHandle(), light.red, light.green,
+            // Iterate through point lights, uploading each to the shader
+            for(int i = 0; i < lightGroup.size() && i < shader.getMaxLights(); i++) {
+                final Light light = lightGroup.get(i);
+
+                // Upload light position
+                if(shader.validHandle(shader.getPointLightPositionUniformHandle(i))) {
+                    glUniform3f(shader.getPointLightPositionUniformHandle(i), light.x, light.y,
+                            light.z);
+                }
+
+                // Upload light colour
+                if(shader.validHandle(shader.getPointLightColourUniformHandle(i))) {
+                    glUniform3f(shader.getPointLightColourUniformHandle(i), light.red, light.green,
                             light.blue);
-                    break; // TEMP just use first light in group todo: Multi-light rendering
                 }
-            } else {
-                // TEMP just use first light in group todo: Multi-light rendering
-                glUniform3f(shader.getLightColourUniformHandle(), 1.0f, 1.0f, 1.0f);
-            }
-        }
 
-        if(shader.validHandle(shader.getLightIntensityUniformHandle())) {
-            if (lightGroup != null) {
-                for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightIntensityUniformHandle(), light.intensity);
-                    break; // TEMP just use first light in group todo: Multi-light rendering
+                // Upload light ambient
+                if(shader.validHandle(shader.getPointLightAmbientUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightAmbientUniformHandle(i), light.ambientStrength);
                 }
-            } else {
-                // TEMP just use first light in group todo: Multi-light rendering
-                glUniform1f(shader.getLightIntensityUniformHandle(), 0.0f);
-            }
-        }
 
-        if(shader.validHandle(shader.getLightAmbienceStrengthHandle())) {
-            if (lightGroup != null) {
-                for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightAmbienceStrengthHandle(), light.ambienceStrength);
-                    break; // TEMP just use first light in group todo: Multi-light rendering
+                // Upload light diffuse
+                if(shader.validHandle(shader.getPointLightDiffuseUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightDiffuseUniformHandle(i), light.diffuseStrength);
                 }
-            } else {
-                // TEMP just use first light in group todo: Multi-light rendering
-                glUniform1f(shader.getLightAmbienceStrengthHandle(), 1.0f);
-            }
-        }
 
-        if(shader.validHandle(shader.getLightSpecularStrengthHandle())) {
-            if (lightGroup != null) {
-                for(Light light : lightGroup) {
-                    glUniform1f(shader.getLightSpecularStrengthHandle(), light.specularStrength);
-                    break; // TEMP just use first light in group todo: Multi-light rendering
+                // Upload light specular
+                if(shader.validHandle(shader.getPointLightSpecularUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightSpecularUniformHandle(i), light.specularStrength);
                 }
-            } else {
-                // TEMP just use first light in group todo: Multi-light rendering
-                glUniform1f(shader.getLightSpecularStrengthHandle(), 0.0f);
+
+                // Upload light attenuation variables
+                if(shader.validHandle(shader.getPointLightAttenuationConstantUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightAttenuationConstantUniformHandle(i),
+                            light.attenuationConstant);
+                }
+
+                if(shader.validHandle(shader.getPointLightAttenuationLinearUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightAttenuationLinearUniformHandle(i),
+                            light.attenuationLinear);
+                }
+
+                if(shader.validHandle(shader.getPointLightAttenuationQuadraticUniformHandle(i))) {
+                    glUniform1f(shader.getPointLightAttenuationQuadraticUniformHandle(i),
+                            light.attenuationQuadratic);
+                }
             }
         }
 

@@ -27,27 +27,48 @@ public class Light
     // The default strength of the specular glint
     private final float DEFAULT_SPECULAR_STRENGTH = 0.5f;
 
+    // Default attenuation variables have been set to cover a distance of about 50m
+    private final float DEFAULT_ATTENUATION_CONSTANT = 1.0f;
+    private final float DEFAULT_ATTENUATION_LINEAR = 0.09f;
+    private final float DEFAULT_ATTENUATION_QUADRATIC = 0.032f;
+
     // The position of the light source
     public float x;
     public float y;
     public float z;
+
+//    // direction of the light source
+//    public float dx;
+//    public float dy;
+//    public float dz;
 
     // The colour of the light
     public float red;
     public float green;
     public float blue;
 
-    // Intensity of the light
-    public float intensity;
-
     // Lights ambient strength (when the light is present how does it effect the entire scene
     // no matter how far away it is). By default this is DEFAULT_AMBIENT_STRENGTH
-    public float ambienceStrength;
+    public float ambientStrength;
+
+    // Intensity of the light
+    public float diffuseStrength;
 
     // Strength of the specular glint. This gives the object a shiny look. Note that this can also
     // be controlled with specular texture maps on object materials (the advantage of that is that
     // an objects surface can appear with varying levels of shininess)
     public float specularStrength;
+
+    // Attenuation variables
+    public float attenuationConstant;
+    public float attenuationLinear;
+    public float attenuationQuadratic;
+
+//    // Size of the light beam (when to start fading out the radius)
+//    public float size;
+//
+//    // Outer size of the light beam (when to finish fading out the radius)
+//    public float outerSize;
 
     public Light(float x,
                  float y,
@@ -58,12 +79,20 @@ public class Light
         this.x = x;
         this.y = y;
         this.z = z;
+//        this.dx = 0.0f;
+//        this.dy = 0.0f;
+//        this.dz = 0.0f;
         this.red = red;
         this.green = green;
         this.blue = blue;
-        this.intensity = DEFAULT_INTENSITY;
-        this.ambienceStrength = DEFAULT_AMBIENCE_STRENGTH;
+        this.diffuseStrength = DEFAULT_INTENSITY;
+        this.ambientStrength = DEFAULT_AMBIENCE_STRENGTH;
         this.specularStrength = DEFAULT_SPECULAR_STRENGTH;
+        this.attenuationConstant = DEFAULT_ATTENUATION_CONSTANT;
+        this.attenuationLinear = DEFAULT_ATTENUATION_LINEAR;
+        this.attenuationQuadratic = DEFAULT_ATTENUATION_QUADRATIC;
+//        this.size = 0.0f;
+//        this.outerSize = 0.0f;
     }
 
     public Light(float x,
@@ -142,20 +171,20 @@ public class Light
         return new Colour(red, green, blue);
     }
 
-    public void setIntensity(float intensity) {
-        this.intensity = intensity;
+    public void setDiffuseStrength(float diffuseStrength) {
+        this.diffuseStrength = diffuseStrength;
     }
 
-    public float getIntensity() {
-        return intensity;
+    public float getDiffuseStrength() {
+        return diffuseStrength;
     }
 
-    public void setAmbienceStrength(float ambienceStrength) {
-        this.ambienceStrength = ambienceStrength;
+    public void setAmbientStrength(float ambientStrength) {
+        this.ambientStrength = ambientStrength;
     }
 
-    public float getAmbienceStrength() {
-        return ambienceStrength;
+    public float getAmbientStrength() {
+        return ambientStrength;
     }
 
     public void setSpecularStrength(float specularStrength) {

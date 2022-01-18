@@ -13,6 +13,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class Model extends RenderObject
@@ -504,7 +505,7 @@ public class Model extends RenderObject
         super.render(camera3D, modelMatrix);
     }
 
-    public void render(Camera3D camera3D, final HashSet<Light> lightGroup)
+    public void render(Camera3D camera3D, final ArrayList<Light> lightGroup)
     {
         updateModelMatrix();
         super.render(camera3D, modelMatrix, lightGroup);

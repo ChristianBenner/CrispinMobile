@@ -24,9 +24,11 @@ import java.util.List;
 public class MaterialDemo extends Scene {
     private static final long MATERIAL_TIME_MS = 4000L;
     private Model lightBulb;
+    private Model lightBulb2;
     private Model torus;
-    private HashSet<Light> lightGroup;
+    private ArrayList<Light> lightGroup;
     private Light light;
+    private Light light2;
     private Camera3D camera3D;
     private float lightXCount;
     private float lightZCount;
@@ -51,14 +53,25 @@ public class MaterialDemo extends Scene {
         ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
             this.lightBulb = loadListener;
             this.lightBulb.setMaterial(lightBulbMaterial);
-            this.lightBulb.setScale(0.3f);
+            this.lightBulb.setScale(0.2f);
             this.lightBulb.setPosition(0.0f, 1.0f, 0.0f);
         });
 
-        lightGroup = new HashSet<>();
+        // Load the light bulb model (used to show light position)
+        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
+            this.lightBulb2 = loadListener;
+            this.lightBulb2.setMaterial(lightBulbMaterial);
+            this.lightBulb2.setScale(0.2f);
+            this.lightBulb2.setPosition(0.0f, 1.0f, 0.0f);
+        });
+
+        lightGroup = new ArrayList<>();
 
         light = new Light();
         lightGroup.add(light);
+
+        light2 = new Light();
+        lightGroup.add(light2);
 
         camera3D = new Camera3D();
         camera3D.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
@@ -68,10 +81,16 @@ public class MaterialDemo extends Scene {
     public void update(float deltaTime) {
         lightXCount += 0.03f * deltaTime;
         lightZCount += 0.03f * deltaTime;
+
         float lightX = (float) Math.sin(lightXCount);
         float lightZ = (float) Math.cos(lightZCount);
         lightBulb.setPosition(lightX, 1.0f, lightZ);
         light.setPosition(lightBulb.getPosition());
+
+        float light2X = (float) Math.sin(lightXCount + Math.PI);
+        float light2Z = (float) Math.cos(lightZCount + Math.PI);
+        lightBulb2.setPosition(light2X, 1.0f, light2Z);
+        light2.setPosition(lightBulb2.getPosition());
 
         if (torus != null) {
             if (System.currentTimeMillis() - materialSetTimeMs > MATERIAL_TIME_MS) {
@@ -90,6 +109,10 @@ public class MaterialDemo extends Scene {
     public void render() {
         if(lightBulb != null) {
             lightBulb.render(camera3D, lightGroup);
+        }
+
+        if(lightBulb2 != null) {
+            lightBulb2.render(camera3D, lightGroup);
         }
 
         if(torus != null) {

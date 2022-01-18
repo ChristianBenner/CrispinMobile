@@ -24,6 +24,9 @@ public class LightingTextureShader extends Shader
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.lighting_texture_frag;
 
+    // Maximum number of point lights supported by the shader
+    private static final int MAX_NUM_POINT_LIGHTS = 4;
+
     /**
      * Create the NormalTextureShader. This compiles the pre-defined vertex and fragment
      * shader's, and links the attributes to the shader base class for a common form of user
@@ -58,10 +61,21 @@ public class LightingTextureShader extends Shader
         materialDiffuseUniformHandle = getUniform("uMaterial.diffuse");
         materialSpecularUniformHandle = getUniform("uMaterial.specular");
         materialShininessUniformHandle = getUniform("uMaterial.shininess");
-        lightPositionUniformHandle = getUniform("uLight.position");
-        lightColourUniformHandle = getUniform("uLight.colour");
-        lightIntensityUniformHandle = getUniform("uLight.intensity");
-        lightAmbienceStrengthHandle = getUniform("uLight.ambient");
-        lightSpecularStrengthHandle = getUniform("uLight.specular");
+        numPointLightsUniformHandle = getUniform("uNumPointLights");
+        initPointLightHandles();
+    }
+
+    private void initPointLightHandles() {
+        super.pointLightHandles = new PointLightHandles[MAX_NUM_POINT_LIGHTS];
+        for(int i = 0; i < MAX_NUM_POINT_LIGHTS; i++) {
+            final String parent = "uPointLights[" + i + "].";
+            PointLightHandles pointLightHandles = new PointLightHandles();
+            pointLightHandles.positionUniformHandle = getUniform(parent + "position");
+            pointLightHandles.colourUniformHandle = getUniform(parent + "colour");
+            pointLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+            pointLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+            pointLightHandles.specularUniformHandle = getUniform(parent + "specular");
+            super.pointLightHandles[i] = pointLightHandles;
+        }
     }
 }

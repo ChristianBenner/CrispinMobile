@@ -21,6 +21,7 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -86,7 +87,7 @@ public class LightingDemo extends Scene
 
     // Group of lights as a HashSet is required to pass to the renderer for lighting. Even if there
     // is only one. This is because internally, the engines support multiple
-    private HashSet<Light> lightGroup;
+    private ArrayList<Light> lightGroup;
 
     private int currentStage;
 
@@ -128,12 +129,12 @@ public class LightingDemo extends Scene
         fadeInInformationText = true;
 
         light = new Light();
-        light.setAmbienceStrength(0.0f);
-        light.setIntensity(0.0f);
+        light.setAmbientStrength(0.0f);
+        light.setDiffuseStrength(0.0f);
         light.setSpecularStrength(0.0f);
         resetLightingValues();
 
-        lightGroup = new HashSet<>();
+        lightGroup = new ArrayList<>();
         lightGroup.add(light);
 
         // Load the torus donut shape used to demo lighting
@@ -237,20 +238,20 @@ public class LightingDemo extends Scene
                 }
                 break;
             case STAGE_INTENSITY_TEST:
-                light.setIntensity(((float)currentStageDurationMs() /
+                light.setDiffuseStrength(((float)currentStageDurationMs() /
                         (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING);
 
                 if(currentStageDurationMs() >= LIGHT_INTENSITY_SCENE_DURATION_MS) {
-                    light.setIntensity(LIGHT_INTENSITY_CEILING);
+                    light.setDiffuseStrength(LIGHT_INTENSITY_CEILING);
                     nextStage();
                 }
                 break;
             case STAGE_AMBIENT_TEST:
-                light.setAmbienceStrength(((float)currentStageDurationMs() /
+                light.setAmbientStrength(((float)currentStageDurationMs() /
                         (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING);
 
                 if(currentStageDurationMs() >= LIGHT_AMBIENT_SCENE_DURATION_MS) {
-                    light.setAmbienceStrength(LIGHT_AMBIENT_CEILING);
+                    light.setAmbientStrength(LIGHT_AMBIENT_CEILING);
                     nextStage();
                 }
                 break;
@@ -340,9 +341,9 @@ public class LightingDemo extends Scene
                         (float)Math.sin(lightZCount));
                 break;
             case STAGE_RESET_LIGHT:
-                light.setIntensity(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
+                light.setDiffuseStrength(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
                         (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING));
-                light.setAmbienceStrength(LIGHT_AMBIENT_CEILING -
+                light.setAmbientStrength(LIGHT_AMBIENT_CEILING -
                         (((float)currentStageDurationMs() /
                                 (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING));
                 light.setSpecularStrength(LIGHT_SPECULAR_CEILING -
@@ -351,8 +352,8 @@ public class LightingDemo extends Scene
 
                 if(currentStageDurationMs() >= RESET_LIGHT_SCENE_DURATION_MS) {
                     resetLightingValues();
-                    light.setIntensity(0.0f);
-                    light.setAmbienceStrength(0.0f);
+                    light.setDiffuseStrength(0.0f);
+                    light.setAmbientStrength(0.0f);
                     light.setSpecularStrength(0.0f);
                     light.setColour(1.0f, 1.0f, 1.0f);
                     nextStage();

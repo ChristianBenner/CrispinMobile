@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
+import static android.opengl.GLES20.glGetUniformfv;
+
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
@@ -22,6 +24,9 @@ public class LightingShader extends Shader
 
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.lighting_frag;
+
+    // Maximum number of point lights supported by the shader
+    private static final int MAX_NUM_POINT_LIGHTS = 4;
 
     /**
      * Create the NormalShader. This compiles the pre-defined vertex and fragment
@@ -52,10 +57,27 @@ public class LightingShader extends Shader
         materialDiffuseUniformHandle = getUniform("uMaterial.diffuse");
         materialSpecularUniformHandle = getUniform("uMaterial.specular");
         materialShininessUniformHandle = getUniform("uMaterial.shininess");
-        lightPositionUniformHandle = getUniform("uLight.position");
-        lightColourUniformHandle = getUniform("uLight.colour");
-        lightIntensityUniformHandle = getUniform("uLight.intensity");
-        lightAmbienceStrengthHandle = getUniform("uLight.ambient");
-        lightSpecularStrengthHandle = getUniform("uLight.specular");
+        numPointLightsUniformHandle = getUniform("uNumPointLights");
+        initPointLightHandles();
+    }
+
+    private void initPointLightHandles() {
+        super.pointLightHandles = new PointLightHandles[MAX_NUM_POINT_LIGHTS];
+        for(int i = 0; i < MAX_NUM_POINT_LIGHTS; i++) {
+            final String parent = "uPointLights[" + i + "].";
+            PointLightHandles pointLightHandles = new PointLightHandles();
+            pointLightHandles.positionUniformHandle = getUniform(parent + "position");
+          //  pointLightHandles.directionUniformHandle = getUniform(parent + "direction");
+            pointLightHandles.colourUniformHandle = getUniform(parent + "colour");
+            pointLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+            pointLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+            pointLightHandles.specularUniformHandle = getUniform(parent + "specular");
+            pointLightHandles.constantUniformHandle = getUniform(parent + "constant");
+            pointLightHandles.linearUniformHandle = getUniform(parent + "linear");
+            pointLightHandles.quadraticUniformHandle = getUniform(parent + "quadratic");
+           // pointLightHandles.sizeUniformHandle = getUniform(parent + "size");
+          //  pointLightHandles.outerSizeUniformHandle = getUniform(parent + "outerSize");
+            super.pointLightHandles[i] = pointLightHandles;
+        }
     }
 }
