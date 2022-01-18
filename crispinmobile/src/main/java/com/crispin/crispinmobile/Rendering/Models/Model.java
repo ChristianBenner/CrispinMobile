@@ -6,7 +6,7 @@ import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
-import com.crispin.crispinmobile.Rendering.Entities.Light;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
@@ -14,7 +14,6 @@ import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 
 public class Model extends RenderObject
 {
@@ -505,9 +504,9 @@ public class Model extends RenderObject
         super.render(camera3D, modelMatrix);
     }
 
-    public void render(Camera3D camera3D, final ArrayList<Light> lightGroup)
+    public void render(Camera3D camera3D, final ArrayList<PointLight> pointLightGroup)
     {
         updateModelMatrix();
-        super.render(camera3D, modelMatrix, lightGroup);
+        super.render(camera3D, modelMatrix, pointLightGroup);
     }
 }

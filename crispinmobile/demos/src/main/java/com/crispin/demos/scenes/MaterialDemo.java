@@ -4,20 +4,16 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.Light;
-import com.crispin.crispinmobile.Rendering.Models.Cube;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Utilities.LoadListener;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -26,9 +22,9 @@ public class MaterialDemo extends Scene {
     private Model lightBulb;
     private Model lightBulb2;
     private Model torus;
-    private ArrayList<Light> lightGroup;
-    private Light light;
-    private Light light2;
+    private ArrayList<PointLight> pointLightGroup;
+    private PointLight pointLight;
+    private PointLight pointLight2;
     private Camera3D camera3D;
     private float lightXCount;
     private float lightZCount;
@@ -65,13 +61,13 @@ public class MaterialDemo extends Scene {
             this.lightBulb2.setPosition(0.0f, 1.0f, 0.0f);
         });
 
-        lightGroup = new ArrayList<>();
+        pointLightGroup = new ArrayList<>();
 
-        light = new Light();
-        lightGroup.add(light);
+        pointLight = new PointLight();
+        pointLightGroup.add(pointLight);
 
-        light2 = new Light();
-        lightGroup.add(light2);
+        pointLight2 = new PointLight();
+        pointLightGroup.add(pointLight2);
 
         camera3D = new Camera3D();
         camera3D.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
@@ -85,12 +81,12 @@ public class MaterialDemo extends Scene {
         float lightX = (float) Math.sin(lightXCount);
         float lightZ = (float) Math.cos(lightZCount);
         lightBulb.setPosition(lightX, 1.0f, lightZ);
-        light.setPosition(lightBulb.getPosition());
+        pointLight.setPosition(lightBulb.getPosition());
 
         float light2X = (float) Math.sin(lightXCount + Math.PI);
         float light2Z = (float) Math.cos(lightZCount + Math.PI);
         lightBulb2.setPosition(light2X, 1.0f, light2Z);
-        light2.setPosition(lightBulb2.getPosition());
+        pointLight2.setPosition(lightBulb2.getPosition());
 
         if (torus != null) {
             if (System.currentTimeMillis() - materialSetTimeMs > MATERIAL_TIME_MS) {
@@ -108,15 +104,15 @@ public class MaterialDemo extends Scene {
     @Override
     public void render() {
         if(lightBulb != null) {
-            lightBulb.render(camera3D, lightGroup);
+            lightBulb.render(camera3D, pointLightGroup);
         }
 
         if(lightBulb2 != null) {
-            lightBulb2.render(camera3D, lightGroup);
+            lightBulb2.render(camera3D, pointLightGroup);
         }
 
         if(torus != null) {
-            torus.render(camera3D, lightGroup);
+            torus.render(camera3D, pointLightGroup);
         }
     }
 

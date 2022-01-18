@@ -4,7 +4,7 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.Light;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
@@ -23,7 +23,6 @@ import com.crispin.demos.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 
 public class LightingDemo extends Scene
 {
@@ -83,11 +82,11 @@ public class LightingDemo extends Scene
     private boolean fadeInInformationText;
 
     // Light object containing position and colour data
-    private Light light;
+    private PointLight pointLight;
 
     // Group of lights as a HashSet is required to pass to the renderer for lighting. Even if there
     // is only one. This is because internally, the engines support multiple
-    private ArrayList<Light> lightGroup;
+    private ArrayList<PointLight> pointLightGroup;
 
     private int currentStage;
 
@@ -128,14 +127,14 @@ public class LightingDemo extends Scene
 
         fadeInInformationText = true;
 
-        light = new Light();
-        light.setAmbientStrength(0.0f);
-        light.setDiffuseStrength(0.0f);
-        light.setSpecularStrength(0.0f);
+        pointLight = new PointLight();
+        pointLight.setAmbientStrength(0.0f);
+        pointLight.setDiffuseStrength(0.0f);
+        pointLight.setSpecularStrength(0.0f);
         resetLightingValues();
 
-        lightGroup = new ArrayList<>();
-        lightGroup.add(light);
+        pointLightGroup = new ArrayList<>();
+        pointLightGroup.add(pointLight);
 
         // Load the torus donut shape used to demo lighting
         Material torusWoodMaterial = new Material(R.drawable.tiledwood16);
@@ -238,20 +237,20 @@ public class LightingDemo extends Scene
                 }
                 break;
             case STAGE_INTENSITY_TEST:
-                light.setDiffuseStrength(((float)currentStageDurationMs() /
+                pointLight.setDiffuseStrength(((float)currentStageDurationMs() /
                         (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING);
 
                 if(currentStageDurationMs() >= LIGHT_INTENSITY_SCENE_DURATION_MS) {
-                    light.setDiffuseStrength(LIGHT_INTENSITY_CEILING);
+                    pointLight.setDiffuseStrength(LIGHT_INTENSITY_CEILING);
                     nextStage();
                 }
                 break;
             case STAGE_AMBIENT_TEST:
-                light.setAmbientStrength(((float)currentStageDurationMs() /
+                pointLight.setAmbientStrength(((float)currentStageDurationMs() /
                         (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING);
 
                 if(currentStageDurationMs() >= LIGHT_AMBIENT_SCENE_DURATION_MS) {
-                    light.setAmbientStrength(LIGHT_AMBIENT_CEILING);
+                    pointLight.setAmbientStrength(LIGHT_AMBIENT_CEILING);
                     nextStage();
                 }
                 break;
@@ -274,11 +273,11 @@ public class LightingDemo extends Scene
                 break;
             case STAGE_SPECULAR_TEST:
                 updateBulbPosition(deltaTime);
-                light.setSpecularStrength(((float)currentStageDurationMs() /
+                pointLight.setSpecularStrength(((float)currentStageDurationMs() /
                         (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING);
 
                 if(currentStageDurationMs() >= LIGHT_SPECULAR_SCENE_DURATION_MS) {
-                    light.setSpecularStrength(LIGHT_SPECULAR_CEILING);
+                    pointLight.setSpecularStrength(LIGHT_SPECULAR_CEILING);
                     nextStage();
                 }
                 break;
@@ -294,7 +293,7 @@ public class LightingDemo extends Scene
                 float redChannel = ((float)Math.cos(redColourRad) + 1.0f) / 2.0f;
                 float greenChannel = ((float)Math.cos(greenColourRad) + 1.0f) / 2.0f;
                 float blueChannel = ((float)Math.cos(blueColourRad) + 1.0f) / 2.0f;
-                light.setColour(redChannel, greenChannel, blueChannel);
+                pointLight.setColour(redChannel, greenChannel, blueChannel);
 
                 if(currentStageDurationMs() >= COLOUR_SCENE_DURATION_MS) {
                     nextStage();
@@ -341,37 +340,37 @@ public class LightingDemo extends Scene
                         (float)Math.sin(lightZCount));
                 break;
             case STAGE_RESET_LIGHT:
-                light.setDiffuseStrength(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
+                pointLight.setDiffuseStrength(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
                         (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING));
-                light.setAmbientStrength(LIGHT_AMBIENT_CEILING -
+                pointLight.setAmbientStrength(LIGHT_AMBIENT_CEILING -
                         (((float)currentStageDurationMs() /
                                 (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING));
-                light.setSpecularStrength(LIGHT_SPECULAR_CEILING -
+                pointLight.setSpecularStrength(LIGHT_SPECULAR_CEILING -
                         (((float)currentStageDurationMs() /
                         (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING));
 
                 if(currentStageDurationMs() >= RESET_LIGHT_SCENE_DURATION_MS) {
                     resetLightingValues();
-                    light.setDiffuseStrength(0.0f);
-                    light.setAmbientStrength(0.0f);
-                    light.setSpecularStrength(0.0f);
-                    light.setColour(1.0f, 1.0f, 1.0f);
+                    pointLight.setDiffuseStrength(0.0f);
+                    pointLight.setAmbientStrength(0.0f);
+                    pointLight.setSpecularStrength(0.0f);
+                    pointLight.setColour(1.0f, 1.0f, 1.0f);
                     nextStage();
                 }
                 break;
         }
 
-        light.setPosition(lightBulb.getPosition());
+        pointLight.setPosition(lightBulb.getPosition());
     }
 
     @Override
     public void render() {
         if(torus != null) {
-            lightBulb.render(modelCamera, lightGroup);
+            lightBulb.render(modelCamera, pointLightGroup);
         }
 
         if(torus != null) {
-            torus.render(modelCamera, lightGroup);
+            torus.render(modelCamera, pointLightGroup);
         }
 
         if(stageInfoText.containsKey(currentStage)) {

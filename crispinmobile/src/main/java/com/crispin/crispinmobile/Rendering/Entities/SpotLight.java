@@ -2,6 +2,8 @@ package com.crispin.crispinmobile.Rendering.Entities;
 
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Point3D;
+import com.crispin.crispinmobile.Geometry.Vector2D;
+import com.crispin.crispinmobile.Geometry.Vector3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
@@ -14,7 +16,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * @see         RenderObject
  * @since       1.0
  */
-public class Light
+public class SpotLight
 {
     // The intensity of the light. This effects specular and diffuse calculations (not ambience)
     private final float DEFAULT_INTENSITY = 1.0f;
@@ -32,15 +34,19 @@ public class Light
     private final float DEFAULT_ATTENUATION_LINEAR = 0.09f;
     private final float DEFAULT_ATTENUATION_QUADRATIC = 0.032f;
 
+    // Default size of the beam
+    private final float DEFAULT_SIZE = 0.22f;
+    private final float DEFAULT_OUTER_SIZE = 0.26f;
+
     // The position of the light source
     public float x;
     public float y;
     public float z;
 
-//    // direction of the light source
-//    public float dx;
-//    public float dy;
-//    public float dz;
+    // Direction of the light source
+    public float dx;
+    public float dy;
+    public float dz;
 
     // The colour of the light
     public float red;
@@ -64,74 +70,69 @@ public class Light
     public float attenuationLinear;
     public float attenuationQuadratic;
 
-//    // Size of the light beam (when to start fading out the radius)
-//    public float size;
-//
-//    // Outer size of the light beam (when to finish fading out the radius)
-//    public float outerSize;
+    // Size of the light beam (when to start fading out the radius)
+    public float size;
 
-    public Light(float x,
-                 float y,
-                 float z,
-                 float red,
-                 float green,
-                 float blue) {
+    // Outer size of the light beam (when to finish fading out the radius)
+    public float outerSize;
+
+    public SpotLight(float x,
+                     float y,
+                     float z,
+                     float dx,
+                     float dy,
+                     float dz) {
         this.x = x;
         this.y = y;
         this.z = z;
-//        this.dx = 0.0f;
-//        this.dy = 0.0f;
-//        this.dz = 0.0f;
-        this.red = red;
-        this.green = green;
-        this.blue = blue;
+        this.dx = dx;
+        this.dy = dy;
+        this.dz = dz;
+        this.red = 1.0f;
+        this.green = 1.0f;
+        this.blue = 1.0f;
         this.diffuseStrength = DEFAULT_INTENSITY;
         this.ambientStrength = DEFAULT_AMBIENCE_STRENGTH;
         this.specularStrength = DEFAULT_SPECULAR_STRENGTH;
         this.attenuationConstant = DEFAULT_ATTENUATION_CONSTANT;
         this.attenuationLinear = DEFAULT_ATTENUATION_LINEAR;
         this.attenuationQuadratic = DEFAULT_ATTENUATION_QUADRATIC;
-//        this.size = 0.0f;
-//        this.outerSize = 0.0f;
+        this.size = DEFAULT_SIZE;
+        this.outerSize = DEFAULT_OUTER_SIZE;
     }
 
-    public Light(float x,
-                 float y,
-                 float z) {
+    public SpotLight(float x, float y, float z) {
         this(x, y, z, 1.0f, 1.0f, 1.0f);
     }
 
-    public Light(float x,
-                 float y,
-                 float red,
-                 float green,
-                 float blue) {
-        this(x, y, 0.0f, red, green, blue);
+    public SpotLight(float x,
+                     float y,
+                     float dx,
+                     float dy) {
+        this(x, y, 0.0f, dx, dy, 0.0f);
     }
 
-    public Light(float x,
-                 float y) {
+    public SpotLight(float x, float y) {
         this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public Light(final Point3D position, final Colour colour) {
-        this(position.x, position.y, position.z, colour.red, colour.green,
-                colour.blue);
+    public SpotLight(final Point3D position, final Vector3D direction) {
+        this(position.x, position.y, position.z, direction.x, direction.y, direction.z);
     }
 
-    public Light(final Point2D position, final Colour colour) {
-        this(position.x, position.y, colour.red, colour.green, colour.blue);
+    public SpotLight(final Point2D position, final Vector2D direction) {
+        this(position.x, position.y, 0.0f, direction.x, direction.y, 0.0f);
     }
 
-    public Light(final Point3D position) {
+    public SpotLight(final Point3D position) {
         this(position.x, position.y, position.z);
     }
 
-    public Light(final Point2D position) {
+    public SpotLight(final Point2D position) {
         this(position.x, position.y);
     }
 
-    public Light() {
+    public SpotLight() {
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
@@ -147,12 +148,52 @@ public class Light
         this.z = z;
     }
 
+    public void setPosition(Point2D position) {
+        x = position.x;
+        y = position.y;
+    }
+
+    public void setPosition(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
     public Point3D getPosition() {
         return new Point3D(x, y, z);
     }
 
     public Point2D getPosition2D() {
         return new Point2D(x, y);
+    }
+
+    public void setDirection(Vector3D direction) {
+        dx = direction.x;
+        dy = direction.y;
+        dz = direction.z;
+    }
+
+    public void setDirection(float dx, float dy, float dz) {
+        this.dx = dx;
+        this.dy = dy;
+        this.dz = dz;
+    }
+
+    public void setDirection(Vector2D direction) {
+        dx = direction.x;
+        dy = direction.y;
+    }
+
+    public void setDirection(float dx, float dy) {
+        this.dx = dx;
+        this.dy = dy;
+    }
+
+    public Vector3D getDirection() {
+        return new Vector3D(dx, dy, dz);
+    }
+
+    public Vector2D getDirection2D() {
+        return new Vector2D(dx, dy);
     }
 
     public void setColour(final Colour colour) {

@@ -25,7 +25,7 @@ import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.Light;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
@@ -748,7 +748,7 @@ public class RenderObject
 
     public void render(Camera3D camera,
                        ModelMatrix modelMatrix,
-                       final ArrayList<Light> lightGroup)
+                       final ArrayList<PointLight> pointLightGroup)
     {
         // If the shader is null, create a shader for the object
         if(shader == null)
@@ -758,56 +758,56 @@ public class RenderObject
 
         shader.enableIt();
 
-        if(lightGroup != null) {
+        if(pointLightGroup != null) {
             if(shader.validHandle(shader.getNumLightsUniformHandle())) {
-                glUniform1i(shader.getNumLightsUniformHandle(), lightGroup.size());
+                glUniform1i(shader.getNumLightsUniformHandle(), pointLightGroup.size());
             }
 
             // Iterate through point lights, uploading each to the shader
-            for(int i = 0; i < lightGroup.size() && i < shader.getMaxLights(); i++) {
-                final Light light = lightGroup.get(i);
+            for(int i = 0; i < pointLightGroup.size() && i < shader.getMaxLights(); i++) {
+                final PointLight pointLight = pointLightGroup.get(i);
 
                 // Upload light position
                 if(shader.validHandle(shader.getPointLightPositionUniformHandle(i))) {
-                    glUniform3f(shader.getPointLightPositionUniformHandle(i), light.x, light.y,
-                            light.z);
+                    glUniform3f(shader.getPointLightPositionUniformHandle(i), pointLight.x, pointLight.y,
+                            pointLight.z);
                 }
 
                 // Upload light colour
                 if(shader.validHandle(shader.getPointLightColourUniformHandle(i))) {
-                    glUniform3f(shader.getPointLightColourUniformHandle(i), light.red, light.green,
-                            light.blue);
+                    glUniform3f(shader.getPointLightColourUniformHandle(i), pointLight.red, pointLight.green,
+                            pointLight.blue);
                 }
 
                 // Upload light ambient
                 if(shader.validHandle(shader.getPointLightAmbientUniformHandle(i))) {
-                    glUniform1f(shader.getPointLightAmbientUniformHandle(i), light.ambientStrength);
+                    glUniform1f(shader.getPointLightAmbientUniformHandle(i), pointLight.ambientStrength);
                 }
 
                 // Upload light diffuse
                 if(shader.validHandle(shader.getPointLightDiffuseUniformHandle(i))) {
-                    glUniform1f(shader.getPointLightDiffuseUniformHandle(i), light.diffuseStrength);
+                    glUniform1f(shader.getPointLightDiffuseUniformHandle(i), pointLight.diffuseStrength);
                 }
 
                 // Upload light specular
                 if(shader.validHandle(shader.getPointLightSpecularUniformHandle(i))) {
-                    glUniform1f(shader.getPointLightSpecularUniformHandle(i), light.specularStrength);
+                    glUniform1f(shader.getPointLightSpecularUniformHandle(i), pointLight.specularStrength);
                 }
 
                 // Upload light attenuation variables
                 if(shader.validHandle(shader.getPointLightAttenuationConstantUniformHandle(i))) {
                     glUniform1f(shader.getPointLightAttenuationConstantUniformHandle(i),
-                            light.attenuationConstant);
+                            pointLight.attenuationConstant);
                 }
 
                 if(shader.validHandle(shader.getPointLightAttenuationLinearUniformHandle(i))) {
                     glUniform1f(shader.getPointLightAttenuationLinearUniformHandle(i),
-                            light.attenuationLinear);
+                            pointLight.attenuationLinear);
                 }
 
                 if(shader.validHandle(shader.getPointLightAttenuationQuadraticUniformHandle(i))) {
                     glUniform1f(shader.getPointLightAttenuationQuadraticUniformHandle(i),
-                            light.attenuationQuadratic);
+                            pointLight.attenuationQuadratic);
                 }
             }
         }
