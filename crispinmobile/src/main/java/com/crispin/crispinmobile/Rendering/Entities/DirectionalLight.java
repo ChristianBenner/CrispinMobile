@@ -56,9 +56,9 @@ public class DirectionalLight
                             float red,
                             float green,
                             float blue) {
-        this.dx = 0.0f;
-        this.dy = 0.0f;
-        this.dz = 0.0f;
+        this.dx = dx;
+        this.dy = dy;
+        this.dz = dz;
         this.red = red;
         this.green = green;
         this.blue = blue;

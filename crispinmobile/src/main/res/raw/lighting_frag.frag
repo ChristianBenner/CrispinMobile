@@ -8,6 +8,14 @@ struct Material {
     float shininess;
 };
 
+struct DirectionalLight {
+    vec3 direction;
+    vec3 colour;
+    float ambient;
+    float diffuse;
+    float specular;
+};
+
 struct PointLight {
     vec3 position;
     vec3 colour;
@@ -39,6 +47,8 @@ struct PointLight {
 //    float outerSize;
 //};
 
+#define MAX_NUM_POINT_LIGHTS 10
+
 in vec3 vFragPos;
 in vec3 vNormal;
 
@@ -49,9 +59,10 @@ uniform vec3 uViewPosition;
 uniform int uNumPointLights;
 uniform Material uMaterial;
 
-#define MAX_NUM_POINT_LIGHTS 10
+uniform DirectionalLight uDirectionalLight;
 uniform PointLight uPointLights[MAX_NUM_POINT_LIGHTS];
 
+vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection);
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection);
 
 void main()
@@ -59,13 +70,35 @@ void main()
     vec3 viewDirection = normalize(uViewPosition - vFragPos);
     vec3 normal = normalize(vNormal);
 
-    // Calculate all the point lights
     vec3 lightCalc = vec3(0.0);
+
+    lightCalc = CalculateDirectionalLight(uDirectionalLight, normal, viewDirection);
+
+    // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
         lightCalc += CalculatePointLight(uPointLights[i], normal, vFragPos, viewDirection);
     }
 
     FragColor = vec4(lightCalc, 1.0) * uColour;
+}
+
+vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection) {
+    // Direction that the light is travelling from the source to the frag
+    vec3 lightDirection = normalize(-light.direction);
+
+    // Ambient lighting calculation
+    vec3 ambient = uMaterial.ambient * light.ambient * light.colour;
+
+    // Diffuse lighting calculation
+    float normalDiffuseStrength = max(dot(normal, lightDirection), 0.0);
+    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * light.diffuse;
+
+    // Specular lighting calculation
+    vec3 reflectDirection = reflect(-lightDirection, normal);
+    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
+    vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour;
+
+    return ambient + diffuse + specular;
 }
 
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection) {

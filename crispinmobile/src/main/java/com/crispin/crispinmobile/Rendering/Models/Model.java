@@ -9,6 +9,7 @@ import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
@@ -504,9 +505,9 @@ public class Model extends RenderObject
         super.render(camera3D, modelMatrix);
     }
 
-    public void render(Camera3D camera3D, final ArrayList<PointLight> pointLightGroup)
+    public void render(Camera3D camera3D, final LightGroup lightGroup)
     {
         updateModelMatrix();
-        super.render(camera3D, modelMatrix, pointLightGroup);
+        super.render(camera3D, modelMatrix, lightGroup);
     }
 }

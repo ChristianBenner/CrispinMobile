@@ -4,9 +4,11 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
@@ -22,7 +24,7 @@ public class MaterialDemo extends Scene {
     private Model lightBulb;
     private Model lightBulb2;
     private Model torus;
-    private ArrayList<PointLight> pointLightGroup;
+    private LightGroup lightGroup;
     private PointLight pointLight;
     private PointLight pointLight2;
     private Camera3D camera3D;
@@ -61,13 +63,13 @@ public class MaterialDemo extends Scene {
             this.lightBulb2.setPosition(0.0f, 1.0f, 0.0f);
         });
 
-        pointLightGroup = new ArrayList<>();
+        lightGroup = new LightGroup();
 
         pointLight = new PointLight();
-        pointLightGroup.add(pointLight);
+        lightGroup.addPointLight(pointLight);
 
         pointLight2 = new PointLight();
-        pointLightGroup.add(pointLight2);
+        lightGroup.addPointLight(pointLight2);
 
         camera3D = new Camera3D();
         camera3D.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
@@ -104,15 +106,15 @@ public class MaterialDemo extends Scene {
     @Override
     public void render() {
         if(lightBulb != null) {
-            lightBulb.render(camera3D, pointLightGroup);
+            lightBulb.render(camera3D, lightGroup);
         }
 
         if(lightBulb2 != null) {
-            lightBulb2.render(camera3D, pointLightGroup);
+            lightBulb2.render(camera3D, lightGroup);
         }
 
         if(torus != null) {
-            torus.render(camera3D, pointLightGroup);
+            torus.render(camera3D, lightGroup);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**

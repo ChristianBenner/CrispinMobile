@@ -3,6 +3,8 @@ package com.crispin.crispinmobile.Rendering.Shaders;
 import static android.opengl.GLES20.glGetUniformfv;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.DirectionalLightHandles;
+import com.crispin.crispinmobile.Rendering.Utilities.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**
@@ -58,7 +60,19 @@ public class LightingShader extends Shader
         materialSpecularUniformHandle = getUniform("uMaterial.specular");
         materialShininessUniformHandle = getUniform("uMaterial.shininess");
         numPointLightsUniformHandle = getUniform("uNumPointLights");
+        initDirectionalLightHandles();
         initPointLightHandles();
+    }
+
+    private void initDirectionalLightHandles() {
+        final String parent = "uDirectionalLight.";
+        DirectionalLightHandles directionalLightHandles = new DirectionalLightHandles();
+        directionalLightHandles.directionUniformHandle = getUniform(parent + "direction");
+        directionalLightHandles.colourUniformHandle = getUniform(parent + "colour");
+        directionalLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+        directionalLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+        directionalLightHandles.specularUniformHandle = getUniform(parent + "specular");
+        super.directionalLightHandles = directionalLightHandles;
     }
 
     private void initPointLightHandles() {

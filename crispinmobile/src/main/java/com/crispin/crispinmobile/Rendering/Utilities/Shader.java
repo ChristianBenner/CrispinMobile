@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
+import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Utilities.FileResourceReader;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
@@ -101,42 +103,6 @@ public class Shader
     // Number of point lights
     protected int  numPointLightsUniformHandle;
 
-    public class PointLightHandles {
-        // Position uniform handle
-        public int positionUniformHandle;
-
-        // Colour uniform handle
-        public int colourUniformHandle;
-
-        // Diffuse strength uniform handle
-        public int diffuseUniformHandle;
-
-        // Ambience strength uniform handle
-        public int ambientUniformHandle;
-
-        // Specular strength uniform handle
-        public int specularUniformHandle;
-
-        // Attenuation constant variable uniform handle
-        public int constantUniformHandle;
-
-        // Attenuation linear variable uniform handle
-        public int linearUniformHandle;
-
-        // Attenuation quadratic variable uniform handle
-        public int quadraticUniformHandle;
-
-        public PointLightHandles() {
-            positionUniformHandle = UNDEFINED_HANDLE;
-            colourUniformHandle = UNDEFINED_HANDLE;
-            diffuseUniformHandle = UNDEFINED_HANDLE;
-            ambientUniformHandle = UNDEFINED_HANDLE;
-            specularUniformHandle = UNDEFINED_HANDLE;
-            constantUniformHandle = UNDEFINED_HANDLE;
-            linearUniformHandle = UNDEFINED_HANDLE;
-            quadraticUniformHandle = UNDEFINED_HANDLE;
-        }
-    }
 
 //    public class SpotLightHandles {
 //        // Position uniform handle
@@ -186,6 +152,9 @@ public class Shader
 //            outerSizeUniformHandle = UNDEFINED_HANDLE;
 //        }
 //    }
+
+    // Handles for a directional light
+    protected DirectionalLightHandles directionalLightHandles;
 
     // Handles for all the shader point lights
     protected PointLightHandles pointLightHandles[];
@@ -511,115 +480,95 @@ public class Shader
 //    }
 
     /**
-     * Get a point light position uniform handle
+     * Get a directional light direction uniform handle
      *
-     * @return  Integer ID of the point light position uniform handle
+     * @return  Integer ID of the directional light direction uniform handle
      * @since   1.0
      */
-    public int getPointLightPositionUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].positionUniformHandle;
+    public int getDirectionalLightDirectionUniformHandle(int index) {
+        if(directionalLightHandles != null) {
+            return directionalLightHandles.directionUniformHandle;
         }
 
         return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light colour uniform handle
+     * Get a directional light colour uniform handle
      *
-     * @return  Integer ID of the point light colour uniform handle
+     * @return  Integer ID of the directional light colour uniform handle
      * @since   1.0
      */
-    public int getPointLightColourUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].colourUniformHandle;
+    public int getDirectionalLightColourUniformHandle(int index) {
+        if(directionalLightHandles != null) {
+            return directionalLightHandles.colourUniformHandle;
         }
 
         return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light ambience strength uniform handle
+     * Get a directional light ambience strength uniform handle
      *
-     * @return  Integer ID of the point light ambience strength uniform handle
+     * @return  Integer ID of the directional light ambience strength uniform handle
      * @since   1.0
      */
-    public int getPointLightAmbientUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].ambientUniformHandle;
+    public int getDirectionalLightAmbientUniformHandle(int index) {
+        if(directionalLightHandles != null) {
+            return directionalLightHandles.ambientUniformHandle;
         }
 
         return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light intensity uniform handle
+     * Get a directional light intensity uniform handle
      *
-     * @return  Integer ID of the point light intensity uniform handle
+     * @return  Integer ID of the directional light intensity uniform handle
      * @since   1.0
      */
-    public int getPointLightDiffuseUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].diffuseUniformHandle;
+    public int getDirectionalLightDiffuseUniformHandle(int index) {
+        if(directionalLightHandles != null) {
+            return directionalLightHandles.diffuseUniformHandle;
         }
 
         return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light specular strength uniform handle
+     * Get a directional light specular strength uniform handle
      *
-     * @return  Integer ID of the point light specular strength uniform handle
+     * @return  Integer ID of the directional light specular strength uniform handle
      * @since   1.0
      */
-    public int getPointLightSpecularUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].specularUniformHandle;
+    public int getDirectionalLightSpecularUniformHandle(int index) {
+        if(directionalLightHandles != null) {
+            return directionalLightHandles.specularUniformHandle;
         }
 
         return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light attenuation constant uniform handle
+     * Set all the uniforms for a directional light
      *
-     * @return  Integer ID of the point light attenuation constant uniform handle
      * @since   1.0
      */
-    public int getPointLightAttenuationConstantUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].constantUniformHandle;
+    public void setDirectionalLightHandles(DirectionalLight directionalLight) {
+        if(directionalLightHandles != null) {
+            directionalLightHandles.setUniforms(directionalLight);
         }
-
-        return UNDEFINED_HANDLE;
     }
 
     /**
-     * Get a point light attenuation linear uniform handle
+     * Set all the uniforms for an index and given point light
      *
-     * @return  Integer ID of the point light attenuation linear uniform handle
      * @since   1.0
      */
-    public int getPointLightAttenuationLinearUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].linearUniformHandle;
+    public void setPointLightHandles(int index, PointLight pointLight) {
+        if(pointLightHandles != null && index < pointLightHandles.length) {
+            pointLightHandles[index].setUniforms(pointLight);
         }
-
-        return UNDEFINED_HANDLE;
-    }
-
-    /**
-     * Get a point light attenuation quadratic uniform handle
-     *
-     * @return  Integer ID of the point light attenuation quadratic uniform handle
-     * @since   1.0
-     */
-    public int getPointLightAttenuationQuadraticUniformHandle(int index) {
-        if(pointLightHandles != null && pointLightHandles.length >= index) {
-            return pointLightHandles[index].quadraticUniformHandle;
-        }
-
-        return UNDEFINED_HANDLE;
     }
 
     /**

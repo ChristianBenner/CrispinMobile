@@ -10,6 +10,7 @@ import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
@@ -84,9 +85,7 @@ public class LightingDemo extends Scene
     // Light object containing position and colour data
     private PointLight pointLight;
 
-    // Group of lights as a HashSet is required to pass to the renderer for lighting. Even if there
-    // is only one. This is because internally, the engines support multiple
-    private ArrayList<PointLight> pointLightGroup;
+    private LightGroup lightGroup;
 
     private int currentStage;
 
@@ -133,8 +132,8 @@ public class LightingDemo extends Scene
         pointLight.setSpecularStrength(0.0f);
         resetLightingValues();
 
-        pointLightGroup = new ArrayList<>();
-        pointLightGroup.add(pointLight);
+        lightGroup = new LightGroup();
+        lightGroup.addPointLight(pointLight);
 
         // Load the torus donut shape used to demo lighting
         Material torusWoodMaterial = new Material(R.drawable.tiledwood16);
@@ -366,11 +365,11 @@ public class LightingDemo extends Scene
     @Override
     public void render() {
         if(torus != null) {
-            lightBulb.render(modelCamera, pointLightGroup);
+            lightBulb.render(modelCamera, lightGroup);
         }
 
         if(torus != null) {
-            torus.render(modelCamera, pointLightGroup);
+            torus.render(modelCamera, lightGroup);
         }
 
         if(stageInfoText.containsKey(currentStage)) {
