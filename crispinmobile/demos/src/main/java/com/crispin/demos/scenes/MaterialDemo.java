@@ -107,35 +107,35 @@ public class MaterialDemo extends Scene {
         emerald.ambientStrength = new Colour(0.0215f, 0.1745f, 0.0215f);
         emerald.diffuseStrength = new Colour(0.07568f, 0.61424f, 0.07568f);
         emerald.specularStrength = new Colour(0.633f, 0.727811f, 0.633f);
-        emerald.shininess = 0.6f;
+        emerald.shininess = 19.2f;
         emerald.setIgnoreTexelData(true);
 
         Material jade = new Material();
         jade.ambientStrength = new Colour(0.135f, 0.2225f, 0.1575f);
         jade.diffuseStrength = new Colour(0.54f, 0.89f, 0.63f);
         jade.specularStrength = new Colour(0.316228f, 0.316228f, 0.316227f);
-        jade.shininess = 0.1f;
+        jade.shininess = 3.2f;
         jade.setIgnoreTexelData(true);
 
         Material obsidian = new Material();
         obsidian.ambientStrength = new Colour(0.05375f, 0.05f, 0.06625f);
         obsidian.diffuseStrength = new Colour(0.18275f, 0.17f, 0.22525f);
         obsidian.specularStrength = new Colour(0.296648f, 0.296648f, 0.296648f);
-        obsidian.shininess = 0.088f;
+        obsidian.shininess = 2.816f;
         obsidian.setIgnoreTexelData(true);
 
         Material pearl = new Material();
         pearl.ambientStrength = new Colour(0.25f, 0.20725f, 0.20725f);
         pearl.diffuseStrength = new Colour(1.0f, 0.829f, 0.829f);
         pearl.specularStrength = new Colour(0.296648f, 0.296648f, 0.296648f);
-        pearl.shininess = 0.088f;
+        pearl.shininess = 2.816f;
         pearl.setIgnoreTexelData(true);
 
         Material ruby = new Material();
         ruby.ambientStrength = new Colour(0.1745f, 0.01175f, 0.01175f);
         ruby.diffuseStrength = new Colour(0.61424f, 0.04136f, 0.04136f);
         ruby.specularStrength = new Colour(0.727811f, 0.626959f, 0.0626959f);
-        ruby.shininess = 0.6f;
+        ruby.shininess = 19.2f;
         ruby.setIgnoreTexelData(true);
 
         List<Material> materials = new ArrayList<>();
