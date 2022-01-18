@@ -149,6 +149,17 @@ public class LightingDemo extends Scene
             this.torus.setAlpha(0.0f);
         });
 
+        // Load the light bulb model (used to show light position)
+        Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
+        lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
+        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
+            this.lightBulb = loadListener;
+            this.lightBulb.setMaterial(lightBulbMaterial);
+            this.lightBulb.setScale(0.3f);
+            this.lightBulb.setPosition(0.0f, 1.0f, 0.0f);
+            this.lightBulb.setAlpha(0.0f);
+        });
+
         toggleShader = new Button(new Font(R.raw.aileron_regular, 48),
                 "Toggle Shader");
         toggleShader.setPosition(Crispin.getSurfaceWidth() - BUTTON_PADDING -
@@ -177,17 +188,6 @@ public class LightingDemo extends Scene
                     }
                 }
             }
-        });
-
-        // Load the light bulb model (used to show light position)
-        Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
-        lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
-        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
-            this.lightBulb = loadListener;
-            this.lightBulb.setMaterial(lightBulbMaterial);
-            this.lightBulb.setScale(0.3f);
-            this.lightBulb.setPosition(0.0f, 1.0f, 0.0f);
-            this.lightBulb.setAlpha(0.0f);
         });
 
         // Create the model camera and move it forward in-front of the origin

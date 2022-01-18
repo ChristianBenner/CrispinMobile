@@ -1085,25 +1085,29 @@ public class RenderObject
     protected void handleAttributes(boolean enable)
     {
         // If the material is not ignoring position data, enable the position data attribute
-        if(!material.isIgnoringPositionData())
+        if(shader.validHandle(shader.getPositionAttributeHandle()) &&
+                !material.isIgnoringPositionData())
         {
             handlePositionDataAttribute(enable);
         }
 
         // If the material is not ignoring texel data, enable the texel data attribute
-        if(!material.isIgnoringTexelData() && elementsPerTexel != 0)
+        if(shader.validHandle(shader.getTextureAttributeHandle()) &&
+                !material.isIgnoringTexelData() && elementsPerTexel != 0)
         {
             handleTexelDataAttribute(enable);
         }
 
         // If the material is not ignoring colour data, enable the colour data attribute
-        if(!material.isIgnoringColourData() && elementsPerColour != 0)
+        if(shader.validHandle(shader.getColourAttributeHandle()) &&
+                !material.isIgnoringColourData() && elementsPerColour != 0)
         {
             handleColourDataAttribute(enable);
         }
 
         // If the material is not ignoring normal data, enable the normal data attribute
-        if(!material.isIgnoringNormalData() && elementsPerNormal != 0)
+        if(shader.validHandle(shader.getNormalAttributeHandle()) &&
+                !material.isIgnoringNormalData() && elementsPerNormal != 0)
         {
             handleNormalDataAttribute(enable);
         }
