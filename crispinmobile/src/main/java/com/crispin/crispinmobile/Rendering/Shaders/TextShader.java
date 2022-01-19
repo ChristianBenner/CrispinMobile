@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
@@ -38,7 +39,9 @@ public class TextShader extends Shader
         positionAttributeHandle = getAttribute("vPosition");
         textureAttributeHandle = getAttribute("vTextureCoordinates");
         matrixUniformHandle = getUniform("uMatrix");
-        colourUniformHandle = getUniform("uColour");
-        textureUniformHandle = getUniform("uTexture");
+
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
+        materialHandles.textureUniformHandle = getUniform("uTexture");
     }
 }

@@ -133,7 +133,7 @@ public class LightingDemo extends Scene
         resetLightingValues();
 
         lightGroup = new LightGroup();
-        lightGroup.addPointLight(pointLight);
+        lightGroup.addLight(pointLight);
 
         // Load the torus donut shape used to demo lighting
         Material torusWoodMaterial = new Material(R.drawable.tiledwood16);
@@ -364,7 +364,7 @@ public class LightingDemo extends Scene
 
     @Override
     public void render() {
-        if(torus != null) {
+        if(lightBulb != null) {
             lightBulb.render(modelCamera, lightGroup);
         }
 

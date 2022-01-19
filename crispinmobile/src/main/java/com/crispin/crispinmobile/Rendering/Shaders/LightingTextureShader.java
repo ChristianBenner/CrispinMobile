@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
@@ -50,19 +51,25 @@ public class LightingTextureShader extends Shader
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");
         modelMatrixUniformHandle = getUniform("uModel");
-        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
 
         // Fragment uniforms
-        colourUniformHandle = getUniform("uColour");
         viewPositionUniformHandle = getUniform("uViewPosition");
-        textureUniformHandle = getUniform("uTexture");
-        specularMapUniformHandle = getUniform("uSpecularMap");
-        normalMapUniformHandle = getUniform("uNormalMap");
-        materialAmbientUniformHandle = getUniform("uMaterial.ambient");
-        materialDiffuseUniformHandle = getUniform("uMaterial.diffuse");
-        materialSpecularUniformHandle = getUniform("uMaterial.specular");
-        materialShininessUniformHandle = getUniform("uMaterial.shininess");
         numPointLightsUniformHandle = getUniform("uNumPointLights");
+
+        // Set all the material handles
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
+        materialHandles.uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+        materialHandles.textureUniformHandle = getUniform("uTexture");
+        materialHandles.specularMapUniformHandle = getUniform("uSpecularMap");
+        materialHandles.normalMapUniformHandle = getUniform("uNormalMap");
+        materialHandles.ambientUniformHandle = getUniform("uMaterial.ambient");
+        materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
+        materialHandles.specularUniformHandle = getUniform(
+                "uMaterial.specular");
+        materialHandles.shininessUniformHandle = getUniform(
+                "uMaterial.shininess");
+
         initPointLightHandles();
     }
 

@@ -54,7 +54,7 @@ public class Line
 
     private LineShader lineShader;
 
-    private Colour colour;
+    private Material material;
 
     public Line()
     {
@@ -63,7 +63,7 @@ public class Line
         lineWidth = 1.0f;
 
         lineShader = new LineShader();
-        colour = new Colour();
+        material = new Material();
 
         setPoints(new Point2D(0.0f, 0.0f), new Point2D(0.0f, 0.0f));
     }
@@ -78,9 +78,12 @@ public class Line
         return pointTwo;
     }
 
-    public void setColour(Colour colour)
-    {
-        this.colour = colour;
+    public void setColour(Colour colour) {
+        material.setColour(colour);
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public void setWidth(float width)
@@ -126,14 +129,12 @@ public class Line
     {
         lineShader.enableIt();
         glLineWidth(lineWidth);
-        glUniform4f(lineShader.getColourUniformHandle(), colour.red, colour.green, colour.blue,
-                colour.alpha);
+
+        glUniform4f(lineShader.materialHandles.colourUniformHandle, material.colour.red,
+                material.colour.green, material.colour.blue, material.colour.alpha);
 
         glUniformMatrix4fv(lineShader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT, false,
                 camera.getOrthoMatrix(), 0);
-
-        glUniform4f(lineShader.getColourUniformHandle(), colour.red, colour.green, colour.blue,
-                colour.alpha);
 
         vertexBuffer.position(0);
         glEnableVertexAttribArray(lineShader.getPositionAttributeHandle());

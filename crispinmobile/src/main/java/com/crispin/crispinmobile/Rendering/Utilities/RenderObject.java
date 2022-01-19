@@ -2,17 +2,10 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
-import static android.opengl.GLES30.GL_TEXTURE1;
-import static android.opengl.GLES30.GL_TEXTURE2;
-import static android.opengl.GLES30.glUniform1f;
-import static android.opengl.GLES30.glUniform2f;
 import static android.opengl.GLES30.glUniform3f;
-import static android.opengl.GLES30.glUniform4f;
 import static android.opengl.GLES30.GL_FLOAT;
-import static android.opengl.GLES30.GL_TEXTURE0;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
 import static android.opengl.GLES30.GL_TRIANGLES;
-import static android.opengl.GLES30.glActiveTexture;
 import static android.opengl.GLES30.glBindTexture;
 import static android.opengl.GLES30.glDisableVertexAttribArray;
 import static android.opengl.GLES30.glDrawArrays;
@@ -27,6 +20,7 @@ import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
@@ -653,76 +647,8 @@ public class RenderObject
                 modelViewMatrix,
                 0);
 
-        // If the shader UV offset uniform handle is not invalid, upload the UV offset data
-        if(shader.getUvOffsetUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform2f(shader.getUvOffsetUniformHandle(),
-                    material.getUvOffset().x,
-                    material.getUvOffset().y);
-        }
-
-        // If the shader colour uniform handle is not invalid, upload the colour data
-        if(shader.getColourUniformHandle() != INVALID_UNIFORM_HANDLE)
-        {
-            glUniform4f(shader.getColourUniformHandle(),
-                    material.colour.red,
-                    material.colour.green,
-                    material.colour.blue,
-                    material.colour.alpha);
-        }
-
-        // If the shader texture uniform handle is not invalid, upload the texture unit
-        if(shader.getTextureUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasTexture())
-        {
-            glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.getTexture().getId());
-            glUniform1i(shader.getTextureUniformHandle(), 0);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
-
-        // If the shader supports a specular map and the material has one, supply it to the
-        // shader.
-        if(shader.getSpecularMapUniformHandle() !=
-                INVALID_UNIFORM_HANDLE && material.hasSpecularMap())
-        {
-            glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.getSpecularMap().getId());
-            glUniform1i(shader.getSpecularMapUniformHandle(), 1);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
-
-        // If the shader supports a normal map and the material has one, supply it to the shader
-        if(shader.getNormalMapUniformHandle() != INVALID_UNIFORM_HANDLE && material.hasNormalMap())
-        {
-            glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, material.getNormalMap().getId());
-            glUniform1i(shader.getNormalMapUniformHandle(), 2);
-
-            // If the shader UV multiplier uniform handle is not invalid, upload the UV multiplier
-            // data
-            if(shader.getUvMultiplierUniformHandle() != INVALID_UNIFORM_HANDLE)
-            {
-                glUniform2f(shader.getUvMultiplierUniformHandle(),
-                        material.getUvMultiplier().x,
-                        material.getUvMultiplier().y);
-            }
-        }
+        // Set all material uniforms
+        shader.setMaterialUniforms(material);
 
         handleAttributes(true);
 
@@ -762,23 +688,34 @@ public class RenderObject
         if(lightGroup != null) {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
             if(directionalLight != null) {
-                shader.setDirectionalLightHandles(directionalLight);
+                shader.setDirectionalLightUniforms(directionalLight);
             }
 
             final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
-            if(shader.validHandle(shader.getNumLightsUniformHandle())) {
-                glUniform1i(shader.getNumLightsUniformHandle(), pointLights.size());
+            if(shader.validHandle(shader.getNumPointLightsUniformHandle())) {
+                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
             }
 
             // Iterate through point lights, uploading each to the shader
-            for(int i = 0; i < pointLights.size() && i < shader.getMaxLights(); i++) {
+            for(int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
                 final PointLight pointLight = pointLights.get(i);
-                shader.setPointLightHandles(i, pointLight);
+                shader.setPointLightUniforms(i, pointLight);
+            }
+
+            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
+            if(shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
+                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
+            }
+
+            // Iterate through spot lights, uploading each to the shader
+            for(int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
+                final SpotLight spotLight = spotLights.get(i);
+                shader.setSpotLightUniforms(i, spotLight);
             }
         }
 
         // Set all material uniforms
-        material.setUniforms(shader);
+        shader.setMaterialUniforms(material);
 
         if(shader.validHandle(shader.getViewPositionUniformHandle())) {
             final Point3D cameraPos = camera.getPosition();
@@ -809,54 +746,6 @@ public class RenderObject
                     modelMatrix.getModelMatrix(),
                     0);
         }
-
-
-//        // Matrix upload for a lighting enabled shader is slightly different
-//        if(shader.isLightingShader())
-//        {
-//            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
-//                    UNIFORM_UPLOAD_COUNT,
-//                    false,
-//                    camera.getPerspectiveMatrix(),
-//                    0);
-//
-//            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
-//                    UNIFORM_UPLOAD_COUNT,
-//                    false,
-//                    camera.getViewMatrix(),
-//                    0);
-//
-//            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
-//                    UNIFORM_UPLOAD_COUNT,
-//                    false,
-//                    modelMatrix.getModelMatrix(),
-//                    0);
-//        }
-//        else
-//        {
-//            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-//            Matrix.multiplyMM(modelViewMatrix,
-//                    0,
-//                    camera.getViewMatrix(),
-//                    0,
-//                    modelMatrix.getModelMatrix(),
-//                    0);
-//
-//            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-//            Matrix.multiplyMM(modelViewProjectionMatrix,
-//                    0,
-//                    camera.getPerspectiveMatrix(),
-//                    0,
-//                    modelViewMatrix,
-//                    0);
-//
-//            glUniformMatrix4fv(shader.getMatrixUniformHandle(),
-//                    UNIFORM_UPLOAD_COUNT,
-//                    false,
-//                    modelViewProjectionMatrix,
-//                    0);
-//        }
-
 
         handleAttributes(true);
 

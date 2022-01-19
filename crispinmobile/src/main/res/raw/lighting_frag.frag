@@ -27,27 +27,22 @@ struct PointLight {
     float quadratic;
 };
 
-//struct Spotlight {
-//    vec3 position;
-//    vec3 direction;
-//
-//    vec3 colour;
-//
-//    // Strengths of lighting techniques
-//    float ambient;
-//    float diffuse;
-//    float specular;
-//
-//    // Used in itensity attenuation calculation
-//    float constant;
-//    float linear;
-//    float quadratic;
-//
-//    float size;
-//    float outerSize;
-//};
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    vec3 colour;
+    float ambient;
+    float diffuse;
+    float specular;
+    float constant;
+    float linear;
+    float quadratic;
+    float size;
+    float outerSize;
+};
 
 #define MAX_NUM_POINT_LIGHTS 10
+#define MAX_NUM_SPOT_LIGHTS 5
 
 in vec3 vFragPos;
 in vec3 vNormal;
@@ -56,14 +51,16 @@ out vec4 FragColor;
 
 uniform vec4 uColour;
 uniform vec3 uViewPosition;
-uniform int uNumPointLights;
 uniform Material uMaterial;
-
 uniform DirectionalLight uDirectionalLight;
 uniform PointLight uPointLights[MAX_NUM_POINT_LIGHTS];
+uniform int uNumPointLights;
+uniform SpotLight uSpotLights[MAX_NUM_SPOT_LIGHTS];
+uniform int uNumSpotLights;
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection);
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection);
+vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirection);
 
 void main()
 {
@@ -77,6 +74,11 @@ void main()
     // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
         lightCalc += CalculatePointLight(uPointLights[i], normal, vFragPos, viewDirection);
+    }
+
+    // Calculate all the spot lights
+    for(int i = 0; i < MAX_NUM_SPOT_LIGHTS && i < uNumSpotLights; i++) {
+        lightCalc += CalculateSpotLight(uSpotLights[i], normal, vFragPos, viewDirection);
     }
 
     FragColor = vec4(lightCalc, 1.0) * uColour;
@@ -123,7 +125,30 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     return ambient + diffuse + specular;
 }
 
-//vec3 CalculateSpotlight(Light light, vec3 normal, vec3 fragPos, vec3 viewDirection) {
+vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
+    vec3 lightDir = normalize(light.position - fragPos);
+    // diffuse shading
+    float diff = max(dot(normal, lightDir), 0.0);
+    // specular shading
+    vec3 reflectDir = reflect(-lightDir, normal);
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
+    // attenuation
+    float distance = length(light.position - fragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
+    // spotlight intensity
+    float theta = dot(lightDir, normalize(-light.direction));
+    float epsilon = light.size - light.outerSize;
+    float intensity = clamp((theta - light.outerSize) / epsilon, 0.0, 1.0);
+    // combine results
+    vec3 ambient = vec3(light.ambient);
+    vec3 diffuse = vec3(light.diffuse) * diff;
+    vec3 specular = vec3(light.specular) * spec;
+    ambient *= attenuation * intensity;
+    diffuse *= attenuation * intensity;
+    specular *= attenuation * intensity;
+    return (ambient + diffuse + specular);
+
+
 //    // Calculate the distance of the light from the point
 //    float distance = length(light.position - fragPos);
 //    float attenuation = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
@@ -148,5 +173,7 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
 //    vec3 reflectDirection = reflect(-lightDirection, normal);
 //    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
 //    vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour * attenuation * spotlight;
-//    return ambient + diffuse + specular;
-//}
+//
+//    //return ambient + diffuse + specular;
+//    return lightDirection;
+}

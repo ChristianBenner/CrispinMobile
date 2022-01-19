@@ -5,32 +5,44 @@ import static android.opengl.GLES20.glUniform3f;
 import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 
+/**
+ * DirectionalLightHandles stores all GLSL shader uniform handles associated to DirectionalLight
+ * properties such as position, direction and colour. The class acts as a data only object - all
+ * fields are publicly accessible. The second responsibility of the class is to upload uniform data
+ * to OpenGL.
+ *
+ * @see         PointLight
+ * @author      Christian Benner
+ * @version     %I%, %G%
+ * @since       1.0
+ */
 public class DirectionalLightHandles {
     // Direction uniform handle
-    public int directionUniformHandle;
+    public int directionUniformHandle = UNDEFINED_HANDLE;
 
     // Colour uniform handle
-    public int colourUniformHandle;
+    public int colourUniformHandle = UNDEFINED_HANDLE;
 
     // Diffuse strength uniform handle
-    public int diffuseUniformHandle;
+    public int diffuseUniformHandle = UNDEFINED_HANDLE;
 
     // Ambience strength uniform handle
-    public int ambientUniformHandle;
+    public int ambientUniformHandle = UNDEFINED_HANDLE;
 
     // Specular strength uniform handle
-    public int specularUniformHandle;
+    public int specularUniformHandle = UNDEFINED_HANDLE;
 
-    public DirectionalLightHandles() {
-        directionUniformHandle = UNDEFINED_HANDLE;
-        colourUniformHandle = UNDEFINED_HANDLE;
-        diffuseUniformHandle = UNDEFINED_HANDLE;
-        ambientUniformHandle = UNDEFINED_HANDLE;
-        specularUniformHandle = UNDEFINED_HANDLE;
-    }
-
-    public void setUniforms(DirectionalLight light) {
+    /**
+     * Upload uniform data to each uniform handle from the properties of a given DirectionalLight
+     *
+     * @param light DirectionalLight to upload properties from
+     * @author      Christian Benner
+     * @version     %I%, %G%
+     * @since       1.0
+     */
+    public void setUniforms(final DirectionalLight light) {
         if(directionUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(directionUniformHandle, light.dx, light.dy, light.dz);
         }

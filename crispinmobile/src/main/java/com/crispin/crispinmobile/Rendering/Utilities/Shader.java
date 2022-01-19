@@ -2,6 +2,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Utilities.FileResourceReader;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
@@ -70,26 +71,11 @@ public class Shader
     // Normal attribute handle
     protected int normalAttributeHandle;
 
-    // Colour uniform handle
-    protected int colourUniformHandle;
-
-    // Texture uniform handle
-    protected int textureUniformHandle;
-
-    // Specular map uniform handle
-    protected int specularMapUniformHandle;
-
-    // Normal map uniform handle
-    protected int normalMapUniformHandle;
+    // View position uniform handle
+    public int viewPositionUniformHandle;
 
     // Matrix uniform handle
     protected int matrixUniformHandle;
-
-    // UV multiplier uniform handle
-    protected int uvMultiplierUniformHandle;
-
-    // UV offset uniform handle
-    protected int uvOffsetUniformHandle;
 
     // Projection matrix uniform handle
     protected int projectionMatrixUniformHandle;
@@ -101,57 +87,10 @@ public class Shader
     protected int modelMatrixUniformHandle;
 
     // Number of point lights
-    protected int  numPointLightsUniformHandle;
+    protected int numPointLightsUniformHandle;
 
-
-//    public class SpotLightHandles {
-//        // Position uniform handle
-//        public int positionUniformHandle;
-//
-//        // Direction uniform handle
-//        public int directionUniformHandle;
-//
-//        // Colour uniform handle
-//        public int colourUniformHandle;
-//
-//        // Diffuse strength uniform handle
-//        public int diffuseUniformHandle;
-//
-//        // Ambience strength uniform handle
-//        public int ambientUniformHandle;
-//
-//        // Specular strength uniform handle
-//        public int specularUniformHandle;
-//
-//        // Attenuation constant variable uniform handle
-//        public int constantUniformHandle;
-//
-//        // Attenuation linear variable uniform handle
-//        public int linearUniformHandle;
-//
-//        // Attenuation quadratic variable uniform handle
-//        public int quadraticUniformHandle;
-//
-//        // Size of the light (when to begin fading out the light radius of the light)
-//        public int sizeUniformHandle;
-//
-//        // Outer size of the light (when to end fading out the light radius of the light)
-//        public int outerSizeUniformHandle;
-//
-//        public SpotLightHandles() {
-//            positionUniformHandle = UNDEFINED_HANDLE;
-//            directionUniformHandle = UNDEFINED_HANDLE;
-//            colourUniformHandle = UNDEFINED_HANDLE;
-//            diffuseUniformHandle = UNDEFINED_HANDLE;
-//            ambientUniformHandle = UNDEFINED_HANDLE;
-//            specularUniformHandle = UNDEFINED_HANDLE;
-//            constantUniformHandle = UNDEFINED_HANDLE;
-//            linearUniformHandle = UNDEFINED_HANDLE;
-//            quadraticUniformHandle = UNDEFINED_HANDLE;
-//            sizeUniformHandle = UNDEFINED_HANDLE;
-//            outerSizeUniformHandle = UNDEFINED_HANDLE;
-//        }
-//    }
+    // Number of spot lights
+    protected int numSpotLightsUniformHandle;
 
     // Handles for a directional light
     protected DirectionalLightHandles directionalLightHandles;
@@ -159,20 +98,11 @@ public class Shader
     // Handles for all the shader point lights
     protected PointLightHandles pointLightHandles[];
 
-    // View position uniform handle
-    protected int viewPositionUniformHandle;
+    // Handles for all the shader spot lights
+    protected SpotLightHandles spotLightHandles[];
 
-    // Material diffuse strength uniform handle
-    protected int materialDiffuseUniformHandle;
-
-    // Material ambience strength uniform handle
-    protected int materialAmbientUniformHandle;
-
-    // Material specular strength uniform handle
-    protected int materialSpecularUniformHandle;
-
-    // Material shininess uniform handle
-    protected int materialShininessUniformHandle;
+    // Handles for the material
+    protected MaterialHandles materialHandles;
 
     // Is the shader a lighting shader
     protected boolean lightingShader;
@@ -294,83 +224,6 @@ public class Shader
     }
 
     /**
-     * Get the colour uniform handle
-     *
-     * @return Integer ID of the colour uniform handle
-     * @since 1.0
-     */
-    public int getColourUniformHandle()
-    {
-        return colourUniformHandle;
-    }
-
-    /**
-     * Get the texture uniform handle
-     *
-     * @return Integer ID of the texture uniform handle
-     * @since 1.0
-     */
-    public int getTextureUniformHandle()
-    {
-        return textureUniformHandle;
-    }
-
-    /**
-     * Get the specular map uniform handle
-     *
-     * @return Integer ID of the specular map uniform handle
-     * @since 1.0
-     */
-    public int getSpecularMapUniformHandle()
-    {
-        return specularMapUniformHandle;
-    }
-
-    /**
-     * Get the normal map uniform handle
-     *
-     * @return Integer ID of the normal map uniform handle
-     * @since 1.0
-     */
-    public int getNormalMapUniformHandle()
-    {
-        return normalMapUniformHandle;
-    }
-
-    /**
-     * Get the matrix uniform handle
-     *
-     * @return  Integer ID of the matrix uniform handle
-     * @since   1.0
-     */
-    public int getMatrixUniformHandle()
-    {
-        return matrixUniformHandle;
-    }
-
-    /**
-     * Get the UV multiplier uniform handle
-     *
-     * @return  Integer ID of the UV multipliers uniform handle
-     * @since   1.0
-     */
-    public int getUvMultiplierUniformHandle()
-    {
-        return uvMultiplierUniformHandle;
-    }
-
-    /**
-     * Get the UV offset uniform handle
-     *
-     * @return  Integer ID of the UV offset uniform handle
-     * @since   1.0
-     */
-    public int getUvOffsetUniformHandle()
-    {
-        return uvOffsetUniformHandle;
-    }
-
-    /**
      * Get the projection matrix uniform handle
      *
      * @return  Integer ID of the projection matrix uniform handle
@@ -414,22 +267,43 @@ public class Shader
     }
 
     /**
-     * Get the num lights uniform handle
+     * Get the matrix uniform handle
      *
-     * @return  Integer ID of the num lights uniform handle
+     * @return  Integer ID of the matrix uniform handle
      * @since   1.0
      */
-    public int getNumLightsUniformHandle() {
+    public int getMatrixUniformHandle()
+    {
+        return matrixUniformHandle;
+    }
+
+    /**
+     * Get the num point uniform handle
+     *
+     * @return  Integer ID of the num point lights uniform handle
+     * @since   1.0
+     */
+    public int getNumPointLightsUniformHandle() {
         return numPointLightsUniformHandle;
     }
 
     /**
-     * Get the maximum number of lights that the shader supports
+     * Get the num spot lights uniform handle
      *
-     * @return  Max number of lights the shader can handle
+     * @return  Integer ID of the num spot lights uniform handle
      * @since   1.0
      */
-    public int getMaxLights() {
+    public int getNumSpotLightsUniformHandle() {
+        return numSpotLightsUniformHandle;
+    }
+
+    /**
+     * Get the maximum number of point lights that the shader supports
+     *
+     * @return  Max number of point lights the shader can handle
+     * @since   1.0
+     */
+    public int getMaxPointLights() {
         if(pointLightHandles == null) {
             return 0;
         }
@@ -437,116 +311,18 @@ public class Shader
         return pointLightHandles.length;
     }
 
-//    /**
-//     * Get a light direction uniform handle
-//     *
-//     * @return  Integer ID of the light direction uniform handle
-//     * @since   1.0
-//     */
-//    public int getSpotLightDirectionUniformHandle(int index) {
-//        if(pointLightHandles != null && pointLightHandles.length >= index) {
-//            return pointLightHandles[index].directionUniformHandle;
-//        }
-//
-//        return UNDEFINED_HANDLE;
-//    }
-
-//    /**
-//     * Get a light size uniform handle
-//     *
-//     * @return  Integer ID of the light size uniform handle
-//     * @since   1.0
-//     */
-//    public int getLightSizeUniformHandle(int index) {
-//        if(pointLightHandles != null && pointLightHandles.length >= index) {
-//            return pointLightHandles[index].sizeUniformHandle;
-//        }
-//
-//        return UNDEFINED_HANDLE;
-//    }
-//
-//    /**
-//     * Get a light outer size uniform handle
-//     *
-//     * @return  Integer ID of the outer light size uniform handle
-//     * @since   1.0
-//     */
-//    public int getLightOuterSizeUniformHandle(int index) {
-//        if(pointLightHandles != null && pointLightHandles.length >= index) {
-//            return pointLightHandles[index].outerSizeUniformHandle;
-//        }
-//
-//        return UNDEFINED_HANDLE;
-//    }
-
     /**
-     * Get a directional light direction uniform handle
+     * Get the maximum number of spot lights that the shader supports
      *
-     * @return  Integer ID of the directional light direction uniform handle
+     * @return  Max number of spot lights the shader can handle
      * @since   1.0
      */
-    public int getDirectionalLightDirectionUniformHandle(int index) {
-        if(directionalLightHandles != null) {
-            return directionalLightHandles.directionUniformHandle;
+    public int getMaxSpotLights() {
+        if(spotLightHandles == null) {
+            return 0;
         }
 
-        return UNDEFINED_HANDLE;
-    }
-
-    /**
-     * Get a directional light colour uniform handle
-     *
-     * @return  Integer ID of the directional light colour uniform handle
-     * @since   1.0
-     */
-    public int getDirectionalLightColourUniformHandle(int index) {
-        if(directionalLightHandles != null) {
-            return directionalLightHandles.colourUniformHandle;
-        }
-
-        return UNDEFINED_HANDLE;
-    }
-
-    /**
-     * Get a directional light ambience strength uniform handle
-     *
-     * @return  Integer ID of the directional light ambience strength uniform handle
-     * @since   1.0
-     */
-    public int getDirectionalLightAmbientUniformHandle(int index) {
-        if(directionalLightHandles != null) {
-            return directionalLightHandles.ambientUniformHandle;
-        }
-
-        return UNDEFINED_HANDLE;
-    }
-
-    /**
-     * Get a directional light intensity uniform handle
-     *
-     * @return  Integer ID of the directional light intensity uniform handle
-     * @since   1.0
-     */
-    public int getDirectionalLightDiffuseUniformHandle(int index) {
-        if(directionalLightHandles != null) {
-            return directionalLightHandles.diffuseUniformHandle;
-        }
-
-        return UNDEFINED_HANDLE;
-    }
-
-    /**
-     * Get a directional light specular strength uniform handle
-     *
-     * @return  Integer ID of the directional light specular strength uniform handle
-     * @since   1.0
-     */
-    public int getDirectionalLightSpecularUniformHandle(int index) {
-        if(directionalLightHandles != null) {
-            return directionalLightHandles.specularUniformHandle;
-        }
-
-        return UNDEFINED_HANDLE;
+        return spotLightHandles.length;
     }
 
     /**
@@ -554,7 +330,7 @@ public class Shader
      *
      * @since   1.0
      */
-    public void setDirectionalLightHandles(DirectionalLight directionalLight) {
+    public void setDirectionalLightUniforms(DirectionalLight directionalLight) {
         if(directionalLightHandles != null) {
             directionalLightHandles.setUniforms(directionalLight);
         }
@@ -565,49 +341,34 @@ public class Shader
      *
      * @since   1.0
      */
-    public void setPointLightHandles(int index, PointLight pointLight) {
+    public void setPointLightUniforms(int index, PointLight pointLight) {
         if(pointLightHandles != null && index < pointLightHandles.length) {
             pointLightHandles[index].setUniforms(pointLight);
         }
     }
 
     /**
-     * Get the material diffuse strength uniform handle
+     * Set all the uniforms for an index and given spot light
      *
-     * @return  Integer ID of the light intensity uniform handle
      * @since   1.0
      */
-    public int getMaterialDiffuseUniformHandle() {
-        return materialDiffuseUniformHandle;
+    public void setSpotLightUniforms(int index, SpotLight spotLight) {
+        if(spotLightHandles != null && index < spotLightHandles.length) {
+            spotLightHandles[index].setUniforms(spotLight);
+        }
     }
 
     /**
-     * Get the material ambient strength uniform handle
+     * Set all the uniforms for a material
      *
-     * @return  Integer ID of the light ambience strength uniform handle
      * @since   1.0
      */
-    public int getMaterialAmbientUniformHandle() {
-        return materialAmbientUniformHandle;
+    public void setMaterialUniforms(Material material) {
+        if(materialHandles != null) {
+            materialHandles.setUniforms(material);
+        }
     }
 
-    /**
-     * Get the material specular strength uniform handle
-     *
-     * @return  Integer ID of the light specular strength uniform handle
-     * @since   1.0
-     */
-    public int getMaterialSpecularUniformHandle() {
-        return materialSpecularUniformHandle;
-    }
-
-    /**
-     * Get the material shininess uniform handle
-     *
-     * @return  Integer ID of the material shininess uniform handle
-     * @since   1.0
-     */
-    public int getMaterialShininessUniformHandle() { return materialShininessUniformHandle; }
     /**
      * Set the state of the lighting shader variable. If the shader supports lighting then this
      * should be set to true, else false.
@@ -656,22 +417,12 @@ public class Shader
         colourAttributeHandle = UNDEFINED_HANDLE;
         textureAttributeHandle = UNDEFINED_HANDLE;
         normalAttributeHandle = UNDEFINED_HANDLE;
-        colourUniformHandle = UNDEFINED_HANDLE;
-        textureUniformHandle = UNDEFINED_HANDLE;
-        specularMapUniformHandle = UNDEFINED_HANDLE;
-        normalMapUniformHandle = UNDEFINED_HANDLE;
         matrixUniformHandle = UNDEFINED_HANDLE;
-        uvMultiplierUniformHandle = UNDEFINED_HANDLE;
-        uvOffsetUniformHandle = UNDEFINED_HANDLE;
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
         viewMatrixUniformHandle = UNDEFINED_HANDLE;
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
-        materialDiffuseUniformHandle = UNDEFINED_HANDLE;
-        materialAmbientUniformHandle = UNDEFINED_HANDLE;
-        materialSpecularUniformHandle = UNDEFINED_HANDLE;
-        materialShininessUniformHandle = UNDEFINED_HANDLE;
     }
 
     /**

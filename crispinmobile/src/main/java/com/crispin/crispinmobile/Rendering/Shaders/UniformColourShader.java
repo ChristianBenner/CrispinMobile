@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**
@@ -35,7 +36,9 @@ public class UniformColourShader extends Shader
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
         positionAttributeHandle = getAttribute("vPosition");
-        colourUniformHandle = getUniform("uColour");
         matrixUniformHandle = getUniform("uMatrix");
+
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
     }
 }

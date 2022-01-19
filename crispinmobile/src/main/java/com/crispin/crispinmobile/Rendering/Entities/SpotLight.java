@@ -113,7 +113,7 @@ public class SpotLight
     }
 
     public SpotLight(float x, float y) {
-        this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
+        this(x, y, 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     public SpotLight(final Point3D position, final Vector3D direction) {
@@ -133,7 +133,7 @@ public class SpotLight
     }
 
     public SpotLight() {
-        this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
+        this(0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     }
 
     public void setPosition(Point3D position) {

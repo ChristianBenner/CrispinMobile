@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 import static android.opengl.GLES20.glUniform1i;
@@ -22,6 +23,8 @@ public class LineShader extends Shader
 
         positionAttributeHandle = getAttribute("vPosition");
         matrixUniformHandle = getUniform("uMatrix");
-        colourUniformHandle = getUniform("uColour");
+
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
     }
 }

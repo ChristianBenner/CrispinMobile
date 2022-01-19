@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**
@@ -38,6 +39,8 @@ public class AttributeColourShader extends Shader
         positionAttributeHandle = getAttribute("vPosition");
         colourAttributeHandle = getAttribute("vColour");
         matrixUniformHandle = getUniform("uMatrix");
-        colourUniformHandle = getUniform("uColour");
+
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
     }
 }

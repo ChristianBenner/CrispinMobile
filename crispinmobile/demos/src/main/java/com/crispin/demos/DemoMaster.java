@@ -21,6 +21,8 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.scenes.LightingDemo;
 import com.crispin.demos.scenes.MaterialDemo;
 import com.crispin.demos.scenes.ObjLoadDemo;
+import com.crispin.demos.scenes.ParticleEngineDemo;
+import com.crispin.demos.scenes.SpotLightDemo;
 import com.crispin.demos.scenes.TextDemo;
 
 class DemoMasterScene extends Scene {
@@ -46,6 +48,8 @@ class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
         linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
         linearLayout.add(createDemoButton("TextDemo", TextDemo::new));
+        linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
+        linearLayout.add(createDemoButton("Particles", ParticleEngineDemo::new));
 
         selectDemoText = new com.crispin.crispinmobile.UserInterface.Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);

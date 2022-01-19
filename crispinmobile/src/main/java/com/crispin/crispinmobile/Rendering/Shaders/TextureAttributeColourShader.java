@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
 /**
@@ -36,10 +37,12 @@ public class TextureAttributeColourShader extends Shader
 
         positionAttributeHandle = getAttribute("vPosition");
         colourAttributeHandle = getAttribute("vColour");
-        colourUniformHandle = getUniform("uColour");
         textureAttributeHandle = getAttribute("vTextureCoordinates");
         matrixUniformHandle = getUniform("uMatrix");
-        uvMultiplierUniformHandle = getUniform("uUvMultiplier");
-        textureUniformHandle = getUniform("uTexture");
+
+        materialHandles = new MaterialHandles();
+        materialHandles.colourUniformHandle = getUniform("uColour");
+        materialHandles.uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+        materialHandles.textureUniformHandle = getUniform("uTexture");
     }
 }
