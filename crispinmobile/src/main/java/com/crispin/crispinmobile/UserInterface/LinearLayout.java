@@ -1,11 +1,5 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
 import java.util.ArrayList;
@@ -13,6 +7,9 @@ import java.util.ArrayList;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
+
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
 
 public class LinearLayout extends Plane
 {
@@ -31,16 +28,16 @@ public class LinearLayout extends Plane
     private float cursorY;
     private float endX;
     private float endY;
-    private Scale2D padding;
+    private Vec2 padding;
 
     private boolean automaticWidth;
     private boolean automaticHeight;
 
     private boolean showBackground;
 
-    public LinearLayout(Point2D position, Scale2D size, boolean vertical)
+    public LinearLayout(Vec2 position, Vec2 size, boolean vertical)
     {
-        this.padding = new Scale2D();
+        this.padding = new Vec2();
         this.vertical = vertical;
         this.showBackground = false;
 
@@ -57,32 +54,27 @@ public class LinearLayout extends Plane
 
         setSize(size);
         setPosition(position);
-        setPadding(new Scale2D(DEFAULT_PADDING_X, DEFAULT_PADDING_Y));
+        setPadding(new Vec2(DEFAULT_PADDING_X, DEFAULT_PADDING_Y));
     }
 
-    public LinearLayout(Point2D position, Scale2D size)
+    public LinearLayout(Vec2 position, Vec2 size)
     {
         this(position, size, false);
     }
 
-    public LinearLayout(Point2D position)
+    public LinearLayout(Vec2 position)
     {
-        this(position, new Scale2D(0.0f, 0.0f), false);
-    }
-
-    public LinearLayout(Scale2D size)
-    {
-        this(new Point2D(), size, false);
+        this(position, new Vec2(0.0f, 0.0f), false);
     }
 
     public LinearLayout(boolean vertical)
     {
-        this(new Point2D(), new Scale2D(0.0f, 0.0f), vertical);
+        this(new Vec2(), new Vec2(0.0f, 0.0f), vertical);
     }
 
     public LinearLayout()
     {
-        this(new Point2D(), new Scale2D(0.0f, 0.0f), false);
+        this(new Vec2(), new Vec2(0.0f, 0.0f), false);
     }
 
     public void addUI(UIObject uiObject)
@@ -90,12 +82,12 @@ public class LinearLayout extends Plane
         uiObjects.add(uiObject);
     }
 
-    public Scale2D getPadding()
+    public Vec2 getPadding()
     {
         return padding;
     }
 
-    public void setPadding(Scale2D padding)
+    public void setPadding(Vec2 padding)
     {
         this.padding.x = padding.x;
         this.padding.y = padding.y;
@@ -124,7 +116,7 @@ public class LinearLayout extends Plane
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         super.setPosition(position);
         updateUIElementPositions();
@@ -177,7 +169,7 @@ public class LinearLayout extends Plane
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
+    public void setSize(Vec2 size)
     {
         super.setSize(size.x, size.y);
         updateUIElementPositions();
@@ -198,7 +190,7 @@ public class LinearLayout extends Plane
     }
 
     @Override
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         this.showBackground = true;
         super.setColour(colour);

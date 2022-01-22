@@ -16,8 +16,6 @@ import static android.opengl.GLES30.glVertexAttribPointer;
 
 import android.opengl.Matrix;
 
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
@@ -34,6 +32,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * Render object is a base class for any graphical object. It handles an objects shader (based on
@@ -523,10 +524,10 @@ public class RenderObject
      * Set the colour of the object
      *
      * @param colour    The colour to set the object
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         this.material.setColour(colour);
     }
@@ -538,7 +539,7 @@ public class RenderObject
      * @param g The intensity of the green channel (0.0-1.0)
      * @param b The intensity of the blue channel (0.0-1.0)
      * @param a The intensity of the alpha channel (0.0-1.0)
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
     public void setColour(float r,
@@ -546,7 +547,7 @@ public class RenderObject
                           float b,
                           float a)
     {
-        this.material.setColour(new Colour(r, g, b, a));
+        this.material.setColour(new Vec4(r, g, b, a));
     }
 
     /**
@@ -555,48 +556,46 @@ public class RenderObject
      * @param r The intensity of the red channel (0.0-1.0)
      * @param g The intensity of the green channel (0.0-1.0)
      * @param b The intensity of the blue channel (0.0-1.0)
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
-    public void setColour(float r,
-                          float g,
-                          float b)
+    public void setColour(float r, float g, float b)
     {
-        this.material.setColour(new Colour(r, g, b));
+        this.material.setColour(new Vec4(r, g, b, 1.0f));
     }
 
     /**
      * Set the alpha channel intensity of the object
      *
      * @param alpha The intensity of the alpha channel (0.0-1.0)
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
     public void setAlpha(float alpha)
     {
-        this.material.colour.alpha = alpha;
+        this.material.colour.w = alpha;
     }
 
     /**
      * Get the alpha channel intensity of the object
      *
      * @return  The intensity of the alpha channel (0.0-1.0)
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
     public float getAlpha()
     {
-        return this.material.colour.alpha;
+        return this.material.colour.w;
     }
 
     /**
      * Get the colour of the object
      *
      * @return The colour of the object
-     * @see Colour
+     * @see Vec4
      * @since 1.0
      */
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return this.material.colour;
     }
@@ -718,7 +717,7 @@ public class RenderObject
         shader.setMaterialUniforms(material);
 
         if(shader.validHandle(shader.getViewPositionUniformHandle())) {
-            final Point3D cameraPos = camera.getPosition();
+            final Vec3 cameraPos = camera.getPosition();
             glUniform3f(shader.getViewPositionUniformHandle(), cameraPos.x, cameraPos.y,
                     cameraPos.z);
         }

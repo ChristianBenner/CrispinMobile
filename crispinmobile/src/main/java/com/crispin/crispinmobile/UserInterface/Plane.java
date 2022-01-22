@@ -1,32 +1,30 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
-import com.crispin.crispinmobile.Utilities.Logger;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
+
 public class Plane implements UIObject
 {
-    protected Point2D position;
-    protected Scale2D size;
+    protected Vec2 position;
+    protected Vec2 size;
 
     protected Square plane;
 
     private boolean borderEnabled;
     private int disabledBorderFlags;
 
-    public Plane(Point2D position, Scale2D size)
+    public Plane(Vec2 position, Vec2 size)
     {
-        this.position = new Point2D();
-        this.size = new Scale2D();
+        this.position = new Vec2();
+        this.size = new Vec2();
 
         this.borderEnabled = false;
 
@@ -41,11 +39,11 @@ public class Plane implements UIObject
     }
 
     public Plane(Texture texture,
-                 Point2D position,
-                 Scale2D size)
+                 Vec2 position,
+                 Vec2 size)
     {
-        this.position = new Point2D();
-        this.size = new Scale2D();
+        this.position = new Vec2();
+        this.size = new Vec2();
         this.borderEnabled = false;
 
         plane = new Square(true);
@@ -55,31 +53,24 @@ public class Plane implements UIObject
         setSize(size);
     }
 
-    public Plane(Scale2D size)
+    public Plane(Vec2 size)
     {
-        this(new Point2D(), size);
+        this(new Vec2(), size);
     }
 
     public Plane(Texture texture)
     {
-        this(texture, new Point2D(), new Scale2D());
+        this(texture, new Vec2(), new Vec2());
     }
 
-    public Plane(Texture texture,
-                 Point2D position)
+    public Plane(Texture texture, Vec2 position)
     {
-        this(texture, position, new Scale2D());
-    }
-
-    public Plane(Texture texture,
-                 Scale2D size)
-    {
-        this(texture, new Point2D(), size);
+        this(texture, position, new Vec2());
     }
 
     public Plane()
     {
-        this(new Point2D(), new Scale2D());
+        this(new Vec2(), new Vec2());
     }
 
     public void setImage(Texture texture)
@@ -123,7 +114,7 @@ public class Plane implements UIObject
             this.border.updatePosition(this);
         }
 
-        this.plane.setScale(new Scale2D(size.x, size.y));
+        this.plane.setScale(new Vec2(size.x, size.y));
         this.plane.setPosition(position);
     }
 
@@ -134,7 +125,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.position.x = position.x;
         this.position.y = position.y;
@@ -163,7 +154,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return position;
     }
@@ -225,7 +216,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
+    public void setSize(Vec2 size)
     {
         this.setSize(size.x, size.y);
     }
@@ -252,7 +243,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Scale2D getSize()
+    public Vec2 getSize()
     {
         return size;
     }
@@ -264,10 +255,10 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         this.plane.setColour(colour);
-        this.setBorderAlpha(colour.alpha);
+        this.setBorderAlpha(colour.w);
     }
 
     /**
@@ -276,7 +267,7 @@ public class Plane implements UIObject
      * @param colour    The colour of the border
      * @since 1.0
      */
-    public void setBorderColour(Colour colour)
+    public void setBorderColour(Vec4 colour)
     {
         // If a border does not exist yet, create one
         if(border == null)
@@ -309,7 +300,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return this.plane.getColour();
     }
@@ -347,7 +338,7 @@ public class Plane implements UIObject
     @Override
     public float getOpacity()
     {
-        return this.plane.getMaterial().colour.alpha;
+        return this.plane.getMaterial().colour.w;
     }
 
     /**

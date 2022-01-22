@@ -7,11 +7,9 @@ import android.view.Window;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
@@ -24,6 +22,8 @@ import com.crispin.demos.scenes.ObjLoadDemo;
 import com.crispin.demos.scenes.ParticleEngineDemo;
 import com.crispin.demos.scenes.SpotLightDemo;
 import com.crispin.demos.scenes.TextDemo;
+
+import glm_.vec2.Vec2;
 
 class DemoMasterScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
@@ -38,12 +38,14 @@ class DemoMasterScene extends Scene {
     private com.crispin.crispinmobile.UserInterface.Text selectDemoText;
 
     public DemoMasterScene() {
+        Camera camera = new Camera();
+
         Crispin.setBackgroundColour(Colour.LIGHT_GREY);
         camera2D = new Camera2D(0.0f, 0.0f, SURFACE_WIDTH, SURFACE_HEIGHT);
         Font titleFont = FontCache.getFont(R.raw.aileron_regular, 72);
 
-        linearLayout = new LinearLayout(new Point2D(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
-        linearLayout.setPadding(new Scale2D(PADDING, PADDING));
+        linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Vec2(SURFACE_WIDTH, SURFACE_HEIGHT));
+        linearLayout.setPadding(new Vec2(PADDING, PADDING));
         linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
         linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
         linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
@@ -78,7 +80,7 @@ class DemoMasterScene extends Scene {
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 }

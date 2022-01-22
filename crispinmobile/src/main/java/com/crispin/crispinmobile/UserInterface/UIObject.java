@@ -1,9 +1,9 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
 
 /**
  * Base class for user interface objects. Contains functions that should be generic to most user
@@ -21,7 +21,7 @@ public interface UIObject
      * @param position  The new position for the user interface
      * @since 1.0
      */
-    void setPosition(Point2D position);
+    void setPosition(Vec2 position);
 
     /**
      * Set the position of the user interface
@@ -38,7 +38,7 @@ public interface UIObject
      * @return The user interface position
      * @since 1.0
      */
-    Point2D getPosition();
+    Vec2 getPosition();
 
     /**
      * Set the width of the UI object
@@ -78,7 +78,7 @@ public interface UIObject
      * @param size  The new size of the UI object
      * @since 1.0
      */
-    void setSize(Scale2D size);
+    void setSize(Vec2 size);
 
     /**
      * Set the size of the UI object
@@ -95,7 +95,7 @@ public interface UIObject
      * @return The size of the UI object
      * @since 1.0
      */
-    Scale2D getSize();
+    Vec2 getSize();
 
     /**
      * Set the colour of the UI object
@@ -103,7 +103,7 @@ public interface UIObject
      * @param colour    The new colour for the UI object
      * @since 1.0
      */
-    void setColour(Colour colour);
+    void setColour(Vec4 colour);
 
     /**
      * Get the colour of the UI object
@@ -111,7 +111,7 @@ public interface UIObject
      * @return The colour of the UI object
      * @since 1.0
      */
-    Colour getColour();
+    Vec4 getColour();
 
     /**
      * Set the opacity of the UI object

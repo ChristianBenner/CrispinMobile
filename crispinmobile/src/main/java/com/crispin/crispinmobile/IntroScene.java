@@ -1,7 +1,5 @@
 package com.crispin.crispinmobile;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
@@ -10,6 +8,10 @@ import com.crispin.crispinmobile.UserInterface.Image;
 import com.crispin.crispinmobile.UserInterface.Plane;
 import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.Scene;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 public class IntroScene extends Scene
 {
@@ -33,7 +35,7 @@ public class IntroScene extends Scene
     // Image UI for the red logo
     private Image redLogoImage;
 
-    private Colour backgroundColour = new Colour(Colour.BLACK);
+    private Vec4 backgroundColour = Colour.BLACK;
 
     private TRANSITION_STATE backgroundTransitionState;
     private TRANSITION_STATE whiteLogoImageTransitionState;
@@ -51,7 +53,7 @@ public class IntroScene extends Scene
 
         uiCamera = new Camera2D();
 
-        background = new Plane(new Point2D(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(),
+        background = new Plane(new Vec2(0.0f, 0.0f), new Vec2(Crispin.getSurfaceWidth(),
                 Crispin.getSurfaceHeight()));
         background.setColour(Colour.BLACK);
 
@@ -91,9 +93,7 @@ public class IntroScene extends Scene
 
     public void modifyBackgroundColour(float amount)
     {
-        backgroundColour.red += amount;
-        backgroundColour.green += amount;
-        backgroundColour.blue += amount;
+        backgroundColour.plusAssign(amount);
         background.setColour(backgroundColour);
     }
 
@@ -107,7 +107,7 @@ public class IntroScene extends Scene
             modifyBackgroundColour(TRANSITION_RATE * deltaTime);
 
             // Check if its time to fade back out to white
-            if(backgroundColour.red >= 1.0f)
+            if(backgroundColour.r() >= 1.0f)
             {
                 backgroundTransitionState = TRANSITION_STATE.FADE_OUT;
             }
@@ -117,7 +117,7 @@ public class IntroScene extends Scene
             // Over time, change the background colour to black
             modifyBackgroundColour(-TRANSITION_RATE * deltaTime);
 
-            if(backgroundColour.red <= 0.0f)
+            if(backgroundColour.r() <= 0.0f)
             {
                 backgroundTransitionState = TRANSITION_STATE.COMPLETED;
             }
@@ -181,7 +181,7 @@ public class IntroScene extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position)
+    public void touch(int type, Vec2 position)
     {
 
     }

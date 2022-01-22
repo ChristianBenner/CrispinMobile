@@ -1,8 +1,5 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import android.opengl.GLES20;
-
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
 

@@ -1,12 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
@@ -14,7 +9,8 @@ import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
-import java.util.ArrayList;
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 public class Model extends RenderObject
 {
@@ -22,16 +18,16 @@ public class Model extends RenderObject
     private ModelMatrix modelMatrix;
 
     // Position of the object
-    private Point3D position;
+    private Vec3 position;
 
     // Rotation of the object
     private Rotation3D rotation;
 
     // Scale of the object
-    private Scale3D scale;
+    private Vec3 scale;
 
     // Rotation around a point
-    private Point3D rotationPoint;
+    private Vec3 rotationPoint;
 
     // Point rotation
     private Rotation3D rotationPointAngle;
@@ -54,10 +50,10 @@ public class Model extends RenderObject
 
         // Initialise the class variables
         modelMatrix = new ModelMatrix();
-        position = new Point3D();
+        position = new Vec3();
         rotation = new Rotation3D();
-        scale = new Scale3D();
-        rotationPoint = new Point3D();
+        scale = new Vec3();
+        rotationPoint = new Vec3();
         rotationPointAngle = new Rotation3D();
     }
 
@@ -92,10 +88,10 @@ public class Model extends RenderObject
 
         // Initialise the class variables
         modelMatrix = new ModelMatrix();
-        position = new Point3D();
+        position = new Vec3();
         rotation = new Rotation3D();
-        scale = new Scale3D();
-        rotationPoint = new Point3D();
+        scale = new Vec3();
+        rotationPoint = new Vec3();
         rotationPointAngle = new Rotation3D();
     }
 
@@ -113,7 +109,7 @@ public class Model extends RenderObject
      * @param position  The new position
      * @since 1.0
      */
-    public void setPosition(Point3D position)
+    public void setPosition(Vec3 position)
     {
         setPosition(position.x, position.y, position.z);
     }
@@ -141,7 +137,7 @@ public class Model extends RenderObject
      * @param position  The new position
      * @since 1.0
      */
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.position.x = position.x;
         this.position.y = position.y;
@@ -166,7 +162,7 @@ public class Model extends RenderObject
      * @return The position of the object
      * @since 1.0
      */
-    public Point3D getPosition()
+    public Vec3 getPosition()
     {
         return position;
     }
@@ -188,7 +184,7 @@ public class Model extends RenderObject
      * @param scale The scale to apply to the object
      * @since 1.0
      */
-    public void setScale(Scale3D scale)
+    public void setScale(Vec3 scale)
     {
         setScale(scale.x, scale.y, scale.z);
     }
@@ -216,7 +212,7 @@ public class Model extends RenderObject
      * @param scale The scale to apply to the object
      * @since 1.0
      */
-    public void setScale(Scale2D scale)
+    public void setScale(Vec2 scale)
     {
         setScale(scale.x, scale.y);
     }
@@ -273,7 +269,7 @@ public class Model extends RenderObject
      * @return The scale multiplier of the object
      * @since 1.0
      */
-    public Scale3D getScale()
+    public Vec3 getScale()
     {
         return this.scale;
     }
@@ -344,7 +340,7 @@ public class Model extends RenderObject
      * @param rotation  The rotation to make
      * @since 1.0
      */
-    public void setRotationAroundPoint(Point3D point,
+    public void setRotationAroundPoint(Vec3 point,
                                        Rotation3D rotation)
     {
         setRotationAroundPoint(point.x, point.y, point.z, rotation.angle, rotation.x, rotation.y,
@@ -361,7 +357,7 @@ public class Model extends RenderObject
      * @param rotationZ The z axis multiplier
      * @since 1.0
      */
-    public void setRotationAroundPoint(Point3D point,
+    public void setRotationAroundPoint(Vec3 point,
                                        float angle,
                                        float rotationX,
                                        float rotationY,
@@ -422,9 +418,9 @@ public class Model extends RenderObject
      * @param point The point to translate by
      * @since 1.0
      */
-    public void translate(Point3D point)
+    public void translate(Vec3 point)
     {
-        this.position.translate(point);
+        this.position.plusAssign(point);
     }
 
     /**
@@ -450,7 +446,7 @@ public class Model extends RenderObject
      * @param point The point to translate by
      * @since 1.0
      */
-    public void translate(Point2D point)
+    public void translate(Vec2 point)
     {
         this.position.x += point.x;
         this.position.y += point.y;

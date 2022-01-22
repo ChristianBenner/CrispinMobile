@@ -1,15 +1,14 @@
 package com.crispin.demos.scenes;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
-import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.Utilities.Scene;
+
+import glm_.vec2.Vec2;
 
 /**
  * A demonstration scene designed to show the usage of text in the Crispin engine
@@ -138,7 +137,7 @@ public class TextDemo extends Scene
                 wrappedCenteredText.getPosition().y - wiggleText.getHeight() -
                         (PADDING_PIXELS * WIGGLE_MULTIPLIER));
 
-        linearLayout = new LinearLayout(new Point2D(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight()), false);
+        linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Vec2(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight()), false);
 
         for(int i = 0; i < 10; i++)
         {
@@ -186,7 +185,7 @@ public class TextDemo extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position)
+    public void touch(int type, Vec2 position)
     {
 
     }

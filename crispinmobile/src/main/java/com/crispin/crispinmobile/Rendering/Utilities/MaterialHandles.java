@@ -65,8 +65,8 @@ public class MaterialHandles {
      */
     public void setUniforms(final Material material) {
         if(colourUniformHandle != UNDEFINED_HANDLE) {
-            glUniform4f(colourUniformHandle, material.colour.red, material.colour.green,
-                    material.colour.blue, material.colour.alpha);
+            glUniform4f(colourUniformHandle, material.colour.x, material.colour.y,
+                    material.colour.z, material.colour.w);
         }
 
         if(uvMultiplierUniformHandle != UNDEFINED_HANDLE) {
@@ -97,18 +97,18 @@ public class MaterialHandles {
         }
 
         if(ambientUniformHandle != UNDEFINED_HANDLE) {
-            glUniform3f(ambientUniformHandle, material.ambientStrength.red,
-                    material.ambientStrength.green, material.ambientStrength.blue);
+            glUniform3f(ambientUniformHandle, material.ambientStrength.x,
+                    material.ambientStrength.y, material.ambientStrength.z);
         }
 
         if(diffuseUniformHandle != UNDEFINED_HANDLE) {
-            glUniform3f(diffuseUniformHandle, material.diffuseStrength.red,
-                    material.diffuseStrength.green, material.diffuseStrength.blue);
+            glUniform3f(diffuseUniformHandle, material.diffuseStrength.x,
+                    material.diffuseStrength.y, material.diffuseStrength.z);
         }
 
         if(specularUniformHandle != UNDEFINED_HANDLE) {
-            glUniform3f(specularUniformHandle, material.specularStrength.red,
-                    material.specularStrength.green, material.specularStrength.blue);
+            glUniform3f(specularUniformHandle, material.specularStrength.x,
+                    material.specularStrength.y, material.specularStrength.z);
         }
 
         if(shininessUniformHandle != UNDEFINED_HANDLE) {

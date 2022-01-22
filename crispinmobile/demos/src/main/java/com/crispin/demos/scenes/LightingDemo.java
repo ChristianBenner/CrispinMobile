@@ -1,8 +1,6 @@
 package com.crispin.demos.scenes;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
@@ -22,8 +20,10 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 public class LightingDemo extends Scene
 {
@@ -191,7 +191,7 @@ public class LightingDemo extends Scene
 
         // Create the model camera and move it forward in-front of the origin
         modelCamera = new Camera3D();
-        modelCamera.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
+        modelCamera.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
     }
 
     private void putStageText(HashMap<Integer, Text> textHashMap, int stage, String text) {
@@ -380,7 +380,7 @@ public class LightingDemo extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 

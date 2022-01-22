@@ -1,9 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 /**
  * FontSquare class derived from the Square class. It is a square render object with some extra
@@ -19,10 +20,10 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 public class FontSquare extends Square
 {
     // The position of the text UI object associated to the character
-    private Point3D textPosition;
+    private Vec3 textPosition;
 
     // The offset of the character from the text position
-    private Point2D characterOffset;
+    private Vec2 characterOffset;
 
     /**
      * Construct a FontSquare object with a material and position
@@ -35,8 +36,8 @@ public class FontSquare extends Square
      * @since 1.0
      */
     public FontSquare(Material material,
-                      Point3D textPosition,
-                      Point2D characterOffset)
+                      Vec3 textPosition,
+                      Vec2 characterOffset)
     {
         super(material);
 
@@ -60,8 +61,8 @@ public class FontSquare extends Square
 
         // Because text shouldn't have colour per vertex ignore the data if it is present
         super.material.ignoreData(Material.IGNORE_COLOUR_DATA_FLAG);
-        textPosition = new Point3D();
-        characterOffset = new Point2D();
+        textPosition = new Vec3();
+        characterOffset = new Vec2();
     }
 
     /**
@@ -84,7 +85,7 @@ public class FontSquare extends Square
      * @param textPosition  The new position of the text
      * @since 1.0
      */
-    public void setTextPosition(Point3D textPosition)
+    public void setTextPosition(Vec3 textPosition)
     {
         setTextPosition(textPosition.x, textPosition.y, textPosition.z);
         updatePosition();
@@ -116,7 +117,7 @@ public class FontSquare extends Square
      * @param textPosition  The new position of the text
      * @since 1.0
      */
-    public void setTextPosition(Point2D textPosition)
+    public void setTextPosition(Vec2 textPosition)
     {
         setTextPosition(textPosition.x, textPosition.y);
         updatePosition();
@@ -140,10 +141,10 @@ public class FontSquare extends Square
     /**
      * Get the text position
      *
-     * @return The position of the text as a Point3D object
+     * @return The position of the text as a Vec3 object
      * @since 1.0
      */
-    public Point3D getTextPosition()
+    public Vec3 getTextPosition()
     {
         return this.textPosition;
     }
@@ -155,7 +156,7 @@ public class FontSquare extends Square
      * @param characterOffset The new character offset
      * @since 1.0
      */
-    public void setCharacterOffset(Point2D characterOffset)
+    public void setCharacterOffset(Vec2 characterOffset)
     {
         setCharacterOffset(characterOffset.x, characterOffset.y);
         updatePosition();
@@ -179,12 +180,12 @@ public class FontSquare extends Square
     /**
      * Get the character offset
      *
-     * @return The character offset as a Point2D object
+     * @return The character offset as a Vec2 object
      * @since 1.0
      */
-    public Point2D getCharacterOffset()
+    public Vec2 getCharacterOffset()
     {
-        return new Point2D(this.characterOffset);
+        return new Vec2(this.characterOffset);
     }
 
     /**

@@ -1,21 +1,11 @@
 package com.crispin.crispinmobile.Utilities;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.opengl.GLSurfaceView;
-import android.os.Looper;
-import android.util.Pair;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.UserInterface.Button;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -35,6 +25,10 @@ import static android.opengl.GLES30.glClearColor;
 import static android.opengl.GLES30.glDisable;
 import static android.opengl.GLES30.glEnable;
 import static android.opengl.GLES30.glViewport;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * SceneManager class handles scene rendering and updates. The scene manager is the initial place
@@ -60,8 +54,8 @@ public class SceneManager implements GLSurfaceView.Renderer
     private static SceneManager sceneManagerInstance;
 
     // The default background colour of the graphics surface
-    private static final Colour DEFAULT_BACKGROUND_COLOUR =
-            new Colour(0.25f, 0.25f, 0.25f);
+    private static final Vec4 DEFAULT_BACKGROUND_COLOUR = new Vec4(0.25f, 0.25f, 0.25f,
+            1.0f);
 
     // The default state of depth being enabled
     private static final boolean DEFAULT_DEPTH_ENABLED_STATE = true;
@@ -91,7 +85,7 @@ public class SceneManager implements GLSurfaceView.Renderer
     private Scene.Constructor currentSceneConstructor;
 
     // The current background colour of the graphics surface
-    private Colour backgroundColour;
+    private Vec4 backgroundColour;
 
     // Should the rendering take depth into consideration (not drawing order)
     private boolean depthEnabled;
@@ -249,14 +243,14 @@ public class SceneManager implements GLSurfaceView.Renderer
                     int action = event.getAction();
 
                     // Retrieve the position of the event
-                    Point2D position = new Point2D(event.getX(), Crispin.getSurfaceHeight() -
+                    Vec2 position = new Vec2(event.getX(), Crispin.getSurfaceHeight() -
                             event.getY());
 
                     if(event.getAction() == MotionEvent.ACTION_DOWN)
                     {
                         System.out.println("Event Y: " + event.getY());
-                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " +
-                                position.y + ")");
+                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " + position.y +
+                                ")");
                     }
 
                     // Provide the current scene with the motion event information
@@ -306,10 +300,10 @@ public class SceneManager implements GLSurfaceView.Renderer
      * beginning of the render cycle.
      *
      * @param backgroundColour  The new background colour for the graphics surface
-     * @see                     Colour
+     * @see                     Vec4
      * @since                   1.0
      */
-    public void setBackgroundColour(Colour backgroundColour)
+    public void setBackgroundColour(Vec4 backgroundColour)
     {
         this.backgroundColour = backgroundColour;
     }
@@ -318,10 +312,10 @@ public class SceneManager implements GLSurfaceView.Renderer
      * Get the current background colour of the graphics surface
      *
      * @retrun  The current background colour
-     * @see     Colour
+     * @see     Vec4
      * @since   1.0
      */
-    public Colour getBackgroundColour()
+    public Vec4 getBackgroundColour()
     {
         return this.backgroundColour;
     }
@@ -550,10 +544,8 @@ public class SceneManager implements GLSurfaceView.Renderer
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.red,
-                backgroundColour.green,
-                backgroundColour.blue,
-                backgroundColour.alpha);
+        glClearColor(backgroundColour.x, backgroundColour.y, backgroundColour.z,
+                backgroundColour.w);
 
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise
         // disable in OpenGL ES

@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Geometry;
 
+import glm_.vec3.Vec3;
+
 /**
  * Ray is a class that represents a virtual ray using position and direction data. A ray is
  * essentially a vector with a position. It is used in geometry calculations. This is not a
@@ -7,8 +9,8 @@ package com.crispin.crispinmobile.Geometry;
  *
  * @author  Christian Benner
  * @version %I%, %G%
- * @see     Point3D
- * @see     Vector3D
+ * @see     Vec3
+ * @see     Vec3
  * @see     Geometry
  * @since   1.0
  */
@@ -18,10 +20,10 @@ public class Ray
     private static final String TAG = "Ray";
 
     // The position of the ray position point
-    public final Point3D position;
+    public final Vec3 position;
 
     // The direction of the ray
-    public final Vector3D direction;
+    public final Vec3 direction;
 
     /**
      * Construct a ray object
@@ -30,7 +32,7 @@ public class Ray
      * @param direction The direction of the ray
      * @since 1.0
      */
-    public Ray(Point3D position, Vector3D direction)
+    public Ray(Vec3 position, Vec3 direction)
     {
         this.position = position;
         this.direction = direction;
@@ -39,7 +41,7 @@ public class Ray
     /**
      * Get a string that contains the ray data that can be used in a log
      *
-     * @return  String in the format 'Ray{Point3D[x:X,y:Y,z:Z], Vector3D[x:X,y:Y,z:z]}'
+     * @return  String in the format 'Ray{Vec3[x:X,y:Y,z:Z], Vec3[x:X,y:Y,z:z]}'
      * @since   1.0
      */
     @Override

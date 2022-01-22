@@ -2,11 +2,7 @@ package com.crispin.crispinmobile.UserInterface;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.FontSquare;
 import com.crispin.crispinmobile.Rendering.Shaders.TextShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
@@ -20,6 +16,10 @@ import java.util.Queue;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * Text class is a UIObject designed to render text strings. It requires a Font to be loaded before
@@ -242,7 +242,7 @@ public class Text implements UIObject
     private static final float SIN_WAVE_DIVIDE = 2.0f;
 
     // Position of the text
-    private Point2D position;
+    private Vec2 position;
 
     // Width of the text
     private float width;
@@ -250,8 +250,8 @@ public class Text implements UIObject
     // Height of the text
     private float height;
 
-    // Colour of the text
-    private Colour colour;
+    // Vec4 of the text
+    private Vec4 colour;
 
     // The font that the text string is in
     private Font font;
@@ -323,7 +323,7 @@ public class Text implements UIObject
         this.centerText = centerText;
         this.maxLineWidth = maxLineWidth;
         this.scale = scale;
-        this.colour = new Colour(0.0f, 0.0f, 0.0f);
+        this.colour = new Vec4(0.0f, 0.0f, 0.0f, 1.0f);
         this.showBounds = false;
 
         wiggleAmountPixels = 0.0f;
@@ -334,7 +334,7 @@ public class Text implements UIObject
         height = 0.0f;
 
         textShader = new TextShader();
-        position = new Point2D();
+        position = new Vec2();
         squares = new ArrayList<>();
 
         setText(textString);
@@ -440,9 +440,9 @@ public class Text implements UIObject
         // Check that bounds exit
         if(bounds == null)
         {
-            bounds = new Plane(new Point2D(position.x, position.y), new Scale2D(getWidth(),
+            bounds = new Plane(new Vec2(position.x, position.y), new Vec2(getWidth(),
                     getHeight()));
-            bounds.setColour(new Colour(0.0f, 255.0f, 0.0f, 100.0f));
+            bounds.setColour(new Vec4(0.0f, 255.0f, 0.0f, 100.0f));
         }
 
         showBounds = true;
@@ -501,7 +501,7 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
+    public void setSize(Vec2 size)
     {
         Logger.info("You cannot change the width and height of a text object");
     }
@@ -526,9 +526,9 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public Scale2D getSize()
+    public Vec2 getSize()
     {
-        return new Scale2D(this.width, this.height);
+        return new Vec2(this.width, this.height);
     }
 
     /**
@@ -695,9 +695,9 @@ public class Text implements UIObject
                     }
 
                     FontSquare square = new FontSquare(new Material(theChar.texture, colour),
-                            new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
+                            new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
                     square.useCustomShader(textShader);
-                    square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
+                    square.setScale(new Vec2(CHAR_WIDTH, CHAR_HEIGHT));
                     squares.add(square);
 
                     theX += (theChar.getAdvance() >> ADVANCE_TRANSFORMATION) * scale;
@@ -822,13 +822,13 @@ public class Text implements UIObject
 
                 // Create the render object square
                 FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
-                        colour), new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
+                        colour), new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
 
                 // Force the use of the text shader (optimised for text rendering)
                 square.useCustomShader(textShader);
 
                 // Scale the square to the width and height of the character
-                square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
+                square.setScale(new Vec2(CHAR_WIDTH, CHAR_HEIGHT));
 
                 // Add the square to the square array for rendering later
                 squares.add(square);
@@ -922,14 +922,14 @@ public class Text implements UIObject
             // Create the render object square
             FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
                     colour),
-                    new Point3D(position, 0.0f),
-                    new Point2D(CHAR_X, CHAR_Y));
+                    new Vec3(position, 0.0f),
+                    new Vec2(CHAR_X, CHAR_Y));
 
             // Force the use of the text shader (optimised for text rendering)
             square.useCustomShader(textShader);
 
             // Scale the square to the width and height of the character
-            square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
+            square.setScale(new Vec2(CHAR_WIDTH, CHAR_HEIGHT));
 
             // Add the square to the square array for rendering later
             squares.add(square);
@@ -1037,9 +1037,9 @@ public class Text implements UIObject
      * @param colour
      * @since 1.0
      */
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
-        this.colour = new Colour(colour);
+        this.colour = new Vec4(colour);
 
         // Iterate through all of the characters setting their new material colours
         for(int i = 0; i < squares.size(); i++)
@@ -1055,7 +1055,7 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return colour;
     }
@@ -1069,7 +1069,7 @@ public class Text implements UIObject
     @Override
     public void setOpacity(float alpha)
     {
-        this.colour.alpha = alpha;
+        this.colour.w = alpha;
         setColour(this.colour);
     }
 
@@ -1082,7 +1082,7 @@ public class Text implements UIObject
     @Override
     public float getOpacity()
     {
-        return this.colour.alpha;
+        return this.colour.w;
     }
 
     /**
@@ -1114,7 +1114,7 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         // Only update the position if the position has changed
         if(this.position.x != position.x ||
@@ -1154,9 +1154,9 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
-        return new Point2D(position.x, position.y);
+        return new Vec2(position.x, position.y);
     }
 
     /**

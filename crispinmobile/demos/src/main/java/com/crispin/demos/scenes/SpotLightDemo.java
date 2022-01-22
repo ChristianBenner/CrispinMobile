@@ -1,7 +1,5 @@
 package com.crispin.demos.scenes;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
@@ -15,6 +13,9 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 public class SpotLightDemo extends Scene {
     private Cube cube;
@@ -36,7 +37,7 @@ public class SpotLightDemo extends Scene {
         cube.setColour(Colour.ORANGE);
 
         camera3D = new Camera3D();
-        camera3D.setPosition(new Point3D(0.0f, 1.5f, 5.0f));
+        camera3D.setPosition(new Vec3(0.0f, 1.5f, 5.0f));
 
         lightGroup = new LightGroup();
 
@@ -75,7 +76,7 @@ public class SpotLightDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 }

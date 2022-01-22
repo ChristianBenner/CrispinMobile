@@ -2,8 +2,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import android.opengl.Matrix;
 
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Vector3D;
+import glm_.vec3.Vec3;
 
 public class RotationMatrix
 {
@@ -17,7 +16,7 @@ public class RotationMatrix
         reset();
     }
 
-    public void applyRotation(Vector3D rotationAxis, float angle)
+    public void applyRotation(Vec3 rotationAxis, float angle)
     {
         float[] calcAxis = new float[4];
         float[] axisOfRotation = { rotationAxis.x, rotationAxis.y, rotationAxis.z, 1.0f };

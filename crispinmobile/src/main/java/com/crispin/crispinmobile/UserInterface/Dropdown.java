@@ -1,13 +1,14 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
 
 import java.util.ArrayList;
+
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
 
 public class Dropdown extends InteractableUIObject
 {
@@ -20,7 +21,7 @@ public class Dropdown extends InteractableUIObject
 
     public static final int NO_ITEM_SELECTED = -1;
 
-    private static final Scale2D DEFAULT_SIZE = new Scale2D(600.0f, 100.0f);
+    private static final Vec2 DEFAULT_SIZE = new Vec2(600.0f, 100.0f);
 
     private ArrayList<Item> items;
     private Plane baseBox;
@@ -45,24 +46,24 @@ public class Dropdown extends InteractableUIObject
 
     private int selectedId = NO_ITEM_SELECTED;
 
-    private Point2D position;
-    private Scale2D size;
-    private Scale2D itemSize;
-    private Colour colour;
-    private Colour textColour;
-    private Colour borderColour;
+    private Vec2 position;
+    private Vec2 size;
+    private Vec2 itemSize;
+    private Vec4 colour;
+    private Vec4 textColour;
+    private Vec4 borderColour;
 
-    private Point2D overallPosition;
+    private Vec2 overallPosition;
 
     public Dropdown(String text)
     {
-        position = new Point2D();
+        position = new Vec2();
         size = DEFAULT_SIZE;
         itemSize = DEFAULT_SIZE;
-        colour = new Colour();
-        textColour = new Colour();
-        borderColour = new Colour();
-        overallPosition = new Point2D(position);
+        colour = new Vec4();
+        textColour = new Vec4();
+        borderColour = new Vec4();
+        overallPosition = new Vec2(position);
 
         items = new ArrayList<>();
         id = 0;
@@ -186,13 +187,13 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    protected void clickEvent(Point2D position)
+    protected void clickEvent(Vec2 position)
     {
         selectedId = NO_ITEM_SELECTED;
     }
 
     @Override
-    protected void dragEvent(Point2D position)
+    protected void dragEvent(Vec2 position)
     {
 
     }
@@ -213,7 +214,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    protected void releaseEvent(Point2D position)
+    protected void releaseEvent(Vec2 position)
     {
         // Only check if an item has been selected if the dropdown is already expanded
         if(expanded)
@@ -286,7 +287,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.setPosition(position.x, position.y);
     }
@@ -301,7 +302,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     // Return the position of the combo box itself (and not the items)
-    public Point2D getBasePosition()
+    public Vec2 getBasePosition()
     {
         return position;
     }
@@ -313,7 +314,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return overallPosition;
     }
@@ -368,18 +369,18 @@ public class Dropdown extends InteractableUIObject
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
+    public void setSize(Vec2 size)
     {
         setSize(size.x, size.y);
     }
 
     @Override
-    public Scale2D getSize()
+    public Vec2 getSize()
     {
-        return new Scale2D(size.x, getHeight());
+        return new Vec2((float)size.x, getHeight());
     }
 
-    public void setTextColour(Colour textColour)
+    public void setTextColour(Vec4 textColour)
     {
         this.textColour = textColour;
 
@@ -391,12 +392,12 @@ public class Dropdown extends InteractableUIObject
         }
     }
 
-    public Colour getTextColour()
+    public Vec4 getTextColour()
     {
         return textColour;
     }
 
-    public void setBorderColour(Colour borderColour)
+    public void setBorderColour(Vec4 borderColour)
     {
         this.borderColour = borderColour;
 
@@ -409,13 +410,13 @@ public class Dropdown extends InteractableUIObject
         }
     }
 
-    public Colour getBorderColour()
+    public Vec4 getBorderColour()
     {
         return borderColour;
     }
 
     @Override
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         this.colour = colour;
 
@@ -429,7 +430,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return colour;
     }

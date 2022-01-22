@@ -2,11 +2,10 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import android.opengl.Matrix;
 
-import com.crispin.crispinmobile.Geometry.Geometry;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
+
+import glm_.vec3.Vec3;
 
 public class ModelMatrix
 {
@@ -51,7 +50,7 @@ public class ModelMatrix
         rotate(rotation2D.angle, rotation2D.x, rotation2D.y);
     }
 
-    public void translate(Point3D point3D)
+    public void translate(Vec3 point3D)
     {
         Matrix.translateM(modelMatrix, 0, point3D.x, point3D.y, point3D.z);
     }
@@ -69,17 +68,17 @@ public class ModelMatrix
         translate(-x, -y, -z);
     }
 
-    public void rotateAroundPoint(Point3D point3D, float angle, float x, float y, float z)
+    public void rotateAroundPoint(Vec3 point3D, float angle, float x, float y, float z)
     {
         rotateAroundPoint(point3D.x, point3D.y, point3D.z, angle, x, y, z);
     }
 
-    public void rotateAroundPoint(Point3D point3D, Rotation3D rotation3D)
+    public void rotateAroundPoint(Vec3 point3D, Rotation3D rotation3D)
     {
         rotateAroundPoint(point3D, rotation3D.angle, rotation3D.x, rotation3D.y, rotation3D.z);
     }
 
-    public void scale(Scale3D scale3D)
+    public void scale(Vec3 scale3D)
     {
         Matrix.scaleM(modelMatrix, 0, scale3D.x, scale3D.y, scale3D.z);
     }
@@ -94,10 +93,10 @@ public class ModelMatrix
         return modelMatrix;
     }
 
-    public Point3D getPosition()
+    public Vec3 getPosition()
     {
         // m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33
-        return new Point3D(modelMatrix[12], modelMatrix[13], modelMatrix[14]);
+        return new Vec3(modelMatrix[12], modelMatrix[13], modelMatrix[14]);
     }
 
     // normal render call (no matrix in param)

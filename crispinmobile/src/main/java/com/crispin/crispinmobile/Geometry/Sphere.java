@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Geometry;
 
+import glm_.vec3.Vec3;
+
 /**
  * Sphere is a class that represents a virtual spherical object using position and radius data. The
  * class is used in geometry calculations. This is not a graphical sphere, it is not an object that
@@ -7,7 +9,7 @@ package com.crispin.crispinmobile.Geometry;
  *
  * @author  Christian Benner
  * @version %I%, %G%
- * @see     Point3D
+ * @see     Vec3
  * @see     Geometry
  * @since   1.0
  */
@@ -17,7 +19,7 @@ public class Sphere
     private static final String TAG = "Sphere";
 
     // The position of the center of the sphere
-    public final Point3D center;
+    public final Vec3 center;
 
     // The radius of the sphere
     public final float radius;
@@ -29,7 +31,7 @@ public class Sphere
      * @param radius    The radius of the sphere
      * @since 1.0
      */
-    public Sphere(Point3D center, float radius)
+    public Sphere(Vec3 center, float radius)
     {
         this.center = center;
         this.radius = radius;
@@ -38,7 +40,7 @@ public class Sphere
     /**
      * Get a string that contains the sphere data that can be used in a log
      *
-     * @return  String in the format 'Sphere{Point3D[x:X,y:Y,z:Z],float[radius:R]}'
+     * @return  String in the format 'Sphere{Vec3[x:X,y:Y,z:Z],float[radius:R]}'
      * @since   1.0
      */
     @Override

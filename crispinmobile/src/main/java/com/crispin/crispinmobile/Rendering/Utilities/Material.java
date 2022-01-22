@@ -1,21 +1,11 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE1;
-import static android.opengl.GLES20.GL_TEXTURE2;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glUniform1i;
-import static android.opengl.GLES20.glUniform2f;
-import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES30.glUniform1f;
-import static android.opengl.GLES30.glUniform3f;
-
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Utilities.TextureCache;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * The material class is designed to hold rendering information that can be used on objects.
@@ -25,7 +15,7 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
  * @author      Christian Benner
  * @see         RenderObject
  * @see         Texture
- * @see         Colour
+ * @see         Vec4
  * @version     %I%, %G%
  * @since       1.0
  */
@@ -37,10 +27,13 @@ public class Material
     private static final String TAG = "Material";
 
     // Default uv multiplier
-    private static final Scale2D DEFAULT_UV_MULTIPLIER = new Scale2D();
+    private static final Vec2 DEFAULT_UV_MULTIPLIER = new Vec2();
 
     // Default uv offset
-    private static final Point2D DEFAULT_UV_OFFSET = new Point2D();
+    private static final Vec2 DEFAULT_UV_OFFSET = new Vec2();
+
+    // Default colour
+    private static final Vec4 DEFAULT_COLOUR = Colour.WHITE;
 
     // Default shininess
     public static final float DEFAULT_SHININESS = 32.0f;
@@ -67,22 +60,22 @@ public class Material
     public Texture normalMap;
 
     // The UV multiplier for the texture
-    public Scale2D uvMultiplier;
+    public Vec2 uvMultiplier;
 
     // UV offset for the texture
-    public Point2D uvOffset;
+    public Vec2 uvOffset;
 
     // The colour
-    public Colour colour;
+    public Vec4 colour;
 
     // Strength of the ambient lighting
-    public Colour ambientStrength;
+    public Vec3 ambientStrength;
 
     // Strength of the diffuse lighting
-    public Colour diffuseStrength;
+    public Vec3 diffuseStrength;
 
     // Strength of the specular/reflective lighting
-    public Colour specularStrength;
+    public Vec3 specularStrength;
 
     // How shiny the object appears when lit
     public float shininess;
@@ -108,21 +101,21 @@ public class Material
      *                      tiling)
      * @param colour        A colour to apply uniformly over the render object
      * @see                 Texture
-     * @see                 Scale2D
-     * @see                 Colour
+     * @see                 Vec2
+     * @see                 Vec4
      * @since               1.0
      */
     public Material(Texture texture,
-                    Scale2D uvMultiplier,
-                    Point2D uvOffset,
-                    Colour colour)
+                    Vec2 uvMultiplier,
+                    Vec2 uvOffset,
+                    Vec4 colour)
     {
-        this.uvMultiplier = new Scale2D();
-        this.uvOffset = new Point2D();
-        this.colour = new Colour();
-        this.ambientStrength = new Colour();
-        this.diffuseStrength = new Colour();
-        this.specularStrength = new Colour();
+        this.uvMultiplier = new Vec2();
+        this.uvOffset = new Vec2();
+        this.colour = new Vec4();
+        this.ambientStrength = new Vec3();
+        this.diffuseStrength = new Vec3();
+        this.specularStrength = new Vec3();
         this.shininess = DEFAULT_SHININESS;
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
@@ -143,10 +136,10 @@ public class Material
      * @param texture       A texture to apply over the render object
      * @param colour        A colour to apply uniformly over the render object
      * @see                 Texture
-     * @see                 Colour
+     * @see                 Vec4
      * @since               1.0
      */
-    public Material(Texture texture, Colour colour)
+    public Material(Texture texture, Vec4 colour)
     {
         this(texture,
                 DEFAULT_UV_MULTIPLIER,
@@ -161,15 +154,12 @@ public class Material
      * @param uvMultiplier  The amount to multiply the texture UV co-ordinates (can be used for
      *                      tiling)
      * @see                 Texture
-     * @see                 Scale2D
+     * @see                 Vec2
      * @since               1.0
      */
-    public Material(Texture texture, Scale2D uvMultiplier)
+    public Material(Texture texture, Vec2 uvMultiplier)
     {
-        this(texture,
-                uvMultiplier,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(texture, uvMultiplier, DEFAULT_UV_OFFSET, DEFAULT_COLOUR);
     }
 
     /**
@@ -179,11 +169,11 @@ public class Material
      * @param uvMultiplier  The amount to multiply the texture UV co-ordinates (can be used for
      *                      tiling)
      * @param colour        A colour to apply uniformly over the render object
-     * @see                 Scale2D
-     * @see                 Colour
+     * @see                 Vec2
+     * @see                 Vec4
      * @since               1.0
      */
-    public Material(Scale2D uvMultiplier, Colour colour)
+    public Material(Vec2 uvMultiplier, Vec4 colour)
     {
         this(null,
                 uvMultiplier,
@@ -203,7 +193,7 @@ public class Material
         this(texture,
                 DEFAULT_UV_MULTIPLIER,
                 DEFAULT_UV_OFFSET,
-                new Colour());
+                DEFAULT_COLOUR);
     }
 
     /**
@@ -218,7 +208,7 @@ public class Material
         this(TextureCache.loadTexture(resourceId),
                 DEFAULT_UV_MULTIPLIER,
                 DEFAULT_UV_OFFSET,
-                new Colour());
+                DEFAULT_COLOUR);
     }
 
     /**
@@ -228,7 +218,7 @@ public class Material
      * @see                 Texture
      * @since               1.0
      */
-    public Material(Colour colour)
+    public Material(Vec4 colour)
     {
         this(null,
                 DEFAULT_UV_MULTIPLIER,
@@ -241,15 +231,15 @@ public class Material
      *
      * @param uvMultiplier  The amount to multiply the texture UV co-ordinates (can be used for
      *                      tiling)
-     * @see                 Scale2D
+     * @see                 Vec2
      * @since               1.0
      */
-    public Material(Scale2D uvMultiplier)
+    public Material(Vec2 uvMultiplier)
     {
         this(null,
                 uvMultiplier,
                 DEFAULT_UV_OFFSET,
-                new Colour());
+                DEFAULT_COLOUR);
     }
 
     /**
@@ -259,10 +249,7 @@ public class Material
      */
     public Material()
     {
-        this(null,
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(null, DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET, DEFAULT_COLOUR);
     }
 
     /**
@@ -411,7 +398,7 @@ public class Material
      * @param uvMultiplier  The new UV co-ordinate multiplier
      * @since               1.0
      */
-    public void setUvMultiplier(Scale2D uvMultiplier)
+    public void setUvMultiplier(Vec2 uvMultiplier)
     {
         this.uvMultiplier.x = uvMultiplier.x;
         this.uvMultiplier.y = uvMultiplier.y;
@@ -420,11 +407,11 @@ public class Material
     /**
      * Get the UV co-ordinate multiplier
      *
-     * @return  Scale2D of the UV multiplier
-     * @see     Scale2D
+     * @return  Vec2 of the UV multiplier
+     * @see     Vec2
      * @since   1.0
      */
-    public Scale2D getUvMultiplier()
+    public Vec2 getUvMultiplier()
     {
         return this.uvMultiplier;
     }
@@ -452,7 +439,7 @@ public class Material
      * @param uvOffset  The new UV co-ordinate offset
      * @since           1.0
      */
-    public void setUvOffset(Point2D uvOffset)
+    public void setUvOffset(Vec2 uvOffset)
     {
         this.uvOffset.x = uvOffset.x;
         this.uvOffset.y = uvOffset.y;
@@ -461,11 +448,11 @@ public class Material
     /**
      * Get the UV co-ordinate offset
      *
-     * @return  Point2D of the UV offset
-     * @see     Scale2D
+     * @return  Vec2 of the UV offset
+     * @see     Vec2
      * @since   1.0
      */
-    public Point2D getUvOffset()
+    public Vec2 getUvOffset()
     {
         return this.uvOffset;
     }
@@ -581,13 +568,14 @@ public class Material
      * the two colours will be blended.
      *
      * @param colour    The uniform colour of the material
-     * @see             Colour
+     * @see             Vec4
      * @since           1.0
      */
-    public void setColour(final Colour colour)
+    public void setColour(final Vec4 colour)
     {
-        this.colour.red = colour.red;
-        this.colour.green = colour.green;
-        this.colour.blue = colour.blue;
+        this.colour.x = colour.x;
+        this.colour.y = colour.y;
+        this.colour.z = colour.z;
+        this.colour.w = colour.w;
     }
 }

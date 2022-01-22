@@ -1,7 +1,5 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
@@ -10,14 +8,17 @@ import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
+
 public class Button extends InteractableUIObject
 {
-    private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
-    private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.WHITE;
-    private static final Colour DEFAULT_COLOUR_TEXT = Colour.BLACK;
-    private static final Colour DEFAULT_DISABLED_COLOUR_BORDER = Colour.GREY;
-    private static final Colour DEFAULT_DISABLED_COLOUR_BACKGROUND = Colour.LIGHT_GREY;
-    private static final Colour DEFAULT_DISABLED_COLOUR_TEXT = Colour.GREY;
+    private static final Vec4 DEFAULT_COLOUR_BORDER = Colour.BLUE;
+    private static final Vec4 DEFAULT_COLOUR_BACKGROUND = Colour.WHITE;
+    private static final Vec4 DEFAULT_COLOUR_TEXT = Colour.BLACK;
+    private static final Vec4 DEFAULT_DISABLED_COLOUR_BORDER = Colour.GREY;
+    private static final Vec4 DEFAULT_DISABLED_COLOUR_BACKGROUND = Colour.LIGHT_GREY;
+    private static final Vec4 DEFAULT_DISABLED_COLOUR_TEXT = Colour.GREY;
 
     private Font font;
     private String textString;
@@ -25,15 +26,15 @@ public class Button extends InteractableUIObject
     private Text text;
     private Plane plane;
 
-    private Point2D position;
-    private Scale2D size;
+    private Vec2 position;
+    private Vec2 size;
 
-    private Colour colourBorder;
-    private Colour colourBackground;
-    private Colour colourText;
-    private Colour disabledColourBorder;
-    private Colour disabledColourBackground;
-    private Colour disabledColourText;
+    private Vec4 colourBorder;
+    private Vec4 colourBackground;
+    private Vec4 colourText;
+    private Vec4 disabledColourBorder;
+    private Vec4 disabledColourBackground;
+    private Vec4 disabledColourText;
 
     public Button(Font font, String textString)
     {
@@ -46,8 +47,8 @@ public class Button extends InteractableUIObject
         this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
         this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;
 
-        this.position = new Point2D();
-        this.size = new Scale2D();
+        this.position = new Vec2();
+        this.size = new Vec2();
         this.text = new Text(font, textString, true, true, size.x);
 
         plane = new Plane(size);
@@ -55,14 +56,14 @@ public class Button extends InteractableUIObject
         plane.setBorderColour(colourBorder);
         text.setColour(colourText);
 
-        setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setSize(new Vec2(200.0f, 200.0f));
+        setPosition(new Vec2());
     }
 
     public Button(Texture texture)
     {
-        this.position = new Point2D();
-        this.size = new Scale2D();
+        this.position = new Vec2();
+        this.size = new Vec2();
         this.colourBorder = DEFAULT_COLOUR_BORDER;
         this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
         this.colourText = DEFAULT_COLOUR_TEXT;
@@ -72,15 +73,15 @@ public class Button extends InteractableUIObject
 
         plane = new Plane(size);
 
-        setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setSize(new Vec2(200.0f, 200.0f));
+        setPosition(new Vec2());
         setImage(texture);
     }
 
     public Button(int resourceId)
     {
-        this.position = new Point2D();
-        this.size = new Scale2D();
+        this.position = new Vec2();
+        this.size = new Vec2();
         this.colourBorder = DEFAULT_COLOUR_BORDER;
         this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
         this.colourText = DEFAULT_COLOUR_TEXT;
@@ -90,8 +91,8 @@ public class Button extends InteractableUIObject
 
         plane = new Plane(size);
 
-        setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setSize(new Vec2(200.0f, 200.0f));
+        setPosition(new Vec2());
         setImage(resourceId);
     }
 
@@ -117,32 +118,32 @@ public class Button extends InteractableUIObject
         plane.setColour(disabledColourBackground);
     }
 
-    public void setDisabledBorderColour(Colour colour)
+    public void setDisabledBorderColour(Vec4 colour)
     {
-        disabledColourBorder = new Colour(colour);
+        disabledColourBorder = new Vec4(colour);
     }
 
-    public void setDisabledTextColour(Colour colour)
+    public void setDisabledTextColour(Vec4 colour)
     {
-        disabledColourText = new Colour(colour);
+        disabledColourText = new Vec4(colour);
     }
 
-    public void setDisabledColour(Colour colour)
+    public void setDisabledColour(Vec4 colour)
     {
-        disabledColourBackground = new Colour(colour);
+        disabledColourBackground = new Vec4(colour);
     }
 
-    public Colour getDisabledBorderColour()
+    public Vec4 getDisabledBorderColour()
     {
         return disabledColourBorder;
     }
 
-    public Colour getDisabledTextColour()
+    public Vec4 getDisabledTextColour()
     {
         return disabledColourText;
     }
 
-    public Colour getDisabledColour()
+    public Vec4 getDisabledColour()
     {
         return disabledColourBackground;
     }
@@ -181,7 +182,7 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.position.x = position.x;
         this.position.y = position.y;
@@ -197,7 +198,7 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return position;
     }
@@ -240,7 +241,7 @@ public class Button extends InteractableUIObject
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
+    public void setSize(Vec2 size)
     {
         this.setSize(size.x, size.y);
     }
@@ -273,13 +274,13 @@ public class Button extends InteractableUIObject
      * @since 1.0
      */
     @Override
-    public Scale2D getSize()
+    public Vec2 getSize()
     {
         return size;
     }
 
     @Override
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         colourBackground = colour;
         this.plane.setColour(colourBackground);
@@ -290,7 +291,7 @@ public class Button extends InteractableUIObject
         this.setOpacity(alpha);
     }
 
-    public void setTextColour(Colour colour)
+    public void setTextColour(Vec4 colour)
     {
         colourText = colour;
 
@@ -300,19 +301,19 @@ public class Button extends InteractableUIObject
         }
     }
 
-    public Colour getTextColour()
+    public Vec4 getTextColour()
     {
         return colourText;
     }
 
-    public void setBorderColour(Colour colour)
+    public void setBorderColour(Vec4 colour)
     {
         colourBorder = colour;
         plane.setBorderColour(colourBorder);
     }
 
     @Override
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return colourBackground;
     }
@@ -320,8 +321,8 @@ public class Button extends InteractableUIObject
     @Override
     public void setOpacity(float alpha)
     {
-        colourBackground.alpha = alpha;
-        colourText.alpha = alpha;
+        colourBackground.w = alpha;
+        colourText.w = alpha;
 
         if(text != null)
         {
@@ -334,7 +335,7 @@ public class Button extends InteractableUIObject
     @Override
     public float getOpacity()
     {
-        return colourBackground.alpha;
+        return colourBackground.w;
     }
 
     /**
@@ -350,19 +351,19 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    protected void clickEvent(Point2D position)
+    protected void clickEvent(Vec2 position)
     {
         // Play click sound
     }
 
     @Override
-    protected void dragEvent(Point2D position)
+    protected void dragEvent(Vec2 position)
     {
 
     }
 
     @Override
-    protected void releaseEvent(Point2D position)
+    protected void releaseEvent(Vec2 position)
     {
 
     }

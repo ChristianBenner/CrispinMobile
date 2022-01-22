@@ -1,12 +1,13 @@
 package com.crispin.demos.scenes;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 public class ObjLoadDemo extends Scene
 {
@@ -32,7 +33,7 @@ public class ObjLoadDemo extends Scene
 
         // Create the model camera and move it forward in-front of the origin
         modelCamera = new Camera3D();
-        modelCamera.setPosition(new Point3D(0.0f, 0.0f, 3.0f));
+        modelCamera.setPosition(new Vec3(0.0f, 0.0f, 3.0f));
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ObjLoadDemo extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 }

@@ -1,9 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Entities;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * The light class provides an interface to lighting elements in a graphical scene. The class allows
@@ -98,20 +99,20 @@ public class PointLight
         this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public PointLight(final Point3D position, final Colour colour) {
-        this(position.x, position.y, position.z, colour.red, colour.green,
-                colour.blue);
+    public PointLight(final Vec3 position, final Vec4 colour) {
+        this(position.x, position.y, position.z, colour.x, colour.y,
+                colour.z);
     }
 
-    public PointLight(final Point2D position, final Colour colour) {
-        this(position.x, position.y, colour.red, colour.green, colour.blue);
+    public PointLight(final Vec2 position, final Vec4 colour) {
+        this(position.x, position.y, colour.x, colour.y, colour.z);
     }
 
-    public PointLight(final Point3D position) {
+    public PointLight(final Vec3 position) {
         this(position.x, position.y, position.z);
     }
 
-    public PointLight(final Point2D position) {
+    public PointLight(final Vec2 position) {
         this(position.x, position.y);
     }
 
@@ -119,7 +120,7 @@ public class PointLight
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public void setPosition(Point3D position) {
+    public void setPosition(Vec3 position) {
         x = position.x;
         y = position.y;
         z = position.z;
@@ -131,7 +132,7 @@ public class PointLight
         this.z = z;
     }
 
-    public void setPosition(Point2D position) {
+    public void setPosition(Vec2 position) {
         x = position.x;
         y = position.y;
     }
@@ -141,18 +142,18 @@ public class PointLight
         this.y = y;
     }
 
-    public Point3D getPosition() {
-        return new Point3D(x, y, z);
+    public Vec3 getPosition() {
+        return new Vec3(x, y, z);
     }
 
-    public Point2D getPosition2D() {
-        return new Point2D(x, y);
+    public Vec2 getPosition2D() {
+        return new Vec2(x, y);
     }
 
-    public void setColour(final Colour colour) {
-        red = colour.red;
-        green = colour.green;
-        blue = colour.blue;
+    public void setColour(final Vec4 colour) {
+        red = colour.x;
+        green = colour.y;
+        blue = colour.z;
     }
 
     public void setColour(float red, float green, float blue) {
@@ -161,8 +162,8 @@ public class PointLight
         this.blue = blue;
     }
 
-    public Colour getColour() {
-        return new Colour(red, green, blue);
+    public Vec4 getColour() {
+        return new Vec4(red, green, blue, 1.0f);
     }
 
     public void setDiffuseStrength(float diffuseStrength) {

@@ -1,11 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Entities;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Vector2D;
-import com.crispin.crispinmobile.Geometry.Vector3D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
 
 /**
  * Text
@@ -86,19 +85,19 @@ public class DirectionalLight
         this(dx, dy, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public DirectionalLight(final Vector3D direction, final Colour colour) {
-        this(direction.x, direction.y, direction.z, colour.red, colour.green, colour.blue);
+    public DirectionalLight(final Vec3 direction, final Vec4 colour) {
+        this(direction.x, direction.y, direction.z, colour.x, colour.y, colour.z);
     }
 
-    public DirectionalLight(final Vector2D direction, final Colour colour) {
-        this(direction.x, direction.y, colour.red, colour.green, colour.blue);
+    public DirectionalLight(final Vec2 direction, final Vec4 colour) {
+        this(direction.x, direction.y, colour.x, colour.y, colour.z);
     }
 
-    public DirectionalLight(final Vector3D direction) {
+    public DirectionalLight(final Vec3 direction) {
         this(direction.x, direction.y, direction.z);
     }
 
-    public DirectionalLight(final Vector2D direction) {
+    public DirectionalLight(final Vec2 direction) {
         this(direction.x, direction.y);
     }
 
@@ -106,7 +105,7 @@ public class DirectionalLight
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public void setDirection(Vector3D direction) {
+    public void setDirection(Vec3 direction) {
         dx = direction.x;
         dy = direction.y;
         dz = direction.z;
@@ -118,7 +117,7 @@ public class DirectionalLight
         this.dz = dz;
     }
 
-    public void setDirection(Vector2D direction) {
+    public void setDirection(Vec2 direction) {
         dx = direction.x;
         dy = direction.y;
     }
@@ -128,18 +127,18 @@ public class DirectionalLight
         this.dy = dy;
     }
 
-    public Vector3D getDirection() {
-        return new Vector3D(dx, dy, dz);
+    public Vec3 getDirection() {
+        return new Vec3(dx, dy, dz);
     }
 
-    public Vector2D getDirection2D() {
-        return new Vector2D(dx, dy);
+    public Vec2 getDirection2D() {
+        return new Vec2(dx, dy);
     }
 
-    public void setColour(final Colour colour) {
-        red = colour.red;
-        green = colour.green;
-        blue = colour.blue;
+    public void setColour(final Vec4 colour) {
+        red = colour.x;
+        green = colour.y;
+        blue = colour.z;
     }
 
     public void setColour(float red, float green, float blue) {
@@ -148,8 +147,8 @@ public class DirectionalLight
         this.blue = blue;
     }
 
-    public Colour getColour() {
-        return new Colour(red, green, blue);
+    public Vec4 getColour() {
+        return new Vec4(red, green, blue, 1.0f);
     }
 
     public void setDiffuseStrength(float diffuseStrength) {

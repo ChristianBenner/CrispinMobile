@@ -1,14 +1,14 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
+
 public class Border
 {
-    private Colour colour;
+    private Vec4 colour;
     private int width;
 
     private static final int DEFAULT_BORDER_WIDTH_PIXELS = 5;
@@ -24,7 +24,7 @@ public class Border
     private Square borderBottom;
     private Square borderLeft;
 
-    public Border(Colour colour, int width)
+    public Border(Vec4 colour, int width)
     {
         this.colour = colour;
         this.width = width;
@@ -37,22 +37,22 @@ public class Border
         setColour(colour);
     }
 
-    public Border(Colour colour)
+    public Border(Vec4 colour)
     {
         this(colour, DEFAULT_BORDER_WIDTH_PIXELS);
     }
 
     public Border(int width)
     {
-        this(new Colour(), width);
+        this(new Vec4(), width);
     }
 
     public Border()
     {
-        this(new Colour(), DEFAULT_BORDER_WIDTH_PIXELS);
+        this(new Vec4(), DEFAULT_BORDER_WIDTH_PIXELS);
     }
 
-    public void setColour(Colour colour)
+    public void setColour(Vec4 colour)
     {
         this.borderTop.setColour(colour);
         this.borderRight.setColour(colour);
@@ -60,7 +60,7 @@ public class Border
         this.borderLeft.setColour(colour);
     }
 
-    public Colour getColour()
+    public Vec4 getColour()
     {
         return this.colour;
     }
@@ -73,8 +73,8 @@ public class Border
     // Updates the position of all enabled borders around a given object (based on position and scale)
     public void updatePosition(UIObject uiObject)
     {
-        final Point2D parentPos = uiObject.getPosition();
-        final Scale2D parentSize = uiObject.getSize();
+        final Vec2 parentPos = uiObject.getPosition();
+        final Vec2 parentSize = uiObject.getSize();
 
         borderTop.setPosition(parentPos.x, parentPos.y + parentSize.y);
         borderRight.setPosition(parentPos.x + parentSize.x, parentPos.y - width);

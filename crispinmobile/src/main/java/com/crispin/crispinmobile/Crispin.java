@@ -12,6 +12,9 @@ import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.SceneManager;
 
+import glm_.vec3.Vec3;
+import glm_.vec4.Vec4;
+
 /**
  * Crispin class provides core engine functionality. It is crucial in order to position a graphics
  * application. It can be interacted with via its static public methods, allowing users to access
@@ -175,10 +178,10 @@ public class Crispin
      * Set the background colour of the graphics view.
      *
      * @param backgroundColour  The desired background colour.
-     * @see                     Colour
+     * @see                     Vec4
      * @since                   1.0
      */
-    public static void setBackgroundColour(Colour backgroundColour)
+    public static void setBackgroundColour(Vec4 backgroundColour)
     {
         // Check if the engine is freeTypeInitialised before accessing the scene manager
         if(isInit())
@@ -191,10 +194,10 @@ public class Crispin
      * Get the background colour of the graphics view.
      *
      * @return  The current background colour
-     * @see     Colour
+     * @see     Vec4
      * @since   1.0
      */
-    public static Colour getBackgroundColour()
+    public static Vec4 getBackgroundColour()
     {
         // Check if the engine is freeTypeInitialised before accessing the scene manager
         if(isInit())

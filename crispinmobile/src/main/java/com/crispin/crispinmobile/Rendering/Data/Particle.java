@@ -1,23 +1,23 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Vector2D;
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
 
 public class Particle
 {
     public float maxLifeTime;
     public float currentLifeTime;
-    public Point2D position;
+    public Vec2 position;
     public float size;
-    public Vector2D velocity;
-    public Colour colour;
+    public Vec2 velocity;
+    public Vec4 colour;
     public float angle;
 
-    public Particle(Point2D startPosition,
-                    Vector2D startVelocity,
+    public Particle(Vec2 startPosition,
+                    Vec2 startVelocity,
                     float size,
                     float life,
-                    Colour colour,
+                    Vec4 colour,
                     float angle)
     {
         this.position = startPosition;
@@ -31,12 +31,12 @@ public class Particle
 
     public Particle()
     {
-        this.position = new Point2D();
-        this.velocity = new Vector2D();
+        this.position = new Vec2();
+        this.velocity = new Vec2();
         this.size = 0.0f;
         this.maxLifeTime = 0.0f;
         this.currentLifeTime = 0.0f;
-        this.colour = new Colour();
+        this.colour = new Vec4();
         this.angle = 0.0f;
     }
 
@@ -59,10 +59,10 @@ public class Particle
         this.size = size;
         this.maxLifeTime = life;
         this.currentLifeTime = life;
-        this.colour.red = colourR;
-        this.colour.green = colourG;
-        this.colour.blue = colourB;
-        this.colour.alpha = colourA;
+        this.colour.x = colourR;
+        this.colour.y = colourG;
+        this.colour.z = colourB;
+        this.colour.w = colourA;
         this.angle = angle;
     }
 }

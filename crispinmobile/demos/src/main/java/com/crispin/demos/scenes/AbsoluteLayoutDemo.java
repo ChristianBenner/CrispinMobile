@@ -1,15 +1,15 @@
 package com.crispin.demos.scenes;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.UserInterface.AbsoluteLayout;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
+
+import glm_.vec2.Vec2;
 
 public class AbsoluteLayoutDemo extends Scene
 {
@@ -52,7 +52,7 @@ public class AbsoluteLayoutDemo extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position)
+    public void touch(int type, Vec2 position)
     {
 
     }

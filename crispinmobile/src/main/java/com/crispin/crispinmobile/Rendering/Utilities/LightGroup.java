@@ -1,7 +1,5 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;

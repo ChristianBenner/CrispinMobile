@@ -1,6 +1,6 @@
 package com.crispin.crispinmobile.Utilities;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
+import glm_.vec2.Vec2;
 
 /**
  * Scene base class. This provides functions that are controlled by the SceneManager object in
@@ -48,5 +48,5 @@ public abstract class Scene
     public abstract void render();
 
     // Single pointer motion event
-    public abstract void touch(int type, Point2D position);
+    public abstract void touch(int type, Vec2 position);
 }

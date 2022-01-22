@@ -1,13 +1,11 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import android.opengl.GLES20;
-import android.util.Pair;
-
 import com.crispin.crispinmobile.Geometry.Geometry;
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
 import java.util.ArrayList;
+
+import glm_.vec2.Vec2;
 
 public class AbsoluteLayout extends Plane
 {
@@ -36,7 +34,7 @@ public class AbsoluteLayout extends Plane
         for(int i = 0; i < uiObjects.size(); i++)
         {
             // Calculate the objects new position based on the position of the layout
-            final Point2D oldPos = new Point2D(uiObjects.get(i).getPosition());
+            final Vec2 oldPos = new Vec2(uiObjects.get(i).getPosition());
             uiObjects.get(i).setPosition(Geometry.translate(oldPos, super.getPosition()));
             uiObjects.get(i).draw(camera);
             uiObjects.get(i).setPosition(oldPos);

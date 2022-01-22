@@ -1,28 +1,24 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import android.opengl.Matrix;
-
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Shaders.LineShader;
-import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 
-import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.GL_POINTS;
-import static android.opengl.GLES20.glDisableVertexAttribArray;
-import static android.opengl.GLES20.glDrawArrays;
-import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glLineWidth;
-import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES20.glUniformMatrix4fv;
-import static android.opengl.GLES20.glVertexAttribPointer;
+import static android.opengl.GLES30.GL_FLOAT;
+import static android.opengl.GLES30.GL_LINES;
+import static android.opengl.GLES30.glDisableVertexAttribArray;
+import static android.opengl.GLES30.glDrawArrays;
+import static android.opengl.GLES30.glEnableVertexAttribArray;
+import static android.opengl.GLES30.glLineWidth;
+import static android.opengl.GLES30.glUniform4f;
+import static android.opengl.GLES30.glUniformMatrix4fv;
+import static android.opengl.GLES30.glVertexAttribPointer;
 import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
+
+import glm_.vec2.Vec2;
+import glm_.vec4.Vec4;
 
 public class Line
 {
@@ -44,8 +40,8 @@ public class Line
     private static final int NUM_DIMS = 2;
     private static final int NUM_VERTICES_PER_LINE = 2;
 
-    private Point2D pointOne;
-    private Point2D pointTwo;
+    private Vec2 pointOne;
+    private Vec2 pointTwo;
     private float lineWidth;
     private float[] positionBuffer = new float[NUM_DIMS * NUM_VERTICES_PER_LINE];
 
@@ -58,27 +54,27 @@ public class Line
 
     public Line()
     {
-        pointOne = new Point2D();
-        pointTwo = new Point2D();
+        pointOne = new Vec2();
+        pointTwo = new Vec2();
         lineWidth = 1.0f;
 
         lineShader = new LineShader();
         material = new Material();
 
-        setPoints(new Point2D(0.0f, 0.0f), new Point2D(0.0f, 0.0f));
+        setPoints(new Vec2(0.0f, 0.0f), new Vec2(0.0f, 0.0f));
     }
 
-    public Point2D getPointOne()
+    public Vec2 getPointOne()
     {
         return pointOne;
     }
 
-    public Point2D getPointTwo()
+    public Vec2 getPointTwo()
     {
         return pointTwo;
     }
 
-    public void setColour(Colour colour) {
+    public void setColour(Vec4 colour) {
         material.setColour(colour);
     }
 
@@ -120,7 +116,7 @@ public class Line
         vertexBuffer.position(0);
     }
 
-    public void setPoints(Point2D p1, Point2D p2)
+    public void setPoints(Vec2 p1, Vec2 p2)
     {
         setPoints(p1.x, p1.y, p2.x, p2.y);
     }
@@ -130,8 +126,8 @@ public class Line
         lineShader.enableIt();
         glLineWidth(lineWidth);
 
-        glUniform4f(lineShader.materialHandles.colourUniformHandle, material.colour.red,
-                material.colour.green, material.colour.blue, material.colour.alpha);
+        glUniform4f(lineShader.materialHandles.colourUniformHandle, material.colour.x,
+                material.colour.y, material.colour.z, material.colour.w);
 
         glUniformMatrix4fv(lineShader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT, false,
                 camera.getOrthoMatrix(), 0);

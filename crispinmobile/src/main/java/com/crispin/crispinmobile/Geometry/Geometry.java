@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Geometry;
 
-import com.crispin.crispinmobile.Rendering.Models.Square;
+import glm_.vec2.Vec2;
+import glm_.vec3.Vec3;
 
 /**
  * Geometry class provides some public static functions for useful calculations and operations based
@@ -11,36 +12,34 @@ import com.crispin.crispinmobile.Rendering.Models.Square;
  * @see     Plane
  * @see     Ray
  * @see     Sphere
- * @see     Vector2D
- * @see     Vector3D
- * @see     Point2D
- * @see     Point3D
+ * @see     Vec2
+ * @see     Vec3
  * @since   1.0
  */
 public class Geometry
 {
     /**
-     * Invert a Point2D object. This flips the x and y co-ordinate polarity
+     * Invert a Vec2 object. This flips the x and y co-ordinate polarity
      *
      * @param point2D   The point to invert
      * @return  Inverted Point
      * @since   1.0
      */
-    public static Point2D invert(Point2D point2D)
+    public static Vec2 invert(Vec2 point2D)
     {
-        return new Point2D(-point2D.x, -point2D.y);
+        return new Vec2(-point2D.x, -point2D.y);
     }
 
     /**
-     * Invert a Point3D object. This flips the x, y and z co-ordinate polarity
+     * Invert a Vec3 object. This flips the x, y and z co-ordinate polarity
      *
      * @param point3D   The point to invert
      * @return  Inverted Point
      * @since   1.0
      */
-    public static Point3D invert(Point3D point3D)
+    public static Vec3 invert(Vec3 point3D)
     {
-        return new Point3D(-point3D.x, -point3D.y, -point3D.z);
+        return new Vec3(-point3D.x, -point3D.y, -point3D.z);
     }
 
     /**
@@ -51,9 +50,9 @@ public class Geometry
      * @return      A vector with a direction from the first point to the second.
      * @since 1.0
      */
-    public static Vector3D getVectorBetween(Point3D from, Point3D to)
+    public static Vec3 getVectorBetween(Vec3 from, Vec3 to)
     {
-        return new Vector3D(
+        return new Vec3(
                 to.x - from.x,
                 to.y - from.y,
                 to.z - from.z);
@@ -67,9 +66,9 @@ public class Geometry
      * @return      A vector with a direction from the first point to the second.
      * @since 1.0
      */
-    public static Vector2D getVectorBetween(Point2D from, Point2D to)
+    public static Vec2 getVectorBetween(Vec2 from, Vec2 to)
     {
-        return new Vector2D(
+        return new Vec2(
                 to.x - from.x,
                 to.y - from.y);
     }
@@ -82,7 +81,7 @@ public class Geometry
      * @return      A ray originating from the first point that is facing the second point
      * @since 1.0
      */
-    public static Ray getRayBetween(Point3D from, Point3D to)
+    public static Ray getRayBetween(Vec3 from, Vec3 to)
     {
         return new Ray(from,
                 getVectorBetween(from, to));
@@ -110,13 +109,13 @@ public class Geometry
      * @return          Distance between the given point and ray as a float
      * @since 1.0
      */
-    public static float getDistanceBetween(Point3D point3D, Ray ray)
+    public static float getDistanceBetween(Vec3 point3D, Ray ray)
     {
-        Vector3D p1ToPoint = getVectorBetween(ray.position, point3D);
-        Vector3D p2ToPoint = getVectorBetween(translate(ray.position, ray.direction), point3D);
+        Vec3 p1ToPoint = getVectorBetween(ray.position, point3D);
+        Vec3 p2ToPoint = getVectorBetween(translate(ray.position, ray.direction), point3D);
 
-        float areaOfTriangleTimesTwo = p1ToPoint.getCrossProduct(p2ToPoint).getLength();
-        float lengthOfBase = ray.direction.getLength();
+        float areaOfTriangleTimesTwo = p1ToPoint.cross(p2ToPoint).length();
+        float lengthOfBase = ray.direction.length();
 
         // area of triangle = base * height so height = triangle / base
         float distanceFromPointToRay = areaOfTriangleTimesTwo / lengthOfBase;
@@ -131,7 +130,7 @@ public class Geometry
      * @return          Distance between the two given points
      * @since 1.0
      */
-    public static float getDistance(Point2D first, Point2D second)
+    public static float getDistance(Vec2 first, Vec2 second)
     {
         float a = first.x - second.x;
         float b = first.y - second.y;
@@ -148,9 +147,9 @@ public class Geometry
      * @return          The translated point
      * @since 1.0
      */
-    public static Point3D translate(Point3D point3D, Vector3D vector)
+    public static Vec3 translate(Vec3 point3D, Vec3 vector)
     {
-        return new Point3D(
+        return new Vec3(
                 point3D.x + vector.x,
                 point3D.y + vector.y,
                 point3D.z + vector.z);
@@ -166,15 +165,12 @@ public class Geometry
      * @return          The translated point
      * @since 1.0
      */
-    public static Point3D translate(Point3D point3D,
+    public static Vec3 translate(Vec3 point3D,
                                     float x,
                                     float y,
                                     float z)
     {
-        return new Point3D(
-                point3D.x + x,
-                point3D.y + y,
-                point3D.z + z);
+        return new Vec3(point3D.x + x, point3D.y + y, point3D.z + z);
     }
 
     /**
@@ -185,11 +181,9 @@ public class Geometry
      * @return          The translated point
      * @since 1.0
      */
-    public static Point2D translate(Point2D point2D, Vector2D vector)
+    public static Vec2 translate(Vec2 point2D, Vec2 vector)
     {
-        return new Point2D(
-                point2D.x + vector.x,
-                point2D.y + vector.y);
+        return new Vec2(point2D.x + vector.x, point2D.y + vector.y);
     }
 
     /**
@@ -201,29 +195,11 @@ public class Geometry
      * @return          The translated point
      * @since 1.0
      */
-    public static Point2D translate(Point2D point2D,
+    public static Vec2 translate(Vec2 point2D,
                                     float x,
                                     float y)
     {
-        return new Point2D(
-                point2D.x + x,
-                point2D.y + y);
-    }
-
-    /**
-     * Translate a point by another point
-     *
-     * @param pointOne  The first point
-     * @param pointTwo  The second point
-     * @return          The translated point
-     * @since 1.0
-     */
-    public static Point2D translate(Point2D pointOne,
-                                    Point2D pointTwo)
-    {
-        return new Point2D(
-                pointOne.x + pointTwo.x,
-                pointOne.y + pointTwo.y);
+        return new Vec2(point2D.x + x, point2D.y + y);
     }
 
     /**
@@ -233,9 +209,9 @@ public class Geometry
      * @return      The scaled vector
      * @since 1.0
      */
-    public static Vector3D scaleVector(Vector3D vector, float scale)
+    public static Vec3 scaleVector(Vec3 vector, float scale)
     {
-        return new Vector3D(
+        return new Vec3(
                 vector.x * scale,
                 vector.y * scale,
                 vector.z * scale);
@@ -250,12 +226,12 @@ public class Geometry
      * @return  The scaled vector
      * @since 1.0
      */
-    public static Vector3D scaleVector(Vector3D vector,
+    public static Vec3 scaleVector(Vec3 vector,
                                 float x,
                                 float y,
                                 float z)
     {
-        return new Vector3D(
+        return new Vec3(
                 vector.x * x,
                 vector.y * y,
                 vector.z * z);
@@ -268,9 +244,9 @@ public class Geometry
      * @return      The scaled vector
      * @since 1.0
      */
-    public static Vector2D scaleVector(Vector2D vector, float scale)
+    public static Vec2 scaleVector(Vec2 vector, float scale)
     {
-        return new Vector2D(
+        return new Vec2(
                 vector.x * scale,
                 vector.y * scale);
     }
@@ -283,11 +259,11 @@ public class Geometry
      * @return  The scaled vector
      * @since 1.0
      */
-    public static Vector2D scaleVector(Vector2D vector,
+    public static Vec2 scaleVector(Vec2 vector,
                                        float x,
                                        float y)
     {
-        return new Vector2D(
+        return new Vec2(
                 vector.x * x,
                 vector.y * y);
     }
@@ -300,15 +276,15 @@ public class Geometry
      * @return      The point in which the ray intersects the plane
      * @since 1.0
      */
-    public static Point3D getIntersectionPoint(Ray ray, Plane plane)
+    public static Vec3 getIntersectionPoint(Ray ray, Plane plane)
     {
-        Vector3D rayToPlaneVector = getVectorBetween(ray.position, plane.position);
+        Vec3 rayToPlaneVector = getVectorBetween(ray.position, plane.position);
 
-        float scaleFactor = rayToPlaneVector.getDotProduct(plane.direction)
-                / ray.direction.getDotProduct(plane.direction);
+        float scaleFactor = rayToPlaneVector.dot(plane.direction)
+                / ray.direction.dot(plane.direction);
 
-        Point3D intersectionPoint3D = translate(ray.position,
+        Vec3 intersectionVec3 = translate(ray.position,
                 scaleVector(ray.direction, scaleFactor));
-        return intersectionPoint3D;
+        return intersectionVec3;
     }
 }
