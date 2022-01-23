@@ -18,10 +18,13 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 public class LightingTextureShader extends Shader {
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.lighting_texture_vert;
+
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.lighting_texture_frag;
+
     // Tag for the logger
     private static final String TAG = "LightingTextureShader";
+
     // Maximum number of point lights supported by the shader
     private static final int MAX_NUM_POINT_LIGHTS = 4;
 
@@ -60,11 +63,8 @@ public class LightingTextureShader extends Shader {
         materialHandles.normalMapUniformHandle = getUniform("uNormalMap");
         materialHandles.ambientUniformHandle = getUniform("uMaterial.ambient");
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
-        materialHandles.specularUniformHandle = getUniform(
-                "uMaterial.specular");
-        materialHandles.shininessUniformHandle = getUniform(
-                "uMaterial.shininess");
-
+        materialHandles.specularUniformHandle = getUniform("uMaterial.specular");
+        materialHandles.shininessUniformHandle = getUniform("uMaterial.shininess");
         initPointLightHandles();
     }
 

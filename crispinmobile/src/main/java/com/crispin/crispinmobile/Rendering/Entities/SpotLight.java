@@ -73,12 +73,7 @@ public class SpotLight {
     // Outer size of the light beam (when to finish fading out the radius)
     public float outerSize;
 
-    public SpotLight(float x,
-                     float y,
-                     float z,
-                     float dx,
-                     float dy,
-                     float dz) {
+    public SpotLight(float x, float y, float z, float dx, float dy, float dz) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -102,10 +97,7 @@ public class SpotLight {
         this(x, y, z, 1.0f, 1.0f, 1.0f);
     }
 
-    public SpotLight(float x,
-                     float y,
-                     float dx,
-                     float dy) {
+    public SpotLight(float x, float y, float dx, float dy) {
         this(x, y, 0.0f, dx, dy, 0.0f);
     }
 

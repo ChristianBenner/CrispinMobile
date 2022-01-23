@@ -32,22 +32,13 @@ public class Model extends RenderObject {
     // Point rotation
     private final Rotation3D rotationPointAngle;
 
-    public Model(float[] positionBuffer,
-                 float[] texelBuffer,
-                 float[] colourBuffer,
-                 float[] normalBuffer,
-                 RenderMethod renderMethod,
-                 int numVerticesPerGroup,
-                 byte elementsPerPosition,
-                 byte elementsPerTexel,
-                 byte elementsPerColour,
-                 byte elementsPerNormal,
-                 Material material) {
+    public Model(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
+                 float[] normalBuffer, RenderMethod renderMethod, int numVerticesPerGroup,
+                 byte elementsPerPosition, byte elementsPerTexel, byte elementsPerColour,
+                 byte elementsPerNormal, Material material) {
         super(positionBuffer, texelBuffer, colourBuffer, normalBuffer, renderMethod,
                 numVerticesPerGroup, elementsPerPosition, elementsPerTexel, elementsPerColour,
                 elementsPerNormal, material);
-
-        // Initialise the class variables
         modelMatrix = new ModelMatrix();
         position = new Vec3();
         rotation = new Rotation3D();
@@ -56,34 +47,20 @@ public class Model extends RenderObject {
         rotationPointAngle = new Rotation3D();
     }
 
-    public Model(float[] positionBuffer,
-                 float[] texelBuffer,
-                 float[] colourBuffer,
-                 float[] normalBuffer,
-                 RenderMethod renderMethod,
-                 int numVerticesPerGroup,
-                 byte elementsPerPosition,
-                 byte elementsPerTexel,
-                 byte elementsPerColour,
+    public Model(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
+                 float[] normalBuffer, RenderMethod renderMethod, int numVerticesPerGroup,
+                 byte elementsPerPosition, byte elementsPerTexel, byte elementsPerColour,
                  byte elementsPerNormal) {
         this(positionBuffer, texelBuffer, colourBuffer, normalBuffer, renderMethod,
                 numVerticesPerGroup, elementsPerPosition, elementsPerTexel, elementsPerColour,
                 elementsPerNormal, new Material());
     }
 
-    public Model(float[] vertexData,
-                 RenderMethod renderMethod,
-                 AttributeOrder_t attributeOrder,
-                 int numVerticesPerGroup,
-                 byte elementsPerPosition,
-                 byte elementsPerTexel,
-                 byte elementsPerColour,
-                 byte elementsPerNormal,
-                 Material material) {
+    public Model(float[] vertexData, RenderMethod renderMethod, AttributeOrder_t attributeOrder,
+                 int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
+                 byte elementsPerColour, byte elementsPerNormal, Material material) {
         super(vertexData, renderMethod, attributeOrder, numVerticesPerGroup, elementsPerPosition,
                 elementsPerTexel, elementsPerColour, elementsPerNormal, material);
-
-        // Initialise the class variables
         modelMatrix = new ModelMatrix();
         position = new Vec3();
         rotation = new Rotation3D();
@@ -107,9 +84,7 @@ public class Model extends RenderObject {
      * @param z The new z-coordinate
      * @since 1.0
      */
-    public void setPosition(float x,
-                            float y,
-                            float z) {
+    public void setPosition(float x, float y, float z) {
         this.position.x = x;
         this.position.y = y;
         this.position.z = z;
@@ -166,9 +141,7 @@ public class Model extends RenderObject {
      * @param l Multiplier for the z-axis
      * @since 1.0
      */
-    public void setScale(float w,
-                         float h,
-                         float l) {
+    public void setScale(float w, float h, float l) {
         this.scale.x = w;
         this.scale.y = h;
         this.scale.z = l;
@@ -275,10 +248,7 @@ public class Model extends RenderObject {
      * @param z     The z axis multiplier
      * @since 1.0
      */
-    public void setRotation(float angle,
-                            float x,
-                            float y,
-                            float z) {
+    public void setRotation(float angle, float x, float y, float z) {
         this.rotation.angle = angle;
         this.rotation.x = x;
         this.rotation.y = y;
@@ -303,9 +273,7 @@ public class Model extends RenderObject {
      * @param y     The y axis multiplier
      * @since 1.0
      */
-    public void setRotation(float angle,
-                            float x,
-                            float y) {
+    public void setRotation(float angle, float x, float y) {
         this.rotation.angle = angle;
         this.rotation.x = x;
         this.rotation.y = y;
@@ -318,8 +286,7 @@ public class Model extends RenderObject {
      * @param rotation The rotation to make
      * @since 1.0
      */
-    public void setRotationAroundPoint(Vec3 point,
-                                       Rotation3D rotation) {
+    public void setRotationAroundPoint(Vec3 point, Rotation3D rotation) {
         setRotationAroundPoint(point.x, point.y, point.z, rotation.angle, rotation.x, rotation.y,
                 rotation.z);
     }
@@ -334,10 +301,7 @@ public class Model extends RenderObject {
      * @param rotationZ The z axis multiplier
      * @since 1.0
      */
-    public void setRotationAroundPoint(Vec3 point,
-                                       float angle,
-                                       float rotationX,
-                                       float rotationY,
+    public void setRotationAroundPoint(Vec3 point, float angle, float rotationX, float rotationY,
                                        float rotationZ) {
         setRotationAroundPoint(point.x, point.y, point.z, angle, rotationX, rotationY, rotationZ);
     }
@@ -351,10 +315,7 @@ public class Model extends RenderObject {
      * @param rotation The rotation to make
      * @since 1.0
      */
-    public void setRotationAroundPoint(float x,
-                                       float y,
-                                       float z,
-                                       Rotation3D rotation) {
+    public void setRotationAroundPoint(float x, float y, float z, Rotation3D rotation) {
         setRotationAroundPoint(x, y, z, rotation.angle, rotation.x, rotation.y, rotation.z);
     }
 
@@ -370,13 +331,8 @@ public class Model extends RenderObject {
      * @param rotationZ The z axis multiplier
      * @since 1.0
      */
-    public void setRotationAroundPoint(float x,
-                                       float y,
-                                       float z,
-                                       float angle,
-                                       float rotationX,
-                                       float rotationY,
-                                       float rotationZ) {
+    public void setRotationAroundPoint(float x, float y, float z, float angle, float rotationX,
+                                       float rotationY, float rotationZ) {
         this.rotationPoint.x = x;
         this.rotationPoint.y = y;
         this.rotationPoint.z = z;
@@ -404,9 +360,7 @@ public class Model extends RenderObject {
      * @param z The z-coordinate to translate by
      * @since 1.0
      */
-    public void translate(float x,
-                          float y,
-                          float z) {
+    public void translate(float x, float y, float z) {
         this.position.x += x;
         this.position.y += y;
         this.position.z += z;

@@ -45,48 +45,69 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class RenderObject {
-    // The 'numVerticesPerGroup' if the vertices are not grouped
-    public static final int UNGROUPED = 1;
-    // The number of bytes in a float
-    public static final int BYTES_PER_FLOAT = 4;
     // Tag used in logging output
     private static final String TAG = "RenderObject";
+
+    // The 'numVerticesPerGroup' if the vertices are not grouped
+    public static final int UNGROUPED = 1;
+
+    // The number of bytes in a float
+    public static final int BYTES_PER_FLOAT = 4;
+
     // Value that represents an invalid OpenGL ES GLSL shader uniform handle
     private static final int INVALID_UNIFORM_HANDLE = -1;
+
     // Number of uniform elements to upload in a GLSL uniform upload
     private static final int UNIFORM_UPLOAD_COUNT = 1;
+
     // The number of vertices in the model data
     private final int VERTEX_COUNT;
+
     // The number of elements in a 4x4 view matrix
     private final int NUM_VALUES_PER_VIEW_MATRIX = 16;
+
     // The number to multiply the specified rotation on a rotation axis
     private final float ROTATION_AXIS_MULTIPLIER = 1.0f;
+
     // The method to render the data as (e.g. triangles or lines)
     private final RenderMethod renderMethod;
+
     // Material to apply to the object
     protected Material material;
+
     // Shader applied to the object
     protected Shader shader;
+
     // The number of elements that are in the position data
     private final int elementsPerPosition;
+
     // The position index of the position data in the vertex data buffer
     private int positionDataOffset;
+
     // The number of elements that are in the texel data
     private final int elementsPerTexel;
+
     // The position index of the texel data in the vertex data buffer
     private int texelDataOffset;
+
     // The number of elements that are in the colour data
     private final int elementsPerColour;
+
     // The position index of the colour data in the vertex data buffer
     private int colourDataOffset;
+
     // The number of elements that are in the direction data
     private final int elementsPerNormal;
+
     // The position index of the direction data in the vertex data buffer
     private int normalDataOffset;
+
     // The stride between each set of data (only if the data format is ungrouped)
     private int totalStrideBytes;
+
     // Float buffer that holds all the triangle co-ordinate data
     private final FloatBuffer vertexBuffer;
+
     // If the model has a custom shader
     private boolean hasCustomShader;
 
@@ -110,17 +131,10 @@ public class RenderObject {
      * @param material            The material to apply to the object
      * @since 1.0
      */
-    public RenderObject(float[] positionBuffer,
-                        float[] texelBuffer,
-                        float[] colourBuffer,
-                        float[] normalBuffer,
-                        RenderObject.RenderMethod renderMethod,
-                        int numVerticesPerGroup,
-                        byte elementsPerPosition,
-                        byte elementsPerTexel,
-                        byte elementsPerColour,
-                        byte elementsPerNormal,
-                        Material material) {
+    public RenderObject(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
+                        float[] normalBuffer, RenderObject.RenderMethod renderMethod,
+                        int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
+                        byte elementsPerColour, byte elementsPerNormal, Material material) {
         this.renderMethod = renderMethod;
         this.elementsPerPosition = positionBuffer == null ? 0 : elementsPerPosition;
         this.elementsPerTexel = texelBuffer == null ? 0 : elementsPerTexel;
@@ -232,16 +246,10 @@ public class RenderObject {
      * @param elementsPerNormal   The number components that the normal data is comprised of
      * @since 1.0
      */
-    public RenderObject(float[] positionBuffer,
-                        float[] texelBuffer,
-                        float[] colourBuffer,
-                        float[] normalBuffer,
-                        RenderObject.RenderMethod renderMethod,
-                        int numVerticesPerGroup,
-                        byte elementsPerPosition,
-                        byte elementsPerTexel,
-                        byte elementsPerColour,
-                        byte elementsPerNormal) {
+    public RenderObject(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
+                        float[] normalBuffer, RenderObject.RenderMethod renderMethod,
+                        int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
+                        byte elementsPerColour, byte elementsPerNormal) {
         this(positionBuffer,
                 texelBuffer,
                 colourBuffer,
@@ -272,14 +280,9 @@ public class RenderObject {
      * @since 1.0
      */
     public RenderObject(float[] vertexData,
-                        RenderObject.RenderMethod renderMethod,
-                        AttributeOrder_t attributeOrder,
-                        int numVerticesPerGroup,
-                        byte elementsPerPosition,
-                        byte elementsPerTexel,
-                        byte elementsPerColour,
-                        byte elementsPerNormal,
-                        Material material) {
+                        RenderObject.RenderMethod renderMethod, AttributeOrder_t attributeOrder,
+                        int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
+                        byte elementsPerColour, byte elementsPerNormal, Material material) {
         this.renderMethod = renderMethod;
         this.totalStrideBytes = 0;
         this.elementsPerPosition = elementsPerPosition;
@@ -334,23 +337,12 @@ public class RenderObject {
      * @param elementsPerNormal   The number components that the normal data is comprised of
      * @since 1.0
      */
-    public RenderObject(float[] vertexData,
-                        RenderObject.RenderMethod renderMethod,
-                        AttributeOrder_t attributeOrder,
-                        int numVerticesPerGroup,
-                        byte elementsPerPosition,
-                        byte elementsPerTexel,
-                        byte elementsPerColour,
+    public RenderObject(float[] vertexData, RenderObject.RenderMethod renderMethod,
+                        AttributeOrder_t attributeOrder, int numVerticesPerGroup,
+                        byte elementsPerPosition, byte elementsPerTexel, byte elementsPerColour,
                         byte elementsPerNormal) {
-        this(vertexData,
-                renderMethod,
-                attributeOrder,
-                numVerticesPerGroup,
-                elementsPerPosition,
-                elementsPerTexel,
-                elementsPerColour,
-                elementsPerNormal,
-                new Material());
+        this(vertexData, renderMethod, attributeOrder, numVerticesPerGroup, elementsPerPosition,
+                elementsPerTexel, elementsPerColour, elementsPerNormal, new Material());
     }
 
     /**
@@ -370,9 +362,7 @@ public class RenderObject {
                                                           boolean renderColour,
                                                           boolean renderNormals) {
         // Check what attribute order to use depending on what data types are allowed
-        if (renderTexels &&
-                renderColour &&
-                renderNormals) {
+        if (renderTexels && renderColour && renderNormals) {
             return AttributeOrder_t.POSITION_THEN_TEXEL_THEN_COLOUR_THEN_NORMAL;
         } else if (renderTexels && renderColour) {
             return AttributeOrder_t.POSITION_THEN_TEXEL_THEN_COLOUR;
@@ -424,10 +414,7 @@ public class RenderObject {
      * @see Colour
      * @since 1.0
      */
-    public void setColour(float r,
-                          float g,
-                          float b,
-                          float a) {
+    public void setColour(float r, float g, float b, float a) {
         this.material.setColour(new Colour(r, g, b, a));
     }
 
@@ -440,9 +427,7 @@ public class RenderObject {
      * @see Colour
      * @since 1.0
      */
-    public void setColour(float r,
-                          float g,
-                          float b) {
+    public void setColour(float r, float g, float b) {
         this.material.setColour(new Colour(r, g, b));
     }
 
@@ -517,18 +502,11 @@ public class RenderObject {
         shader.enableIt();
 
         float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-        Matrix.multiplyMM(modelViewMatrix,
-                0,
-                camera.getOrthoMatrix(),
-                0,
-                modelMatrix.getModelMatrix(),
-                0);
+        Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
+                modelMatrix.getModelMatrix(), 0);
 
-        glUniformMatrix4fv(shader.getMatrixUniformHandle(),
-                UNIFORM_UPLOAD_COUNT,
-                false,
-                modelViewMatrix,
-                0);
+        glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT, false,
+                modelViewMatrix, 0);
 
         // Set all material uniforms
         shader.setMaterialUniforms(material);
@@ -555,9 +533,7 @@ public class RenderObject {
         shader.disableIt();
     }
 
-    public void render(Camera3D camera,
-                       ModelMatrix modelMatrix,
-                       final LightGroup lightGroup) {
+    public void render(Camera3D camera, ModelMatrix modelMatrix, final LightGroup lightGroup) {
         // If the shader is null, create a shader for the object
         if (shader == null) {
             updateShader();
@@ -677,21 +653,6 @@ public class RenderObject {
             final boolean supportsColourPerAttrib = (elementsPerColour != 0) &&
                     !material.isIgnoringColourData();
 
-//            // Determine the best shader to used depending on the material
-//            if(material.isLightingEnabled() && material.hasTexture() && material.hasNormalMap())
-//            {
-//                // Use lighting, texture/direction map supporting shader
-//            }
-//            else if(material.isLightingEnabled() && material.hasTexture())
-//            {
-//                // Use lighting, texture supporting shader
-//            }
-//            else if(material.isLightingEnabled())
-//            {
-//                // Use lighting supporting shader
-//            }
-//            else
-
             // Select a shader based on what data attributes and uniforms the object supports
             if (supportsNormals && supportsTexture && supportsColourPerAttrib) {
                 System.out.println("NORMAL, TEXTURE AND COLOUR SHADER");
@@ -810,12 +771,8 @@ public class RenderObject {
         if (enable) {
             vertexBuffer.position(positionDataOffset);
             glEnableVertexAttribArray(shader.getPositionAttributeHandle());
-            glVertexAttribPointer(shader.getPositionAttributeHandle(),
-                    elementsPerPosition,
-                    GL_FLOAT,
-                    true,
-                    totalStrideBytes,
-                    vertexBuffer);
+            glVertexAttribPointer(shader.getPositionAttributeHandle(), elementsPerPosition,
+                    GL_FLOAT, true, totalStrideBytes, vertexBuffer);
             vertexBuffer.position(0);
         } else {
             glDisableVertexAttribArray(shader.getPositionAttributeHandle());
@@ -835,12 +792,8 @@ public class RenderObject {
             // Enable attribute texture data
             vertexBuffer.position(texelDataOffset);
             glEnableVertexAttribArray(shader.getTextureAttributeHandle());
-            glVertexAttribPointer(shader.getTextureAttributeHandle(),
-                    elementsPerTexel,
-                    GL_FLOAT,
-                    true,
-                    totalStrideBytes,
-                    vertexBuffer);
+            glVertexAttribPointer(shader.getTextureAttributeHandle(), elementsPerTexel, GL_FLOAT,
+                    true, totalStrideBytes, vertexBuffer);
             vertexBuffer.position(0);
         } else {
             glDisableVertexAttribArray(shader.getTextureAttributeHandle());
@@ -860,12 +813,8 @@ public class RenderObject {
             // Enable attribute colour data
             vertexBuffer.position(colourDataOffset);
             glEnableVertexAttribArray(shader.getColourAttributeHandle());
-            glVertexAttribPointer(shader.getColourAttributeHandle(),
-                    elementsPerColour,
-                    GL_FLOAT,
-                    true,
-                    totalStrideBytes,
-                    vertexBuffer);
+            glVertexAttribPointer(shader.getColourAttributeHandle(), elementsPerColour, GL_FLOAT,
+                    true, totalStrideBytes, vertexBuffer);
             vertexBuffer.position(0);
         } else {
             glDisableVertexAttribArray(shader.getColourAttributeHandle());
@@ -885,12 +834,8 @@ public class RenderObject {
             // Enable attribute colour data
             vertexBuffer.position(normalDataOffset);
             glEnableVertexAttribArray(shader.getNormalAttributeHandle());
-            glVertexAttribPointer(shader.getNormalAttributeHandle(),
-                    elementsPerNormal,
-                    GL_FLOAT,
-                    true,
-                    totalStrideBytes,
-                    vertexBuffer);
+            glVertexAttribPointer(shader.getNormalAttributeHandle(), elementsPerNormal, GL_FLOAT,
+                    true, totalStrideBytes, vertexBuffer);
             vertexBuffer.position(0);
         } else {
             glDisableVertexAttribArray(shader.getNormalAttributeHandle());
@@ -907,11 +852,8 @@ public class RenderObject {
     private void resolveStride(int numVerticesPerGroup) {
         // Check if the format of the data is ungrouped before resolving stride
         if (numVerticesPerGroup == UNGROUPED) {
-            totalStrideBytes = (elementsPerPosition +
-                    elementsPerTexel +
-                    elementsPerColour +
-                    elementsPerNormal) *
-                    BYTES_PER_FLOAT;
+            totalStrideBytes = (elementsPerPosition + elementsPerTexel + elementsPerColour +
+                    elementsPerNormal) * BYTES_PER_FLOAT;
         } else {
             totalStrideBytes = 0;
         }
@@ -925,8 +867,7 @@ public class RenderObject {
      * @param numVerticesPerGroup The number of vertices in a group
      * @since 1.0
      */
-    private void resolveAttributeOffsets(AttributeOrder_t attributeOrder,
-                                         int numVerticesPerGroup) {
+    private void resolveAttributeOffsets(AttributeOrder_t attributeOrder, int numVerticesPerGroup) {
         // Solve attribute offset
         final int TOTAL_NUMBER_POSITION_ELEMENTS = elementsPerPosition * numVerticesPerGroup;
         final int TOTAL_NUMBER_TEXEL_ELEMENTS = elementsPerTexel * numVerticesPerGroup;

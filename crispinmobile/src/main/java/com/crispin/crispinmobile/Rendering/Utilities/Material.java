@@ -18,24 +18,30 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
  * @since 1.0
  */
 public class Material {
-    // todo: Add a texture for the normal map. This will be used eventually by lighting shaders
+    // Tag used in logging output
+    private static final String TAG = "Material";
 
     // Default shininess
     public static final float DEFAULT_SHININESS = 32.0f;
+
     // Flag position for ignoring position data
     public static final int IGNORE_POSITION_DATA_FLAG = 1;
+
     // Flag position for ignoring texel texel data
     public static final int IGNORE_TEXEL_DATA_FLAG = 2;
+
     // Flag position for ignoring colour data
     public static final int IGNORE_COLOUR_DATA_FLAG = 4;
+
     // Flag position for ignoring normal data
     public static final int IGNORE_NORMAL_DATA_FLAG = 8;
-    // Tag used in logging output
-    private static final String TAG = "Material";
+
     // Default uv multiplier
     private static final Scale2D DEFAULT_UV_MULTIPLIER = new Scale2D();
+
     // Default uv offset
     private static final Vec2 DEFAULT_UV_OFFSET = new Vec2();
+
     // The material texture
     public Texture texture;
 
@@ -91,10 +97,7 @@ public class Material {
      * @see Colour
      * @since 1.0
      */
-    public Material(Texture texture,
-                    Scale2D uvMultiplier,
-                    Vec2 uvOffset,
-                    Colour colour) {
+    public Material(Texture texture, Scale2D uvMultiplier, Vec2 uvOffset, Colour colour) {
         this.uvMultiplier = new Scale2D();
         this.uvOffset = new Vec2();
         this.colour = new Colour();
@@ -108,7 +111,6 @@ public class Material {
         this.ignoreNormalData = false;
         this.specularMap = null;
         this.normalMap = null;
-
         setTexture(texture);
         setUvMultiplier(uvMultiplier);
         setUvOffset(uvOffset);
@@ -125,10 +127,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Texture texture, Colour colour) {
-        this(texture,
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
-                colour);
+        this(texture, DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET, colour);
     }
 
     /**
@@ -142,10 +141,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Texture texture, Scale2D uvMultiplier) {
-        this(texture,
-                uvMultiplier,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(texture, uvMultiplier, DEFAULT_UV_OFFSET, new Colour());
     }
 
     /**
@@ -160,10 +156,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Scale2D uvMultiplier, Colour colour) {
-        this(null,
-                uvMultiplier,
-                DEFAULT_UV_OFFSET,
-                colour);
+        this(null, uvMultiplier, DEFAULT_UV_OFFSET, colour);
     }
 
     /**
@@ -174,10 +167,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Texture texture) {
-        this(texture,
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(texture, DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET, new Colour());
     }
 
     /**
@@ -188,9 +178,7 @@ public class Material {
      * @since 1.0
      */
     public Material(int resourceId) {
-        this(TextureCache.loadTexture(resourceId),
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
+        this(TextureCache.loadTexture(resourceId), DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET,
                 new Colour());
     }
 
@@ -202,10 +190,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Colour colour) {
-        this(null,
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
-                colour);
+        this(null, DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET, colour);
     }
 
     /**
@@ -217,10 +202,7 @@ public class Material {
      * @since 1.0
      */
     public Material(Scale2D uvMultiplier) {
-        this(null,
-                uvMultiplier,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(null, uvMultiplier, DEFAULT_UV_OFFSET, new Colour());
     }
 
     /**
@@ -229,10 +211,7 @@ public class Material {
      * @since 1.0
      */
     public Material() {
-        this(null,
-                DEFAULT_UV_MULTIPLIER,
-                DEFAULT_UV_OFFSET,
-                new Colour());
+        this(null, DEFAULT_UV_MULTIPLIER, DEFAULT_UV_OFFSET, new Colour());
     }
 
     /**

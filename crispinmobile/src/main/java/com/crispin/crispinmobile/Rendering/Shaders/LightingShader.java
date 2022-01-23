@@ -19,10 +19,13 @@ import com.crispin.crispinmobile.Rendering.Utilities.SpotLightHandles;
 public class LightingShader extends Shader {
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.lighting_vert;
+
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.lighting_frag;
+
     // Tag for the logger
     private static final String TAG = "LightingShader";
+
     // Maximum number of point lights supported by the shader
     private static final int MAX_NUM_POINT_LIGHTS = 10;
 
@@ -62,7 +65,6 @@ public class LightingShader extends Shader {
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
         materialHandles.specularUniformHandle = getUniform("uMaterial.specular");
         materialHandles.shininessUniformHandle = getUniform("uMaterial.shininess");
-
         initDirectionalLightHandles();
         initPointLightHandles();
         initSpotLightHandles();

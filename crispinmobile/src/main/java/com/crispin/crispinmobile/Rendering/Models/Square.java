@@ -60,8 +60,7 @@ public class Square extends Model {
      * @param renderTexels True if the model is allowed to use texel data, else false
      * @since 1.0
      */
-    public Square(Material material,
-                  boolean renderTexels) {
+    public Square(Material material, boolean renderTexels) {
         super(POSITION_DATA,
                 renderTexels ? TEXEL_DATA : null,
                 null,

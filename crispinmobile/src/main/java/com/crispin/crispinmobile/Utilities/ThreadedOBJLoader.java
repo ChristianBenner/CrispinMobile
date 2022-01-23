@@ -10,16 +10,15 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * present a loading bar whilst the threaded models load. The class uses the OBJModelLoader to load
  * OBJ models and does it on another thread so that it doesn't lag or pause the main loop.
  *
- * @see         RenderObject
- * @see         OBJModelLoader
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see RenderObject
+ * @see OBJModelLoader
+ * @since 1.0
  */
-public class ThreadedOBJLoader implements Runnable
-{
+public class ThreadedOBJLoader implements Runnable {
     // The resource ID of the model
-    private int resourceId;
+    private final int resourceId;
 
     // The render object
     private Model model;
@@ -28,41 +27,38 @@ public class ThreadedOBJLoader implements Runnable
     private boolean complete = false;
 
     // LoadEvent that gets called when the OBJ has loaded
-    private LoadListener loadListener;
-
-    /**
-     * Load a model on another thread without having to create the ThreadedOBJLoader object
-     *
-     * @param resourceId    The OBJ model file resource ID
-     * @since   1.0
-     */
-    public static void loadModel(int resourceId, LoadListener loadListener)
-    {
-        ThreadedOBJLoader threadedModelLoader = new ThreadedOBJLoader(resourceId, loadListener);
-        threadedModelLoader.run();
-    }
+    private final LoadListener loadListener;
 
     /**
      * Create an ThreadedOBJLoader obj to load an OBJ model on another thread
      *
-     * @param resourceId    The OBJ model file resource ID
-     * @param loadListener  The load listener that listens to load events
-     * @since   1.0
+     * @param resourceId   The OBJ model file resource ID
+     * @param loadListener The load listener that listens to load events
+     * @since 1.0
      */
-    public ThreadedOBJLoader(int resourceId, LoadListener loadListener)
-    {
+    public ThreadedOBJLoader(int resourceId, LoadListener loadListener) {
         this.resourceId = resourceId;
         this.loadListener = loadListener;
     }
 
     /**
+     * Load a model on another thread without having to create the ThreadedOBJLoader object
+     *
+     * @param resourceId The OBJ model file resource ID
+     * @since 1.0
+     */
+    public static void loadModel(int resourceId, LoadListener loadListener) {
+        ThreadedOBJLoader threadedModelLoader = new ThreadedOBJLoader(resourceId, loadListener);
+        threadedModelLoader.run();
+    }
+
+    /**
      * Overridden from the thread base class
      *
-     * @since   1.0
+     * @since 1.0
      */
     @Override
-    public void run()
-    {
+    public void run() {
         model = OBJModelLoader.readObjFile(resourceId);
         this.loadListener.onLoad(model);
         complete = true;
@@ -71,22 +67,20 @@ public class ThreadedOBJLoader implements Runnable
     /**
      * Check if the model has loaded
      *
-     * @return  The state of the model loading. True if the model has finished loading, else false
-     * @since   1.0
+     * @return The state of the model loading. True if the model has finished loading, else false
+     * @since 1.0
      */
-    public boolean isComplete()
-    {
+    public boolean isComplete() {
         return this.complete;
     }
 
     /**
      * Get the render object that is loaded
      *
-     * @return  The state of the model loading. True if the model has finished loading, else false
-     * @since   1.0
+     * @return The state of the model loading. True if the model has finished loading, else false
+     * @since 1.0
      */
-    public Model getRenderObject()
-    {
+    public Model getRenderObject() {
         return model;
     }
 }

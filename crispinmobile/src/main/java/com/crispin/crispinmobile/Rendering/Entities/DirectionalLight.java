@@ -47,12 +47,7 @@ public class DirectionalLight {
     // an objects surface can appear with varying levels of shininess)
     public float specularStrength;
 
-    public DirectionalLight(float dx,
-                            float dy,
-                            float dz,
-                            float red,
-                            float green,
-                            float blue) {
+    public DirectionalLight(float dx, float dy, float dz, float red, float green, float blue) {
         this.dx = dx;
         this.dy = dy;
         this.dz = dz;
@@ -64,22 +59,15 @@ public class DirectionalLight {
         this.specularStrength = DEFAULT_SPECULAR_STRENGTH;
     }
 
-    public DirectionalLight(float dx,
-                            float dy,
-                            float dz) {
+    public DirectionalLight(float dx, float dy, float dz) {
         this(dx, dy, dz, 1.0f, 1.0f, 1.0f);
     }
 
-    public DirectionalLight(float dx,
-                            float dy,
-                            float red,
-                            float green,
-                            float blue) {
+    public DirectionalLight(float dx, float dy, float red, float green, float blue) {
         this(dx, dy, 0.0f, red, green, blue);
     }
 
-    public DirectionalLight(float dx,
-                            float dy) {
+    public DirectionalLight(float dx, float dy) {
         this(dx, dy, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 

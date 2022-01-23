@@ -225,9 +225,7 @@ public class Cube extends Model {
      * @param renderColour  True if the model is allowed to use colour data, else false
      * @since 1.0
      */
-    public Cube(Material material,
-                boolean renderTexels,
-                boolean renderNormals,
+    public Cube(Material material, boolean renderTexels, boolean renderNormals,
                 boolean renderColour) {
         super(POSITION_DATA,
                 renderTexels ? TEXEL_DATA : null,
@@ -253,13 +251,8 @@ public class Cube extends Model {
      * @param renderColour  True if the model is allowed to use colour data, else false
      * @since 1.0
      */
-    public Cube(boolean renderTexels,
-                boolean renderNormals,
-                boolean renderColour) {
-        this(new Material(),
-                renderTexels,
-                renderNormals,
-                renderColour);
+    public Cube(boolean renderTexels, boolean renderNormals, boolean renderColour) {
+        this(new Material(), renderTexels, renderNormals, renderColour);
     }
 
     /**
@@ -274,10 +267,7 @@ public class Cube extends Model {
      * @since 1.0
      */
     public Cube(Material material) {
-        this(material,
-                true,
-                false,
-                false);
+        this(material, true, false, false);
     }
 
     /**
@@ -291,9 +281,6 @@ public class Cube extends Model {
      * @since 1.0
      */
     public Cube() {
-        this(new Material(),
-                true,
-                false,
-                false);
+        this(new Material(), true, false, false);
     }
 }

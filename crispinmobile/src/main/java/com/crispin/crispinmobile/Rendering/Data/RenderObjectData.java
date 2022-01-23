@@ -19,56 +19,82 @@ import java.util.ArrayList;
 public class RenderObjectData {
     // Tag used for logging
     private static final String TAG = "RenderObjectData";
+
     // Start index offset
     private static final int START_INDEX_OFFSET = 1;
+
     // The face data index offset
     private static final int FACE_DATA_INDEX_OFFSET = -1;
+
     // The number of data elements in position only face data
     private static final int NUM_DATA_ELEMENTS_POSITION_ONLY = 1;
+
     // The number of data elements in position and normal face data
     private static final int NUM_DATA_ELEMENTS_POSITION_AND_NORMAL = 2;
+
     // The number of data elements in position and texel data
     private static final int NUM_DATA_ELEMENTS_POSITION_AND_TEXEL = 2;
+
     // The number of data elements in position, texel and normal data
     private static final int NUM_DATA_ELEMENTS_POSITION_AND_TEXEL_AND_NORMAL = 3;
+
     // The start index for the position data
     private static final int POSITION_START_INDEX = 0;
+
     // Represent a data start index as unused
     private static final int UNUSED_DATA_ELEMENT = -1;
+
     // The number of components in XY data format
     private static final int NUM_COMPONENTS_XY = 2;
+
     // The number of components in XYZ data format
     private static final int NUM_COMPONENTS_XYZ = 3;
+
     // The number of components in XYZW data format
     private static final int NUM_COMPONENTS_XYZW = 4;
+
     // The number of components in ST data format
     private static final int NUM_COMPONENTS_ST = 2;
+
     // The number -1 signals that the attribute is invalid or doesn't associate to any data
     private static final int INVALID_ATTRIBUTE_INDEX = -1;
+
     // Array holding the position vertex data
     private final ArrayList<Float> positionDataArray;
+
     // Array holding the texel vertex data
     private final ArrayList<Float> texelDataArray;
+
     // Array holding the normal vertex data
     private final ArrayList<Float> normalDataArray;
+
     // Array holding the face data
     private final ArrayList<Integer> faceDataArray;
+
     // The type of face data that is to be loaded
     private FaceData faceData;
+
     // The render method that has been determined
     private RenderObject.RenderMethod renderMethod;
+
     // The data stride
     private int dataStride;
+
     // The start index of the position data
     private int positionStartIndex;
+
     // The start index of the texel data
     private int texelStartIndex;
+
     // The start index of the normal data
     private int normalStartIndex;
+
     // Number of position components
     private byte numberOfPositionComponents;
+
     // Number of normal components
     private byte numberOfNormalComponents;
+
     // Number of texel components
     private byte numberOfTexelComponents;
 

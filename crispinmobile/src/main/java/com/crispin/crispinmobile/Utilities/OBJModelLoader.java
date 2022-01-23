@@ -14,13 +14,12 @@ import java.io.InputStream;
  * scene. OBJ models loaded with the class must have triangulated faces. It also doesn't support
  * multiple OBJ models within one file. The class is comprised of static only functions.
  *
- * @see         RenderObject
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see RenderObject
+ * @since 1.0
  */
-public class  OBJModelLoader
-{
+public class OBJModelLoader {
     // Tag used in logging output
     private static final String TAG = "OBJModelLoader";
 
@@ -111,16 +110,14 @@ public class  OBJModelLoader
     /**
      * Read an OBJ file from a resource ID
      *
-     * @param resourceId    The OBJ model file resource ID
-     * @return  A RenderObject built from the model data. The model can be rendered to a scene
-     * @see     RenderObject
-     * @since   1.0
+     * @param resourceId The OBJ model file resource ID
+     * @return A RenderObject built from the model data. The model can be rendered to a scene
+     * @see RenderObject
+     * @since 1.0
      */
-    public static Model readObjFile(int resourceId)
-    {
+    public static Model readObjFile(int resourceId) {
         // Attempt to open and read an OBJ file
-        try
-        {
+        try {
             // Measure how long it takes to load load and read the model file
             long start = System.nanoTime();
 
@@ -141,9 +138,7 @@ public class  OBJModelLoader
                     NANOSECONDS_TO_MILLISECONDS_DIVIDE) + "ms");
 
             return ro;
-        }
-        catch(Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -153,13 +148,12 @@ public class  OBJModelLoader
     /**
      * Process the OBJ model
      *
-     * @param theFile   The model file as an array of bytes
-     * @return  A RenderObject built from the model data. The model can be rendered to a scene
-     * @see     RenderObject
-     * @since   1.0
+     * @param theFile The model file as an array of bytes
+     * @return A RenderObject built from the model data. The model can be rendered to a scene
+     * @see RenderObject
+     * @since 1.0
      */
-    private static Model processObj(byte[] theFile)
-    {
+    private static Model processObj(byte[] theFile) {
         RenderObjectData renderObjectData = new RenderObjectData();
 
         // Keep track of the type of data we are looking at
@@ -202,17 +196,14 @@ public class  OBJModelLoader
         boolean countFaceDataPerLine = false;
 
         // Iterate through all the bytes in the file
-        for(int i = 0; i < theFile.length; i++)
-        {
+        for (int i = 0; i < theFile.length; i++) {
             final byte theByte = theFile[i];
 
             // Look at the line type so we know what we are processing
-            switch (lineType)
-            {
+            switch (lineType) {
                 case NONE:
                     // Discover what type the line that we are working on is
-                    switch (theByte)
-                    {
+                    switch (theByte) {
                         case ASCII_HASHTAG: // '#' for comment
                             lineType = COMMENT;
                             break;
@@ -227,8 +218,7 @@ public class  OBJModelLoader
                 case VERTEX:
                     // We know that the line type is vertex related but we still don't know what it
                     // is, discover its type
-                    switch (theByte)
-                    {
+                    switch (theByte) {
                         case ASCII_SPACE: // SPACE for vertex position
                             lineType = POSITION;
                             break;
@@ -245,33 +235,26 @@ public class  OBJModelLoader
                     break;
                 case POSITION:
                     // This is float data relevant to vertex position
-                    if((theByte >= ASCII_0 && theByte <= ASCII_9) ||
-                            theByte == ASCII_POINT || theByte == ASCII_MINUS)
-                    {
+                    if ((theByte >= ASCII_0 && theByte <= ASCII_9) ||
+                            theByte == ASCII_POINT || theByte == ASCII_MINUS) {
                         // Check that a start index hasn't already been defined
-                        if (dataStartIndex == NO_START_INDEX)
-                        {
+                        if (dataStartIndex == NO_START_INDEX) {
                             dataStartIndex = i;
 
-                            if(!countPositionDataElements && numberPositionDataElements == 0)
-                            {
+                            if (!countPositionDataElements && numberPositionDataElements == 0) {
                                 countPositionDataElements = true;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Check if there is a start index before continuing
-                        if(dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing a float and have found the end of it, parse it
                             renderObjectData.addPositionData(Float.parseFloat(new String(theFile,
                                     dataStartIndex,
                                     i - dataStartIndex)));
                             dataStartIndex = NO_START_INDEX;
 
-                            if(countPositionDataElements)
-                            {
+                            if (countPositionDataElements) {
                                 numberPositionDataElements++;
                             }
                         }
@@ -279,33 +262,26 @@ public class  OBJModelLoader
                     break;
                 case TEXEL:
                     // This is float data relevant to vertex position
-                    if((theByte >= ASCII_0 && theByte <= ASCII_9) ||
-                            theByte == ASCII_POINT || theByte == ASCII_MINUS)
-                    {
+                    if ((theByte >= ASCII_0 && theByte <= ASCII_9) ||
+                            theByte == ASCII_POINT || theByte == ASCII_MINUS) {
                         // Check that a start index hasn't already been defined
-                        if (dataStartIndex == NO_START_INDEX)
-                        {
+                        if (dataStartIndex == NO_START_INDEX) {
                             dataStartIndex = i;
 
-                            if(!countTexelDataElements && numberTexelDataElements == 0)
-                            {
+                            if (!countTexelDataElements && numberTexelDataElements == 0) {
                                 countTexelDataElements = true;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Check if there is a start index before continuing
-                        if(dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing a float and have found the end of it, parse it
                             renderObjectData.addTexelData(Float.parseFloat(new String(theFile,
                                     dataStartIndex,
                                     i - dataStartIndex)));
                             dataStartIndex = NO_START_INDEX;
 
-                            if(countTexelDataElements)
-                            {
+                            if (countTexelDataElements) {
                                 numberTexelDataElements++;
                             }
                         }
@@ -313,33 +289,26 @@ public class  OBJModelLoader
                     break;
                 case NORMAL:
                     // This is float data relevant to vertex position
-                    if((theByte >= ASCII_0 && theByte <= ASCII_9) ||
-                            theByte == ASCII_POINT || theByte == ASCII_MINUS)
-                    {
+                    if ((theByte >= ASCII_0 && theByte <= ASCII_9) ||
+                            theByte == ASCII_POINT || theByte == ASCII_MINUS) {
                         // Check that a start index hasn't already been defined
-                        if (dataStartIndex == NO_START_INDEX)
-                        {
+                        if (dataStartIndex == NO_START_INDEX) {
                             dataStartIndex = i;
 
-                            if(!countNormalDataElements && numberNormalDataElements == 0)
-                            {
+                            if (!countNormalDataElements && numberNormalDataElements == 0) {
                                 countNormalDataElements = true;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Check if there is a start index before continuing
-                        if(dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing a float and have found the end of it, parse it
                             renderObjectData.addNormalData(Float.parseFloat(new String(theFile,
                                     dataStartIndex,
                                     i - dataStartIndex)));
                             dataStartIndex = NO_START_INDEX;
 
-                            if(countNormalDataElements)
-                            {
+                            if (countNormalDataElements) {
                                 numberNormalDataElements++;
                             }
                         }
@@ -347,40 +316,33 @@ public class  OBJModelLoader
                     break;
                 case FACE:
                     // Now we have to parse integers
-                    if(theByte >= ASCII_0 && theByte <= ASCII_9)
-                    {
+                    if (theByte >= ASCII_0 && theByte <= ASCII_9) {
                         // Check that a start index hasn't already been defined
-                        if(dataStartIndex == NO_START_INDEX)
-                        {
+                        if (dataStartIndex == NO_START_INDEX) {
                             dataStartIndex = i;
 
                             // Check if we should position counting the amount of face data per line
-                            if(!countFaceDataPerLine && numberFaceDataPerLine == 0)
-                            {
+                            if (!countFaceDataPerLine && numberFaceDataPerLine == 0) {
                                 countFaceDataPerLine = true;
                             }
 
                             // Check if we should position counting the number of face data elements
                             // and separators
-                            if(!countFaceDataElements &&
+                            if (!countFaceDataElements &&
                                     numberFaceDataElements == 0 &&
-                                    numberFaceDataSeparators == 0)
-                            {
+                                    numberFaceDataSeparators == 0) {
                                 countFaceDataElements = true;
                             }
                         }
-                    }
-                    else
-                    {
+                    } else {
                         // Increment the number of face data separators if one is found
-                        if(theByte == ASCII_FORWARD_SLASH && countFaceDataElements) // forward slash
+                        if (theByte == ASCII_FORWARD_SLASH && countFaceDataElements) // forward slash
                         {
                             numberFaceDataSeparators++;
                         }
 
                         // Check if there is a start index before continuing
-                        if(dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing an int and have found the end of it, parse it
                             renderObjectData.addFaceData(Integer.parseInt(new String(theFile,
                                     dataStartIndex,
@@ -389,20 +351,18 @@ public class  OBJModelLoader
                             dataStartIndex = NO_START_INDEX;
 
                             // If we have finished processing a chunk of face data
-                            if(theByte != ASCII_FORWARD_SLASH && countFaceDataPerLine)
-                            {
+                            if (theByte != ASCII_FORWARD_SLASH && countFaceDataPerLine) {
                                 numberFaceDataPerLine++;
                             }
 
                             // Add face data elements if counting is enabled as we have found one
-                            if(countFaceDataElements)
-                            {
+                            if (countFaceDataElements) {
                                 numberFaceDataElements++;
                             }
                         }
 
                         // If a space has been detected, stop counting face data elements
-                        if(theByte == ASCII_SPACE) // space
+                        if (theByte == ASCII_SPACE) // space
                         {
                             countFaceDataElements = false;
                         }
@@ -411,7 +371,7 @@ public class  OBJModelLoader
             }
 
             // Check if the byte represents line feed or new line '/r' or '/n'
-            if(theByte == ASCII_NEW_LINE || theByte == ASCII_CARRIAGE_RETURN) // '\n' or '\r'
+            if (theByte == ASCII_NEW_LINE || theByte == ASCII_CARRIAGE_RETURN) // '\n' or '\r'
             {
                 // Reset the line type for a new line
                 lineType = NONE;
@@ -424,16 +384,13 @@ public class  OBJModelLoader
             }
 
             // If we are processing the last byte, process last bits of data
-            if(i == theFile.length - 1)
-            {
+            if (i == theFile.length - 1) {
                 // Look at the line type so we know what we are processing
-                switch (lineType)
-                {
+                switch (lineType) {
                     case POSITION:
                         // Check that a start index has been found before attempting to add position
                         // data (because there will not have been any in the string)
-                        if (dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing a float and have found the end of it, parse it
                             renderObjectData.addPositionData(Float.parseFloat(new String(theFile,
                                     dataStartIndex,
@@ -443,8 +400,7 @@ public class  OBJModelLoader
                     case TEXEL:
                         // Check that a start index has been found before attempting to add texel
                         // data (because there will not have been any in the string)
-                        if (dataStartIndex != NO_START_INDEX)
-                        {
+                        if (dataStartIndex != NO_START_INDEX) {
                             // We are processing a float and have found the end of it, parse it
                             renderObjectData.addTexelData(Float.parseFloat(new String(theFile,
                                     dataStartIndex,
@@ -471,8 +427,7 @@ public class  OBJModelLoader
                                     theFile.length - dataStartIndex)));
 
                             // If we have finished processing a chunk of face data
-                            if(theByte != ASCII_FORWARD_SLASH && countFaceDataPerLine)
-                            {
+                            if (theByte != ASCII_FORWARD_SLASH && countFaceDataPerLine) {
                                 numberFaceDataPerLine++;
                             }
                         }
@@ -482,41 +437,31 @@ public class  OBJModelLoader
         }
 
         // Determine what type of face data the OBJ model file has
-        if(numberFaceDataElements == THREE_FACE_DATA_ELEMENTS &&
-                numberFaceDataSeparators == TWO_FACE_DATA_SEPARATORS)
-        {
+        if (numberFaceDataElements == THREE_FACE_DATA_ELEMENTS &&
+                numberFaceDataSeparators == TWO_FACE_DATA_SEPARATORS) {
             // Position, texel and direction data has been provided
             renderObjectData.setFaceDataType(RenderObjectData.FaceData.
                     POSITION_AND_TEXEL_AND_NORMAL);
-        }
-        else if(numberFaceDataElements == TWO_FACE_DATA_ELEMENTS &&
-                numberFaceDataSeparators == TWO_FACE_DATA_SEPARATORS)
-        {
+        } else if (numberFaceDataElements == TWO_FACE_DATA_ELEMENTS &&
+                numberFaceDataSeparators == TWO_FACE_DATA_SEPARATORS) {
             // Position and direction data has been provided
             renderObjectData.setFaceDataType(RenderObjectData.FaceData.POSITION_AND_NORMAL);
-        }
-        else if(numberFaceDataElements == TWO_FACE_DATA_ELEMENTS &&
-                numberFaceDataSeparators == ONE_FACE_DATA_SEPARATOR)
-        {
+        } else if (numberFaceDataElements == TWO_FACE_DATA_ELEMENTS &&
+                numberFaceDataSeparators == ONE_FACE_DATA_SEPARATOR) {
             // Position and texel data has been provided
             renderObjectData.setFaceDataType(RenderObjectData.FaceData.POSITION_AND_TEXEL);
-        }
-        else if(numberFaceDataElements == ONE_FACE_DATA_ELEMENT &&
-                numberFaceDataSeparators == 0)
-        {
+        } else if (numberFaceDataElements == ONE_FACE_DATA_ELEMENT &&
+                numberFaceDataSeparators == 0) {
             // Only position data has been provided
             renderObjectData.setFaceDataType(RenderObjectData.FaceData.POSITION_ONLY);
-        }
-        else
-        {
+        } else {
             // error
             Logger.error(TAG, "Failed to determine how many face data elements in an OBJ" +
                     "model files face data");
         }
 
         // Set the render method depending on how much face data appears in a line
-        switch (numberFaceDataPerLine)
-        {
+        switch (numberFaceDataPerLine) {
             case ONE_FACE_DATA_ELEMENT:
                 renderObjectData.setRenderMethod(RenderObject.RenderMethod.POINTS);
                 break;
@@ -535,9 +480,9 @@ public class  OBJModelLoader
                 break;
         }
 
-        renderObjectData.setNumPositionComponents((byte)numberPositionDataElements);
-        renderObjectData.setNumNormalComponents((byte)numberNormalDataElements);
-        renderObjectData.setNumTexelComponents((byte)numberTexelDataElements);
+        renderObjectData.setNumPositionComponents((byte) numberPositionDataElements);
+        renderObjectData.setNumNormalComponents((byte) numberNormalDataElements);
+        renderObjectData.setNumTexelComponents((byte) numberTexelDataElements);
         return renderObjectData.processData();
     }
 }

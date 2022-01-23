@@ -5,8 +5,8 @@ package com.crispin.crispinmobile.Utilities;
  */
 
 public class Sound {
-    private boolean loaded;
     private final int sound;
+    private boolean loaded;
 
     public Sound(int soundId, boolean loaded) {
         this.sound = soundId;

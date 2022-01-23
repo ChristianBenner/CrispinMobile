@@ -45,44 +45,64 @@ public class Shader {
 
     // Undefined handle value
     protected static int UNDEFINED_HANDLE = -1;
+
     // Name used in logging
     private final String name;
+
     // Vertex shader code
     private final String vertexShaderCode;
+
     // Fragment shader code
     private final String fragmentShaderCode;
+
     // View position uniform handle
     public int viewPositionUniformHandle;
+
     // Position attribute handle
     protected int positionAttributeHandle;
+
     // Colour attribute handle
     protected int colourAttributeHandle;
+
     // Texture attribute handle
     protected int textureAttributeHandle;
+
     // Normal attribute handle
     protected int normalAttributeHandle;
+
     // Matrix uniform handle
     protected int matrixUniformHandle;
+
     // Projection matrix uniform handle
     protected int projectionMatrixUniformHandle;
+
     // View matrix uniform handle
     protected int viewMatrixUniformHandle;
+
     // Model matrix uniform handle
     protected int modelMatrixUniformHandle;
+
     // Number of point lights
     protected int numPointLightsUniformHandle;
+
     // Number of spot lights
     protected int numSpotLightsUniformHandle;
+
     // Handles for a directional light
     protected DirectionalLightHandles directionalLightHandles;
+
     // Handles for all the shader point lights
     protected PointLightHandles[] pointLightHandles;
+
     // Handles for all the shader spot lights
     protected SpotLightHandles[] spotLightHandles;
+
     // Handles for the material
     protected MaterialHandles materialHandles;
+
     // Is the shader a lighting shader
     protected boolean lightingShader;
+
     // The ID of the OpenGL program
     private int programId;
 
@@ -169,8 +189,7 @@ public class Shader {
      * @return Program ID integer
      * @since 1.0
      */
-    private static int createProgram(String name,
-                                     String vertexShaderCode,
+    private static int createProgram(String name, String vertexShaderCode,
                                      String fragmentShaderCode) {
         // Create a vertex shader
         final int vertexShaderId = createShader(name, GL_VERTEX_SHADER, vertexShaderCode);
@@ -230,7 +249,7 @@ public class Shader {
      *                   programming language.
      * @return Return
      * @see #createProgram(String, String, String)
-     * @see android.opengl.GLES20
+     * @see android.opengl.GLES30
      * @since 1.0
      */
     private static int createShader(String name, int type, String shaderCode) {
@@ -567,26 +586,5 @@ public class Shader {
         if (materialHandles != null) {
             materialHandles.setUniforms(material);
         }
-    }
-
-    /**
-     * Is the shader a lighting shader. Get the state of the lighting shader variable.
-     *
-     * @return True if the shader is a lighting shader, else false
-     */
-    public boolean isLightingShader() {
-        return lightingShader;
-    }
-
-    /**
-     * Set the state of the lighting shader variable. If the shader supports lighting then this
-     * should be set to true, else false.
-     *
-     * @param state Set to true if the shader supports lighting. This will enable different upload
-     *              of matrix data to the shader program from the RenderObject.
-     * @since 1.0
-     */
-    public void setLightingShader(boolean state) {
-        lightingShader = state;
     }
 }

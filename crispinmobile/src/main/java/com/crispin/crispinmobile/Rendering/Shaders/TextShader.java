@@ -18,8 +18,10 @@ import com.crispin.crispinmobile.UserInterface.Text;
 public class TextShader extends Shader {
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.text_vert;
+
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.text_frag;
+
     // Tag for the logger
     private static final String TAG = "TextShader";
 

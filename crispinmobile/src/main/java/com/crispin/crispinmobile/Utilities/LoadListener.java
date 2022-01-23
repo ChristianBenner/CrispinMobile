@@ -4,7 +4,6 @@ import com.crispin.crispinmobile.Rendering.Models.Model;
 
 import java.util.EventListener;
 
-public interface LoadListener extends EventListener
-{
+public interface LoadListener extends EventListener {
     void onLoad(Model model);
 }

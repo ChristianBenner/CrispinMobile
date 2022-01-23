@@ -1,10 +1,7 @@
 package com.crispin.crispinmobile.Utilities;
 
-import android.util.Pair;
-
 import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,34 +10,28 @@ import java.util.Map;
  * resource is referenced. This is used to significantly reduce loading times of scenes, reduce
  * memory and reduce video memory. The class consists of static only functions.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @since 1.0
  */
-public class ShaderCache
-{
+public class ShaderCache {
     // Tag used for logging
     private static final String TAG = "ShaderCache";
 
     // The array of shader programs
-    private static Map<Integer, Shader> shaderArray = new HashMap<>();
+    private static final Map<Integer, Shader> shaderArray = new HashMap<>();
 
     // Pairing function
-    private static int generateUniqueId(int a, int b)
-    {
+    private static int generateUniqueId(int a, int b) {
         return (((a + b) * (a + b + 1)) / 2) + b;
     }
 
-    public static boolean existsInCache(int vertexShaderResourceId,
-                                  int fragmentShaderResourceId)
-    {
+    public static boolean existsInCache(int vertexShaderResourceId, int fragmentShaderResourceId) {
         return shaderArray.containsKey(generateUniqueId(vertexShaderResourceId,
                 fragmentShaderResourceId));
     }
 
-    public static Shader getShader(int vertexShaderResourceId,
-                                   int fragmentShaderResourceId)
-    {
+    public static Shader getShader(int vertexShaderResourceId, int fragmentShaderResourceId) {
         return shaderArray.get(generateUniqueId(vertexShaderResourceId,
                 fragmentShaderResourceId));
     }
@@ -50,10 +41,8 @@ public class ShaderCache
      *
      * @since 1.0
      */
-    public static void registerShader(int vertexShaderResource,
-                                      int fragmentShaderResource,
-                                      Shader shader)
-    {
+    public static void registerShader(int vertexShaderResource, int fragmentShaderResource,
+                                      Shader shader) {
         shaderArray.put(generateUniqueId(vertexShaderResource, fragmentShaderResource), shader);
     }
 
@@ -62,12 +51,10 @@ public class ShaderCache
      *
      * @since 1.0
      */
-    public static void removeAll()
-    {
+    public static void removeAll() {
         // Iterate through the shader array, destroying all of the shaders. This will also remove
         // shader from OpenGL controlled memory.
-        for (Map.Entry<Integer,Shader> shader : shaderArray.entrySet())
-        {
+        for (Map.Entry<Integer, Shader> shader : shaderArray.entrySet()) {
             shader.getValue().destroy();
         }
 
@@ -81,18 +68,13 @@ public class ShaderCache
      *
      * @since 1.0
      */
-    public static void reinitialiseAll()
-    {
+    public static void reinitialiseAll() {
         // Iterate through the shader array, reconstructing all of them
-        for (Map.Entry<Integer,Shader> shader : shaderArray.entrySet())
-        {
+        for (Map.Entry<Integer, Shader> shader : shaderArray.entrySet()) {
             // Attempt to reconstruct
-            try
-            {
+            try {
                 shader.getValue().reconstruct();
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 Logger.error(TAG, "Failed to re-initialise shader");
                 e.printStackTrace();
             }

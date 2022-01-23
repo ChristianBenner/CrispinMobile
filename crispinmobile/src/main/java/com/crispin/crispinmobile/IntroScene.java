@@ -11,42 +11,28 @@ import com.crispin.crispinmobile.UserInterface.Plane;
 import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.Scene;
 
-public class IntroScene extends Scene
-{
-    private enum TRANSITION_STATE
-    {
-        NONE,
-        FADE_IN,
-        FADE_OUT,
-        COMPLETED
-    }
-
+public class IntroScene extends Scene {
+    final float TRANSITION_RATE = 0.015f;
     // UI Camera
-    private Camera2D uiCamera;
+    private final Camera2D uiCamera;
 
     // Background UI colour
-    private Plane background;
+    private final Plane background;
 
     // Image UI for the white logo
-    private Image whiteLogoImage;
+    private final Image whiteLogoImage;
 
     // Image UI for the red logo
-    private Image redLogoImage;
+    private final Image redLogoImage;
 
-    private Colour backgroundColour = new Colour(Colour.BLACK);
+    private final Colour backgroundColour = new Colour(Colour.BLACK);
 
     private TRANSITION_STATE backgroundTransitionState;
     private TRANSITION_STATE whiteLogoImageTransitionState;
     private TRANSITION_STATE redLogoImageTransitionState;
+    private final Scene.Constructor nextSceneConstructor;
 
-    final float TRANSITION_RATE = 0.015f;
-
-    private Scene.Constructor nextSceneConstructor;
-
-   // private FadeT
-
-    public IntroScene(Scene.Constructor nextSceneConstructor)
-    {
+    public IntroScene(Scene.Constructor nextSceneConstructor) {
         Crispin.setBackgroundColour(Colour.BLACK);
 
         uiCamera = new Camera2D();
@@ -71,8 +57,9 @@ public class IntroScene extends Scene
         Audio.getInstance().playSound(R.raw.intro);
     }
 
-    private Image createLogoImage(int resourceId)
-    {
+    // private FadeT
+
+    private Image createLogoImage(int resourceId) {
         // The texture is quite high quality so resizing it may cause sharp pixel look using default
         // min and mag filter. Set to linear filter.
         TextureOptions textureOptions = new TextureOptions();
@@ -80,17 +67,16 @@ public class IntroScene extends Scene
         textureOptions.magFilter = TextureOptions.LINEAR_FILTER;
 
         Texture texture = new Texture(resourceId, textureOptions);
-        float widthToHeightRatio = (float)texture.getWidth() / (float)texture.getHeight();
+        float widthToHeightRatio = (float) texture.getWidth() / (float) texture.getHeight();
         int width = Crispin.getSurfaceWidth();
-        int height = (int)(width / widthToHeightRatio);
+        int height = (int) (width / widthToHeightRatio);
         float y = (Crispin.getSurfaceHeight() / 2.0f) - (height / 2.0f);
         Image image = new Image(texture, width, height);
         image.setPosition(0.0f, y);
         return image;
     }
 
-    public void modifyBackgroundColour(float amount)
-    {
+    public void modifyBackgroundColour(float amount) {
         backgroundColour.red += amount;
         backgroundColour.green += amount;
         backgroundColour.blue += amount;
@@ -98,91 +84,77 @@ public class IntroScene extends Scene
     }
 
     @Override
-    public void update(float deltaTime)
-    {
+    public void update(float deltaTime) {
         // Handle background transition
-        if(backgroundTransitionState == TRANSITION_STATE.FADE_IN)
-        {
+        if (backgroundTransitionState == TRANSITION_STATE.FADE_IN) {
             // Over time, change the background colour to white
             modifyBackgroundColour(TRANSITION_RATE * deltaTime);
 
             // Check if its time to fade back out to white
-            if(backgroundColour.red >= 1.0f)
-            {
+            if (backgroundColour.red >= 1.0f) {
                 backgroundTransitionState = TRANSITION_STATE.FADE_OUT;
             }
-        }
-        else if(backgroundTransitionState == TRANSITION_STATE.FADE_OUT)
-        {
+        } else if (backgroundTransitionState == TRANSITION_STATE.FADE_OUT) {
             // Over time, change the background colour to black
             modifyBackgroundColour(-TRANSITION_RATE * deltaTime);
 
-            if(backgroundColour.red <= 0.0f)
-            {
+            if (backgroundColour.red <= 0.0f) {
                 backgroundTransitionState = TRANSITION_STATE.COMPLETED;
             }
         }
 
         // Handle white logo image transition
-        if(whiteLogoImageTransitionState == TRANSITION_STATE.FADE_IN)
-        {
+        if (whiteLogoImageTransitionState == TRANSITION_STATE.FADE_IN) {
             whiteLogoImage.setAlpha(whiteLogoImage.getOpacity() + (TRANSITION_RATE * deltaTime));
 
-            if(whiteLogoImage.getOpacity() >= 1.0f)
-            {
+            if (whiteLogoImage.getOpacity() >= 1.0f) {
                 whiteLogoImageTransitionState = TRANSITION_STATE.FADE_OUT;
                 redLogoImageTransitionState = TRANSITION_STATE.FADE_IN;
             }
-        }
-        else if(whiteLogoImageTransitionState == TRANSITION_STATE.FADE_OUT)
-        {
+        } else if (whiteLogoImageTransitionState == TRANSITION_STATE.FADE_OUT) {
             whiteLogoImage.setAlpha(whiteLogoImage.getOpacity() + (-TRANSITION_RATE * deltaTime));
 
-            if(whiteLogoImage.getOpacity() <= 0.0f)
-            {
+            if (whiteLogoImage.getOpacity() <= 0.0f) {
                 whiteLogoImageTransitionState = TRANSITION_STATE.COMPLETED;
             }
         }
 
         // Handle red logo image transition
-        if(redLogoImageTransitionState == TRANSITION_STATE.FADE_IN)
-        {
+        if (redLogoImageTransitionState == TRANSITION_STATE.FADE_IN) {
             redLogoImage.setAlpha(redLogoImage.getOpacity() + (TRANSITION_RATE * deltaTime));
 
-            if(redLogoImage.getOpacity() >= 1.0f)
-            {
+            if (redLogoImage.getOpacity() >= 1.0f) {
                 redLogoImageTransitionState = TRANSITION_STATE.FADE_OUT;
             }
-        }
-        else if(redLogoImageTransitionState == TRANSITION_STATE.FADE_OUT)
-        {
+        } else if (redLogoImageTransitionState == TRANSITION_STATE.FADE_OUT) {
             redLogoImage.setAlpha(redLogoImage.getOpacity() + (-TRANSITION_RATE * deltaTime));
 
-            if(redLogoImage.getOpacity() <= 0.0f)
-            {
+            if (redLogoImage.getOpacity() <= 0.0f) {
                 redLogoImageTransitionState = TRANSITION_STATE.COMPLETED;
             }
-        }
-        else if(redLogoImageTransitionState == TRANSITION_STATE.COMPLETED)
-        {
-            if(nextSceneConstructor != null)
-            {
+        } else if (redLogoImageTransitionState == TRANSITION_STATE.COMPLETED) {
+            if (nextSceneConstructor != null) {
                 Crispin.setScene(nextSceneConstructor);
             }
         }
     }
 
     @Override
-    public void render()
-    {
+    public void render() {
         background.draw(uiCamera);
         whiteLogoImage.draw(uiCamera);
         redLogoImage.draw(uiCamera);
     }
 
     @Override
-    public void touch(int type, Vec2 position)
-    {
+    public void touch(int type, Vec2 position) {
 
+    }
+
+    private enum TRANSITION_STATE {
+        NONE,
+        FADE_IN,
+        FADE_OUT,
+        COMPLETED
     }
 }

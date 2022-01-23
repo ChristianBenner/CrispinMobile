@@ -68,12 +68,7 @@ public class Camera2D {
      *                  near and far bounds (on the Z plane) will be clipped
      * @since 1.0
      */
-    public Camera2D(float x,
-                    float y,
-                    float width,
-                    float height,
-                    float nearBound,
-                    float farBound) {
+    public Camera2D(float x, float y, float width, float height, float nearBound, float farBound) {
         this.left = x;
         this.bottom = y;
         this.right = width;
@@ -97,17 +92,8 @@ public class Camera2D {
      * @param height The height of the camera view
      * @since 1.0
      */
-    public Camera2D(float x,
-                    float y,
-                    float width,
-                    float height) {
-        this(
-                x,
-                y,
-                width,
-                height,
-                DEFAULT_NEAR,
-                DEFAULT_FAR);
+    public Camera2D(float x, float y, float width, float height) {
+        this(x, y, width, height, DEFAULT_NEAR, DEFAULT_FAR);
     }
 
     /**
@@ -123,11 +109,7 @@ public class Camera2D {
      * @since 1.0
      */
     public Camera2D() {
-        this(
-                DEFAULT_LEFT,
-                DEFAULT_BOTTOM,
-                Crispin.getSurfaceWidth(),
-                Crispin.getSurfaceHeight());
+        this(DEFAULT_LEFT, DEFAULT_BOTTOM, Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
     }
 
     /**
@@ -273,13 +255,6 @@ public class Camera2D {
      * @since 1.0
      */
     public void updateView() {
-        Matrix.orthoM(orthoMatrix,
-                0,
-                left,
-                right,
-                bottom,
-                top,
-                near,
-                far);
+        Matrix.orthoM(orthoMatrix, 0, left, right, bottom, top, near, far);
     }
 }

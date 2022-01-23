@@ -7,8 +7,10 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 public class LineShader extends Shader {
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.line_vert;
+
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.line_frag;
+
     // Tag for the logger
     private static final String TAG = "LineShader";
 

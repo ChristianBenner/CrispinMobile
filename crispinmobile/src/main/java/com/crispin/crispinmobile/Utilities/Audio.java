@@ -18,20 +18,17 @@ import java.util.Map;
 public class Audio {
     private static Audio single_instance = null;
     static private int currentPosition = 0;
+    private final boolean trackFinished = true;
     // Store the current playing music ID
     private int currentMusicID = -1;
     private MediaPlayer mediaPlayer;
-
     // Store the loaded sound effects
     // Key = Resource Id, Value = Loaded
     private Map<Integer, Sound> soundList;
     private SoundPool soundPool;
     private AudioManager audioManager;
-
     private boolean musicInnit = false;
     private boolean soundInnit = false;
-
-    private final boolean trackFinished = true;
 
     private Audio() {
         System.out.println("Created Audio class instance");

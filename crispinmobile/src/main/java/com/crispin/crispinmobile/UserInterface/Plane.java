@@ -1,5 +1,9 @@
 package com.crispin.crispinmobile.UserInterface;
 
+import static android.opengl.GLES20.GL_DEPTH_TEST;
+import static android.opengl.GLES20.glDisable;
+import static android.opengl.GLES20.glEnable;
+
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
@@ -7,12 +11,7 @@ import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
 
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-
-public class Plane implements UIObject
-{
+public class Plane implements UIObject {
     protected Vec2 position;
     protected Scale2D size;
 
@@ -20,9 +19,9 @@ public class Plane implements UIObject
 
     private boolean borderEnabled;
     private int disabledBorderFlags;
+    private Border border;
 
-    public Plane(Vec2 position, Scale2D size)
-    {
+    public Plane(Vec2 position, Scale2D size) {
         this.position = new Vec2();
         this.size = new Scale2D();
 
@@ -38,10 +37,7 @@ public class Plane implements UIObject
         setSize(size);
     }
 
-    public Plane(Texture texture,
-                 Vec2 position,
-                 Scale2D size)
-    {
+    public Plane(Texture texture, Vec2 position, Scale2D size) {
         this.position = new Vec2();
         this.size = new Scale2D();
         this.borderEnabled = false;
@@ -53,71 +49,55 @@ public class Plane implements UIObject
         setSize(size);
     }
 
-    public Plane(Scale2D size)
-    {
+    public Plane(Scale2D size) {
         this(new Vec2(), size);
     }
 
-    public Plane(Texture texture)
-    {
+    public Plane(Texture texture) {
         this(texture, new Vec2(), new Scale2D());
     }
 
     public Plane(Texture texture,
-                 Vec2 position)
-    {
+                 Vec2 position) {
         this(texture, position, new Scale2D());
     }
 
     public Plane(Texture texture,
-                 Scale2D size)
-    {
+                 Scale2D size) {
         this(texture, new Vec2(), size);
     }
 
-    public Plane()
-    {
+    public Plane() {
         this(new Vec2(), new Scale2D());
     }
 
-    public void setImage(Texture texture)
-    {
+    public void setImage(Texture texture) {
         plane.getMaterial().setIgnoreTexelData(false);
         plane.getMaterial().setTexture(texture);
     }
 
-    public void setImage(int resourceId)
-    {
+    public void setImage(int resourceId) {
         plane.getMaterial().setIgnoreTexelData(false);
         plane.getMaterial().setTexture(new Texture(resourceId));
     }
 
-    private Border border;
-
-    public void setBorder(Border border)
-    {
-        if(border == null)
-        {
+    public void setBorder(Border border) {
+        if (border == null) {
             this.borderEnabled = false;
-        }
-        else
-        {
+        } else {
             this.border = border;
             this.borderEnabled = true;
             this.border.updatePosition(this);
         }
     }
 
-    public void removeBorder()
-    {
+    public void removeBorder() {
         this.borderEnabled = false;
     }
 
     // recalculate positions
-    private void updatePosition()
-    {
-        if(borderEnabled)
-        {
+    private void updatePosition() {
+        if (borderEnabled) {
             this.border.updatePosition(this);
         }
 
@@ -128,27 +108,12 @@ public class Plane implements UIObject
     /**
      * Set the position of the user interface
      *
-     * @param position  The new position for the user interface
-     * @since 1.0
-     */
-    @Override
-    public void setPosition(Vec2 position)
-    {
-        this.position.x = position.x;
-        this.position.y = position.y;
-        updatePosition();
-    }
-
-    /**
-     * Set the position of the user interface
-     *
      * @param x The x-coordinate
      * @param y The y-coordinate
      * @since 1.0
      */
     @Override
-    public void setPosition(float x, float y)
-    {
+    public void setPosition(float x, float y) {
         this.position.x = x;
         this.position.y = y;
         updatePosition();
@@ -161,21 +126,20 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Vec2 getPosition()
-    {
+    public Vec2 getPosition() {
         return position;
     }
 
     /**
-     * Set the width of the UI object
+     * Set the position of the user interface
      *
-     * @param width The new width of the object
+     * @param position The new position for the user interface
      * @since 1.0
      */
     @Override
-    public void setWidth(float width)
-    {
-        size.x = width;
+    public void setPosition(Vec2 position) {
+        this.position.x = position.x;
+        this.position.y = position.y;
         updatePosition();
     }
 
@@ -186,21 +150,19 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public float getWidth()
-    {
+    public float getWidth() {
         return size.x;
     }
 
     /**
-     * Set the height of the UI object
+     * Set the width of the UI object
      *
-     * @param height    The new width of the object
+     * @param width The new width of the object
      * @since 1.0
      */
     @Override
-    public void setHeight(float height)
-    {
-        size.y = height;
+    public void setWidth(float width) {
+        size.x = width;
         updatePosition();
     }
 
@@ -211,33 +173,31 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public float getHeight()
-    {
+    public float getHeight() {
         return size.y;
     }
 
     /**
-     * Set the size of the UI object
+     * Set the height of the UI object
      *
-     * @param size  The new size of the UI object
+     * @param height The new width of the object
      * @since 1.0
      */
     @Override
-    public void setSize(Scale2D size)
-    {
-        this.setSize(size.x, size.y);
+    public void setHeight(float height) {
+        size.y = height;
+        updatePosition();
     }
 
     /**
      * Set the size of the UI object
      *
-     * @param width     The new width for the object
-     * @param height    The new height for the object
+     * @param width  The new width for the object
+     * @param height The new height for the object
      * @since 1.0
      */
     @Override
-    public void setSize(float width, float height)
-    {
+    public void setSize(float width, float height) {
         this.size.x = width;
         this.size.y = height;
         updatePosition();
@@ -250,35 +210,30 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Scale2D getSize()
-    {
+    public Scale2D getSize() {
         return size;
     }
 
     /**
-     * Set the colour of the UI object
+     * Set the size of the UI object
      *
-     * @param colour    The new colour for the UI object
+     * @param size The new size of the UI object
      * @since 1.0
      */
     @Override
-    public void setColour(Colour colour)
-    {
-        this.plane.setColour(colour);
-        this.setBorderAlpha(colour.alpha);
+    public void setSize(Scale2D size) {
+        this.setSize(size.x, size.y);
     }
 
     /**
      * Set the colour of the border. If the object doesn't have a border, one will be created.
      *
-     * @param colour    The colour of the border
+     * @param colour The colour of the border
      * @since 1.0
      */
-    public void setBorderColour(Colour colour)
-    {
+    public void setBorderColour(Colour colour) {
         // If a border does not exist yet, create one
-        if(border == null)
-        {
+        if (border == null) {
             border = new Border();
             border.updatePosition(this);
         }
@@ -292,10 +247,8 @@ public class Plane implements UIObject
      * @param alpha The alpha channel intensity
      * @since 1.0
      */
-    public void setBorderAlpha(float alpha)
-    {
-        if(border != null)
-        {
+    public void setBorderAlpha(float alpha) {
+        if (border != null) {
             this.border.setAlpha(alpha);
         }
     }
@@ -307,9 +260,20 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Colour getColour()
-    {
+    public Colour getColour() {
         return this.plane.getColour();
+    }
+
+    /**
+     * Set the colour of the UI object
+     *
+     * @param colour The new colour for the UI object
+     * @since 1.0
+     */
+    @Override
+    public void setColour(Colour colour) {
+        this.plane.setColour(colour);
+        this.setBorderAlpha(colour.alpha);
     }
 
     /**
@@ -318,9 +282,19 @@ public class Plane implements UIObject
      * @param alpha The new alpha channel intensity for the UI object
      * @since 1.0
      */
-    public void setAlpha(float alpha)
-    {
+    public void setAlpha(float alpha) {
         this.setOpacity(alpha);
+    }
+
+    /**
+     * Get the opacity of the UI object
+     *
+     * @return The alpha channel value of the UI object
+     * @since 1.0
+     */
+    @Override
+    public float getOpacity() {
+        return this.plane.getMaterial().colour.alpha;
     }
 
     /**
@@ -330,22 +304,9 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setOpacity(float alpha)
-    {
+    public void setOpacity(float alpha) {
         this.plane.setAlpha(alpha);
         this.setBorderAlpha(alpha);
-    }
-
-    /**
-     * Get the opacity of the UI object
-     *
-     * @return  The alpha channel value of the UI object
-     * @since 1.0
-     */
-    @Override
-    public float getOpacity()
-    {
-        return this.plane.getMaterial().colour.alpha;
     }
 
     /**
@@ -355,8 +316,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setDisabledBorders(int flags)
-    {
+    public void setDisabledBorders(int flags) {
         this.disabledBorderFlags = flags;
     }
 
@@ -366,11 +326,9 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void draw(Camera2D camera)
-    {
+    public void draw(Camera2D camera) {
         glDisable(GL_DEPTH_TEST);
-        if(borderEnabled)
-        {
+        if (borderEnabled) {
             border.draw(camera, disabledBorderFlags);
         }
         plane.render(camera);

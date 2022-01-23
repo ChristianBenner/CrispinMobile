@@ -293,11 +293,6 @@ public class Camera3D {
         final float ASPECT_RATIO = (float) Crispin.getSurfaceWidth() / Crispin.getSurfaceHeight();
 
         // Generate perspective matrix
-        Matrix.perspectiveM(perspectiveMatrix,
-                0,
-                fieldOfView,
-                ASPECT_RATIO,
-                near,
-                far);
+        Matrix.perspectiveM(perspectiveMatrix, 0, fieldOfView, ASPECT_RATIO, near, far);
     }
 }

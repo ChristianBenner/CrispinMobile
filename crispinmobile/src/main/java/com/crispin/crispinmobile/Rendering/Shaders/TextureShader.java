@@ -16,8 +16,10 @@ import com.crispin.crispinmobile.Rendering.Utilities.Shader;
 public class TextureShader extends Shader {
     // The resource ID of the vertex file
     public static final int VERTEX_FILE = R.raw.texture_vert;
+
     // The resource ID of the fragment file
     public static final int FRAGMENT_FILE = R.raw.texture_frag;
+
     // Tag for the logger
     private static final String TAG = "TextureShader";
 

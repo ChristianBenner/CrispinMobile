@@ -11,11 +11,7 @@ public class Particle {
     public Colour colour;
     public float angle;
 
-    public Particle(Vec2 startPosition,
-                    Vec2 startVelocity,
-                    float size,
-                    float life,
-                    Colour colour,
+    public Particle(Vec2 startPosition, Vec2 startVelocity, float size, float life, Colour colour,
                     float angle) {
         this.position = startPosition;
         this.velocity = startVelocity;
@@ -36,17 +32,9 @@ public class Particle {
         this.angle = 0.0f;
     }
 
-    public void setAttributes(float posX,
-                              float posY,
-                              float velocityX,
-                              float velocityY,
-                              float size,
-                              float life,
-                              float colourR,
-                              float colourG,
-                              float colourB,
-                              float colourA,
-                              float angle) {
+    public void setAttributes(float posX, float posY, float velocityX, float velocityY, float size,
+                              float life, float colourR, float colourG, float colourB,
+                              float colourA, float angle) {
         this.position.x = posX;
         this.position.y = posY;
         this.velocity.x = velocityX;

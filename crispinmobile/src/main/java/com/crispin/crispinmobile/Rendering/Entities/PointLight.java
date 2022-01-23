@@ -58,12 +58,7 @@ public class PointLight {
     public float attenuationLinear;
     public float attenuationQuadratic;
 
-    public PointLight(float x,
-                      float y,
-                      float z,
-                      float red,
-                      float green,
-                      float blue) {
+    public PointLight(float x, float y, float z, float red, float green, float blue) {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -78,22 +73,15 @@ public class PointLight {
         this.attenuationQuadratic = DEFAULT_ATTENUATION_QUADRATIC;
     }
 
-    public PointLight(float x,
-                      float y,
-                      float z) {
+    public PointLight(float x, float y, float z) {
         this(x, y, z, 1.0f, 1.0f, 1.0f);
     }
 
-    public PointLight(float x,
-                      float y,
-                      float red,
-                      float green,
-                      float blue) {
+    public PointLight(float x, float y, float red, float green, float blue) {
         this(x, y, 0.0f, red, green, blue);
     }
 
-    public PointLight(float x,
-                      float y) {
+    public PointLight(float x, float y) {
         this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 

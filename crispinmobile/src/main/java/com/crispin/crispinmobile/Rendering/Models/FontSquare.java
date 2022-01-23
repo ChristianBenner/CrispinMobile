@@ -33,9 +33,7 @@ public class FontSquare extends Square {
      * @param characterOffset The position offset of the character from the text position
      * @since 1.0
      */
-    public FontSquare(Material material,
-                      Vec3 textPosition,
-                      Vec2 characterOffset) {
+    public FontSquare(Material material, Vec3 textPosition, Vec2 characterOffset) {
         super(material);
 
         // Because text shouldn't have colour per vertex ignore the data if it is present
@@ -68,9 +66,8 @@ public class FontSquare extends Square {
      * @since 1.0
      */
     private void updatePosition() {
-        super.setPosition(textPosition.x + characterOffset.x,
-                textPosition.y + characterOffset.y,
-                textPosition.z);
+        super.setPosition(textPosition.x + characterOffset.x, textPosition.y +
+                characterOffset.y, textPosition.z);
     }
 
     /**
@@ -82,9 +79,7 @@ public class FontSquare extends Square {
      * @param z The text z position
      * @since 1.0
      */
-    public void setTextPosition(float x,
-                                float y,
-                                float z) {
+    public void setTextPosition(float x, float y, float z) {
         this.textPosition.x = x;
         this.textPosition.y = y;
         this.textPosition.z = z;

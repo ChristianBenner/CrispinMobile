@@ -15,16 +15,6 @@ public class Logger {
     private static boolean debugLoggingEnabled = false;
 
     /**
-     * Enable or disable debug logging
-     *
-     * @param state The new state of debug logging. True to enable debug logging, else false.
-     * @since 1.0
-     */
-    public static void setDebugLoggingEnabled(boolean state) {
-        debugLoggingEnabled = state;
-    }
-
-    /**
      * Get the debug logging state
      *
      * @return True if debug logging is enabled, else false
@@ -32,6 +22,16 @@ public class Logger {
      */
     public static boolean isDebugLoggingEnabled() {
         return debugLoggingEnabled;
+    }
+
+    /**
+     * Enable or disable debug logging
+     *
+     * @param state The new state of debug logging. True to enable debug logging, else false.
+     * @since 1.0
+     */
+    public static void setDebugLoggingEnabled(boolean state) {
+        debugLoggingEnabled = state;
     }
 
     /**
