@@ -1,21 +1,13 @@
 package com.crispin.crispinmobile.Utilities;
 
 import android.content.Context;
-import android.graphics.Point;
 import android.opengl.GLSurfaceView;
-import android.os.Looper;
-import android.util.Pair;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.UserInterface.Button;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -249,7 +241,7 @@ public class SceneManager implements GLSurfaceView.Renderer
                     int action = event.getAction();
 
                     // Retrieve the position of the event
-                    Point2D position = new Point2D(event.getX(), Crispin.getSurfaceHeight() -
+                    Vec2 position = new Vec2(event.getX(), Crispin.getSurfaceHeight() -
                             event.getY());
 
                     if(event.getAction() == MotionEvent.ACTION_DOWN)
@@ -499,10 +491,7 @@ public class SceneManager implements GLSurfaceView.Renderer
         resetTimingValues();
 
         // Set the OpenGL viewport to fill the entire surface
-        glViewport(0,
-                0,
-                width,
-                height);
+        glViewport(0, 0, width, height);
     }
 
     /**
@@ -550,9 +539,7 @@ public class SceneManager implements GLSurfaceView.Renderer
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.red,
-                backgroundColour.green,
-                backgroundColour.blue,
+        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
                 backgroundColour.alpha);
 
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise

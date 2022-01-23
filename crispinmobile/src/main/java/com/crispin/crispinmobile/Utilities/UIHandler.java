@@ -1,12 +1,9 @@
 package com.crispin.crispinmobile.Utilities;
 
-import android.util.Pair;
 import android.view.MotionEvent;
 
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.UserInterface.InteractableUIObject;
-import com.crispin.crispinmobile.UserInterface.UIObject;
 
 import java.util.ArrayList;
 
@@ -41,7 +38,7 @@ public class UIHandler
     }
 
     // send a touch event to all the UI in the current scene
-    public static void sendTouchEvent(int type, Point2D position)
+    public static void sendTouchEvent(int type, Vec2 position)
     {
         for(int i = 0; i < uiObjects.size(); i++)
         {

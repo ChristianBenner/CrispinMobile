@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
@@ -73,7 +73,7 @@ public class Border
     // Updates the position of all enabled borders around a given object (based on position and scale)
     public void updatePosition(UIObject uiObject)
     {
-        final Point2D parentPos = uiObject.getPosition();
+        final Vec2 parentPos = uiObject.getPosition();
         final Scale2D parentSize = uiObject.getSize();
 
         borderTop.setPosition(parentPos.x, parentPos.y + parentSize.y);

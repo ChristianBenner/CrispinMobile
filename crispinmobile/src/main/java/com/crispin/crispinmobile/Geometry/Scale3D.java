@@ -4,13 +4,12 @@ package com.crispin.crispinmobile.Geometry;
  * Scale3D provides a singular object that can represent a three dimensional (x, y and z) scale
  * multiplier. It is a subclass of the Scale2D class.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         Scale2D
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Scale2D
+ * @since 1.0
  */
-public class Scale3D extends Scale2D
-{
+public class Scale3D extends Scale2D {
     // Tag used in logging output
     private static final String TAG = "Scale2D";
 
@@ -27,8 +26,7 @@ public class Scale3D extends Scale2D
      */
     public Scale3D(float x,
                    float y,
-                   float z)
-    {
+                   float z) {
         super(x, y);
         this.z = z;
     }
@@ -38,8 +36,7 @@ public class Scale3D extends Scale2D
      *
      * @since 1.0
      */
-    public Scale3D()
-    {
+    public Scale3D() {
         super();
         z = DEFAULT_SCALE_MULTIPLIER;
     }
@@ -47,12 +44,11 @@ public class Scale3D extends Scale2D
     /**
      * Get a string that contains the scale data that can be used in a log
      *
-     * @return  String in the format 'Scale3D[x:X,y:Y,z:Z]'
+     * @return String in the format 'Scale3D[x:X,y:Y,z:Z]'
      * @since 1.0
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return TAG + "[x:" + x + ",y:" + y + ",z:" + z + "]";
     }
 }

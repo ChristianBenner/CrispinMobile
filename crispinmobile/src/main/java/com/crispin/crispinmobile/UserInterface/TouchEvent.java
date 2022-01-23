@@ -1,8 +1,6 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import android.graphics.PointF;
-
-import com.crispin.crispinmobile.Geometry.Point2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 
 import java.util.EventObject;
 
@@ -15,16 +13,16 @@ public class TouchEvent extends EventObject {
     }
 
     private Event event;
-    private Point2D position;
+    private Vec2 position;
 
-    public TouchEvent(Object source, Event event, Point2D position)
+    public TouchEvent(Object source, Event event, Vec2 position)
     {
         super(source);
         this.event = event;
         this.position = position;
     }
 
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return this.position;
     }

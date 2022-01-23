@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
@@ -21,7 +21,7 @@ public interface UIObject
      * @param position  The new position for the user interface
      * @since 1.0
      */
-    void setPosition(Point2D position);
+    void setPosition(Vec2 position);
 
     /**
      * Set the position of the user interface
@@ -38,7 +38,7 @@ public interface UIObject
      * @return The user interface position
      * @since 1.0
      */
-    Point2D getPosition();
+    Vec2 getPosition();
 
     /**
      * Set the width of the UI object

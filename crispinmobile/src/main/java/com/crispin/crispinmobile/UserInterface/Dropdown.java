@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
@@ -45,24 +45,24 @@ public class Dropdown extends InteractableUIObject
 
     private int selectedId = NO_ITEM_SELECTED;
 
-    private Point2D position;
+    private Vec2 position;
     private Scale2D size;
     private Scale2D itemSize;
     private Colour colour;
     private Colour textColour;
     private Colour borderColour;
 
-    private Point2D overallPosition;
+    private Vec2 overallPosition;
 
     public Dropdown(String text)
     {
-        position = new Point2D();
+        position = new Vec2();
         size = DEFAULT_SIZE;
         itemSize = DEFAULT_SIZE;
         colour = new Colour();
         textColour = new Colour();
         borderColour = new Colour();
-        overallPosition = new Point2D(position);
+        overallPosition = new Vec2(position);
 
         items = new ArrayList<>();
         id = 0;
@@ -186,13 +186,13 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    protected void clickEvent(Point2D position)
+    protected void clickEvent(Vec2 position)
     {
         selectedId = NO_ITEM_SELECTED;
     }
 
     @Override
-    protected void dragEvent(Point2D position)
+    protected void dragEvent(Vec2 position)
     {
 
     }
@@ -213,7 +213,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    protected void releaseEvent(Point2D position)
+    protected void releaseEvent(Vec2 position)
     {
         // Only check if an item has been selected if the dropdown is already expanded
         if(expanded)
@@ -286,7 +286,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.setPosition(position.x, position.y);
     }
@@ -301,7 +301,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     // Return the position of the combo box itself (and not the items)
-    public Point2D getBasePosition()
+    public Vec2 getBasePosition()
     {
         return position;
     }
@@ -313,7 +313,7 @@ public class Dropdown extends InteractableUIObject
     }
 
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return overallPosition;
     }

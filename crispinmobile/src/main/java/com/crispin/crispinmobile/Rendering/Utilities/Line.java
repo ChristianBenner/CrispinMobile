@@ -1,20 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import android.opengl.Matrix;
-
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Shaders.LineShader;
-import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
-
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.nio.FloatBuffer;
-
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.GL_POINTS;
 import static android.opengl.GLES20.glDisableVertexAttribArray;
 import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
@@ -24,8 +11,15 @@ import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
 
-public class Line
-{
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Shaders.LineShader;
+
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.FloatBuffer;
+
+public class Line {
     // todo:
     // - Create a line shader
     // - Upload line vertices
@@ -35,46 +29,37 @@ public class Line
 
     //
 
-    // The number of elements in a 4x4 view matrix
-    private final int NUM_VALUES_PER_VIEW_MATRIX = 16;
-
     // Number of uniform elements to upload in a GLSL uniform upload
     private static final int UNIFORM_UPLOAD_COUNT = 1;
-
     private static final int NUM_DIMS = 2;
     private static final int NUM_VERTICES_PER_LINE = 2;
-
-    private Point2D pointOne;
-    private Point2D pointTwo;
+    // The number of elements in a 4x4 view matrix
+    private final int NUM_VALUES_PER_VIEW_MATRIX = 16;
+    private final Vec2 pointOne;
+    private final Vec2 pointTwo;
+    private final float[] positionBuffer = new float[NUM_DIMS * NUM_VERTICES_PER_LINE];
+    private final LineShader lineShader;
     private float lineWidth;
-    private float[] positionBuffer = new float[NUM_DIMS * NUM_VERTICES_PER_LINE];
-
     // Float buffer that holds all the line co-ordinate data
     private FloatBuffer vertexBuffer;
-
-    private LineShader lineShader;
-
     private Material material;
 
-    public Line()
-    {
-        pointOne = new Point2D();
-        pointTwo = new Point2D();
+    public Line() {
+        pointOne = new Vec2();
+        pointTwo = new Vec2();
         lineWidth = 1.0f;
 
         lineShader = new LineShader();
         material = new Material();
 
-        setPoints(new Point2D(0.0f, 0.0f), new Point2D(0.0f, 0.0f));
+        setPoints(new Vec2(0.0f, 0.0f), new Vec2(0.0f, 0.0f));
     }
 
-    public Point2D getPointOne()
-    {
+    public Vec2 getPointOne() {
         return pointOne;
     }
 
-    public Point2D getPointTwo()
-    {
+    public Vec2 getPointTwo() {
         return pointTwo;
     }
 
@@ -86,13 +71,11 @@ public class Line
         this.material = material;
     }
 
-    public void setWidth(float width)
-    {
+    public void setWidth(float width) {
         this.lineWidth = width;
     }
 
-    public void setPoints(float x1, float y1, float x2, float y2)
-    {
+    public void setPoints(float x1, float y1, float x2, float y2) {
         pointOne.x = x1;
         pointOne.y = y1;
         pointTwo.x = x2;
@@ -120,13 +103,11 @@ public class Line
         vertexBuffer.position(0);
     }
 
-    public void setPoints(Point2D p1, Point2D p2)
-    {
+    public void setPoints(Vec2 p1, Vec2 p2) {
         setPoints(p1.x, p1.y, p2.x, p2.y);
     }
 
-    public void render(Camera2D camera)
-    {
+    public void render(Camera2D camera) {
         lineShader.enableIt();
         glLineWidth(lineWidth);
 

@@ -7,13 +7,12 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * Cube class is a default 3D model of a cube. It is a render object and therefor can be drawn to
  * the display. It contains texture, colour and positional data.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         RenderObject
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see RenderObject
+ * @since 1.0
  */
-public class Cube extends Model
-{
+public class Cube extends Model {
     // The number of position components in the position data (3 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 3;
 
@@ -31,188 +30,188 @@ public class Cube extends Model
     private static final RenderMethod RENDER_METHOD = RenderMethod.TRIANGLES;
 
     // Position vertex data that contains XYZ components
-    private static final float POSITION_DATA[] =
-    {
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
+    private static final float[] POSITION_DATA =
+            {
+                    -1.0f, -1.0f, -1.0f,
+                    -1.0f, -1.0f, 1.0f,
+                    -1.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, -1.0f,
+                    -1.0f, -1.0f, -1.0f,
+                    -1.0f, 1.0f, -1.0f,
 
-            1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
-            1.0f, -1.0f, -1.0f,
-            -1.0f, -1.0f, -1.0f,
+                    1.0f, -1.0f, 1.0f,
+                    -1.0f, -1.0f, -1.0f,
+                    1.0f, -1.0f, -1.0f,
+                    1.0f, 1.0f, -1.0f,
+                    1.0f, -1.0f, -1.0f,
+                    -1.0f, -1.0f, -1.0f,
 
-            -1.0f, -1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-            1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-            -1.0f, -1.0f, -1.0f,
+                    -1.0f, -1.0f, -1.0f,
+                    -1.0f, 1.0f, 1.0f,
+                    -1.0f, 1.0f, -1.0f,
+                    1.0f, -1.0f, 1.0f,
+                    -1.0f, -1.0f, 1.0f,
+                    -1.0f, -1.0f, -1.0f,
 
-            -1.0f, 1.0f, 1.0f,
-            -1.0f, -1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, -1.0f,
+                    -1.0f, 1.0f, 1.0f,
+                    -1.0f, -1.0f, 1.0f,
+                    1.0f, -1.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f,
+                    1.0f, -1.0f, -1.0f,
+                    1.0f, 1.0f, -1.0f,
 
-            1.0f, -1.0f, -1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, -1.0f,
+                    1.0f, -1.0f, -1.0f,
+                    1.0f, 1.0f, 1.0f,
+                    1.0f, -1.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, -1.0f,
+                    -1.0f, 1.0f, -1.0f,
 
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, -1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 1.0f,
-            -1.0f, 1.0f, 1.0f,
-            1.0f, -1.0f, 1.0f,
-    };
+                    1.0f, 1.0f, 1.0f,
+                    -1.0f, 1.0f, -1.0f,
+                    -1.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, 1.0f,
+                    -1.0f, 1.0f, 1.0f,
+                    1.0f, -1.0f, 1.0f,
+            };
 
     // Colour vertex data that contains RGB components
-    private static final float COLOUR_DATA[] =
-    {
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
+    private static final float[] COLOUR_DATA =
+            {
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 1.0f, 0.0f,
+                    1.0f, 1.0f, 0.0f,
+                    1.0f, 1.0f, 0.0f,
 
-            0.0f, 1.0f, 1.0f,
-            0.0f, 1.0f, 1.0f,
-            0.0f, 1.0f, 1.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
-            1.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 1.0f,
+                    0.0f, 1.0f, 1.0f,
+                    0.0f, 1.0f, 1.0f,
+                    1.0f, 1.0f, 0.0f,
+                    1.0f, 1.0f, 0.0f,
+                    1.0f, 1.0f, 0.0f,
 
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 1.0f,
-            0.0f, 1.0f, 1.0f,
-            0.0f, 1.0f, 1.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 1.0f,
+                    0.0f, 1.0f, 1.0f,
+                    0.0f, 1.0f, 1.0f,
 
-            1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
+                    1.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 1.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
 
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
 
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 1.0f,
-    };
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 1.0f,
+            };
 
     // Texel vertex data that contains ST components
-    private static final float TEXEL_DATA[] =
-    {
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
+    private static final float[] TEXEL_DATA =
+            {
+                    0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    1.0f, 0.0f,
+                    0.0f, 0.0f,
+                    1.0f, 1.0f,
+                    1.0f, 0.0f,
 
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
+                    0.0f, 1.0f,
+                    1.0f, 0.0f,
+                    1.0f, 1.0f,
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 1.0f,
 
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 0.0f,
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
+                    0.0f, 0.0f,
+                    1.0f, 0.0f,
 
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    0.0f, 0.0f,
+                    1.0f, 1.0f,
+                    1.0f, 0.0f,
 
-            1.0f, 1.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 0.0f,
+                    0.0f, 0.0f,
+                    0.0f, 1.0f,
 
-            1.0f, 0.0f,
-            0.0f, 1.0f,
-            1.0f, 1.0f,
-            1.0f, 0.0f,
-            0.0f, 0.0f,
-            1.0f, 1.0f,
-    };
+                    1.0f, 0.0f,
+                    0.0f, 1.0f,
+                    1.0f, 1.0f,
+                    1.0f, 0.0f,
+                    0.0f, 0.0f,
+                    1.0f, 1.0f,
+            };
 
     // Normal vertex data that contains XYZ components
-    private static final float NORMAL_DATA[] =
-    {
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
+    private static final float[] NORMAL_DATA =
+            {
+                    -1.0f, 0.0f, 0.0f,
+                    -1.0f, 0.0f, 0.0f,
+                    -1.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, -1.0f,
+                    0.0f, 0.0f, -1.0f,
+                    0.0f, 0.0f, -1.0f,
 
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
-            0.0f, 0.0f, -1.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, 0.0f, -1.0f,
+                    0.0f, 0.0f, -1.0f,
+                    0.0f, 0.0f, -1.0f,
 
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            -1.0f, 0.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
-            0.0f, -1.0f, 0.0f,
+                    -1.0f, 0.0f, 0.0f,
+                    -1.0f, 0.0f, 0.0f,
+                    -1.0f, 0.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
+                    0.0f, -1.0f, 0.0f,
 
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
 
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            1.0f, 0.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    1.0f, 0.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
 
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 1.0f, 0.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f,
-            0.0f, 0.0f, 1.0f
-    };
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 1.0f, 0.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f,
+                    0.0f, 0.0f, 1.0f
+            };
 
     /**
      * Create a cube with specifically allowed data types. This means that on creation of the object
@@ -224,13 +223,12 @@ public class Cube extends Model
      * @param renderTexels  True if the model is allowed to use texel data, else false
      * @param renderNormals True if the model is allowed to use normal data, else false
      * @param renderColour  True if the model is allowed to use colour data, else false
-     * @since   1.0
+     * @since 1.0
      */
     public Cube(Material material,
                 boolean renderTexels,
                 boolean renderNormals,
-                boolean renderColour)
-    {
+                boolean renderColour) {
         super(POSITION_DATA,
                 renderTexels ? TEXEL_DATA : null,
                 renderColour ? COLOUR_DATA : null,
@@ -253,12 +251,11 @@ public class Cube extends Model
      * @param renderTexels  True if the model is allowed to use texel data, else false
      * @param renderNormals True if the model is allowed to use normal data, else false
      * @param renderColour  True if the model is allowed to use colour data, else false
-     * @since   1.0
+     * @since 1.0
      */
     public Cube(boolean renderTexels,
                 boolean renderNormals,
-                boolean renderColour)
-    {
+                boolean renderColour) {
         this(new Material(),
                 renderTexels,
                 renderNormals,
@@ -273,11 +270,10 @@ public class Cube extends Model
      * could also use ignore data flags on an attached material, however this wouldn't provide the
      * efficiency of not uploading the data in the first place.
      *
-     * @param material  Material to apply to the object
+     * @param material Material to apply to the object
      * @since 1.0
      */
-    public Cube(Material material)
-    {
+    public Cube(Material material) {
         this(material,
                 true,
                 false,
@@ -294,8 +290,7 @@ public class Cube extends Model
      *
      * @since 1.0
      */
-    public Cube()
-    {
+    public Cube() {
         this(new Material(),
                 true,
                 false,

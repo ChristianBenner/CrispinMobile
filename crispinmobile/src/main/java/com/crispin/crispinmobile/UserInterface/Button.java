@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
@@ -25,7 +25,7 @@ public class Button extends InteractableUIObject
     private Text text;
     private Plane plane;
 
-    private Point2D position;
+    private Vec2 position;
     private Scale2D size;
 
     private Colour colourBorder;
@@ -46,7 +46,7 @@ public class Button extends InteractableUIObject
         this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
         this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;
 
-        this.position = new Point2D();
+        this.position = new Vec2();
         this.size = new Scale2D();
         this.text = new Text(font, textString, true, true, size.x);
 
@@ -56,12 +56,12 @@ public class Button extends InteractableUIObject
         text.setColour(colourText);
 
         setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setPosition(new Vec2());
     }
 
     public Button(Texture texture)
     {
-        this.position = new Point2D();
+        this.position = new Vec2();
         this.size = new Scale2D();
         this.colourBorder = DEFAULT_COLOUR_BORDER;
         this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
@@ -73,13 +73,13 @@ public class Button extends InteractableUIObject
         plane = new Plane(size);
 
         setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setPosition(new Vec2());
         setImage(texture);
     }
 
     public Button(int resourceId)
     {
-        this.position = new Point2D();
+        this.position = new Vec2();
         this.size = new Scale2D();
         this.colourBorder = DEFAULT_COLOUR_BORDER;
         this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
@@ -91,7 +91,7 @@ public class Button extends InteractableUIObject
         plane = new Plane(size);
 
         setSize(new Scale2D(200.0f, 200.0f));
-        setPosition(new Point2D());
+        setPosition(new Vec2());
         setImage(resourceId);
     }
 
@@ -181,7 +181,7 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.position.x = position.x;
         this.position.y = position.y;
@@ -197,7 +197,7 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return position;
     }
@@ -350,19 +350,19 @@ public class Button extends InteractableUIObject
     }
 
     @Override
-    protected void clickEvent(Point2D position)
+    protected void clickEvent(Vec2 position)
     {
         // Play click sound
     }
 
     @Override
-    protected void dragEvent(Point2D position)
+    protected void dragEvent(Vec2 position)
     {
 
     }
 
     @Override
-    protected void releaseEvent(Point2D position)
+    protected void releaseEvent(Vec2 position)
     {
 
     }

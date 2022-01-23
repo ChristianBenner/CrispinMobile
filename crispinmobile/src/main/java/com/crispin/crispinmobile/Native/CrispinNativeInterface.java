@@ -7,14 +7,12 @@ package com.crispin.crispinmobile.Native;
  * to the following C libraries:
  * -    FreeType: Used to generate font data from font files
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @since 1.0
  */
-public class CrispinNativeInterface
-{
-    static
-    {
+public class CrispinNativeInterface {
+    static {
         // Load the Crispin Native Interface library
         System.loadLibrary("crispinni");
     }
@@ -27,9 +25,9 @@ public class CrispinNativeInterface
      * @param fontBytes The font as an array of bytes
      * @param asciiChar The ASCII character to load
      * @param size      The size to load the character as (larger size entails larger texture size)
-     * @return  Array of bytes containing texture data. The texture is monochrome meaning there is
-     *          one byte per pixel as fonts do not contain colour data.
-     * @since   1.0
+     * @return Array of bytes containing texture data. The texture is monochrome meaning there is
+     * one byte per pixel as fonts do not contain colour data.
+     * @since 1.0
      */
     public static native byte[] loadCharacter(byte[] fontBytes,
                                               byte asciiChar,
@@ -39,7 +37,7 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Discard the currently loaded face object
      *
-     * @since   1.0
+     * @since 1.0
      */
     public static native void freeFace();
 
@@ -47,8 +45,8 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Get the width of the loaded character face
      *
-     * @return  The width of the loaded character face
-     * @since   1.0
+     * @return The width of the loaded character face
+     * @since 1.0
      */
     public static native int getFaceWidth();
 
@@ -56,8 +54,8 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Get the height of the loaded characters face
      *
-     * @return  The height of the loaded character face
-     * @since   1.0
+     * @return The height of the loaded character face
+     * @since 1.0
      */
     public static native int getFaceHeight();
 
@@ -65,8 +63,8 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Get the x-bearing of the loaded characters face
      *
-     * @return  The x-bearing of the loaded character face
-     * @since   1.0
+     * @return The x-bearing of the loaded character face
+     * @since 1.0
      */
     public static native int getFaceBearingX();
 
@@ -74,8 +72,8 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Get the y-bearing of the loaded characters face
      *
-     * @return  The y-bearing of the loaded character face
-     * @since   1.0
+     * @return The y-bearing of the loaded character face
+     * @since 1.0
      */
     public static native int getFaceBearingY();
 
@@ -83,8 +81,8 @@ public class CrispinNativeInterface
      * <code>Native Function</code>
      * Get the advance of the loaded characters face
      *
-     * @return  The advance of the loaded character face
-     * @since   1.0
+     * @return The advance of the loaded character face
+     * @since 1.0
      */
     public static native int getFaceAdvance();
 }

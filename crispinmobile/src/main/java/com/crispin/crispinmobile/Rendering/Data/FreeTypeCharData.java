@@ -9,30 +9,29 @@ import com.crispin.crispinmobile.Rendering.Utilities.TextureOptions;
  * RenderObject can be created, assigned a texture and positioned in the correct place in respect to
  * other characters.
  *
- * @see         com.crispin.crispinmobile.Rendering.Utilities.RenderObject
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see com.crispin.crispinmobile.Rendering.Utilities.RenderObject
+ * @since 1.0
  */
-public class FreeTypeCharData
-{
+public class FreeTypeCharData {
     // The width of the character face
-    private int width;
+    private final int width;
 
     // The height of the character face
-    private int height;
+    private final int height;
 
     // The x-bearing of the character face
-    private int bearingX;
+    private final int bearingX;
 
     // The y-bearing of the character face
-    private int bearingY;
+    private final int bearingY;
 
     // The advance of the character face
-    private int advance;
+    private final int advance;
 
     // The ASCII character the data represents
-    private byte ascii;
+    private final byte ascii;
 
     // The texture of the character
     public Texture texture;
@@ -42,17 +41,16 @@ public class FreeTypeCharData
      * library through the CrispinNativeInterface (crispinni) library to load FreeType characters
      * and obtain the necessary data.
      *
-     * @param fontBytes         The font as a byte array
-     * @param fontSize          The size of the font (bigger font size loads a larger texture)
-     * @param asciiChar         The character to load (ASCII character)
-     * @param textureOptions    Options to apply to the texture data
+     * @param fontBytes      The font as a byte array
+     * @param fontSize       The size of the font (bigger font size loads a larger texture)
+     * @param asciiChar      The character to load (ASCII character)
+     * @param textureOptions Options to apply to the texture data
      * @since 1.0
      */
     public FreeTypeCharData(byte[] fontBytes,
                             int fontSize,
                             byte asciiChar,
-                            TextureOptions textureOptions)
-    {
+                            TextureOptions textureOptions) {
         // Get the character texture data. The character texture must be loaded first before the
         // other properties such as width and height can be accessed.
         final byte[] CHAR_BYTES = CrispinNativeInterface.loadCharacter(fontBytes,
@@ -77,77 +75,70 @@ public class FreeTypeCharData
     /**
      * Get the width of the character
      *
-     * @return  The width of the character face
-     * @since   1.0
+     * @return The width of the character face
+     * @since 1.0
      */
-    public int getWidth()
-    {
+    public int getWidth() {
         return width;
     }
 
     /**
      * Get the height of the character
      *
-     * @return  The height of the character face
-     * @since   1.0
+     * @return The height of the character face
+     * @since 1.0
      */
-    public int getHeight()
-    {
+    public int getHeight() {
         return height;
     }
 
     /**
      * Get the advance of the character
      *
-     * @return  The advance of the character face
-     * @since   1.0
+     * @return The advance of the character face
+     * @since 1.0
      */
-    public int getAdvance()
-    {
+    public int getAdvance() {
         return advance;
     }
 
     /**
      * Get the x-bearing of the character
      *
-     * @return  The x-bearing of the character face
-     * @since   1.0
+     * @return The x-bearing of the character face
+     * @since 1.0
      */
-    public int getBearingX()
-    {
+    public int getBearingX() {
         return bearingX;
     }
 
     /**
      * Get the y-bearing of the character
      *
-     * @return  The y-bearing of the character face
-     * @since   1.0
+     * @return The y-bearing of the character face
+     * @since 1.0
      */
-    public int getBearingY()
-    {
+    public int getBearingY() {
         return bearingY;
     }
 
     /**
      * Get the ASCII character
      *
-     * @return  The ASCII character
-     * @since   1.0
+     * @return The ASCII character
+     * @since 1.0
      */
-    public byte getAscii()
-    {
+    public byte getAscii() {
         return ascii;
     }
 
     /**
      * Get the texture of the character
      *
-     * @return  The texture of the character
-     * @since   1.0
+     * @return The texture of the character
+     * @since 1.0
      */
-    public Texture getTexture()
-    {
+    public Texture getTexture() {
         return texture;
     }
 }

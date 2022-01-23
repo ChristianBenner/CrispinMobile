@@ -4,7 +4,6 @@ import static android.opengl.GLES20.glUniform1f;
 import static android.opengl.GLES20.glUniform3f;
 import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
 
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 
 /**
@@ -12,10 +11,10 @@ import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
  * as direction, size and attenuation values. The class acts as a data only object - all fields are
  * publicly accessible. The second responsibility of the class is to upload uniform data to OpenGL.
  *
- * @see         SpotLight
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see SpotLight
+ * @since 1.0
  */
 public class SpotLightHandles {
     // Position uniform handle
@@ -55,52 +54,52 @@ public class SpotLightHandles {
      * Upload uniform data to each uniform handle from the properties of a given SpotLight
      *
      * @param light SpotLight to upload properties from
-     * @author      Christian Benner
-     * @version     %I%, %G%
-     * @since       1.0
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
      */
     public void setUniforms(SpotLight light) {
-        if(positionUniformHandle != UNDEFINED_HANDLE) {
+        if (positionUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(positionUniformHandle, light.x, light.y, light.z);
         }
 
-        if(directionUniformHandle != UNDEFINED_HANDLE) {
+        if (directionUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(directionUniformHandle, light.dx, light.dy, light.dz);
         }
 
-        if(colourUniformHandle != UNDEFINED_HANDLE) {
+        if (colourUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(colourUniformHandle, light.red, light.green, light.blue);
         }
 
-        if(ambientUniformHandle != UNDEFINED_HANDLE) {
+        if (ambientUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(ambientUniformHandle, light.ambientStrength);
         }
 
-        if(diffuseUniformHandle != UNDEFINED_HANDLE) {
+        if (diffuseUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(diffuseUniformHandle, light.diffuseStrength);
         }
 
-        if(specularUniformHandle != UNDEFINED_HANDLE) {
+        if (specularUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(specularUniformHandle, light.specularStrength);
         }
 
-        if(constantUniformHandle != UNDEFINED_HANDLE) {
+        if (constantUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(constantUniformHandle, light.attenuationConstant);
         }
 
-        if(linearUniformHandle != UNDEFINED_HANDLE) {
+        if (linearUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(linearUniformHandle, light.attenuationLinear);
         }
 
-        if(quadraticUniformHandle != UNDEFINED_HANDLE) {
+        if (quadraticUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(quadraticUniformHandle, light.attenuationQuadratic);
         }
 
-        if(sizeUniformHandle != UNDEFINED_HANDLE) {
+        if (sizeUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(sizeUniformHandle, light.size);
         }
 
-        if(outerSizeUniformHandle != UNDEFINED_HANDLE) {
+        if (outerSizeUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(outerSizeUniformHandle, light.outerSize);
         }
     }

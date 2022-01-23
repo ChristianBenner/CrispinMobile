@@ -4,8 +4,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Vector3D;
+import com.crispin.crispinmobile.Geometry.Vec3;
 
 /**
  * Camera3D provides a simple interface to view matrix operations and control. The class integrates
@@ -13,14 +12,13 @@ import com.crispin.crispinmobile.Geometry.Vector3D;
  * 3-dimensional views. The public methods give the user full control over things such as the
  * position, field of view and direction of the virtual camera.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         Matrix
- * @see         RenderObject
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Matrix
+ * @see RenderObject
+ * @since 1.0
  */
-public class Camera3D
-{
+public class Camera3D {
     // Tag used in logging output
     private static final String TAG = "Camera3D";
 
@@ -37,12 +35,12 @@ public class Camera3D
     private static final float DEFAULT_FIELD_OF_VIEW = 90.0f;
 
     // The default right direction of the 'look at' data
-    private static final Vector3D DEFAULT_RIGHT_DIRECTION = new Vector3D(1.0f,
+    private static final Vec3 DEFAULT_RIGHT_DIRECTION = new Vec3(1.0f,
             0.0f,
             0.0f);
 
     // The default up direction of the 'look at' data
-    private static final Vector3D DEFAULT_DIRECTION = new Vector3D(0.0f,
+    private static final Vec3 DEFAULT_DIRECTION = new Vec3(0.0f,
             0.0f,
             -1.0f);
 
@@ -56,38 +54,37 @@ public class Camera3D
     private float fieldOfView;
 
     // The position of the camera
-    private Point3D position;
+    private Vec3 position;
 
     // The right direction
-    private Vector3D right;
+    private Vec3 right;
 
     // The direction the camera is facing (direction)
-    private Vector3D direction;
+    private Vec3 direction;
 
     // The up direction of the camera
-    private Vector3D up;
+    private Vec3 up;
 
     // The view matrix
-    private float[] viewMatrix;
+    private final float[] viewMatrix;
 
     // The perspective/frustrum matrix
-    private float[] perspectiveMatrix;
+    private final float[] perspectiveMatrix;
 
     /**
      * Construct the camera object with the default values. Then produce the frustrum/perspective
      * matrix.
      *
-     * @since   1.0
+     * @since 1.0
      */
-    public Camera3D()
-    {
+    public Camera3D() {
         near = DEFAULT_NEAR;
         far = DEFAULT_FAR;
         fieldOfView = DEFAULT_FIELD_OF_VIEW;
-        position = new Point3D();
+        position = new Vec3();
         right = DEFAULT_RIGHT_DIRECTION;
         direction = DEFAULT_DIRECTION;
-        up = right.getCrossProduct(DEFAULT_DIRECTION);
+        up = right.crossProduct(DEFAULT_DIRECTION);
         viewMatrix = new float[NUM_FLOATS_4X4_MATRIX];
         perspectiveMatrix = new float[NUM_FLOATS_4X4_MATRIX];
 
@@ -98,24 +95,22 @@ public class Camera3D
     /**
      * Get the position of the camera
      *
-     * @return  Return the position of the camera
-     * @see     Point3D
-     * @since   1.0
+     * @return Return the position of the camera
+     * @see Vec3
+     * @since 1.0
      */
-    public Point3D getPosition()
-    {
+    public Vec3 getPosition() {
         return position;
     }
 
     /**
      * Set the position of the camera. Causes a view matrix update.
      *
-     * @param position  The new position of the camera
-     * @see             Point3D
-     * @since           1.0
+     * @param position The new position of the camera
+     * @see Vec3
+     * @since 1.0
      */
-    public void setPosition(Point3D position)
-    {
+    public void setPosition(Vec3 position) {
         this.position = position;
         updateView();
     }
@@ -123,12 +118,11 @@ public class Camera3D
     /**
      * Get the right direction of the camera
      *
-     * @return  A 3D direction of the right direction
-     * @see     Vector3D
-     * @since   1.0
+     * @return A 3D direction of the right direction
+     * @see Vec3
+     * @since 1.0
      */
-    public Vector3D getRight()
-    {
+    public Vec3 getRight() {
         return right;
     }
 
@@ -136,11 +130,10 @@ public class Camera3D
      * Set the right direction of the camera. Causes a view matrix update.
      *
      * @param right The new right direction of the camera
-     * @see         Vector3D
-     * @since       1.0
+     * @see Vec3
+     * @since 1.0
      */
-    public void setRight(Vector3D right)
-    {
+    public void setRight(Vec3 right) {
         this.right = right;
         updateView();
     }
@@ -148,12 +141,11 @@ public class Camera3D
     /**
      * Get the direction of the camera
      *
-     * @return  A 3D direction of the camera facing direction
-     * @see     Vector3D
-     * @since   1.0
+     * @return A 3D direction of the camera facing direction
+     * @see Vec3
+     * @since 1.0
      */
-    public Vector3D getDirection()
-    {
+    public Vec3 getDirection() {
         return direction;
     }
 
@@ -161,11 +153,10 @@ public class Camera3D
      * Set the direction of the camera. Causes a view matrix update.
      *
      * @param direction The new direction of the camera
-     * @see             Vector3D
-     * @since           1.0
+     * @see Vec3
+     * @since 1.0
      */
-    public void setDirection(Vector3D direction)
-    {
+    public void setDirection(Vec3 direction) {
         this.direction = direction;
         updateView();
     }
@@ -173,24 +164,22 @@ public class Camera3D
     /**
      * Get the up direction of the camera
      *
-     * @return  A 3D direction of the camera up direction
-     * @see     Vector3D
-     * @since   1.0
+     * @return A 3D direction of the camera up direction
+     * @see Vec3
+     * @since 1.0
      */
-    public Vector3D getUp()
-    {
+    public Vec3 getUp() {
         return up;
     }
 
     /**
      * Set the up direction of the camera. Causes a view matrix update.
      *
-     * @param up    The new up direction of the camera
-     * @see         Vector3D
-     * @since       1.0
+     * @param up The new up direction of the camera
+     * @see Vec3
+     * @since 1.0
      */
-    public void setUp(Vector3D up)
-    {
+    public void setUp(Vec3 up) {
         this.up = up;
         updateView();
     }
@@ -198,22 +187,20 @@ public class Camera3D
     /**
      * Get the z-near value of the camera
      *
-     * @return  The z-near value of the camera (the near value of the frustrum matrix)
-     * @since   1.0
+     * @return The z-near value of the camera (the near value of the frustrum matrix)
+     * @since 1.0
      */
-    public float getNear()
-    {
+    public float getNear() {
         return near;
     }
 
     /**
      * Set the z-near value of the camera. Causes a perspective matrix update.
      *
-     * @param near  The new z-near value of the camera (the near value of the frustrum matrix)
-     * @since       1.0
+     * @param near The new z-near value of the camera (the near value of the frustrum matrix)
+     * @since 1.0
      */
-    public void setNear(float near)
-    {
+    public void setNear(float near) {
         this.near = near;
         updatePerspective();
     }
@@ -221,22 +208,20 @@ public class Camera3D
     /**
      * Get the z-far value of the camera
      *
-     * @return  The z-far value of the camera (the far value of the frustrum matrix)
-     * @since   1.0
+     * @return The z-far value of the camera (the far value of the frustrum matrix)
+     * @since 1.0
      */
-    public float getFar()
-    {
+    public float getFar() {
         return far;
     }
 
     /**
      * Set the z-far value of the camera. Causes a perspective matrix update.
      *
-     * @param far   The new z-far value of the camera (the far value of the frustrum matrix)
-     * @since       1.0
+     * @param far The new z-far value of the camera (the far value of the frustrum matrix)
+     * @since 1.0
      */
-    public void setFar(float far)
-    {
+    public void setFar(float far) {
         this.far = far;
         updatePerspective();
     }
@@ -244,22 +229,20 @@ public class Camera3D
     /**
      * Get the camera field of view
      *
-     * @return  The camera field of view
-     * @since   1.0
+     * @return The camera field of view
+     * @since 1.0
      */
-    public float getFieldOfView()
-    {
+    public float getFieldOfView() {
         return fieldOfView;
     }
 
     /**
      * Set the camera field of view. Causes a perspective matrix update.
      *
-     * @param fieldOfView   The new field of view for the camera
-     * @since               1.0
+     * @param fieldOfView The new field of view for the camera
+     * @since 1.0
      */
-    public void setFieldOfView(float fieldOfView)
-    {
+    public void setFieldOfView(float fieldOfView) {
         this.fieldOfView = fieldOfView;
         updatePerspective();
     }
@@ -267,62 +250,45 @@ public class Camera3D
     /**
      * Get the cameras view matrix
      *
-     * @return  An array of 16 floats containing the view matrix.
-     * @since   1.0
+     * @return An array of 16 floats containing the view matrix.
+     * @since 1.0
      */
-    public float[] getViewMatrix()
-    {
+    public float[] getViewMatrix() {
         return viewMatrix;
     }
 
     /**
      * Get the cameras perspective matrix
      *
-     * @return  An array of 16 floats containing the perspective matrix.
-     * @since   1.0
+     * @return An array of 16 floats containing the perspective matrix.
+     * @since 1.0
      */
-    public float[] getPerspectiveMatrix()
-    {
+    public float[] getPerspectiveMatrix() {
         return perspectiveMatrix;
     }
 
     /**
      * Update the view matrix. Uses the Matrix setLookAtM function to produce a new view matrix.
      *
-     * @see     Matrix
-     * @since   1.0
+     * @see Matrix
+     * @since 1.0
      */
-    private void updateView()
-    {
-        // Camera3D look at/center position
-        final Point3D CENTER = new Point3D(
-                position.x + direction.x,
-                position.y + direction.y,
+    private void updateView() {
+        final Vec3 center = new Vec3(position.x + direction.x, position.y + direction.y,
                 position.z + direction.z);
 
-        // Set the view matrix look at
-        Matrix.setLookAtM(viewMatrix,
-                0,
-                position.x,
-                position.y,
-                position.z,
-                CENTER.x,
-                CENTER.y,
-                CENTER.z,
-                up.x,
-                up.y,
-                up.z);
+        Matrix.setLookAtM(viewMatrix, 0, position.x, position.y, position.z, center.x,
+                center.y, center.z, up.x, up.y, up.z);
     }
 
     /**
      * Update the perspective matrix. Uses the Matrix perspectiveM function to produce a new
      * perspective/frustrum matrix.
      *
-     * @see     Matrix
-     * @since   1.0
+     * @see Matrix
+     * @since 1.0
      */
-    private void updatePerspective()
-    {
+    private void updatePerspective() {
         // The aspect ratio of the frustrum
         final float ASPECT_RATIO = (float) Crispin.getSurfaceWidth() / Crispin.getSurfaceHeight();
 

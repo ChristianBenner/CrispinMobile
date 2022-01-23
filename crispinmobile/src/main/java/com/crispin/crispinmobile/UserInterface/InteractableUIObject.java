@@ -1,7 +1,6 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Utilities.UIHandler;
 
 import java.util.ArrayList;
@@ -70,7 +69,7 @@ public abstract class InteractableUIObject implements UIObject
         return clicked;
     }
 
-    public void sendClickEvent(Point2D position)
+    public void sendClickEvent(Vec2 position)
     {
         if(enabled)
         {
@@ -87,7 +86,7 @@ public abstract class InteractableUIObject implements UIObject
         }
     }
 
-    public void sendReleaseEvent(Point2D position)
+    public void sendReleaseEvent(Vec2 position)
     {
         clicked = false;
 
@@ -100,7 +99,7 @@ public abstract class InteractableUIObject implements UIObject
         }
     }
 
-    public void sendDownEvent(Point2D position)
+    public void sendDownEvent(Vec2 position)
     {
         if(enabled)
         {
@@ -116,15 +115,15 @@ public abstract class InteractableUIObject implements UIObject
     }
 
     // This is something that an interactable UI needs to inherit and control
-    protected abstract void clickEvent(Point2D pointerPosition);
-    protected abstract void dragEvent(Point2D pointerPosition);
-    protected abstract void releaseEvent(Point2D pointerPosition);
+    protected abstract void clickEvent(Vec2 pointerPosition);
+    protected abstract void dragEvent(Vec2 pointerPosition);
+    protected abstract void releaseEvent(Vec2 pointerPosition);
     protected abstract void enabled();
     protected abstract void disabled();
 
-    public static boolean interacts(UIObject uiObject, Point2D pointer)
+    public static boolean interacts(UIObject uiObject, Vec2 pointer)
     {
-        Point2D pos = new Point2D();
+        Vec2 pos = new Vec2();
         pos.x = pointer.x;
         pos.y = pointer.y;
 

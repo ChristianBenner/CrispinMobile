@@ -2,9 +2,9 @@ package com.crispin.crispinmobile.UserInterface;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.FontSquare;
@@ -242,7 +242,7 @@ public class Text implements UIObject
     private static final float SIN_WAVE_DIVIDE = 2.0f;
 
     // Position of the text
-    private Point2D position;
+    private Vec2 position;
 
     // Width of the text
     private float width;
@@ -334,7 +334,7 @@ public class Text implements UIObject
         height = 0.0f;
 
         textShader = new TextShader();
-        position = new Point2D();
+        position = new Vec2();
         squares = new ArrayList<>();
 
         setText(textString);
@@ -440,7 +440,7 @@ public class Text implements UIObject
         // Check that bounds exit
         if(bounds == null)
         {
-            bounds = new Plane(new Point2D(position.x, position.y), new Scale2D(getWidth(),
+            bounds = new Plane(new Vec2(position.x, position.y), new Scale2D(getWidth(),
                     getHeight()));
             bounds.setColour(new Colour(0.0f, 255.0f, 0.0f, 100.0f));
         }
@@ -695,7 +695,7 @@ public class Text implements UIObject
                     }
 
                     FontSquare square = new FontSquare(new Material(theChar.texture, colour),
-                            new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
+                            new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
                     square.useCustomShader(textShader);
                     square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
                     squares.add(square);
@@ -822,7 +822,7 @@ public class Text implements UIObject
 
                 // Create the render object square
                 FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
-                        colour), new Point3D(position, 0.0f), new Point2D(CHAR_X, CHAR_Y));
+                        colour), new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
 
                 // Force the use of the text shader (optimised for text rendering)
                 square.useCustomShader(textShader);
@@ -922,8 +922,8 @@ public class Text implements UIObject
             // Create the render object square
             FontSquare square = new FontSquare(new Material(FREE_TYPE_CHAR_DATA.texture,
                     colour),
-                    new Point3D(position, 0.0f),
-                    new Point2D(CHAR_X, CHAR_Y));
+                    new Vec3(position, 0.0f),
+                    new Vec2(CHAR_X, CHAR_Y));
 
             // Force the use of the text shader (optimised for text rendering)
             square.useCustomShader(textShader);
@@ -1114,11 +1114,10 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         // Only update the position if the position has changed
-        if(this.position.x != position.x ||
-                this.position.y != position.y)
+        if(this.position.x != position.x || this.position.y != position.y)
         {
             this.position.x = position.x;
             this.position.y = position.y;
@@ -1154,9 +1153,9 @@ public class Text implements UIObject
      * @since 1.0
      */
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
-        return new Point2D(position.x, position.y);
+        return new Vec2(position.x, position.y);
     }
 
     /**

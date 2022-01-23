@@ -1,26 +1,23 @@
 package com.crispin.demos.scenes;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.UserInterface.AbsoluteLayout;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 
-public class AbsoluteLayoutDemo extends Scene
-{
-    private com.crispin.crispinmobile.UserInterface.AbsoluteLayout absoluteLayout;
-    private Button button;
-    private Text text;
+public class AbsoluteLayoutDemo extends Scene {
+    private final com.crispin.crispinmobile.UserInterface.AbsoluteLayout absoluteLayout;
+    private final Button button;
+    private final Text text;
 
-    private Camera2D camera;
+    private final Camera2D camera;
 
-    public AbsoluteLayoutDemo()
-    {
+    public AbsoluteLayoutDemo() {
         absoluteLayout = new com.crispin.crispinmobile.UserInterface.AbsoluteLayout();
         absoluteLayout.setColour(Colour.BLUE);
         absoluteLayout.setPosition(100.0f, 700.0f);
@@ -34,26 +31,23 @@ public class AbsoluteLayoutDemo extends Scene
         text.setPosition(30.0f, 100.0f);
 
         absoluteLayout.add(button);
-       // absoluteLayout.add(text);
+        // absoluteLayout.add(text);
 
         camera = new Camera2D();
     }
 
     @Override
-    public void update(float deltaTime)
-    {
+    public void update(float deltaTime) {
 
     }
 
     @Override
-    public void render()
-    {
+    public void render() {
         absoluteLayout.draw(camera);
     }
 
     @Override
-    public void touch(int type, Point2D position)
-    {
+    public void touch(int type, Vec2 position) {
 
     }
 }

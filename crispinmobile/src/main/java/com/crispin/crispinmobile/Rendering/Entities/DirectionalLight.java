@@ -1,22 +1,19 @@
 package com.crispin.crispinmobile.Rendering.Entities;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Geometry.Vector2D;
-import com.crispin.crispinmobile.Geometry.Vector3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * Text
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         RenderObject
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see RenderObject
+ * @since 1.0
  */
-public class DirectionalLight
-{
+public class DirectionalLight {
     // The intensity of the light. This effects specular and diffuse calculations (not ambience)
     private final float DEFAULT_INTENSITY = 1.0f;
 
@@ -86,30 +83,24 @@ public class DirectionalLight
         this(dx, dy, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public DirectionalLight(final Vector3D direction, final Colour colour) {
+    public DirectionalLight(final Vec3 direction, final Colour colour) {
         this(direction.x, direction.y, direction.z, colour.red, colour.green, colour.blue);
     }
 
-    public DirectionalLight(final Vector2D direction, final Colour colour) {
+    public DirectionalLight(final Vec2 direction, final Colour colour) {
         this(direction.x, direction.y, colour.red, colour.green, colour.blue);
     }
 
-    public DirectionalLight(final Vector3D direction) {
+    public DirectionalLight(final Vec3 direction) {
         this(direction.x, direction.y, direction.z);
     }
 
-    public DirectionalLight(final Vector2D direction) {
+    public DirectionalLight(final Vec2 direction) {
         this(direction.x, direction.y);
     }
 
     public DirectionalLight() {
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-    }
-
-    public void setDirection(Vector3D direction) {
-        dx = direction.x;
-        dy = direction.y;
-        dz = direction.z;
     }
 
     public void setDirection(float dx, float dy, float dz) {
@@ -118,28 +109,28 @@ public class DirectionalLight
         this.dz = dz;
     }
 
-    public void setDirection(Vector2D direction) {
-        dx = direction.x;
-        dy = direction.y;
-    }
-
     public void setDirection(float dx, float dy) {
         this.dx = dx;
         this.dy = dy;
     }
 
-    public Vector3D getDirection() {
-        return new Vector3D(dx, dy, dz);
+    public Vec3 getDirection() {
+        return new Vec3(dx, dy, dz);
     }
 
-    public Vector2D getDirection2D() {
-        return new Vector2D(dx, dy);
+    public void setDirection(Vec3 direction) {
+        dx = direction.x;
+        dy = direction.y;
+        dz = direction.z;
     }
 
-    public void setColour(final Colour colour) {
-        red = colour.red;
-        green = colour.green;
-        blue = colour.blue;
+    public void setDirection(Vec2 direction) {
+        dx = direction.x;
+        dy = direction.y;
+    }
+
+    public Vec2 getDirection2D() {
+        return new Vec2(dx, dy);
     }
 
     public void setColour(float red, float green, float blue) {
@@ -152,27 +143,33 @@ public class DirectionalLight
         return new Colour(red, green, blue);
     }
 
-    public void setDiffuseStrength(float diffuseStrength) {
-        this.diffuseStrength = diffuseStrength;
+    public void setColour(final Colour colour) {
+        red = colour.red;
+        green = colour.green;
+        blue = colour.blue;
     }
 
     public float getDiffuseStrength() {
         return diffuseStrength;
     }
 
-    public void setAmbientStrength(float ambientStrength) {
-        this.ambientStrength = ambientStrength;
+    public void setDiffuseStrength(float diffuseStrength) {
+        this.diffuseStrength = diffuseStrength;
     }
 
     public float getAmbientStrength() {
         return ambientStrength;
     }
 
-    public void setSpecularStrength(float specularStrength) {
-        this.specularStrength = specularStrength;
+    public void setAmbientStrength(float ambientStrength) {
+        this.ambientStrength = ambientStrength;
     }
 
     public float getSpecularStrength() {
         return specularStrength;
+    }
+
+    public void setSpecularStrength(float specularStrength) {
+        this.specularStrength = specularStrength;
     }
 }

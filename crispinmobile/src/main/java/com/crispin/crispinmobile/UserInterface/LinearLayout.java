@@ -1,10 +1,7 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
@@ -38,7 +35,7 @@ public class LinearLayout extends Plane
 
     private boolean showBackground;
 
-    public LinearLayout(Point2D position, Scale2D size, boolean vertical)
+    public LinearLayout(Vec2 position, Scale2D size, boolean vertical)
     {
         this.padding = new Scale2D();
         this.vertical = vertical;
@@ -60,29 +57,29 @@ public class LinearLayout extends Plane
         setPadding(new Scale2D(DEFAULT_PADDING_X, DEFAULT_PADDING_Y));
     }
 
-    public LinearLayout(Point2D position, Scale2D size)
+    public LinearLayout(Vec2 position, Scale2D size)
     {
         this(position, size, false);
     }
 
-    public LinearLayout(Point2D position)
+    public LinearLayout(Vec2 position)
     {
         this(position, new Scale2D(0.0f, 0.0f), false);
     }
 
     public LinearLayout(Scale2D size)
     {
-        this(new Point2D(), size, false);
+        this(new Vec2(), size, false);
     }
 
     public LinearLayout(boolean vertical)
     {
-        this(new Point2D(), new Scale2D(0.0f, 0.0f), vertical);
+        this(new Vec2(), new Scale2D(0.0f, 0.0f), vertical);
     }
 
     public LinearLayout()
     {
-        this(new Point2D(), new Scale2D(0.0f, 0.0f), false);
+        this(new Vec2(), new Scale2D(0.0f, 0.0f), false);
     }
 
     public void addUI(UIObject uiObject)
@@ -124,7 +121,7 @@ public class LinearLayout extends Plane
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         super.setPosition(position);
         updateUIElementPositions();

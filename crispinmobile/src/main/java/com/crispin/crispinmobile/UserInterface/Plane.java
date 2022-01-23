@@ -1,13 +1,11 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
-import com.crispin.crispinmobile.Utilities.Logger;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
@@ -15,7 +13,7 @@ import static android.opengl.GLES20.glEnable;
 
 public class Plane implements UIObject
 {
-    protected Point2D position;
+    protected Vec2 position;
     protected Scale2D size;
 
     protected Square plane;
@@ -23,9 +21,9 @@ public class Plane implements UIObject
     private boolean borderEnabled;
     private int disabledBorderFlags;
 
-    public Plane(Point2D position, Scale2D size)
+    public Plane(Vec2 position, Scale2D size)
     {
-        this.position = new Point2D();
+        this.position = new Vec2();
         this.size = new Scale2D();
 
         this.borderEnabled = false;
@@ -41,10 +39,10 @@ public class Plane implements UIObject
     }
 
     public Plane(Texture texture,
-                 Point2D position,
+                 Vec2 position,
                  Scale2D size)
     {
-        this.position = new Point2D();
+        this.position = new Vec2();
         this.size = new Scale2D();
         this.borderEnabled = false;
 
@@ -57,16 +55,16 @@ public class Plane implements UIObject
 
     public Plane(Scale2D size)
     {
-        this(new Point2D(), size);
+        this(new Vec2(), size);
     }
 
     public Plane(Texture texture)
     {
-        this(texture, new Point2D(), new Scale2D());
+        this(texture, new Vec2(), new Scale2D());
     }
 
     public Plane(Texture texture,
-                 Point2D position)
+                 Vec2 position)
     {
         this(texture, position, new Scale2D());
     }
@@ -74,12 +72,12 @@ public class Plane implements UIObject
     public Plane(Texture texture,
                  Scale2D size)
     {
-        this(texture, new Point2D(), size);
+        this(texture, new Vec2(), size);
     }
 
     public Plane()
     {
-        this(new Point2D(), new Scale2D());
+        this(new Vec2(), new Scale2D());
     }
 
     public void setImage(Texture texture)
@@ -134,7 +132,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public void setPosition(Point2D position)
+    public void setPosition(Vec2 position)
     {
         this.position.x = position.x;
         this.position.y = position.y;
@@ -163,7 +161,7 @@ public class Plane implements UIObject
      * @since 1.0
      */
     @Override
-    public Point2D getPosition()
+    public Vec2 getPosition()
     {
         return position;
     }

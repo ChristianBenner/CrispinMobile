@@ -10,28 +10,27 @@ import com.crispin.crispinmobile.Crispin;
  * 2-dimensional views. The public methods give the user full control over things such as the
  * position, field of view and direction of the virtual camera.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         Matrix
- * @see         RenderObject
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Matrix
+ * @see RenderObject
+ * @since 1.0
  */
-public class Camera2D
-{
+public class Camera2D {
     // Tag used in logging output
     private static final String TAG = "Camera2D";
 
     // This is the default near range of the orthographic matrix
-    private static float DEFAULT_NEAR = -5.0f;
+    private static final float DEFAULT_NEAR = -5.0f;
 
     // This is the default far range of the orthographic matrix
-    private static float DEFAULT_FAR = 5.0f;
+    private static final float DEFAULT_FAR = 5.0f;
 
     // This is the default left range of the orthographic matrix
-    private static float DEFAULT_LEFT = 0.0f;
+    private static final float DEFAULT_LEFT = 0.0f;
 
     // This is the default bottom range of the orthographic matrix
-    private static float DEFAULT_BOTTOM = 0.0f;
+    private static final float DEFAULT_BOTTOM = 0.0f;
 
     // Left position of the orthographic matrix
     private float left;
@@ -52,7 +51,7 @@ public class Camera2D
     private float far;
 
     // The orthographic matrix
-    private float[] orthoMatrix;
+    private final float[] orthoMatrix;
 
     /**
      * Construct the camera object with the custom values. Then produce the orthographic matrix
@@ -67,15 +66,14 @@ public class Camera2D
      *                  near and far bounds (on the Z plane) will be clipped
      * @param farBound  The far bound of the orthographic matrix. Anything that is not within the
      *                  near and far bounds (on the Z plane) will be clipped
-     * @since           1.0
+     * @since 1.0
      */
     public Camera2D(float x,
                     float y,
                     float width,
                     float height,
                     float nearBound,
-                    float farBound)
-    {
+                    float farBound) {
         this.left = x;
         this.bottom = y;
         this.right = width;
@@ -93,17 +91,16 @@ public class Camera2D
      * constructor uses default near and far values, if you find 3D objects in your 2D view being
      * clipped on the Z plane, specify different near and far values.
      *
-     * @param x         The x position of the camera
-     * @param y         The y position of the camera
-     * @param width     The width of the camera view
-     * @param height    The height of the camera view
-     * @since           1.0
+     * @param x      The x position of the camera
+     * @param y      The y position of the camera
+     * @param width  The width of the camera view
+     * @param height The height of the camera view
+     * @since 1.0
      */
     public Camera2D(float x,
                     float y,
                     float width,
-                    float height)
-    {
+                    float height) {
         this(
                 x,
                 y,
@@ -123,10 +120,9 @@ public class Camera2D
      * far values, if you find 3D objects in your 2D view being clipped on the Z plane, specify
      * different near and far values.
      *
-     * @since           1.0
+     * @since 1.0
      */
-    public Camera2D()
-    {
+    public Camera2D() {
         this(
                 DEFAULT_LEFT,
                 DEFAULT_BOTTOM,
@@ -137,22 +133,20 @@ public class Camera2D
     /**
      * Get the left bound of the cameras orthographic matrix
      *
-     * @return  Return the left bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the left bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getLeft()
-    {
+    public float getLeft() {
         return this.left;
     }
 
     /**
      * Set the left bound of the cameras orthographic matrix. Causes a view matrix update.
      *
-     * @param left  The new left bound of the orthographic matrix
-     * @since       1.0
+     * @param left The new left bound of the orthographic matrix
+     * @since 1.0
      */
-    public void setLeft(float left)
-    {
+    public void setLeft(float left) {
         this.left = left;
         updateView();
     }
@@ -160,11 +154,10 @@ public class Camera2D
     /**
      * Get the right bound of the cameras orthographic matrix
      *
-     * @return  Return the right bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the right bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getRight()
-    {
+    public float getRight() {
         return right;
     }
 
@@ -172,10 +165,9 @@ public class Camera2D
      * Set the right bound of the cameras orthographic matrix. Causes a view matrix update.
      *
      * @param right The new right bound of the orthographic matrix
-     * @since       1.0
+     * @since 1.0
      */
-    public void setRight(float right)
-    {
+    public void setRight(float right) {
         this.right = right;
         updateView();
     }
@@ -183,22 +175,20 @@ public class Camera2D
     /**
      * Get the bottom bound of the cameras orthographic matrix
      *
-     * @return  Return the bottom bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the bottom bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getBottom()
-    {
+    public float getBottom() {
         return bottom;
     }
 
     /**
      * Set the bottom bound of the cameras orthographic matrix. Causes a view matrix update.
      *
-     * @param bottom    The new bottom bound of the orthographic matrix
-     * @since           1.0
+     * @param bottom The new bottom bound of the orthographic matrix
+     * @since 1.0
      */
-    public void setBottom(float bottom)
-    {
+    public void setBottom(float bottom) {
         this.bottom = bottom;
         updateView();
     }
@@ -206,22 +196,20 @@ public class Camera2D
     /**
      * Get the top bound of the cameras orthographic matrix
      *
-     * @return  Return the top bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the top bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getTop()
-    {
+    public float getTop() {
         return top;
     }
 
     /**
      * Set the top bound of the cameras orthographic matrix. Causes a view matrix update.
      *
-     * @param top   The new top bound of the orthographic matrix
-     * @since       1.0
+     * @param top The new top bound of the orthographic matrix
+     * @since 1.0
      */
-    public void setTop(float top)
-    {
+    public void setTop(float top) {
         this.top = top;
         updateView();
     }
@@ -229,22 +217,20 @@ public class Camera2D
     /**
      * Get the near bound of the cameras orthographic matrix
      *
-     * @return  Return the near bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the near bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getNear()
-    {
+    public float getNear() {
         return near;
     }
 
     /**
      * Set the near bound of the cameras orthographic matrix. Causes a view matrix update.
      *
-     * @param near  The new near bound of the orthographic matrix
-     * @since       1.0
+     * @param near The new near bound of the orthographic matrix
+     * @since 1.0
      */
-    public void setNear(float near)
-    {
+    public void setNear(float near) {
         this.near = near;
         updateView();
     }
@@ -252,22 +238,20 @@ public class Camera2D
     /**
      * Get the far bound of the cameras orthographic matrix
      *
-     * @return  Return the far bound of the orthographic matrix
-     * @since   1.0
+     * @return Return the far bound of the orthographic matrix
+     * @since 1.0
      */
-    public float getFar()
-    {
+    public float getFar() {
         return far;
     }
 
     /**
      * Set the far bound of the cameras orthographic matrix. Causes a view matrix update.
      *
-     * @param far   The new far bound of the orthographic matrix
-     * @since       1.0
+     * @param far The new far bound of the orthographic matrix
+     * @since 1.0
      */
-    public void setFar(float far)
-    {
+    public void setFar(float far) {
         this.far = far;
         updateView();
     }
@@ -275,22 +259,20 @@ public class Camera2D
     /**
      * Get the far bound of the cameras orthographic matrix
      *
-     * @return  Return the orthographic matrix
-     * @since   1.0
+     * @return Return the orthographic matrix
+     * @since 1.0
      */
-    public float[] getOrthoMatrix()
-    {
+    public float[] getOrthoMatrix() {
         return orthoMatrix;
     }
 
     /**
      * Update the view by recreating the orthographic matrix
      *
-     * @see     Matrix
-     * @since   1.0
+     * @see Matrix
+     * @since 1.0
      */
-    public void updateView()
-    {
+    public void updateView() {
         Matrix.orthoM(orthoMatrix,
                 0,
                 left,

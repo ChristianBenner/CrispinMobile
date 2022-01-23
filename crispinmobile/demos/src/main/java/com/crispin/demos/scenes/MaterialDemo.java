@@ -1,10 +1,9 @@
 package com.crispin.demos.scenes;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
@@ -24,14 +23,14 @@ public class MaterialDemo extends Scene {
     private Model lightBulb;
     private Model lightBulb2;
     private Model torus;
-    private LightGroup lightGroup;
-    private PointLight pointLight;
-    private PointLight pointLight2;
-    private Camera3D camera3D;
+    private final LightGroup lightGroup;
+    private final PointLight pointLight;
+    private final PointLight pointLight2;
+    private final Camera3D camera3D;
     private float lightXCount;
     private float lightZCount;
     private long materialSetTimeMs;
-    private List<Material> materialList;
+    private final List<Material> materialList;
     private Iterator<Material> materialIterator;
 
     public MaterialDemo() {
@@ -72,7 +71,7 @@ public class MaterialDemo extends Scene {
         lightGroup.addLight(pointLight2);
 
         camera3D = new Camera3D();
-        camera3D.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
+        camera3D.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
     }
 
     @Override
@@ -94,8 +93,8 @@ public class MaterialDemo extends Scene {
             if (System.currentTimeMillis() - materialSetTimeMs > MATERIAL_TIME_MS) {
                 materialSetTimeMs = System.currentTimeMillis();
 
-                if(!materialIterator.hasNext()) {
-                   materialIterator = materialList.iterator();
+                if (!materialIterator.hasNext()) {
+                    materialIterator = materialList.iterator();
                 }
 
                 torus.setMaterial(materialIterator.next());
@@ -105,21 +104,21 @@ public class MaterialDemo extends Scene {
 
     @Override
     public void render() {
-        if(lightBulb != null) {
+        if (lightBulb != null) {
             lightBulb.render(camera3D, lightGroup);
         }
 
-        if(lightBulb2 != null) {
+        if (lightBulb2 != null) {
             lightBulb2.render(camera3D, lightGroup);
         }
 
-        if(torus != null) {
+        if (torus != null) {
             torus.render(camera3D, lightGroup);
         }
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 

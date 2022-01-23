@@ -5,27 +5,23 @@ package com.crispin.crispinmobile.Utilities;
  */
 
 public class Sound {
-    private boolean loaded = false;
-    private int sound;
+    private boolean loaded;
+    private final int sound;
 
-    public Sound(int soundId, boolean loaded)
-    {
+    public Sound(int soundId, boolean loaded) {
         this.sound = soundId;
         this.loaded = loaded;
     }
 
-    public int getSound()
-    {
+    public int getSound() {
         return this.sound;
     }
 
-    public boolean isLoaded()
-    {
+    public boolean isLoaded() {
         return this.loaded;
     }
 
-    public void setLoaded(boolean state)
-    {
+    public void setLoaded(boolean state) {
         this.loaded = state;
     }
 }

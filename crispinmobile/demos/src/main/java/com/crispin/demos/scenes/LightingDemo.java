@@ -1,8 +1,8 @@
 package com.crispin.demos.scenes;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
@@ -22,11 +22,9 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-public class LightingDemo extends Scene
-{
+public class LightingDemo extends Scene {
     // Amount that the information text should fade in per cycle
     private final float INFO_TEXT_FADE_STEP_AMOUNT = 0.03f;
 
@@ -71,29 +69,29 @@ public class LightingDemo extends Scene
     private Model lightBulb;
 
     // Camera for 3D model rendering
-    private Camera3D modelCamera;
+    private final Camera3D modelCamera;
 
     // Camera for user interface rendering
-    private Camera2D uiView;
+    private final Camera2D uiView;
 
     // Font for the information text
-    private Font informationFont;
+    private final Font informationFont;
 
     // Should the text fade in
     private boolean fadeInInformationText;
 
     // Light object containing position and colour data
-    private PointLight pointLight;
+    private final PointLight pointLight;
 
-    private LightGroup lightGroup;
+    private final LightGroup lightGroup;
 
     private int currentStage;
 
     private long stageStartMs;
 
-    private HashMap<Integer, Text> stageInfoText;
+    private final HashMap<Integer, Text> stageInfoText;
 
-    private Button toggleShader;
+    private final Button toggleShader;
     private boolean useMaterialShader;
 
     private float lightXCount;
@@ -169,18 +167,18 @@ public class LightingDemo extends Scene
         toggleShader.setColour(Colour.BLACK);
         toggleShader.setBorder(new Border(Colour.ORANGE, 5));
         toggleShader.addTouchListener(e -> {
-            if(e.getEvent() == TouchEvent.Event.CLICK) {
+            if (e.getEvent() == TouchEvent.Event.CLICK) {
                 useMaterialShader = !useMaterialShader;
-                if(torus != null) {
-                    if(useMaterialShader) {
+                if (torus != null) {
+                    if (useMaterialShader) {
                         torus.useCustomShader(new LightingTextureShader());
                     } else {
                         torus.useCustomShader(new LightingShader());
                     }
                 }
 
-                if(lightBulb != null) {
-                    if(useMaterialShader) {
+                if (lightBulb != null) {
+                    if (useMaterialShader) {
                         lightBulb.useCustomShader(new LightingTextureShader());
                     } else {
                         lightBulb.useCustomShader(new LightingShader());
@@ -191,7 +189,7 @@ public class LightingDemo extends Scene
 
         // Create the model camera and move it forward in-front of the origin
         modelCamera = new Camera3D();
-        modelCamera.setPosition(new Point3D(0.0f, 1.0f, 3.0f));
+        modelCamera.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
     }
 
     private void putStageText(HashMap<Integer, Text> textHashMap, int stage, String text) {
@@ -205,13 +203,13 @@ public class LightingDemo extends Scene
 
     private void nextStage() {
         currentStage++;
-        if(currentStage >= STAGE_MAX) {
+        if (currentStage >= STAGE_MAX) {
             currentStage = 0;
         }
         stageStartMs = System.currentTimeMillis();
         fadeInInformationText = true;
 
-        if(stageInfoText.containsKey(currentStage)) {
+        if (stageInfoText.containsKey(currentStage)) {
             stageInfoText.get(currentStage).setOpacity(0.0f);
         }
     }
@@ -226,38 +224,38 @@ public class LightingDemo extends Scene
 
         switch (currentStage) {
             case STAGE_INTRODUCTION:
-                if(currentStageDurationMs() >= WELCOME_SCENE_MODEL_APPEAR_START_MS) {
+                if (currentStageDurationMs() >= WELCOME_SCENE_MODEL_APPEAR_START_MS) {
                     torus.setAlpha(1.0f);
                     lightBulb.setAlpha(1.0f);
                 }
 
-                if(currentStageDurationMs() >= WELCOME_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= WELCOME_SCENE_DURATION_MS) {
                     nextStage();
                 }
                 break;
             case STAGE_INTENSITY_TEST:
-                pointLight.setDiffuseStrength(((float)currentStageDurationMs() /
-                        (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING);
+                pointLight.setDiffuseStrength(((float) currentStageDurationMs() /
+                        (float) LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING);
 
-                if(currentStageDurationMs() >= LIGHT_INTENSITY_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= LIGHT_INTENSITY_SCENE_DURATION_MS) {
                     pointLight.setDiffuseStrength(LIGHT_INTENSITY_CEILING);
                     nextStage();
                 }
                 break;
             case STAGE_AMBIENT_TEST:
-                pointLight.setAmbientStrength(((float)currentStageDurationMs() /
-                        (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING);
+                pointLight.setAmbientStrength(((float) currentStageDurationMs() /
+                        (float) LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING);
 
-                if(currentStageDurationMs() >= LIGHT_AMBIENT_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= LIGHT_AMBIENT_SCENE_DURATION_MS) {
                     pointLight.setAmbientStrength(LIGHT_AMBIENT_CEILING);
                     nextStage();
                 }
                 break;
             case STAGE_POSITIONING_TEST:
-                if(moveToPosition) {
+                if (moveToPosition) {
                     lightZCount += 0.01f * deltaTime;
-                    float lightZ = (float)Math.sin(lightZCount);
-                    if(lightZCount >= (float)Math.PI / 2.0f) {
+                    float lightZ = (float) Math.sin(lightZCount);
+                    if (lightZCount >= (float) Math.PI / 2.0f) {
                         lightZ = 1.0f;
                         moveToPosition = false;
                     }
@@ -266,16 +264,16 @@ public class LightingDemo extends Scene
                     updateBulbPosition(deltaTime);
                 }
 
-                if(currentStageDurationMs() > POSITIONING_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() > POSITIONING_SCENE_DURATION_MS) {
                     nextStage();
                 }
                 break;
             case STAGE_SPECULAR_TEST:
                 updateBulbPosition(deltaTime);
-                pointLight.setSpecularStrength(((float)currentStageDurationMs() /
-                        (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING);
+                pointLight.setSpecularStrength(((float) currentStageDurationMs() /
+                        (float) LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING);
 
-                if(currentStageDurationMs() >= LIGHT_SPECULAR_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= LIGHT_SPECULAR_SCENE_DURATION_MS) {
                     pointLight.setSpecularStrength(LIGHT_SPECULAR_CEILING);
                     nextStage();
                 }
@@ -283,72 +281,72 @@ public class LightingDemo extends Scene
             case STAGE_COLOUR_TEST:
                 updateBulbPosition(deltaTime);
                 redColourRad += 0.01f * deltaTime;
-                if(redColourRad % Math.PI > 0.0f) {
+                if (redColourRad % Math.PI > 0.0f) {
                     greenColourRad += 0.03f * deltaTime;
                 }
-                if(redColourRad % Math.PI / 2.0f > 0.0f) {
+                if (redColourRad % Math.PI / 2.0f > 0.0f) {
                     blueColourRad += 0.02f * deltaTime;
                 }
-                float redChannel = ((float)Math.cos(redColourRad) + 1.0f) / 2.0f;
-                float greenChannel = ((float)Math.cos(greenColourRad) + 1.0f) / 2.0f;
-                float blueChannel = ((float)Math.cos(blueColourRad) + 1.0f) / 2.0f;
+                float redChannel = ((float) Math.cos(redColourRad) + 1.0f) / 2.0f;
+                float greenChannel = ((float) Math.cos(greenColourRad) + 1.0f) / 2.0f;
+                float blueChannel = ((float) Math.cos(blueColourRad) + 1.0f) / 2.0f;
                 pointLight.setColour(redChannel, greenChannel, blueChannel);
 
-                if(currentStageDurationMs() >= COLOUR_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= COLOUR_SCENE_DURATION_MS) {
                     nextStage();
                 }
                 break;
             case STAGE_RESET_POSITION:
-                if(resetX) {
-                    if(lightXCount % (float)Math.PI < (float)Math.PI / 2.0f) {
+                if (resetX) {
+                    if (lightXCount % (float) Math.PI < (float) Math.PI / 2.0f) {
                         lightXCount -= 0.01f * deltaTime;
-                        if((float)Math.sin(lightXCount) <= 0.0f) {
+                        if ((float) Math.sin(lightXCount) <= 0.0f) {
                             resetX = false;
                             lightXCount = 0.0f;
                         }
                     } else {
                         lightXCount += 0.01f * deltaTime;
-                        if((float)Math.sin(lightXCount) >= 0.0f) {
+                        if ((float) Math.sin(lightXCount) >= 0.0f) {
                             resetX = false;
                             lightXCount = 0.0f;
                         }
                     }
                 }
 
-                if(resetZ) {
-                    if(lightZCount % (float)Math.PI < (float)Math.PI / 2.0f) {
+                if (resetZ) {
+                    if (lightZCount % (float) Math.PI < (float) Math.PI / 2.0f) {
                         lightZCount -= 0.01f * deltaTime;
-                        if((float)Math.sin(lightZCount) <= 0.0f) {
+                        if ((float) Math.sin(lightZCount) <= 0.0f) {
                             resetZ = false;
                             lightZCount = 0.0f;
                         }
                     } else {
                         lightZCount += 0.01f * deltaTime;
-                        if((float)Math.sin(lightZCount) >= 0.0f) {
+                        if ((float) Math.sin(lightZCount) >= 0.0f) {
                             resetZ = false;
                             lightZCount = 0.0f;
                         }
                     }
                 }
 
-                if(lightXCount == 0.0f && lightZCount == 0.0f) {
+                if (lightXCount == 0.0f && lightZCount == 0.0f) {
                     nextStage();
                 }
 
-                lightBulb.setPosition((float)Math.sin(lightXCount), 1.0f,
-                        (float)Math.sin(lightZCount));
+                lightBulb.setPosition((float) Math.sin(lightXCount), 1.0f,
+                        (float) Math.sin(lightZCount));
                 break;
             case STAGE_RESET_LIGHT:
-                pointLight.setDiffuseStrength(LIGHT_INTENSITY_CEILING - (((float)currentStageDurationMs() /
-                        (float)LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING));
+                pointLight.setDiffuseStrength(LIGHT_INTENSITY_CEILING - (((float) currentStageDurationMs() /
+                        (float) LIGHT_INTENSITY_SCENE_DURATION_MS) * LIGHT_INTENSITY_CEILING));
                 pointLight.setAmbientStrength(LIGHT_AMBIENT_CEILING -
-                        (((float)currentStageDurationMs() /
-                                (float)LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING));
+                        (((float) currentStageDurationMs() /
+                                (float) LIGHT_AMBIENT_SCENE_DURATION_MS) * LIGHT_AMBIENT_CEILING));
                 pointLight.setSpecularStrength(LIGHT_SPECULAR_CEILING -
-                        (((float)currentStageDurationMs() /
-                        (float)LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING));
+                        (((float) currentStageDurationMs() /
+                                (float) LIGHT_SPECULAR_SCENE_DURATION_MS) * LIGHT_SPECULAR_CEILING));
 
-                if(currentStageDurationMs() >= RESET_LIGHT_SCENE_DURATION_MS) {
+                if (currentStageDurationMs() >= RESET_LIGHT_SCENE_DURATION_MS) {
                     resetLightingValues();
                     pointLight.setDiffuseStrength(0.0f);
                     pointLight.setAmbientStrength(0.0f);
@@ -364,15 +362,15 @@ public class LightingDemo extends Scene
 
     @Override
     public void render() {
-        if(lightBulb != null) {
+        if (lightBulb != null) {
             lightBulb.render(modelCamera, lightGroup);
         }
 
-        if(torus != null) {
+        if (torus != null) {
             torus.render(modelCamera, lightGroup);
         }
 
-        if(stageInfoText.containsKey(currentStage)) {
+        if (stageInfoText.containsKey(currentStage)) {
             stageInfoText.get(currentStage).draw(uiView);
         }
 
@@ -380,25 +378,25 @@ public class LightingDemo extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position) {
+    public void touch(int type, Vec2 position) {
 
     }
 
     private void updateBulbPosition(float deltaTime) {
         lightXCount += 0.03f * deltaTime;
         lightZCount += 0.03f * deltaTime;
-        float lightX = (float)Math.sin(lightXCount);
-        float lightZ = (float)Math.sin(lightZCount);
+        float lightX = (float) Math.sin(lightXCount);
+        float lightZ = (float) Math.sin(lightZCount);
         lightBulb.setPosition(lightX, 1.0f, lightZ);
     }
 
     private void updateTextFade(float deltaTime) {
-        if(stageInfoText.containsKey(currentStage)) {
+        if (stageInfoText.containsKey(currentStage)) {
             final Text currentText = stageInfoText.get(currentStage);
-            if(fadeInInformationText) {
+            if (fadeInInformationText) {
                 currentText.setOpacity(currentText.getOpacity() +
                         (INFO_TEXT_FADE_STEP_AMOUNT * deltaTime));
-                if(currentText.getOpacity() > 1.0f) {
+                if (currentText.getOpacity() > 1.0f) {
                     currentText.setOpacity(1.0f);
                     fadeInInformationText = false;
                 }

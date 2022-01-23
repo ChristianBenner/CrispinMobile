@@ -10,12 +10,11 @@ import static android.opengl.GLES30.GL_UNSIGNED_BYTE;
  * TextureOptions is a data only class that allows you to configure texture parameters. Texture
  * parameters can change the way that a texture is rendered.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @since 1.0
  */
-public class TextureOptions
-{
+public class TextureOptions {
     // Default minify filter
     public static final int DEFAULT_MIN_FILTER = GL_NEAREST;
 

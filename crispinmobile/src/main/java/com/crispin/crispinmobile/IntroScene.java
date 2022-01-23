@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
@@ -51,7 +51,7 @@ public class IntroScene extends Scene
 
         uiCamera = new Camera2D();
 
-        background = new Plane(new Point2D(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(),
+        background = new Plane(new Vec2(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(),
                 Crispin.getSurfaceHeight()));
         background.setColour(Colour.BLACK);
 
@@ -181,7 +181,7 @@ public class IntroScene extends Scene
     }
 
     @Override
-    public void touch(int type, Point2D position)
+    public void touch(int type, Vec2 position)
     {
 
     }

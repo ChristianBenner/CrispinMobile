@@ -5,12 +5,11 @@ package com.crispin.crispinmobile.Rendering.Data;
  * colours but also contains some pre-defined ones. Colour channels are represented as floats with a
  * range of 0.0 to 1.0.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @since 1.0
  */
-public class Colour
-{
+public class Colour {
     // Pre-defined red colour
     public static final Colour RED = new Colour(1.0f, 0.0f, 0.0f);
 
@@ -83,8 +82,7 @@ public class Colour
      * @param alpha The alpha colour value (0.0 for no alpha, 1.0 for maximum alpha)
      * @since 1.0
      */
-    public Colour(float red, float green, float blue, float alpha)
-    {
+    public Colour(float red, float green, float blue, float alpha) {
         this.red = red;
         this.green = green;
         this.blue = blue;
@@ -97,10 +95,9 @@ public class Colour
      * @param red   The red colour value (0.0 for no red, 1.0 for maximum red)
      * @param green The green colour value (0.0 for no green, 1.0 for maximum green)
      * @param blue  The blue colour value (0.0 for no blue, 1.0 for maximum blue)
-     * @since   1.0
+     * @since 1.0
      */
-    public Colour(float red, float green, float blue)
-    {
+    public Colour(float red, float green, float blue) {
         this(red, green, blue, DEFAULT_ALPHA_VALUE);
     }
 
@@ -108,11 +105,10 @@ public class Colour
      * Construct a colour object using an existing colour object
      * 1.0)
      *
-     * @param   colour  An existing colour object to copy
-     * @since   1.0
+     * @param colour An existing colour object to copy
+     * @since 1.0
      */
-    public Colour(final Colour colour)
-    {
+    public Colour(final Colour colour) {
         this(colour.red, colour.green, colour.blue, colour.alpha);
     }
 
@@ -120,10 +116,9 @@ public class Colour
      * Construct a colour object with default RGBA values (Red: 1.0, Green: 1.0, Blue: 1.0, Alpha:
      * 1.0)
      *
-     * @since   1.0
+     * @since 1.0
      */
-    public Colour()
-    {
+    public Colour() {
         this(DEFAULT_RED_VALUE, DEFAULT_GREEN_VALUE, DEFAULT_BLUE_VALUE, DEFAULT_ALPHA_VALUE);
     }
 
@@ -134,14 +129,13 @@ public class Colour
      * @param green The green colour value (0 for no green, 255 for maximum green)
      * @param blue  The blue colour value (0 for no blue, 255 for maximum blue)
      * @param alpha The alpha colour value (0 for no alpha, 255 for maximum alpha)
-     * @since   1.0
+     * @since 1.0
      */
-    public Colour(int red, int green, int blue, int alpha)
-    {
-        this((float)red / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
-                (float)green / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
-                (float)blue / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
-                (float)alpha / MAXIMUM_INTEGER_CHANNEL_INTENSITY);
+    public Colour(int red, int green, int blue, int alpha) {
+        this((float) red / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float) green / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float) blue / MAXIMUM_INTEGER_CHANNEL_INTENSITY,
+                (float) alpha / MAXIMUM_INTEGER_CHANNEL_INTENSITY);
     }
 
     /**
@@ -150,10 +144,9 @@ public class Colour
      * @param red   The red colour value (0 for no red, 255 for maximum red)
      * @param green The green colour value (0 for no green, 255 for maximum green)
      * @param blue  The blue colour value (0 for no blue, 255 for maximum blue)
-     * @since   1.0
+     * @since 1.0
      */
-    public Colour(int red, int green, int blue)
-    {
+    public Colour(int red, int green, int blue) {
         this(red, green, blue, MAXIMUM_INTEGER_CHANNEL_INTENSITY);
     }
 }

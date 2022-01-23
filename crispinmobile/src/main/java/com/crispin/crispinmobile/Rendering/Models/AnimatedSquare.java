@@ -1,25 +1,20 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import android.opengl.GLES20;
-
-import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.Texture;
 
-public class AnimatedSquare extends Square
-{
+public class AnimatedSquare extends Square {
+    private final int animationDurationMs;
     private int spriteHeight;
     private int frames = 0;
     private float step = 0.0f;
     private int currentFrame = 0;
-    private int animationDurationMs;
     private int animationFrameDurationMs;
     private long lastFrameStart = 0;
     private boolean repeat;
     private boolean reverseFrameCount;
 
-    public AnimatedSquare(Material material, int spriteHeight, int animationDurationMs)
-    {
+    public AnimatedSquare(Material material, int spriteHeight, int animationDurationMs) {
         super(material);
         this.repeat = true;
         this.reverseFrameCount = false;
@@ -31,60 +26,43 @@ public class AnimatedSquare extends Square
 
     // false to repeat the animation (go to frame 0 after the last frame)
     // true to traverse back through the frames back to 0
-    public void setReverse(boolean reverse)
-    {
+    public void setReverse(boolean reverse) {
         this.repeat = !reverse;
     }
 
     // true to repeat the animation (go to frame 0 after the last frame)
     // false to traverse back through the frames back to 0
-    public void setRepeat(boolean repeat)
-    {
+    public void setRepeat(boolean repeat) {
         this.repeat = repeat;
     }
 
-    public int getCurrentFrame()
-    {
+    public int getCurrentFrame() {
         return currentFrame;
     }
 
-    public int getFrames()
-    {
+    public int getFrames() {
         return frames;
     }
 
-    public void updateAnimation()
-    {
-        if(System.currentTimeMillis() > lastFrameStart + animationFrameDurationMs)
-        {
-            if(repeat)
-            {
+    public void updateAnimation() {
+        if (System.currentTimeMillis() > lastFrameStart + animationFrameDurationMs) {
+            if (repeat) {
                 currentFrame++;
 
-                if(currentFrame >= frames)
-                {
+                if (currentFrame >= frames) {
                     currentFrame = 0;
                 }
-            }
-            else
-            {
-                if(reverseFrameCount)
-                {
-                    if(currentFrame == 1)
-                    {
+            } else {
+                if (reverseFrameCount) {
+                    if (currentFrame == 1) {
                         reverseFrameCount = false;
                         currentFrame = 0;
-                    }
-                    else
-                    {
+                    } else {
                         currentFrame--;
                     }
-                }
-                else
-                {
+                } else {
                     currentFrame++;
-                    if(currentFrame >= frames - 1)
-                    {
+                    if (currentFrame >= frames - 1) {
                         reverseFrameCount = true;
                     }
                 }
@@ -97,13 +75,11 @@ public class AnimatedSquare extends Square
         }
     }
 
-    public void setSpriteHeight(int height)
-    {
+    public void setSpriteHeight(int height) {
         // Calculate frames from sprite height
         this.spriteHeight = height;
 
-        if(spriteHeight == 0)
-        {
+        if (spriteHeight == 0) {
             spriteHeight = 1;
         }
 
@@ -116,14 +92,12 @@ public class AnimatedSquare extends Square
         material.setUvMultiplier(1f, step);
     }
 
-    public void setMaterial(Material material, int spriteHeight)
-    {
+    public void setMaterial(Material material, int spriteHeight) {
         this.material = material;
         setSpriteHeight(spriteHeight);
     }
 
-    public void setTexture(Texture texture, int spriteHeight)
-    {
+    public void setTexture(Texture texture, int spriteHeight) {
         this.material.setTexture(texture);
         setSpriteHeight(spriteHeight);
     }

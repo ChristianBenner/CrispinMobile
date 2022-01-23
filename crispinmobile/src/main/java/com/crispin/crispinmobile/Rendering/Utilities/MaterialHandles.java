@@ -19,10 +19,10 @@ import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HAN
  * colour, texture and shininess. The class acts as a data only object - all fields are publicly
  * accessible. The second responsibility of the class is to upload uniform data to OpenGL.
  *
- * @see         Material
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Material
+ * @since 1.0
  */
 public class MaterialHandles {
     // Colour uniform handle
@@ -58,60 +58,60 @@ public class MaterialHandles {
     /**
      * Upload uniform data to each uniform handle from the properties of a given material
      *
-     * @param material  Material to upload properties from
-     * @author          Christian Benner
-     * @version         %I%, %G%
-     * @since           1.0
+     * @param material Material to upload properties from
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
      */
     public void setUniforms(final Material material) {
-        if(colourUniformHandle != UNDEFINED_HANDLE) {
+        if (colourUniformHandle != UNDEFINED_HANDLE) {
             glUniform4f(colourUniformHandle, material.colour.red, material.colour.green,
                     material.colour.blue, material.colour.alpha);
         }
 
-        if(uvMultiplierUniformHandle != UNDEFINED_HANDLE) {
+        if (uvMultiplierUniformHandle != UNDEFINED_HANDLE) {
             glUniform2f(uvMultiplierUniformHandle, material.uvMultiplier.x,
                     material.uvMultiplier.y);
         }
 
-        if(uvOffsetUniformHandle != UNDEFINED_HANDLE) {
+        if (uvOffsetUniformHandle != UNDEFINED_HANDLE) {
             glUniform2f(uvOffsetUniformHandle, material.uvOffset.x, material.uvOffset.y);
         }
 
-        if(textureUniformHandle != UNDEFINED_HANDLE && material.hasTexture()) {
+        if (textureUniformHandle != UNDEFINED_HANDLE && material.hasTexture()) {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, material.texture.getId());
             glUniform1i(textureUniformHandle, 0);
         }
 
-        if(specularMapUniformHandle != UNDEFINED_HANDLE && material.hasSpecularMap()) {
+        if (specularMapUniformHandle != UNDEFINED_HANDLE && material.hasSpecularMap()) {
             glActiveTexture(GL_TEXTURE1);
             glBindTexture(GL_TEXTURE_2D, material.specularMap.getId());
             glUniform1i(specularMapUniformHandle, 1);
         }
 
-        if(normalMapUniformHandle != UNDEFINED_HANDLE && material.hasNormalMap()) {
+        if (normalMapUniformHandle != UNDEFINED_HANDLE && material.hasNormalMap()) {
             glActiveTexture(GL_TEXTURE2);
             glBindTexture(GL_TEXTURE_2D, material.normalMap.getId());
             glUniform1i(normalMapUniformHandle, 2);
         }
 
-        if(ambientUniformHandle != UNDEFINED_HANDLE) {
+        if (ambientUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(ambientUniformHandle, material.ambientStrength.red,
                     material.ambientStrength.green, material.ambientStrength.blue);
         }
 
-        if(diffuseUniformHandle != UNDEFINED_HANDLE) {
+        if (diffuseUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(diffuseUniformHandle, material.diffuseStrength.red,
                     material.diffuseStrength.green, material.diffuseStrength.blue);
         }
 
-        if(specularUniformHandle != UNDEFINED_HANDLE) {
+        if (specularUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(specularUniformHandle, material.specularStrength.red,
                     material.specularStrength.green, material.specularStrength.blue);
         }
 
-        if(shininessUniformHandle != UNDEFINED_HANDLE) {
+        if (shininessUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(shininessUniformHandle, material.shininess);
         }
     }

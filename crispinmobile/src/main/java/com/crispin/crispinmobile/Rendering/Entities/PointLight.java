@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Entities;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
@@ -9,13 +9,12 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  * The light class provides an interface to lighting elements in a graphical scene. The class allows
  * control over the lights properties so that you can fully customise a lit scene.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         RenderObject
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see RenderObject
+ * @since 1.0
  */
-public class PointLight
-{
+public class PointLight {
     // The intensity of the light. This effects specular and diffuse calculations (not ambience)
     private final float DEFAULT_INTENSITY = 1.0f;
 
@@ -98,31 +97,25 @@ public class PointLight
         this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
-    public PointLight(final Point3D position, final Colour colour) {
+    public PointLight(final Vec3 position, final Colour colour) {
         this(position.x, position.y, position.z, colour.red, colour.green,
                 colour.blue);
     }
 
-    public PointLight(final Point2D position, final Colour colour) {
+    public PointLight(final Vec2 position, final Colour colour) {
         this(position.x, position.y, colour.red, colour.green, colour.blue);
     }
 
-    public PointLight(final Point3D position) {
+    public PointLight(final Vec3 position) {
         this(position.x, position.y, position.z);
     }
 
-    public PointLight(final Point2D position) {
+    public PointLight(final Vec2 position) {
         this(position.x, position.y);
     }
 
     public PointLight() {
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
-    }
-
-    public void setPosition(Point3D position) {
-        x = position.x;
-        y = position.y;
-        z = position.z;
     }
 
     public void setPosition(float x, float y, float z) {
@@ -131,28 +124,28 @@ public class PointLight
         this.z = z;
     }
 
-    public void setPosition(Point2D position) {
-        x = position.x;
-        y = position.y;
-    }
-
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
-    public Point3D getPosition() {
-        return new Point3D(x, y, z);
+    public Vec3 getPosition() {
+        return new Vec3(x, y, z);
     }
 
-    public Point2D getPosition2D() {
-        return new Point2D(x, y);
+    public void setPosition(Vec3 position) {
+        x = position.x;
+        y = position.y;
+        z = position.z;
     }
 
-    public void setColour(final Colour colour) {
-        red = colour.red;
-        green = colour.green;
-        blue = colour.blue;
+    public void setPosition(Vec2 position) {
+        x = position.x;
+        y = position.y;
+    }
+
+    public Vec2 getPosition2D() {
+        return new Vec2(x, y);
     }
 
     public void setColour(float red, float green, float blue) {
@@ -165,27 +158,33 @@ public class PointLight
         return new Colour(red, green, blue);
     }
 
-    public void setDiffuseStrength(float diffuseStrength) {
-        this.diffuseStrength = diffuseStrength;
+    public void setColour(final Colour colour) {
+        red = colour.red;
+        green = colour.green;
+        blue = colour.blue;
     }
 
     public float getDiffuseStrength() {
         return diffuseStrength;
     }
 
-    public void setAmbientStrength(float ambientStrength) {
-        this.ambientStrength = ambientStrength;
+    public void setDiffuseStrength(float diffuseStrength) {
+        this.diffuseStrength = diffuseStrength;
     }
 
     public float getAmbientStrength() {
         return ambientStrength;
     }
 
-    public void setSpecularStrength(float specularStrength) {
-        this.specularStrength = specularStrength;
+    public void setAmbientStrength(float ambientStrength) {
+        this.ambientStrength = ambientStrength;
     }
 
     public float getSpecularStrength() {
         return specularStrength;
+    }
+
+    public void setSpecularStrength(float specularStrength) {
+        this.specularStrength = specularStrength;
     }
 }
