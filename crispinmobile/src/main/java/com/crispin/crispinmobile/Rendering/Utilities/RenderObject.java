@@ -533,7 +533,7 @@ public class RenderObject {
         shader.disableIt();
     }
 
-    public void render(Camera3D camera, ModelMatrix modelMatrix, final LightGroup lightGroup) {
+    public void render(Camera camera, ModelMatrix modelMatrix, final LightGroup lightGroup) {
         // If the shader is null, create a shader for the object
         if (shader == null) {
             updateShader();
@@ -625,7 +625,7 @@ public class RenderObject {
         shader.disableIt();
     }
 
-    public void render(Camera3D camera, ModelMatrix modelMatrix) {
+    public void render(Camera camera, ModelMatrix modelMatrix) {
         render(camera, modelMatrix, null);
     }
 

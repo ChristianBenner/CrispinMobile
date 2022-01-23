@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import static android.opengl.GLES20.glUniform1f;
-import static android.opengl.GLES20.glUniform3f;
+import static android.opengl.GLES30.glUniform1f;
+import static android.opengl.GLES30.glUniform3f;
 import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
 
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;

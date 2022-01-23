@@ -8,6 +8,7 @@ import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
@@ -69,7 +70,7 @@ public class LightingDemo extends Scene {
     private Model lightBulb;
 
     // Camera for 3D model rendering
-    private final Camera3D modelCamera;
+    private final Camera modelCamera;
 
     // Camera for user interface rendering
     private final Camera2D uiView;
@@ -188,7 +189,7 @@ public class LightingDemo extends Scene {
         });
 
         // Create the model camera and move it forward in-front of the origin
-        modelCamera = new Camera3D();
+        modelCamera = new Camera();
         modelCamera.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
     }
 

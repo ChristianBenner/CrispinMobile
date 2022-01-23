@@ -3,6 +3,7 @@ package com.crispin.demos.scenes;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Models.Model;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
@@ -14,7 +15,7 @@ public class ObjLoadDemo extends Scene {
     // Monkey model
     private Model monkey;
     // Camera for 3D model rendering
-    private final Camera3D modelCamera;
+    private final Camera modelCamera;
 
     public ObjLoadDemo() {
         // Load the monkey model. Note that we are using the ThreadedOBJLoader here. This means that
@@ -28,7 +29,7 @@ public class ObjLoadDemo extends Scene {
         });
 
         // Create the model camera and move it forward in-front of the origin
-        modelCamera = new Camera3D();
+        modelCamera = new Camera();
         modelCamera.setPosition(new Vec3(0.0f, 0.0f, 3.0f));
     }
 

@@ -6,6 +6,7 @@ import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
@@ -26,7 +27,7 @@ public class MaterialDemo extends Scene {
     private final LightGroup lightGroup;
     private final PointLight pointLight;
     private final PointLight pointLight2;
-    private final Camera3D camera3D;
+    private final Camera camera3D;
     private float lightXCount;
     private float lightZCount;
     private long materialSetTimeMs;
@@ -42,6 +43,7 @@ public class MaterialDemo extends Scene {
         ThreadedOBJLoader.loadModel(R.raw.torus_uv, model -> {
             this.torus = model;
             this.torus.setMaterial(materialIterator.next());
+            this.torus.setRotation(15.0f, 1.0f, 0.0f, 0.0f);
         });
 
         // Load the light bulb model (used to show light position)
@@ -70,8 +72,8 @@ public class MaterialDemo extends Scene {
         pointLight2 = new PointLight();
         lightGroup.addLight(pointLight2);
 
-        camera3D = new Camera3D();
-        camera3D.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
+        camera3D = new Camera();
+        camera3D.setPosition(new Vec3(0.0f, 1.0f, 5.0f));
     }
 
     @Override

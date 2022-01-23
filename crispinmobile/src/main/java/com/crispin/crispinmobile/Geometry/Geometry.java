@@ -26,6 +26,19 @@ public class Geometry {
     }
 
     /**
+     * Get the cross product of two vectors
+     *
+     * @param lhs   Left hand side vector
+     * @param rhs   Right hand side vector
+     * @return      The cross product direction
+     * @since       1.0
+     */
+    public static Vec3 crossProduct(Vec3 lhs, Vec3 rhs) {
+        return new Vec3((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z),
+                (lhs.x * rhs.y) - (lhs.y * rhs.x));
+    }
+
+    /**
      * Invert a Vec3 object. This flips the x, y and z co-ordinate polarity
      *
      * @param vector3D The vector to invert

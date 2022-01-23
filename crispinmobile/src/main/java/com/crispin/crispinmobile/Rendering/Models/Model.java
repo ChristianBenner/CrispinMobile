@@ -6,6 +6,7 @@ import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
@@ -415,12 +416,12 @@ public class Model extends RenderObject {
         super.render(camera2D, modelMatrix);
     }
 
-    public void render(Camera3D camera3D) {
+    public void render(Camera camera3D) {
         updateModelMatrix();
         super.render(camera3D, modelMatrix);
     }
 
-    public void render(Camera3D camera3D, final LightGroup lightGroup) {
+    public void render(Camera camera3D, final LightGroup lightGroup) {
         updateModelMatrix();
         super.render(camera3D, modelMatrix, lightGroup);
     }

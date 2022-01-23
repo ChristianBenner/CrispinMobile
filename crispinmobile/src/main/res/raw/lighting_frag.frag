@@ -122,58 +122,31 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
     vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour * attenuation;
+
     return ambient + diffuse + specular;
 }
 
-vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir) {
-    vec3 lightDir = normalize(light.position - fragPos);
-    // diffuse shading
-    float diff = max(dot(normal, lightDir), 0.0);
-    // specular shading
-    vec3 reflectDir = reflect(-lightDir, normal);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), uMaterial.shininess);
-    // attenuation
+vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirection) {
+    // Calculate the distance of the light from the point
     float distance = length(light.position - fragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
-    // spotlight intensity
-    float theta = dot(lightDir, normalize(-light.direction));
-    float epsilon = light.size - light.outerSize;
-    float intensity = clamp((theta - light.outerSize) / epsilon, 0.0, 1.0);
-    // combine results
-    vec3 ambient = vec3(light.ambient);
-    vec3 diffuse = vec3(light.diffuse) * diff;
-    vec3 specular = vec3(light.specular) * spec;
-    ambient *= attenuation * intensity;
-    diffuse *= attenuation * intensity;
-    specular *= attenuation * intensity;
-    return (ambient + diffuse + specular);
+    float attenuation = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
 
+    // Direction that the light is travelling from the source to the frag
+    vec3 lightDirection = normalize(light.position - fragPos);
 
-//    // Calculate the distance of the light from the point
-//    float distance = length(light.position - fragPos);
-//    float attenuation = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
-//
-//    // Direction that the light is travelling from the source to the frag
-//    vec3 lightDirection = normalize(light.position - fragPos);
-//
-//    // Calculate the spotlight intensity multiplier
-//    float angle = dot(lightDirection, normalize(-light.direction));
-//    float fadeSize = light.size - light.outerSize;
-//    //  float spotlight = clamp((angle - light.outerSize) / angle, 0.0, 1.0);
-//    float spotlight = smoothstep(0.0, 1.0, (angle - light.outerSize) / fadeSize);
-//
-//    // Ambient lighting calculation
-//    vec3 ambient = uMaterial.ambient * light.ambient * light.colour * attenuation;
-//
-//    // Diffuse lighting calculation
-//    float normalDiffuseStrength = max(dot(normal, lightDirection), 0.0);
-//    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * attenuation * light.diffuse * spotlight;
-//
-//    // Specular lighting calculation
-//    vec3 reflectDirection = reflect(-lightDirection, normal);
-//    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
-//    vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour * attenuation * spotlight;
-//
-//    //return ambient + diffuse + specular;
-//    return lightDirection;
+    // Calculate the spotlight intensity multiplier
+    float angle = dot(lightDirection, normalize(-light.direction));
+    float fadeSize = light.size - light.outerSize;
+    float spotlight = smoothstep(0.0, 1.0, (angle - light.outerSize) / fadeSize);
+
+    // Diffuse lighting calculation
+    float normalDiffuseStrength = max(dot(normal, lightDirection), 0.0);
+    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * light.diffuse * attenuation * spotlight;
+
+    // Specular lighting calculation
+    vec3 reflectDirection = reflect(-lightDirection, normal);
+    float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
+    vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour * attenuation * spotlight;
+
+    return diffuse + specular;
 }
