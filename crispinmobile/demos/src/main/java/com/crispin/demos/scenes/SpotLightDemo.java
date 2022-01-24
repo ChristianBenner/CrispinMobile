@@ -1,20 +1,14 @@
 package com.crispin.demos.scenes;
 
-import android.hardware.lights.Light;
-
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
-import com.crispin.crispinmobile.Rendering.Models.Cube;
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
-import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.Material;
 import com.crispin.crispinmobile.Utilities.Scene;
@@ -27,7 +21,7 @@ public class SpotLightDemo extends Scene {
     private Camera camera3D;
     private LightGroup lightGroup;
     private LightGroup lightBulbGroup;
-    private Model lightBulb;
+    private Model torch;
     private float lightXCount;
     private float lightZCount;
     private SpotLight spotLight;
@@ -62,13 +56,10 @@ public class SpotLightDemo extends Scene {
         lightBulbLight = new PointLight();
         lightBulbGroup.addLight(lightBulbLight);
 
-        // Load the light bulb model (used to show light position)
-        Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
-        lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
-        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
-            this.lightBulb = loadListener;
-            this.lightBulb.setMaterial(lightBulbMaterial);
-            this.lightBulb.setScale(0.3f);
+        ThreadedOBJLoader.loadModel(R.raw.torch, loadListener -> {
+            this.torch = loadListener;
+            this.torch.setScale(0.1f);
+            this.torch.setRotation(90.0f, 1.0f, 0.0f, 0.0f);
         });
     }
 
@@ -80,14 +71,14 @@ public class SpotLightDemo extends Scene {
         float lightZ = (float)Math.sin(lightZCount) * 1.1f;
 
         spotLight.setPosition(lightX, 1.0f, lightZ);
-        lightBulb.setPosition(spotLight.getPosition());
-        lightBulbLight.setPosition(spotLight.getPosition());
+        torch.setPosition(spotLight.getPosition());
+        lightBulbLight.setPosition(Geometry.plus(spotLight.getPosition(), new Vec3(0.0f, -0.5f, 0.3f)));
     }
 
     @Override
     public void render() {
-        if (lightBulb != null) {
-            lightBulb.render(camera3D, lightBulbGroup);
+        if (torch != null) {
+            torch.render(camera3D, lightBulbGroup);
         }
 
         torus.render(camera3D, lightGroup);
