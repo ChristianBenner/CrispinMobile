@@ -56,7 +56,6 @@ public class SpotLightDemo extends Scene {
         DirectionalLight directionalLight = new DirectionalLight(1.0f, -1.0f, -0.4f);
         directionalLight.ambientStrength = 0.1f;
         directionalLight.diffuseStrength = 0.4f;
-        //directionalLight.setColour(Colour.RED);
         lightGroup.addLight(directionalLight);
 
         lightBulbGroup = new LightGroup();
@@ -80,6 +79,9 @@ public class SpotLightDemo extends Scene {
         spotLight.setPosition(lightX, 1.0f, lightZ);
         torch.setPosition(spotLight.getPosition());
         lightBulbLight.setPosition(Geometry.plus(spotLight.getPosition(), new Vec3(0.0f, -0.5f, 0.3f)));
+
+        camera3D.setPosition(lightX, 0.8f, lightZ);
+        camera3D.setPitch(-90.0f);
     }
 
     @Override

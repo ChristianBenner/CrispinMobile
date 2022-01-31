@@ -328,7 +328,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec3 normalize(Vec3 v) {
-        float length = (float) Math.sqrt((v.x * v.x) + (v.y * v.y) + (v.z + v.z));
+        final float length = (float) Math.sqrt(Math.abs((v.x * v.x) + (v.y * v.y) + (v.z + v.z)));
         return new Vec3(v.x / length, v.y / length, v.z / length);
     }
 }

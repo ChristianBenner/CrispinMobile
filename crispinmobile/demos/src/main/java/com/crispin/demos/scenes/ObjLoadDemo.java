@@ -4,7 +4,6 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
-import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
