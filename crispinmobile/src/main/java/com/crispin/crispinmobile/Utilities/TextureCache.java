@@ -1,6 +1,6 @@
 package com.crispin.crispinmobile.Utilities;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 
 import java.util.HashMap;
 import java.util.Map;

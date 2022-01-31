@@ -10,9 +10,8 @@ import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.Camera3D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
@@ -190,7 +189,7 @@ public class LightingDemo extends Scene {
 
         // Create the model camera and move it forward in-front of the origin
         modelCamera = new Camera();
-        modelCamera.setPosition(new Vec3(0.0f, 1.0f, 3.0f));
+        modelCamera.setPosition(new Vec3(0.0f, 1.0f, 5.0f));
     }
 
     private void putStageText(HashMap<Integer, Text> textHashMap, int stage, String text) {

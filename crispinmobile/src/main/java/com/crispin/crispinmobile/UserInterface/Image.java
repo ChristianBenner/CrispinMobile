@@ -2,7 +2,7 @@ package com.crispin.crispinmobile.UserInterface;
 
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 
 public class Image extends Plane {
     public Image(Texture texture,

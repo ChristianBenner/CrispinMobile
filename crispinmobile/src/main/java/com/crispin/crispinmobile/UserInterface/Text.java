@@ -14,7 +14,7 @@ import com.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
 import com.crispin.crispinmobile.Rendering.Models.FontSquare;
 import com.crispin.crispinmobile.Rendering.Shaders.TextShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Utilities.Logger;
 
 import java.util.ArrayList;

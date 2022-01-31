@@ -8,7 +8,7 @@ import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 
 public class Button extends InteractableUIObject {
     private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;

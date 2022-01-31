@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 
 /**
  * Square class is a default render object model that allows you to render a 2-dimensional square.

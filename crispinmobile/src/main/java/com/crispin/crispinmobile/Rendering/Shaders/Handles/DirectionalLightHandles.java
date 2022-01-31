@@ -1,8 +1,8 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Shaders.Handles;
 
 import static android.opengl.GLES20.glUniform1f;
 import static android.opengl.GLES20.glUniform3f;
-import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
+import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;

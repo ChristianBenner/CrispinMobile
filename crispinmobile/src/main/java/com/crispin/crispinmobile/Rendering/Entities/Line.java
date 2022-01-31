@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Entities;
 
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;
@@ -9,11 +9,13 @@ import static android.opengl.GLES20.glLineWidth;
 import static android.opengl.GLES20.glUniform4f;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glVertexAttribPointer;
-import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
+import static com.crispin.crispinmobile.Rendering.Entities.RenderObject.BYTES_PER_FLOAT;
 
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Shaders.LineShader;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

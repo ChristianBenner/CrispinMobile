@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Shaders;
 
 import static android.opengl.GLES30.GL_COMPILE_STATUS;
 import static android.opengl.GLES30.GL_FRAGMENT_SHADER;
@@ -26,6 +26,11 @@ import static android.opengl.GLES30.glUseProgram;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Utilities.FileResourceReader;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
@@ -44,7 +49,7 @@ public class Shader {
     private static final String TAG = "Shader";
 
     // Undefined handle value
-    protected static int UNDEFINED_HANDLE = -1;
+    public static final int UNDEFINED_HANDLE = -1;
 
     // Name used in logging
     private final String name;
@@ -59,49 +64,46 @@ public class Shader {
     public int viewPositionUniformHandle;
 
     // Position attribute handle
-    protected int positionAttributeHandle;
+    public int positionAttributeHandle;
 
     // Colour attribute handle
-    protected int colourAttributeHandle;
+    public int colourAttributeHandle;
 
     // Texture attribute handle
-    protected int textureAttributeHandle;
+    public int textureAttributeHandle;
 
     // Normal attribute handle
-    protected int normalAttributeHandle;
+    public int normalAttributeHandle;
 
     // Matrix uniform handle
-    protected int matrixUniformHandle;
+    public int matrixUniformHandle;
 
     // Projection matrix uniform handle
-    protected int projectionMatrixUniformHandle;
+    public int projectionMatrixUniformHandle;
 
     // View matrix uniform handle
-    protected int viewMatrixUniformHandle;
+    public int viewMatrixUniformHandle;
 
     // Model matrix uniform handle
-    protected int modelMatrixUniformHandle;
+    public int modelMatrixUniformHandle;
 
     // Number of point lights
-    protected int numPointLightsUniformHandle;
+    public int numPointLightsUniformHandle;
 
     // Number of spot lights
-    protected int numSpotLightsUniformHandle;
+    public int numSpotLightsUniformHandle;
 
     // Handles for a directional light
-    protected DirectionalLightHandles directionalLightHandles;
+    public DirectionalLightHandles directionalLightHandles;
 
     // Handles for all the shader point lights
-    protected PointLightHandles[] pointLightHandles;
+    public PointLightHandles[] pointLightHandles;
 
     // Handles for all the shader spot lights
-    protected SpotLightHandles[] spotLightHandles;
+    public SpotLightHandles[] spotLightHandles;
 
     // Handles for the material
-    protected MaterialHandles materialHandles;
-
-    // Is the shader a lighting shader
-    protected boolean lightingShader;
+    public MaterialHandles materialHandles;
 
     // The ID of the OpenGL program
     private int programId;
@@ -123,8 +125,6 @@ public class Shader {
 
         // Create a new shader program using the vertex shader code and fragment shader code
         programId = createProgram(name, vertexShaderCode, fragmentShaderCode);
-
-        lightingShader = false;
 
         // Set the default values of all of the different handles to undefined
         positionAttributeHandle = UNDEFINED_HANDLE;

@@ -2,8 +2,8 @@ package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 
 /**
  * FontSquare class derived from the Square class. It is a square render object with some extra

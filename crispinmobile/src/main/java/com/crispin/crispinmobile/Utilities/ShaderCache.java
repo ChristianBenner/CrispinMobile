@@ -1,6 +1,6 @@
 package com.crispin.crispinmobile.Utilities;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
 import java.util.HashMap;
 import java.util.Map;

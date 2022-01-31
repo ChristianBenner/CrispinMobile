@@ -4,7 +4,7 @@ import static android.opengl.GLES20.GL_NEAREST;
 import static android.opengl.GLES30.GL_LUMINANCE;
 
 import com.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
-import com.crispin.crispinmobile.Rendering.Utilities.TextureOptions;
+import com.crispin.crispinmobile.Rendering.Data.TextureOptions;
 import com.crispin.crispinmobile.Utilities.FileResourceReader;
 
 import java.util.ArrayList;

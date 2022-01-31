@@ -1,11 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
-import com.crispin.crispinmobile.Rendering.Utilities.DirectionalLightHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.PointLightHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.Shader;
-import com.crispin.crispinmobile.Rendering.Utilities.SpotLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
 
 /**
  * NormalShader is a built in shader that allows you to handle render objects containing position
@@ -41,8 +40,6 @@ public class LightingShader extends Shader {
      */
     public LightingShader() {
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
-
-        lightingShader = true;
 
         // Attributes
         positionAttributeHandle = getAttribute("aPosition");

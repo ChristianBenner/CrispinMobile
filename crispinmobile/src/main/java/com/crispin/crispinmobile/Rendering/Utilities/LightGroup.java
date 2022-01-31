@@ -2,6 +2,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 
 import java.util.ArrayList;

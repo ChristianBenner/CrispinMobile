@@ -5,12 +5,13 @@ import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
@@ -28,13 +29,14 @@ public class SpotLightDemo extends Scene {
     private PointLight lightBulbLight;
 
     public SpotLightDemo() {
-        Crispin.setBackgroundColour(Colour.ORANGE);
+        Crispin.setBackgroundColour(Colour.BLACK);
 
         lightXCount = 0.0f;
         lightZCount = (float)Math.PI / 2.0f;
 
-        Material wood = new Material();
-        wood.setIgnoreTexelData(true);
+        Material wood = new Material(R.drawable.tiledwood16);
+        wood.setSpecularMap(TextureCache.loadTexture(R.drawable.tiledwood16_specular));
+        wood.setUvMultiplier(16.0f, 4.0f);
         ThreadedOBJLoader.loadModel(R.raw.torus_uv, loadListener -> {
             this.torus = loadListener;
             this.torus.setMaterial(wood);
@@ -44,13 +46,18 @@ public class SpotLightDemo extends Scene {
         camera3D.setPosition(new Vec3(0.0f, 1.0f, 5.0f));
 
         lightGroup = new LightGroup();
-
         spotLight = new SpotLight();
         spotLight.setPosition(new Vec3(-1.0f, 2.0f, 0.0f));
         spotLight.setDirection(new Vec3(0.0f, -1.0f, 0.0f));
-        spotLight.size = (float)Math.cos(Math.toRadians(12.5));
-        spotLight.outerSize = (float)Math.cos(Math.toRadians(15.5));
+        spotLight.size = (float)Math.cos(Math.toRadians(10.5));
+        spotLight.outerSize = (float)Math.cos(Math.toRadians(11.5));
         lightGroup.addLight(spotLight);
+
+        DirectionalLight directionalLight = new DirectionalLight(1.0f, -1.0f, -0.4f);
+        directionalLight.ambientStrength = 0.1f;
+        directionalLight.diffuseStrength = 0.4f;
+        //directionalLight.setColour(Colour.RED);
+        lightGroup.addLight(directionalLight);
 
         lightBulbGroup = new LightGroup();
         lightBulbLight = new PointLight();
@@ -67,8 +74,8 @@ public class SpotLightDemo extends Scene {
     public void update(float deltaTime) {
         lightXCount += 0.03f * deltaTime;
         lightZCount += 0.03f * deltaTime;
-        float lightX = (float)Math.sin(lightXCount) * 1.1f;
-        float lightZ = (float)Math.sin(lightZCount) * 1.1f;
+        float lightX = (float)Math.sin(lightXCount);
+        float lightZ = (float)Math.sin(lightZCount);
 
         spotLight.setPosition(lightX, 1.0f, lightZ);
         torch.setPosition(spotLight.getPosition());

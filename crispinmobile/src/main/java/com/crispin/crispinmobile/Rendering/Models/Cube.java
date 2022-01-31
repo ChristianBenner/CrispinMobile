@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 
 /**
  * Cube class is a default 3D model of a cube. It is a render object and therefor can be drawn to

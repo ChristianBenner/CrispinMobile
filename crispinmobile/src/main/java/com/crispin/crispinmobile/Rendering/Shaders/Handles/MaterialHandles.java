@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Shaders.Handles;
 
 import static android.opengl.GLES30.GL_TEXTURE0;
 import static android.opengl.GLES30.GL_TEXTURE1;
@@ -11,7 +11,9 @@ import static android.opengl.GLES30.glUniform1i;
 import static android.opengl.GLES30.glUniform2f;
 import static android.opengl.GLES30.glUniform3f;
 import static android.opengl.GLES30.glUniform4f;
-import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
+import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
+
+import com.crispin.crispinmobile.Rendering.Data.Material;
 
 
 /**

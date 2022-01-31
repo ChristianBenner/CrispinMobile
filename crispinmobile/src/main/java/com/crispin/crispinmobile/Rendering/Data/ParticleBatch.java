@@ -3,7 +3,6 @@ package com.crispin.crispinmobile.Rendering.Data;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
 
 public class ParticleBatch {
     private final Particle[] particles;

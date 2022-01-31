@@ -1,8 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
-import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.UserInterface.Text;
 
 /**

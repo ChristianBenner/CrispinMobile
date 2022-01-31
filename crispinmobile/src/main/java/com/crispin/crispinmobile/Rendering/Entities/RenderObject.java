@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Entities;
 
 import static android.opengl.GLES30.GL_FLOAT;
 import static android.opengl.GLES30.GL_LINES;
@@ -18,15 +18,18 @@ import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
-import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
 

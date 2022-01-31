@@ -1,25 +1,27 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Shaders.Handles;
 
-import static android.opengl.GLES20.glUniform1f;
-import static android.opengl.GLES20.glUniform3f;
-import static com.crispin.crispinmobile.Rendering.Utilities.Shader.UNDEFINED_HANDLE;
+import static android.opengl.GLES30.glUniform1f;
+import static android.opengl.GLES30.glUniform3f;
+import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
 
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 
 /**
- * PointLightHandles stores all GLSL shader uniform handles associated to PointLight properties such
- * as position, diffuse strength and attenuation values. The class acts as a data only object - all
- * fields are publicly accessible. The second responsibility of the class is to upload uniform data
- * to OpenGL.
+ * SpotLightHandles stores all GLSL shader uniform handles associated to SpotLight properties such
+ * as direction, size and attenuation values. The class acts as a data only object - all fields are
+ * publicly accessible. The second responsibility of the class is to upload uniform data to OpenGL.
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see PointLight
+ * @see SpotLight
  * @since 1.0
  */
-public class PointLightHandles {
+public class SpotLightHandles {
     // Position uniform handle
     public int positionUniformHandle = UNDEFINED_HANDLE;
+
+    // Direction uniform handle
+    public int directionUniformHandle = UNDEFINED_HANDLE;
 
     // Colour uniform handle
     public int colourUniformHandle = UNDEFINED_HANDLE;
@@ -42,17 +44,27 @@ public class PointLightHandles {
     // Attenuation quadratic variable uniform handle
     public int quadraticUniformHandle = UNDEFINED_HANDLE;
 
+    // Size of the light (when to begin fading out the light radius of the light)
+    public int sizeUniformHandle = UNDEFINED_HANDLE;
+
+    // Outer size of the light (when to end fading out the light radius of the light)
+    public int outerSizeUniformHandle = UNDEFINED_HANDLE;
+
     /**
-     * Upload uniform data to each uniform handle from the properties of a given PointLight
+     * Upload uniform data to each uniform handle from the properties of a given SpotLight
      *
-     * @param light PointLight to upload properties from
+     * @param light SpotLight to upload properties from
      * @author Christian Benner
      * @version %I%, %G%
      * @since 1.0
      */
-    public void setUniforms(PointLight light) {
+    public void setUniforms(SpotLight light) {
         if (positionUniformHandle != UNDEFINED_HANDLE) {
             glUniform3f(positionUniformHandle, light.x, light.y, light.z);
+        }
+
+        if (directionUniformHandle != UNDEFINED_HANDLE) {
+            glUniform3f(directionUniformHandle, light.dx, light.dy, light.dz);
         }
 
         if (colourUniformHandle != UNDEFINED_HANDLE) {
@@ -81,6 +93,14 @@ public class PointLightHandles {
 
         if (quadraticUniformHandle != UNDEFINED_HANDLE) {
             glUniform1f(quadraticUniformHandle, light.attenuationQuadratic);
+        }
+
+        if (sizeUniformHandle != UNDEFINED_HANDLE) {
+            glUniform1f(sizeUniformHandle, light.size);
+        }
+
+        if (outerSizeUniformHandle != UNDEFINED_HANDLE) {
+            glUniform1f(outerSizeUniformHandle, light.outerSize);
         }
     }
 }

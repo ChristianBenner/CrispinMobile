@@ -1,8 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
-import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 
 /**
  * UniformColourShader is a built in shader designed to render objects with a position attribute. It

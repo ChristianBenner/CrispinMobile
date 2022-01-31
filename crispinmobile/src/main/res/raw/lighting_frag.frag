@@ -84,6 +84,17 @@ void main()
     FragColor = vec4(lightCalc, 1.0) * uColour;
 }
 
+/**
+ * Calculate the effect of a directional light. Includes calculation for ambience (constantly lit
+ * areas despite the direction), diffusion (strength affected by the normal/direction of the face)
+ * and specular highlights (glints that reflect light). A directional light has no position and does
+ * not represent an entity in world space, but instead lights objects from a given direction.
+ *
+ * @param light         DirectionalLight
+ * @param normal        Direction of the face
+ * @param viewDirection Direction of the view matrix/camera
+ * @return              vec3 containing the colour data from the directional light calculation
+ */
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection) {
     // Direction that the light is travelling from the source to the frag
     vec3 lightDirection = normalize(-light.direction);
@@ -103,6 +114,18 @@ vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
     return ambient + diffuse + specular;
 }
 
+/**
+ * Calculate the effect of a provided point light. Includes calculation for attenuation (simulating
+ * light intensity decreasing over distance), ambience (constantly lit areas despite the direction),
+ * diffusion (strength affected by the normal/direction of the face) and specular highlights (glints
+ * that reflect light). A point light is a light emitting from a single point in all directions.
+ *
+ * @param light         PointLight
+ * @param normal        Direction of the face
+ * @param fragPos       Position of the fragment
+ * @param viewDirection Direction of the view matrix/camera
+ * @return              vec3 containing the colour data from the point light calculation
+ */
 vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection) {
     // Calculate the distance of the light from the point
     float distance = length(light.position - fragPos);
@@ -126,6 +149,19 @@ vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewD
     return ambient + diffuse + specular;
 }
 
+/**
+ * Calculate the effect of a provided spot light. Includes calculation for attenuation (simulating
+ * light intensity decreasing over distance), ambience (constantly lit areas despite the direction),
+ * diffusion (strength affected by the normal/direction of the face) and specular highlights (glints
+ * that reflect light). A spot light is a light emitting from a single point in a specific
+ * directions. The size of the affected area can be configured.
+ *
+ * @param light         SpotLight
+ * @param normal        Direction of the face
+ * @param fragPos       Position of the fragment
+ * @param viewDirection Direction of the view matrix/camera
+ * @return              vec3 containing the colour data from the spot light calculation
+ */
 vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirection) {
     // Calculate the distance of the light from the point
     float distance = length(light.position - fragPos);

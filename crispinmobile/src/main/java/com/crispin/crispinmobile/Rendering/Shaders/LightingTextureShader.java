@@ -1,9 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Shaders;
 
 import com.crispin.crispinmobile.R;
-import com.crispin.crispinmobile.Rendering.Utilities.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.PointLightHandles;
-import com.crispin.crispinmobile.Rendering.Utilities.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
 
 /**
  * NormalTextureShader is a built in shader that allows you to handle render objects containing position
@@ -26,7 +27,10 @@ public class LightingTextureShader extends Shader {
     private static final String TAG = "LightingTextureShader";
 
     // Maximum number of point lights supported by the shader
-    private static final int MAX_NUM_POINT_LIGHTS = 4;
+    private static final int MAX_NUM_POINT_LIGHTS = 10;
+
+    // Maximum number of spot lights supported by the shader
+    private static final int MAX_NUM_SPOT_LIGHTS = 5;
 
     /**
      * Create the NormalTextureShader. This compiles the pre-defined vertex and fragment
@@ -37,8 +41,6 @@ public class LightingTextureShader extends Shader {
      */
     public LightingTextureShader() {
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
-
-        lightingShader = true;
 
         // Attributes
         positionAttributeHandle = getAttribute("aPosition");
@@ -53,6 +55,7 @@ public class LightingTextureShader extends Shader {
         // Fragment uniforms
         viewPositionUniformHandle = getUniform("uViewPosition");
         numPointLightsUniformHandle = getUniform("uNumPointLights");
+        numSpotLightsUniformHandle = getUniform("uNumSpotLights");
 
         // Set all the material handles
         materialHandles = new MaterialHandles();
@@ -65,7 +68,20 @@ public class LightingTextureShader extends Shader {
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
         materialHandles.specularUniformHandle = getUniform("uMaterial.specular");
         materialHandles.shininessUniformHandle = getUniform("uMaterial.shininess");
+        initDirectionalLightHandles();
         initPointLightHandles();
+        initSpotLightHandles();
+    }
+
+    private void initDirectionalLightHandles() {
+        final String parent = "uDirectionalLight.";
+        DirectionalLightHandles directionalLightHandles = new DirectionalLightHandles();
+        directionalLightHandles.directionUniformHandle = getUniform(parent + "direction");
+        directionalLightHandles.colourUniformHandle = getUniform(parent + "colour");
+        directionalLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+        directionalLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+        directionalLightHandles.specularUniformHandle = getUniform(parent + "specular");
+        super.directionalLightHandles = directionalLightHandles;
     }
 
     private void initPointLightHandles() {
@@ -78,7 +94,30 @@ public class LightingTextureShader extends Shader {
             pointLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
             pointLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
             pointLightHandles.specularUniformHandle = getUniform(parent + "specular");
+            pointLightHandles.constantUniformHandle = getUniform(parent + "constant");
+            pointLightHandles.linearUniformHandle = getUniform(parent + "linear");
+            pointLightHandles.quadraticUniformHandle = getUniform(parent + "quadratic");
             super.pointLightHandles[i] = pointLightHandles;
+        }
+    }
+
+    private void initSpotLightHandles() {
+        super.spotLightHandles = new SpotLightHandles[MAX_NUM_SPOT_LIGHTS];
+        for (int i = 0; i < MAX_NUM_SPOT_LIGHTS; i++) {
+            final String parent = "uSpotLights[" + i + "].";
+            SpotLightHandles spotLightHandles = new SpotLightHandles();
+            spotLightHandles.positionUniformHandle = getUniform(parent + "position");
+            spotLightHandles.directionUniformHandle = getUniform(parent + "direction");
+            spotLightHandles.colourUniformHandle = getUniform(parent + "colour");
+            spotLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+            spotLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+            spotLightHandles.specularUniformHandle = getUniform(parent + "specular");
+            spotLightHandles.constantUniformHandle = getUniform(parent + "constant");
+            spotLightHandles.linearUniformHandle = getUniform(parent + "linear");
+            spotLightHandles.quadraticUniformHandle = getUniform(parent + "quadratic");
+            spotLightHandles.sizeUniformHandle = getUniform(parent + "size");
+            spotLightHandles.outerSizeUniformHandle = getUniform(parent + "outerSize");
+            super.spotLightHandles[i] = spotLightHandles;
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Data;
 
 import static android.opengl.GLES30.GL_INVALID_VALUE;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 

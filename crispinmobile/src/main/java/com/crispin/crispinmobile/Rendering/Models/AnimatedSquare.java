@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 
 public class AnimatedSquare extends Square {
     private final int animationDurationMs;

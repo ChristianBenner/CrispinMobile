@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Utilities;
+package com.crispin.crispinmobile.Rendering.Data;
 
 import static android.opengl.GLES20.GL_LINEAR;
 import static android.opengl.GLES30.GL_NEAREST;
