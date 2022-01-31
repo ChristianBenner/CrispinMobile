@@ -25,31 +25,18 @@ import com.crispin.demos.R;
 import java.util.HashMap;
 
 public class LightingDemo extends Scene {
-    // Amount that the information text should fade in per cycle
     private final float INFO_TEXT_FADE_STEP_AMOUNT = 0.03f;
-
     private final long WELCOME_SCENE_DURATION_MS = 4000L;
-
     private final long WELCOME_SCENE_MODEL_APPEAR_START_MS = 2000L;
-
     private final long LIGHT_INTENSITY_SCENE_DURATION_MS = 3000L;
-
     private final float LIGHT_INTENSITY_CEILING = 1.0f;
-
     private final long LIGHT_AMBIENT_SCENE_DURATION_MS = 3000L;
-
     private final float LIGHT_AMBIENT_CEILING = 0.2f;
-
     private final long LIGHT_SPECULAR_SCENE_DURATION_MS = 3000L;
-
     private final float LIGHT_SPECULAR_CEILING = 4.0f;
-
     private final long POSITIONING_SCENE_DURATION_MS = 4000L;
-
     private final long COLOUR_SCENE_DURATION_MS = 8000L;
-
     private final long RESET_LIGHT_SCENE_DURATION_MS = 4000L;
-
     private final float BUTTON_PADDING = 20.0f;
 
     private final int STAGE_INTRODUCTION = 0;

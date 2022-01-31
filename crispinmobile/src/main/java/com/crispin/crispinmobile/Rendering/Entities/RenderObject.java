@@ -18,6 +18,7 @@ import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
@@ -28,7 +29,6 @@ import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
-import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
@@ -48,15 +48,12 @@ import java.util.ArrayList;
  * @since 1.0
  */
 public class RenderObject {
-    // Tag used in logging output
-    private static final String TAG = "RenderObject";
-
     // The 'numVerticesPerGroup' if the vertices are not grouped
     public static final int UNGROUPED = 1;
-
     // The number of bytes in a float
     public static final int BYTES_PER_FLOAT = 4;
-
+    // Tag used in logging output
+    private static final String TAG = "RenderObject";
     // Value that represents an invalid OpenGL ES GLSL shader uniform handle
     private static final int INVALID_UNIFORM_HANDLE = -1;
 
@@ -74,43 +71,30 @@ public class RenderObject {
 
     // The method to render the data as (e.g. triangles or lines)
     private final RenderMethod renderMethod;
-
-    // Material to apply to the object
-    protected Material material;
-
-    // Shader applied to the object
-    protected Shader shader;
-
     // The number of elements that are in the position data
     private final int elementsPerPosition;
-
-    // The position index of the position data in the vertex data buffer
-    private int positionDataOffset;
-
     // The number of elements that are in the texel data
     private final int elementsPerTexel;
-
-    // The position index of the texel data in the vertex data buffer
-    private int texelDataOffset;
-
     // The number of elements that are in the colour data
     private final int elementsPerColour;
-
-    // The position index of the colour data in the vertex data buffer
-    private int colourDataOffset;
-
     // The number of elements that are in the direction data
     private final int elementsPerNormal;
-
-    // The position index of the direction data in the vertex data buffer
-    private int normalDataOffset;
-
-    // The stride between each set of data (only if the data format is ungrouped)
-    private int totalStrideBytes;
-
     // Float buffer that holds all the triangle co-ordinate data
     private final FloatBuffer vertexBuffer;
-
+    // Material to apply to the object
+    protected Material material;
+    // Shader applied to the object
+    protected Shader shader;
+    // The position index of the position data in the vertex data buffer
+    private int positionDataOffset;
+    // The position index of the texel data in the vertex data buffer
+    private int texelDataOffset;
+    // The position index of the colour data in the vertex data buffer
+    private int colourDataOffset;
+    // The position index of the direction data in the vertex data buffer
+    private int normalDataOffset;
+    // The stride between each set of data (only if the data format is ungrouped)
+    private int totalStrideBytes;
     // If the model has a custom shader
     private boolean hasCustomShader;
 

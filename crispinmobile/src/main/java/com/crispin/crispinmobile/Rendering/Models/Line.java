@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Rendering.Entities;
+package com.crispin.crispinmobile.Rendering.Models;
 
 import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;

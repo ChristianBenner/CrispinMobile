@@ -57,6 +57,17 @@ public class PointLight {
     public float attenuationLinear;
     public float attenuationQuadratic;
 
+    /**
+     * Construct a point light with a given position and colour
+     *
+     * @param x     Position x co-ordinate
+     * @param y     Position y co-ordinate
+     * @param z     Position z co-ordinate
+     * @param red   Red channel amount (0.0-1.0)
+     * @param green Green channel amount (0.0-1.0)
+     * @param blue  Blue channel amount (0.0-1.0)
+     * @since 1.0
+     */
     public PointLight(float x, float y, float z, float red, float green, float blue) {
         this.x = x;
         this.y = y;
@@ -72,105 +83,256 @@ public class PointLight {
         this.attenuationQuadratic = DEFAULT_ATTENUATION_QUADRATIC;
     }
 
+    /**
+     * Construct a point light with a given position
+     *
+     * @param x     Position x co-ordinate
+     * @param y     Position y co-ordinate
+     * @param z     Position z co-ordinate
+     * @since 1.0
+     */
     public PointLight(float x, float y, float z) {
         this(x, y, z, 1.0f, 1.0f, 1.0f);
     }
 
+    /**
+     * Construct a point light with a given position and colour
+     *
+     * @param x     Position x co-ordinate
+     * @param y     Position y co-ordinate
+     * @param red   Red channel amount (0.0-1.0)
+     * @param green Green channel amount (0.0-1.0)
+     * @param blue  Blue channel amount (0.0-1.0)
+     * @since 1.0
+     */
     public PointLight(float x, float y, float red, float green, float blue) {
         this(x, y, 0.0f, red, green, blue);
     }
 
+    /**
+     * Construct a point light with a given position and colour
+     *
+     * @param x     Position x co-ordinate
+     * @param y     Position y co-ordinate
+     * @since 1.0
+     */
     public PointLight(float x, float y) {
         this(x, y, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
+    /**
+     * Construct a point light with a given position and colour
+     *
+     * @param position  Position vector
+     * @param colour    Colour
+     * @since 1.0
+     */
     public PointLight(final Vec3 position, final Colour colour) {
         this(position.x, position.y, position.z, colour.red, colour.green,
                 colour.blue);
     }
 
+    /**
+     * Construct a point light with a given position and colour
+     *
+     * @param position  Position vector
+     * @param colour    Colour
+     * @since 1.0
+     */
     public PointLight(final Vec2 position, final Colour colour) {
         this(position.x, position.y, colour.red, colour.green, colour.blue);
     }
 
+    /**
+     * Construct a point light with a given position
+     *
+     * @param position  Position vector
+     * @since 1.0
+     */
     public PointLight(final Vec3 position) {
         this(position.x, position.y, position.z);
     }
 
+    /**
+     * Construct a point light with a given 2D position
+     *
+     * @param position  Position vector
+     * @since 1.0
+     */
     public PointLight(final Vec2 position) {
         this(position.x, position.y);
     }
 
+    /**
+     * Construct a point light. As no position is provided this light will be located at the origin.
+     *
+     * @since 1.0
+     */
     public PointLight() {
         this(0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f);
     }
 
+    /**
+     * Set the light position
+     *
+     * @param x Position x co-ordinate
+     * @param y Position y co-ordinate
+     * @param z Position z co-ordinate
+     * @since 1.0
+     */
     public void setPosition(float x, float y, float z) {
         this.x = x;
         this.y = y;
         this.z = z;
     }
 
+    /**
+     * Set the light position
+     *
+     * @param x Position x co-ordinate
+     * @param y Position y co-ordinate
+     * @since 1.0
+     */
     public void setPosition(float x, float y) {
         this.x = x;
         this.y = y;
     }
 
+    /**
+     * Get the light position
+     *
+     * @return Position as a 3D vector
+     * @since 1.0
+     */
     public Vec3 getPosition() {
         return new Vec3(x, y, z);
     }
 
+    /**
+     * Set the light position
+     *
+     * @param position  Position vector
+     * @since 1.0
+     */
     public void setPosition(Vec3 position) {
         x = position.x;
         y = position.y;
         z = position.z;
     }
 
+    /**
+     * Set the light position
+     *
+     * @param position  Position vector
+     * @since 1.0
+     */
     public void setPosition(Vec2 position) {
         x = position.x;
         y = position.y;
     }
 
+    /**
+     * Get the light position
+     *
+     * @return Position as a 2D vector
+     * @since 1.0
+     */
     public Vec2 getPosition2D() {
         return new Vec2(x, y);
     }
 
+    /**
+     * Set the light colour
+     *
+     * @param red   Red channel amount (0.0-1.0)
+     * @param green Green channel amount (0.0-1.0)
+     * @param blue  Blue channel amount (0.0-1.0)
+     * @since 1.0
+     */
     public void setColour(float red, float green, float blue) {
         this.red = red;
         this.green = green;
         this.blue = blue;
     }
 
+    /**
+     * Get the light colour
+     *
+     * @return Colour of the light
+     * @since 1.0
+     */
     public Colour getColour() {
         return new Colour(red, green, blue);
     }
 
+    /**
+     * Set the light colour
+     *
+     * @param colour Colour
+     * @since 1.0
+     */
     public void setColour(final Colour colour) {
         red = colour.red;
         green = colour.green;
         blue = colour.blue;
     }
 
+    /**
+     * Get the diffuse strength (strength of simulated light spread)
+     *
+     * @return The diffuse strength from 0.0-1.0 (where 1.0 is the highest strength)
+     * @since 1.0
+     */
     public float getDiffuseStrength() {
         return diffuseStrength;
     }
 
+    /**
+     * Set the diffuse strength (strength of simulated light spread)
+     *
+     * @param diffuseStrength Strength for 0.0-1.0
+     * @since 1.0
+     */
     public void setDiffuseStrength(float diffuseStrength) {
         this.diffuseStrength = diffuseStrength;
     }
 
+    /**
+     * Get the ambient strength
+     *
+     * @return The ambient strength from 0.0-1.0 (where 1.0 is the highest strength)
+     * @since 1.0
+     */
     public float getAmbientStrength() {
         return ambientStrength;
     }
 
+    /**
+     * Set the ambient strength
+     *
+     * @param ambientStrength Strength for 0.0-1.0
+     * @since 1.0
+     */
     public void setAmbientStrength(float ambientStrength) {
         this.ambientStrength = ambientStrength;
     }
 
+    /**
+     * Get the specular strength (reflective glint/shine)
+     *
+     * @return The specular strength from 0.0-1.0 (where 1.0 is the highest strength)
+     * @since 1.0
+     */
     public float getSpecularStrength() {
         return specularStrength;
     }
 
+    /**
+     * Set the specular strength (reflective glint/shine)
+     *
+     * @param specularStrength Strength for 0.0-1.0
+     * @since 1.0
+     */
     public void setSpecularStrength(float specularStrength) {
         this.specularStrength = specularStrength;
     }
