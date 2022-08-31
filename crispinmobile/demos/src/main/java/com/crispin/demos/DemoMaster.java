@@ -21,8 +21,10 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.scenes.LightingDemo;
 import com.crispin.demos.scenes.MaterialDemo;
 import com.crispin.demos.scenes.ObjLoadDemo;
+import com.crispin.demos.scenes.RenderBatchDemo;
 import com.crispin.demos.scenes.SpotLightDemo;
 import com.crispin.demos.scenes.TextDemo;
+import com.crispin.demos.scenes.VAODemo;
 
 class DemoMasterScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
@@ -48,6 +50,8 @@ class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
         linearLayout.add(createDemoButton("TextDemo", TextDemo::new));
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
+        linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
+        linearLayout.add(createDemoButton("VAO", VAODemo::new));
 
         selectDemoText = new com.crispin.crispinmobile.UserInterface.Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);

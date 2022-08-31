@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * Square class is a default render object model that allows you to render a 2-dimensional square.
@@ -61,17 +61,9 @@ public class Square extends Model {
      * @since 1.0
      */
     public Square(Material material, boolean renderTexels) {
-        super(POSITION_DATA,
-                renderTexels ? TEXEL_DATA : null,
-                null,
-                null,
-                RenderMethod.TRIANGLES,
-                POSITION_DATA.length / NUMBER_POSITION_COMPONENTS,
-                NUMBER_POSITION_COMPONENTS,
-                NUMBER_TEXEL_COMPONENTS,
-                (byte) 0,
-                (byte) 0,
-                material);
+        super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, null,
+                RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS, NUMBER_TEXEL_COMPONENTS,
+                (byte)0, material);
     }
 
     /**

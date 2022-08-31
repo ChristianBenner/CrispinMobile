@@ -129,7 +129,6 @@ public class LightingDemo extends Scene {
             this.torus = loadListener;
             this.torus.setMaterial(torusWoodMaterial);
             this.torus.setColour(1.0f, 0.5f, 0.31f);
-            this.torus.translate(0.0f, 0.0f, 0.0f);
             this.torus.setAlpha(0.0f);
         });
 

@@ -19,7 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 

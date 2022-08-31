@@ -84,15 +84,15 @@ public class SpotLightHandles {
         }
 
         if (constantUniformHandle != UNDEFINED_HANDLE) {
-            glUniform1f(constantUniformHandle, light.attenuationConstant);
+            glUniform1f(constantUniformHandle, light.constantAttenuation);
         }
 
         if (linearUniformHandle != UNDEFINED_HANDLE) {
-            glUniform1f(linearUniformHandle, light.attenuationLinear);
+            glUniform1f(linearUniformHandle, light.linearAttenuation);
         }
 
         if (quadraticUniformHandle != UNDEFINED_HANDLE) {
-            glUniform1f(quadraticUniformHandle, light.attenuationQuadratic);
+            glUniform1f(quadraticUniformHandle, light.quadraticAttenuation);
         }
 
         if (sizeUniformHandle != UNDEFINED_HANDLE) {

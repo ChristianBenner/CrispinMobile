@@ -3,7 +3,7 @@ package com.crispin.crispinmobile.Rendering.Models;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * FontSquare class derived from the Square class. It is a square render object with some extra
@@ -35,14 +35,9 @@ public class FontSquare extends Square {
      */
     public FontSquare(Material material, Vec3 textPosition, Vec2 characterOffset) {
         super(material);
-
-        // Because text shouldn't have colour per vertex ignore the data if it is present
-        super.material.ignoreData(Material.IGNORE_COLOUR_DATA_FLAG);
         this.textPosition = textPosition;
         this.characterOffset = characterOffset;
-
         updatePosition();
-
     }
 
     /**
@@ -52,9 +47,6 @@ public class FontSquare extends Square {
      */
     public FontSquare() {
         super();
-
-        // Because text shouldn't have colour per vertex ignore the data if it is present
-        super.material.ignoreData(Material.IGNORE_COLOUR_DATA_FLAG);
         textPosition = new Vec3();
         characterOffset = new Vec2();
     }

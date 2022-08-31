@@ -3,7 +3,6 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 
 /**
  * Camera2D provides a simple interface to view matrix operations and control. The class integrates

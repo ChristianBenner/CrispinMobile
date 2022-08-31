@@ -3,6 +3,7 @@ package com.crispin.crispinmobile.Rendering.Entities;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * Text

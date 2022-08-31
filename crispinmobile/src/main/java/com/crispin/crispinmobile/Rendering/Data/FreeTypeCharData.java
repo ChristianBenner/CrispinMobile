@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Native.CrispinNativeInterface;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * FreeTypeCharData class holds important data on FreeType character faces. This is so that a

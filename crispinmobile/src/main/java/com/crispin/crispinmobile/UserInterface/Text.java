@@ -1011,19 +1011,14 @@ public class Text implements UIObject {
             final float X_POS = startX + (character.getBearingX() * scale);
             final float WIDTH = character.getWidth() * scale;
 
-
-            System.out.println("TTT CHAR: " + (char) character.getAscii());
-
             // If a space has not yet been detected and one has just been found, set the word length
             // without any spaces to be the current length
             if (!spaceDetected && character.getAscii() == (byte) 0x20) {
                 lengthPreSpaces = length;
-                System.out.println("TTT Found a space: " + lengthPreSpaces);
                 spaceDetected = true;
             }
 
             length = X_POS + WIDTH;
-            System.out.println("TTT After Length: " + length);
 
             // The advance for the next character
             startX += (character.getAdvance() >> ADVANCE_TRANSFORMATION) * scale;
@@ -1098,8 +1093,6 @@ public class Text implements UIObject {
                 if (words.get(words.size() - 1).lengthPreSpaces != 0.0f) {
                     length -= words.get(words.size() - 1).length;
                     length += words.get(words.size() - 1).lengthPreSpaces;
-                    System.out.println("TTT Word length: " + words.get(words.size() - 1).length);
-                    System.out.println("TTT Word pre spaces length: " + words.get(words.size() - 1).lengthPreSpaces);
                 }
             }
         }

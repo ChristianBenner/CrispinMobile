@@ -3,6 +3,7 @@ package com.crispin.crispinmobile.Rendering.Entities;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 
 /**
  * The light class provides an interface to lighting elements in a graphical scene. The class allows
@@ -62,9 +63,9 @@ public class SpotLight {
     public float specularStrength;
 
     // Attenuation variables
-    public float attenuationConstant;
-    public float attenuationLinear;
-    public float attenuationQuadratic;
+    public float constantAttenuation;
+    public float linearAttenuation;
+    public float quadraticAttenuation;
 
     // Size of the light beam (when to start fading out the radius)
     public float size;
@@ -85,9 +86,9 @@ public class SpotLight {
         this.diffuseStrength = DEFAULT_INTENSITY;
         this.ambientStrength = DEFAULT_AMBIENCE_STRENGTH;
         this.specularStrength = DEFAULT_SPECULAR_STRENGTH;
-        this.attenuationConstant = DEFAULT_ATTENUATION_CONSTANT;
-        this.attenuationLinear = DEFAULT_ATTENUATION_LINEAR;
-        this.attenuationQuadratic = DEFAULT_ATTENUATION_QUADRATIC;
+        this.constantAttenuation = DEFAULT_ATTENUATION_CONSTANT;
+        this.linearAttenuation = DEFAULT_ATTENUATION_LINEAR;
+        this.quadraticAttenuation = DEFAULT_ATTENUATION_QUADRATIC;
         this.size = DEFAULT_SIZE;
         this.outerSize = DEFAULT_OUTER_SIZE;
     }
@@ -356,5 +357,65 @@ public class SpotLight {
      */
     public void setSpecularStrength(float specularStrength) {
         this.specularStrength = specularStrength;
+    }
+
+    /**
+     * Get the constant attenuation
+     *
+     * @return Constant attenuation
+     * @since 1.0
+     */
+    public float getConstantAttenuation() {
+        return constantAttenuation;
+    }
+
+    /**
+     * Set the constant attenuation
+     *
+     * @param constantAttenuation   Value for constant attenuation
+     * @since 1.0
+     */
+    public void setConstantAttenuation(float constantAttenuation) {
+        this.constantAttenuation = this.constantAttenuation;
+    }
+
+    /**
+     * Get the linear attenuation
+     *
+     * @return Linear attenuation
+     * @since 1.0
+     */
+    public float getLinearAttenuation() {
+        return linearAttenuation;
+    }
+
+    /**
+     * Set the linear attenuation
+     *
+     * @param linearAttenuation Value for linear attenuation
+     * @since 1.0
+     */
+    public void setLinearAttenuation(float linearAttenuation) {
+        this.linearAttenuation = linearAttenuation;
+    }
+
+    /**
+     * Get the quadratic attenuation
+     *
+     * @return Quadratic attenuation
+     * @since 1.0
+     */
+    public float getQuadraticAttenuation() {
+        return quadraticAttenuation;
+    }
+
+    /**
+     * Set the quadratic attenuation
+     *
+     * @param quadraticAttenuation  Value for quadratic attenuation
+     * @since 1.0
+     */
+    public void setQuadraticAttenuation(float quadraticAttenuation) {
+        this.quadraticAttenuation = quadraticAttenuation;
     }
 }

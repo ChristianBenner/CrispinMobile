@@ -5,7 +5,6 @@ import android.opengl.Matrix;
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec3;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
 
 /**
  * Camera provides a simple interface to view matrix operations and control. The class integrates

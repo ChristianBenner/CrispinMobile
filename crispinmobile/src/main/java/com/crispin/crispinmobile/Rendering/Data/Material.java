@@ -2,7 +2,7 @@ package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
 /**
@@ -30,11 +30,8 @@ public class Material {
     // Flag position for ignoring texel texel data
     public static final int IGNORE_TEXEL_DATA_FLAG = 2;
 
-    // Flag position for ignoring colour data
-    public static final int IGNORE_COLOUR_DATA_FLAG = 4;
-
     // Flag position for ignoring normal data
-    public static final int IGNORE_NORMAL_DATA_FLAG = 8;
+    public static final int IGNORE_NORMAL_DATA_FLAG = 4;
 
     // Default uv multiplier
     private static final Scale2D DEFAULT_UV_MULTIPLIER = new Scale2D();
@@ -78,9 +75,6 @@ public class Material {
     // Ignore texel data in rendering
     private boolean ignoreTexelData;
 
-    // Ignore colour data in rendering
-    private boolean ignoreColourData;
-
     // Ignore normal data in rendering
     private boolean ignoreNormalData;
 
@@ -107,7 +101,6 @@ public class Material {
         this.shininess = DEFAULT_SHININESS;
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
-        this.ignoreColourData = false;
         this.ignoreNormalData = false;
         this.specularMap = null;
         this.normalMap = null;
@@ -233,11 +226,6 @@ public class Material {
             setIgnoreTexelData(true);
         }
 
-        // Check if the data flag matches the ignore colour data flag
-        if ((dataFlags & Material.IGNORE_COLOUR_DATA_FLAG) == Material.IGNORE_COLOUR_DATA_FLAG) {
-            setIgnoreColourData(true);
-        }
-
         // Check if the data flag matches the ignore normal data flag
         if ((dataFlags & Material.IGNORE_NORMAL_DATA_FLAG) == Material.IGNORE_NORMAL_DATA_FLAG) {
             setIgnoreNormalData(true);
@@ -282,26 +270,6 @@ public class Material {
      */
     public boolean isIgnoringTexelData() {
         return ignoreTexelData;
-    }
-
-    /**
-     * Set the state of ignoring colour data
-     *
-     * @param state The state of ignoring colour data
-     * @since 1.0
-     */
-    public void setIgnoreColourData(boolean state) {
-        ignoreColourData = state;
-    }
-
-    /**
-     * Get the state of ignoring colour data
-     *
-     * @return A boolean of the state of ignoring colour data
-     * @since 1.0
-     */
-    public boolean isIgnoringColourData() {
-        return ignoreColourData;
     }
 
     /**

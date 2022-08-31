@@ -1,5 +1,12 @@
 package com.crispin.crispinmobile.Utilities;
 
+import static android.opengl.GLES20.GL_ALWAYS;
+import static android.opengl.GLES20.GL_LEQUAL;
+import static android.opengl.GLES20.GL_NEVER;
+import static android.opengl.GLES20.GL_NOTEQUAL;
+import static android.opengl.GLES20.GL_STENCIL_BUFFER_BIT;
+import static android.opengl.GLES20.GL_STENCIL_TEST;
+import static android.opengl.GLES20.glDepthFunc;
 import static android.opengl.GLES30.GL_BLEND;
 import static android.opengl.GLES30.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES30.GL_CULL_FACE;

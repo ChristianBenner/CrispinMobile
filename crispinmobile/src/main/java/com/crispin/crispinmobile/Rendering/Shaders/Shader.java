@@ -75,6 +75,9 @@ public class Shader {
     // Normal attribute handle
     public int normalAttributeHandle;
 
+    // Instance matrix attribute handle
+    public int instanceMatrixAttributeHandle;
+
     // Matrix uniform handle
     public int matrixUniformHandle;
 
@@ -131,6 +134,7 @@ public class Shader {
         colourAttributeHandle = UNDEFINED_HANDLE;
         textureAttributeHandle = UNDEFINED_HANDLE;
         normalAttributeHandle = UNDEFINED_HANDLE;
+        instanceMatrixAttributeHandle = UNDEFINED_HANDLE;
         matrixUniformHandle = UNDEFINED_HANDLE;
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
         viewMatrixUniformHandle = UNDEFINED_HANDLE;

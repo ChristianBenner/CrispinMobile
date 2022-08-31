@@ -1,19 +1,57 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import static android.opengl.GLES30.GL_LINES;
+import static android.opengl.GLES30.GL_POINTS;
+import static android.opengl.GLES30.GL_TEXTURE_2D;
+import static android.opengl.GLES30.GL_TRIANGLES;
+import static android.opengl.GLES30.glBindTexture;
+import static android.opengl.GLES30.glDrawArrays;
+import static android.opengl.GLES30.glUniform1i;
+import static android.opengl.GLES30.glUniform3f;
+import static android.opengl.GLES30.glUniformMatrix4fv;
+import static android.opengl.GLES30.glVertexAttribPointer;
+
+import android.opengl.GLES30;
+import android.opengl.Matrix;
+
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
+import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Utilities.Logger;
+import com.crispin.crispinmobile.Utilities.ShaderCache;
+
+import java.util.ArrayList;
 
 public class Model extends RenderObject {
+    // Tag used in logging output
+    private static final String TAG = "Model";
+
+    // The number of elements in a 4x4 view matrix
+    private static final int NUM_VALUES_PER_VIEW_MATRIX = 16;
+
+    // Number of uniform elements to upload in a single GLSL uniform upload
+    private static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
+
     // The model matrix
     private final ModelMatrix modelMatrix;
 
@@ -32,48 +70,56 @@ public class Model extends RenderObject {
     // Point rotation
     private final Rotation3D rotationPointAngle;
 
-    public Model(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
-                 float[] normalBuffer, RenderMethod renderMethod, int numVerticesPerGroup,
-                 byte elementsPerPosition, byte elementsPerTexel, byte elementsPerColour,
-                 byte elementsPerNormal, Material material) {
-        super(positionBuffer, texelBuffer, colourBuffer, normalBuffer, renderMethod,
-                numVerticesPerGroup, elementsPerPosition, elementsPerTexel, elementsPerColour,
-                elementsPerNormal, material);
+    // Material to apply to the object
+    protected Material material;
+
+    // Shader applied to the object
+    protected Shader shader;
+
+    // If the model has a custom shader
+    private boolean hasCustomShader;
+
+    public Model(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
+                 RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
+                 int elementsPerNormal, Material material) {
+        super(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
+                elementsPerTexel, elementsPerNormal);
         modelMatrix = new ModelMatrix();
         position = new Vec3();
         rotation = new Rotation3D();
         scale = new Scale3D();
         rotationPoint = new Vec3();
         rotationPointAngle = new Rotation3D();
+        this.material = material;
+        hasCustomShader = false;
     }
 
-    public Model(float[] positionBuffer, float[] texelBuffer, float[] colourBuffer,
-                 float[] normalBuffer, RenderMethod renderMethod, int numVerticesPerGroup,
-                 byte elementsPerPosition, byte elementsPerTexel, byte elementsPerColour,
-                 byte elementsPerNormal) {
-        this(positionBuffer, texelBuffer, colourBuffer, normalBuffer, renderMethod,
-                numVerticesPerGroup, elementsPerPosition, elementsPerTexel, elementsPerColour,
-                elementsPerNormal, new Material());
+    public Model(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
+                 RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
+                 int elementsPerNormal) {
+        this(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
+                elementsPerTexel, elementsPerNormal, new Material());
     }
 
     public Model(float[] vertexData, RenderMethod renderMethod, AttributeOrder_t attributeOrder,
-                 int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
-                 byte elementsPerColour, byte elementsPerNormal, Material material) {
-        super(vertexData, renderMethod, attributeOrder, numVerticesPerGroup, elementsPerPosition,
-                elementsPerTexel, elementsPerColour, elementsPerNormal, material);
+                 int elementsPerPosition, int elementsPerTexel, int elementsPerNormal,
+                 Material material) {
+        super(vertexData, renderMethod, attributeOrder, elementsPerPosition, elementsPerTexel,
+                elementsPerNormal);
         modelMatrix = new ModelMatrix();
         position = new Vec3();
         rotation = new Rotation3D();
         scale = new Scale3D();
         rotationPoint = new Vec3();
         rotationPointAngle = new Rotation3D();
+        this.material = material;
+        hasCustomShader = false;
     }
 
     public Model(float[] vertexData, RenderMethod renderMethod, AttributeOrder_t attributeOrder,
-                 int numVerticesPerGroup, byte elementsPerPosition, byte elementsPerTexel,
-                 byte elementsPerColour, byte elementsPerNormal) {
-        this(vertexData, renderMethod, attributeOrder, numVerticesPerGroup, elementsPerPosition,
-                elementsPerTexel, elementsPerColour, elementsPerNormal, new Material());
+                 int elementsPerPosition, int elementsPerTexel, int elementsPerNormal) {
+        this(vertexData, renderMethod, attributeOrder, elementsPerPosition,
+                elementsPerTexel, elementsPerNormal, new Material());
     }
 
     /**
@@ -390,6 +436,100 @@ public class Model extends RenderObject {
     }
 
     /**
+     * Get the material applied to the render object
+     *
+     * @return The material attached to the render object
+     * @see Material
+     * @since 1.0
+     */
+    public Material getMaterial() {
+        return this.material;
+    }
+
+    /**
+     * Set the material. Materials can contain multiple pieces of information such as texture and
+     * colour. Your model must contain texel data in order to support material textures.
+     *
+     * @param material The material to apply to the render object
+     * @see Material
+     * @since 1.0
+     */
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param r The intensity of the red channel (0.0-1.0)
+     * @param g The intensity of the green channel (0.0-1.0)
+     * @param b The intensity of the blue channel (0.0-1.0)
+     * @param a The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(float r, float g, float b, float a) {
+        this.material.setColour(new Colour(r, g, b, a));
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param r The intensity of the red channel (0.0-1.0)
+     * @param g The intensity of the green channel (0.0-1.0)
+     * @param b The intensity of the blue channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(float r, float g, float b) {
+        this.material.setColour(new Colour(r, g, b));
+    }
+
+    /**
+     * Get the alpha channel intensity of the object
+     *
+     * @return The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public float getAlpha() {
+        return this.material.colour.alpha;
+    }
+
+    /**
+     * Set the alpha channel intensity of the object
+     *
+     * @param alpha The intensity of the alpha channel (0.0-1.0)
+     * @see Colour
+     * @since 1.0
+     */
+    public void setAlpha(float alpha) {
+        this.material.colour.alpha = alpha;
+    }
+
+    /**
+     * Get the colour of the object
+     *
+     * @return The colour of the object
+     * @see Colour
+     * @since 1.0
+     */
+    public Colour getColour() {
+        return this.material.colour;
+    }
+
+    /**
+     * Set the colour of the object
+     *
+     * @param colour The colour to set the object
+     * @see Colour
+     * @since 1.0
+     */
+    public void setColour(Colour colour) {
+        this.material.setColour(colour);
+    }
+
+    /**
      * Update the model matrix. This can update the model matrix if a transformation property of the
      * object such as a position, scale or rotation has changed.
      *
@@ -410,18 +550,230 @@ public class Model extends RenderObject {
         modelMatrix.scale(scale);
     }
 
-    public void render(Camera2D camera2D) {
-        updateModelMatrix();
-        super.render(camera2D, modelMatrix);
+    /**
+     * Use a custom shader with the object. This means that the object will be rendered using your
+     * own or a different built in GLSL program. You must make sure the shader you are setting
+     * supports the data attributes and uniforms of the object or the object may not render
+     * correctly or worse the program will crash.
+     *
+     * @since 1.0
+     */
+    public void useCustomShader(Shader customShader) {
+        // Check if the shader being assigned has been freeTypeInitialised
+        if (customShader != null) {
+            hasCustomShader = true;
+            shader = customShader;
+            setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                    shader.normalAttributeHandle);
+        } else {
+            Logger.error(TAG, "Custom shader supplied is null");
+        }
     }
 
-    public void render(Camera camera3D) {
+    public void render(Camera2D camera) {
         updateModelMatrix();
-        super.render(camera3D, modelMatrix);
+
+        // If the shader is null, create a shader for the object
+        if (shader == null) {
+            updateShader();
+        }
+
+        shader.enableIt();
+
+        float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+        Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
+                modelMatrix.getModelMatrix(), 0);
+
+        glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT_SINGLE, false,
+                modelViewMatrix, 0);
+
+        // Set all material uniforms
+        shader.setMaterialUniforms(material);
+
+        GLES30.glBindVertexArray(vao);
+        // Draw the vertex data with the specified render method
+        switch (renderMethod) {
+            case POINTS:
+                glDrawArrays(GL_POINTS, 0, vertexCount);
+                break;
+            case LINES:
+                glDrawArrays(GL_LINES, 0, vertexCount);
+                break;
+            case TRIANGLES:
+                glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+                break;
+        }
+        GLES30.glBindVertexArray(0);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        shader.disableIt();
     }
 
-    public void render(Camera camera3D, final LightGroup lightGroup) {
+    public void render(Camera camera, final LightGroup lightGroup) {
         updateModelMatrix();
-        super.render(camera3D, modelMatrix, lightGroup);
+
+        // If the shader is null, create a shader for the object
+        if (shader == null) {
+            updateShader();
+        }
+
+        shader.enableIt();
+
+        if (lightGroup != null) {
+            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
+            if (directionalLight != null) {
+                shader.setDirectionalLightUniforms(directionalLight);
+            }
+
+            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
+            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
+                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
+            }
+
+            // Iterate through point lights, uploading each to the shader
+            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
+                final PointLight pointLight = pointLights.get(i);
+                shader.setPointLightUniforms(i, pointLight);
+            }
+
+            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
+            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
+                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
+            }
+
+            // Iterate through spot lights, uploading each to the shader
+            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
+                final SpotLight spotLight = spotLights.get(i);
+                shader.setSpotLightUniforms(i, spotLight);
+            }
+        }
+
+        // Set all material uniforms
+        shader.setMaterialUniforms(material);
+
+        if (shader.validHandle(shader.getViewPositionUniformHandle())) {
+            final Vec3 cameraPos = camera.getPosition();
+            glUniform3f(shader.getViewPositionUniformHandle(), cameraPos.x, cameraPos.y,
+                    cameraPos.z);
+        }
+
+        if (shader.validHandle(shader.getProjectionMatrixUniformHandle())) {
+            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    camera.getPerspectiveMatrix(),
+                    0);
+        }
+
+        if (shader.validHandle(shader.getViewMatrixUniformHandle())) {
+            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    camera.getViewMatrix(),
+                    0);
+        }
+
+        if (shader.validHandle(shader.getModelMatrixUniformHandle())) {
+            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    modelMatrix.getModelMatrix(),
+                    0);
+        }
+
+        GLES30.glBindVertexArray(vao);
+        // Draw the vertex data with the specified render method
+        switch (renderMethod) {
+            case POINTS:
+                glDrawArrays(GL_POINTS, 0, vertexCount);
+                break;
+            case LINES:
+                glDrawArrays(GL_LINES, 0, vertexCount);
+                break;
+            case TRIANGLES:
+                glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+                break;
+        }
+        GLES30.glBindVertexArray(0);
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+
+        shader.disableIt();
+    }
+
+    public void render(Camera camera) {
+        render(camera, null);
+    }
+
+    /**
+     * Update the shader by automatically deciding what built in GLSL program to use depending on
+     * the data that is present on the render object. For example, if the object has position data,
+     * texel data and a texture applied, a texture shader will be assigned.
+     *
+     * @since 1.0
+     */
+    protected void updateShader() {
+        // If their has not been a custom shader allocated to the render object, automatically
+        // allocate one
+        if (hasCustomShader) {
+            return;
+        }
+
+        // Check that the object has all of the components required to render normal data
+        final boolean supportsNormals = !material.isIgnoringNormalData() &&
+                elementsPerNormal != 0;
+
+        // Check that the object has all of the components required to render a texture
+        final boolean supportsTexture = material.hasTexture() &&
+                (elementsPerTexel != 0) &&
+                !material.isIgnoringTexelData();
+
+        // Select a shader based on what data attributes and uniforms the object supports
+        if (supportsNormals && supportsTexture) {
+            System.out.println("NORMAL AND TEXTURE SHADER");
+
+            if (ShaderCache.existsInCache(LightingTextureShader.VERTEX_FILE,
+                    LightingTextureShader.FRAGMENT_FILE)) {
+                shader = ShaderCache.getShader(LightingTextureShader.VERTEX_FILE,
+                        LightingTextureShader.FRAGMENT_FILE);
+            } else {
+                shader = new LightingTextureShader();
+            }
+        } else if (supportsNormals) {
+            System.out.println("NORMAL SHADER");
+
+            if (ShaderCache.existsInCache(LightingShader.VERTEX_FILE, LightingShader.FRAGMENT_FILE)) {
+                shader = ShaderCache.getShader(LightingShader.VERTEX_FILE,
+                        LightingShader.FRAGMENT_FILE);
+            } else {
+                shader = new LightingShader();
+            }
+        } else if (supportsTexture) {
+            System.out.println("TEXTURE SHADER");
+
+            // Just a texture shader
+            if (ShaderCache.existsInCache(TextureShader.VERTEX_FILE,
+                    TextureShader.FRAGMENT_FILE)) {
+                shader = ShaderCache.getShader(TextureShader.VERTEX_FILE,
+                        TextureShader.FRAGMENT_FILE);
+            } else {
+                shader = new TextureShader();
+            }
+        } else {
+            System.out.println("UniformColourShader");
+
+            // Just use a colour shader
+            if (ShaderCache.existsInCache(UniformColourShader.VERTEX_FILE,
+                    UniformColourShader.FRAGMENT_FILE)) {
+                shader = ShaderCache.getShader(UniformColourShader.VERTEX_FILE,
+                        UniformColourShader.FRAGMENT_FILE);
+            } else {
+                shader = new UniformColourShader();
+            }
+        }
+
+        setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                shader.normalAttributeHandle);
     }
 }

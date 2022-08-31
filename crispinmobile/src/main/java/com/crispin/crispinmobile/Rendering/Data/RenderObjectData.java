@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Entities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.Logger;
 
 import java.util.ArrayList;
@@ -290,55 +290,41 @@ public class RenderObjectData {
 
         int vertexDataBufferIndex = 0;
 
-        // Process the position vertex data
-        for (int vertexIterator = positionStartIndex;
-             vertexIterator != INVALID_ATTRIBUTE_INDEX && vertexIterator < faceDataArray.size();
-             vertexIterator += dataStride) {
-            // Iterate through the position data contained at the index stored in the face data
-            // array
-            for (int elementIndex = 0;
-                 elementIndex < NUMBER_OF_POSITION_ELEMENTS;
-                 elementIndex++) {
-                vertexDataBuffer[vertexDataBufferIndex] =
-                        positionDataArray.get(((faceDataArray.get(vertexIterator) +
-                                FACE_DATA_INDEX_OFFSET) * NUMBER_OF_POSITION_ELEMENTS) +
-                                elementIndex);
-                vertexDataBufferIndex++;
-            }
+        // Determine how many elements the face data includes
+        int faceDataStride = 1;
+        if(texelStartIndex != INVALID_ATTRIBUTE_INDEX) {
+            faceDataStride++;
+        }
+        if(normalStartIndex != INVALID_ATTRIBUTE_INDEX) {
+            faceDataStride++;
         }
 
-        vertexDataBufferIndex = POSITION_BUFFER_SIZE;
-
-        // Process the texel vertex data
-        for (int texelIterator = texelStartIndex;
-             texelIterator != INVALID_ATTRIBUTE_INDEX && texelIterator < faceDataArray.size();
-             texelIterator += dataStride) {
-            // Iterate through the texel data contained at the index stored in the face data
-            // array
-            for (int elementIndex = 0;
-                 elementIndex < NUMBER_OF_TEXEL_ELEMENTS;
-                 elementIndex++) {
-                float value = texelDataArray.get((((faceDataArray.get(texelIterator) +
-                        FACE_DATA_INDEX_OFFSET) * NUMBER_OF_TEXEL_ELEMENTS) + elementIndex));
-                vertexDataBuffer[vertexDataBufferIndex] = value;
+        // Iterate through the face data adding each position, texel and normal data for each
+        // vertex. This should result in a data structure of:
+        // v0: posX, posY, posZ, texU, texV, normX, normY, normZ
+        // v1: posX, posY, posZ, texU, texV, normX, normY, normZ
+        for (int fi = 0; fi < faceDataArray.size(); fi += faceDataStride) {
+            // Add the vertex positions
+            for (int pi = 0; pi < NUMBER_OF_POSITION_ELEMENTS; pi++) {
+                vertexDataBuffer[vertexDataBufferIndex] = positionDataArray.get(((
+                        faceDataArray.get(fi + positionStartIndex) + FACE_DATA_INDEX_OFFSET) *
+                        NUMBER_OF_POSITION_ELEMENTS) + pi);
                 vertexDataBufferIndex++;
             }
-        }
 
-        vertexDataBufferIndex = POSITION_BUFFER_SIZE + TEXEL_BUFFER_SIZE;
+            // Add the vertex texel data
+            for (int ti = 0; ti < NUMBER_OF_TEXEL_ELEMENTS; ti++) {
+                vertexDataBuffer[vertexDataBufferIndex] = texelDataArray.get((((
+                        faceDataArray.get(fi + texelStartIndex) + FACE_DATA_INDEX_OFFSET) *
+                        NUMBER_OF_TEXEL_ELEMENTS) + ti));
+                vertexDataBufferIndex++;
+            }
 
-        // Process the normal vertex data
-        for (int normalIterator = normalStartIndex;
-             normalIterator != INVALID_ATTRIBUTE_INDEX && normalIterator < faceDataArray.size();
-             normalIterator += dataStride) {
-            // Iterate through the normal data contained at the index stored in the face data
-            // array
-            for (int elementIndex = 0;
-                 elementIndex < NUMBER_OF_NORMAL_ELEMENTS;
-                 elementIndex++) {
-                float value = normalDataArray.get((((faceDataArray.get(normalIterator) +
-                        FACE_DATA_INDEX_OFFSET) * NUMBER_OF_NORMAL_ELEMENTS) + elementIndex));
-                vertexDataBuffer[vertexDataBufferIndex] = value;
+            // Add the vertex normal data
+            for (int ni = 0; ni < NUMBER_OF_NORMAL_ELEMENTS; ni++) {
+                vertexDataBuffer[vertexDataBufferIndex] = normalDataArray.get((((
+                        faceDataArray.get(fi + normalStartIndex) + FACE_DATA_INDEX_OFFSET) *
+                        NUMBER_OF_NORMAL_ELEMENTS) + ni));
                 vertexDataBufferIndex++;
             }
         }
@@ -347,10 +333,8 @@ public class RenderObjectData {
         return new Model(vertexDataBuffer,
                 RenderObject.RenderMethod.TRIANGLES,
                 RenderObject.AttributeOrder_t.POSITION_THEN_TEXEL_THEN_NORMAL,
-                NUMBER_OF_FACE_DATA,
                 numberOfPositionComponents,
                 numberOfTexelComponents,
-                (byte) 0,
                 numberOfNormalComponents);
     }
 

@@ -33,8 +33,8 @@ public class TextShader extends Shader {
     public TextShader() {
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
-        positionAttributeHandle = getAttribute("vPosition");
-        textureAttributeHandle = getAttribute("vTextureCoordinates");
+        positionAttributeHandle = getAttribute("aPosition");
+        textureAttributeHandle = getAttribute("aTextureCoordinates");
         matrixUniformHandle = getUniform("uMatrix");
 
         materialHandles = new MaterialHandles();
