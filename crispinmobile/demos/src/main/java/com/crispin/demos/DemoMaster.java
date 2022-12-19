@@ -18,6 +18,7 @@ import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.scenes.IndexDemo;
 import com.crispin.demos.scenes.LightingDemo;
 import com.crispin.demos.scenes.MaterialDemo;
 import com.crispin.demos.scenes.ObjLoadDemo;
@@ -52,6 +53,7 @@ class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
         linearLayout.add(createDemoButton("VAO", VAODemo::new));
+        linearLayout.add(createDemoButton("Index", IndexDemo::new));
 
         selectDemoText = new com.crispin.crispinmobile.UserInterface.Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);

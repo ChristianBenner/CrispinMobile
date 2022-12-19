@@ -263,7 +263,9 @@ public class SceneManager implements GLSurfaceView.Renderer {
                     }
 
                     // Provide the current scene with the motion event information
-                    currentScene.touch(action, position);
+                    if(currentScene != null) {
+                        currentScene.touch(action, position);
+                    }
 
                     // Send the touch event to the UI handler to activate touch on the ui elements on the
                     // current scene

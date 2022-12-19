@@ -326,6 +326,16 @@ public class Model extends RenderObject {
     }
 
     /**
+     * Get the rotation
+     *
+     * @return The 3D rotation of the object
+     * @since 1.0
+     */
+    public Rotation3D getRotation() {
+        return this.rotation;
+    }
+
+    /**
      * Set the rotation around point
      *
      * @param point    The point to rotate around
@@ -651,6 +661,20 @@ public class Model extends RenderObject {
 
         // Set all material uniforms
         shader.setMaterialUniforms(material);
+
+        // Support for shaders that only take in matrix (like uniform colour shader)
+        if (shader.validHandle(shader.getMatrixUniformHandle())) {
+            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.multiplyMM(modelViewMatrix, 0, camera.getViewMatrix(), 0,
+                    modelMatrix.getModelMatrix(), 0);
+
+            float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.multiplyMM(modelViewProjectionMatrix, 0, camera.getPerspectiveMatrix(), 0,
+                    modelViewMatrix, 0);
+
+            glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT_SINGLE, false,
+                    modelViewProjectionMatrix, 0);
+        }
 
         if (shader.validHandle(shader.getViewPositionUniformHandle())) {
             final Vec3 cameraPos = camera.getPosition();
