@@ -58,24 +58,17 @@ import javax.microedition.khronos.opengles.GL;
 
 public class IndexDemo extends Scene {
     class IndexShader extends Shader {
-        // Attribute for the instances of model matrixes
+        // Attribute for the instances of model matrices
         int modelMatrixInstanceAttributeHandle;
 
         public IndexShader() {
             super("Index Demo Shader", R.raw.index_vert, R.raw.index_frag);
             positionAttributeHandle = getAttribute("aPosition");
             modelMatrixInstanceAttributeHandle = getAttribute("aModel");
-
             projectionMatrixUniformHandle = getUniform("uProjection");
             viewMatrixUniformHandle = getUniform("uView");
-            modelMatrixUniformHandle = getUniform("uModel");
         }
 
-        /**
-         * Set the matrix for an index
-         *
-         * @since 1.0
-         */
         public void bindModelMatrixInstanceVAO(int instanceVAO) {
             GLES30.glBindVertexArray(instanceVAO);
 
@@ -101,11 +94,17 @@ public class IndexDemo extends Scene {
     private final Camera camera;
     private IndexShader indexShader;
     private float cameraZCount = 0.0f;
+    private int instanceVBO;
 
     final int NUM_INSTANCES = 5000;
     final int vec4Size = BYTES_PER_FLOAT * 4;
     final int stride = 4 * vec4Size; // we want to stride of 4x vec4's (jump a mat4 num bytes each time)
     final float boxSize = 30.0f;
+    final int numMatrices = NUM_INSTANCES;
+    final int numFloatsPerMatrix = 16;
+    final int totalNumFloats = numMatrices * numFloatsPerMatrix;
+    final int totalBytes = totalNumFloats * 4;
+    final int numBytesPerMatrix = numFloatsPerMatrix * 4;
 
     public IndexDemo() {
         Crispin.setBackgroundColour(Colour.WHITE);
@@ -117,10 +116,6 @@ public class IndexDemo extends Scene {
         camera = new Camera();
         camera.setPosition(new Vec3(0.0f, 0f, boxSize));
 
-        int numMatrices = NUM_INSTANCES;
-        int numFloatsPerMatrix = 16;
-        int totalNumFloats = numMatrices * numFloatsPerMatrix;
-        int numBytes = totalNumFloats * 4;
         FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(totalNumFloats);
 
         Random r = new Random();
@@ -141,9 +136,25 @@ public class IndexDemo extends Scene {
 
         int[] instanceVBO = new int[1];
         GLES30.glGenBuffers(1, instanceVBO, 0);
+        this.instanceVBO = instanceVBO[0];
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
-        GLES30.glBufferData(GL_ARRAY_BUFFER, numBytes, modelMatrixBuffer, GL_STATIC_DRAW);
+        GLES30.glBufferData(GL_ARRAY_BUFFER, totalBytes, modelMatrixBuffer, GL_STATIC_DRAW);
         indexShader.bindModelMatrixInstanceVAO(torus.vao);
+
+        setPosition(1, 0.0f, -1.0f, 35.0f);
+    }
+
+    // An example of how to set the position/model matrix of just one of the objects in the group,
+    // meaning that each object can still have on-demand position, scale and rotation changes
+    private void setPosition(int index, float x, float y, float z) {
+        FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(numFloatsPerMatrix);
+        ModelMatrix modelMatrix = new ModelMatrix();
+        modelMatrix.translate(x, y, z);
+        modelMatrixBuffer.put(modelMatrix.getModelMatrix());
+        modelMatrixBuffer.position(0);
+
+        GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);
+        GLES30.glBufferSubData(GL_ARRAY_BUFFER,index * numBytesPerMatrix, numBytesPerMatrix, modelMatrixBuffer);
     }
 
     @Override
@@ -151,15 +162,13 @@ public class IndexDemo extends Scene {
         cameraZCount += 0.01f * deltaTime;
         float cameraZ = ((float)Math.sin(cameraZCount) * boxSize * 1.4f) + boxSize;
         camera.setPosition(0.0f, 0.0f, cameraZ);
-        indexShader.enableIt();
-        glUniformMatrix4fv(indexShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
-        glUniformMatrix4fv(indexShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
-        indexShader.disableIt();
     }
 
     @Override
     public void render() {
         indexShader.enableIt();
+        glUniformMatrix4fv(indexShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
+        glUniformMatrix4fv(indexShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
         GLES30.glBindVertexArray(torus.vao);
         GLES30.glDrawArraysInstanced(GL_TRIANGLES, 0, torus.vertexCount, NUM_INSTANCES);
         GLES30.glBindVertexArray(0);
