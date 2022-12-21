@@ -4,7 +4,6 @@ layout (location = 1) in mat4 aModel;
 
 uniform mat4 uProjection;
 uniform mat4 uView;
-uniform mat4 uModel;
 
 void main()
 {
