@@ -1,13 +1,22 @@
 package com.crispin.demos.scenes;
 
+import static android.opengl.GLES20.GL_ARRAY_BUFFER;
+import static android.opengl.GLES20.GL_FLOAT;
 import static android.opengl.GLES20.GL_LINES;
 import static android.opengl.GLES20.GL_POINTS;
+import static android.opengl.GLES20.GL_STATIC_DRAW;
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TRIANGLES;
+import static android.opengl.GLES20.glBindBuffer;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glDrawArrays;
+import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glUniformMatrix4fv;
+import static android.opengl.GLES20.glVertexAttribPointer;
+import static android.opengl.GLES30.glBindVertexArray;
+
+import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
 
 import android.opengl.GLES30;
 import android.opengl.Matrix;
@@ -24,6 +33,7 @@ import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
@@ -38,23 +48,27 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
+import javax.microedition.khronos.opengles.GL;
+
 public class IndexDemo extends Scene {
     class IndexShader extends Shader {
-        private int[] matrixUniformHandles = new int[NUM_INSTANCES];
+        // Attribute for the instances of model matrixes
+        int modelMatrixInstanceAttributeHandle;
 
         public IndexShader() {
             super("Index Demo Shader", R.raw.index_vert, R.raw.index_frag);
             positionAttributeHandle = getAttribute("aPosition");
-            matrixUniformHandle = getUniform("uMatrix");
+            modelMatrixInstanceAttributeHandle = getAttribute("aModel");
 
-            for(int i = 0; i < NUM_INSTANCES; i++) {
-                matrixUniformHandles[i] = getUniform("uMatrixArr[" + i + "]");
-            }
+            projectionMatrixUniformHandle = getUniform("uProjection");
+            viewMatrixUniformHandle = getUniform("uView");
+            modelMatrixUniformHandle = getUniform("uModel");
         }
 
         /**
@@ -62,8 +76,24 @@ public class IndexDemo extends Scene {
          *
          * @since 1.0
          */
-        public void setMatrix(int index, float[] matrix) {
-            glUniformMatrix4fv(matrixUniformHandles[index], 1, false, matrix, 0);
+        public void bindModelMatrixInstanceVAO(int instanceVAO) {
+            GLES30.glBindVertexArray(instanceVAO);
+
+            glEnableVertexAttribArray(modelMatrixInstanceAttributeHandle);
+            glVertexAttribPointer(modelMatrixInstanceAttributeHandle, 4, GL_FLOAT, false, stride, 0);
+            glEnableVertexAttribArray(modelMatrixInstanceAttributeHandle + 1);
+            glVertexAttribPointer(modelMatrixInstanceAttributeHandle + 1, 4, GL_FLOAT, false, stride, vec4Size);
+            glEnableVertexAttribArray(modelMatrixInstanceAttributeHandle + 2);
+            glVertexAttribPointer(modelMatrixInstanceAttributeHandle + 2, 4, GL_FLOAT, false, stride, 2 * vec4Size);
+            glEnableVertexAttribArray(modelMatrixInstanceAttributeHandle + 3);
+            glVertexAttribPointer(modelMatrixInstanceAttributeHandle + 3, 4, GL_FLOAT, false, stride, 3 * vec4Size);
+
+            GLES30.glVertexAttribDivisor(modelMatrixInstanceAttributeHandle, 1);
+            GLES30.glVertexAttribDivisor(modelMatrixInstanceAttributeHandle + 1, 1);
+            GLES30.glVertexAttribDivisor(modelMatrixInstanceAttributeHandle + 2, 1);
+            GLES30.glVertexAttribDivisor(modelMatrixInstanceAttributeHandle + 3, 1);
+
+            GLES30.glBindVertexArray(0);
         }
     }
 
@@ -72,52 +102,71 @@ public class IndexDemo extends Scene {
     private IndexShader indexShader;
     final int NUM_INSTANCES = 625;
     float cameraZCount;
+    private ModelMatrix modelMatrix;
+
+    final int vec4Size = BYTES_PER_FLOAT * 4;
+    final int stride = 4 * vec4Size; // we want to stride of 4x vec4's (jump a mat4 num bytes each time)
+
 
     public IndexDemo() {
         Crispin.setBackgroundColour(Colour.WHITE);
 
         indexShader = new IndexShader();
-        ThreadedOBJLoader.loadModel(R.raw.torus_uv, model -> {
-            this.torus = model;
-            this.torus.useCustomShader(indexShader);
-            this.torus.setRotation(15.0f, 1.0f, 0.0f, 0.0f);
-        });
+        torus = OBJModelLoader.readObjFile(R.raw.torus_uv);
+        torus.useCustomShader(indexShader);
 
         camera = new Camera();
-        camera.setPosition(new Vec3(0.0f, 0f, 50.0f));
-        cameraZCount = (float)Math.PI / 2.0f;
+        camera.setPosition(new Vec3(0.0f, 0f, 5f));
 
-        Random r = new Random();
-        indexShader.enableIt();
+        modelMatrix = new ModelMatrix();
+        modelMatrix.reset();
+        modelMatrix.translate(0.0f, 0.0f, 0.0f);
+        modelMatrix.rotate(35f, 1.0f, 0.0f, 0.0f);
+        modelMatrix.scale(1.0f);
 
-        int max = 25;
+        int numFloats = 16;
+        int numBytes = numFloats * 4;
 
-        for(int y = 0; y < max; y++) {
-            for(int x = 0; x < max; x++) {
-                ModelMatrix modelMatrix = new ModelMatrix();
+        FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(numFloats);
+        modelMatrixBuffer.put(modelMatrix.getModelMatrix());
+        modelMatrixBuffer.position(0);
 
-                // Create the model matrix that contains all position, rotation data etc
-                modelMatrix.reset();
-                modelMatrix.translate(x - (max / 2.0f), y - (max/ 2.0f), 0.0f);
-                modelMatrix.rotate(r.nextFloat() * 180.0f, 1.0f, 0.0f, 0.0f);
-                modelMatrix.scale(0.3f);
+        int[] instanceVBO = new int[1];
+        GLES30.glGenBuffers(1, instanceVBO, 0);
+        GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
+        GLES30.glBufferData(GL_ARRAY_BUFFER, numBytes, modelMatrixBuffer, GL_STATIC_DRAW);
+        indexShader.bindModelMatrixInstanceVAO(torus.vao);
 
-                float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-                float[] modelViewMatrix = new float[16];
-                Matrix.multiplyMM(modelViewMatrix, 0, camera.getViewMatrix(), 0, modelMatrix.getModelMatrix(), 0);
-                Matrix.multiplyMM(modelViewProjectionMatrix, 0, camera.getPerspectiveMatrix(), 0, modelViewMatrix, 0);
+//        Random r = new Random();
+//        FloatBuffer md = FloatBuffer.allocate(100 * 16);
+//        int max = 25;
+//        for(int y = 0; y < max; y++) {
+//            for(int x = 0; x < max; x++) {
+//                ModelMatrix modelMatrix = new ModelMatrix();
+//
+//                // Create the model matrix that contains all position, rotation data etc
+//                modelMatrix.reset();
+//                modelMatrix.translate(x - (max / 2.0f), y - (max/ 2.0f), 0.0f);
+//                modelMatrix.rotate(r.nextFloat() * 180.0f, 1.0f, 0.0f, 0.0f);
+//                modelMatrix.scale(0.3f);
+//
+//                md.put(modelMatrix.getModelMatrix());
+//                md.position(0);
+//
+//            }
+//        }
 
-                indexShader.setMatrix((max*y)+x, modelViewProjectionMatrix);
-            }
-        }
-        indexShader.disableIt();
+//        // Create instance VBO and send data
+//        int[] instanceVBO = new int[1];
+//        GLES30.glGenBuffers(1, instanceVBO, 0);
+//        GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
+//        GLES30.glBufferData(GL_ARRAY_BUFFER, vec4Size * 4 * 100, md, GL_STATIC_DRAW);
+//        indexShader.bindModelMatrixInstanceVAO(torus.vao);
     }
 
     @Override
     public void update(float deltaTime) {
-        cameraZCount += 0.03f * deltaTime;
-        float cameraZ = (float)Math.sin(cameraZCount);
-        camera.setPosition(0.0f, 1.0f, cameraZ);
+
     }
 
     final int NUM_VALUES_PER_VIEW_MATRIX = 16;
@@ -125,6 +174,10 @@ public class IndexDemo extends Scene {
     @Override
     public void render() {
         indexShader.enableIt();
+        glUniformMatrix4fv(indexShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
+        glUniformMatrix4fv(indexShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
+        glUniformMatrix4fv(indexShader.getModelMatrixUniformHandle(), 1, false, modelMatrix.getModelMatrix(), 0);
+
         GLES30.glBindVertexArray(torus.vao);
         // Draw the vertex data with the specified render method
         switch (torus.renderMethod) {
