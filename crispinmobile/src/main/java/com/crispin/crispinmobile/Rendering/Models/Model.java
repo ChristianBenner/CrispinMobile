@@ -24,11 +24,9 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
-import com.crispin.crispinmobile.Rendering.Shaders.AttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
-import com.crispin.crispinmobile.Rendering.Shaders.TextureAttributeColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
@@ -588,7 +586,7 @@ public class Model extends RenderObject {
             updateShader();
         }
 
-        shader.enableIt();
+        shader.enable();
 
         float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
         Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
@@ -617,7 +615,7 @@ public class Model extends RenderObject {
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        shader.disableIt();
+        shader.disable();
     }
 
     public void render(Camera camera, final LightGroup lightGroup) {
@@ -628,7 +626,7 @@ public class Model extends RenderObject {
             updateShader();
         }
 
-        shader.enableIt();
+        shader.enable();
 
         if (lightGroup != null) {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
@@ -723,7 +721,7 @@ public class Model extends RenderObject {
 
         glBindTexture(GL_TEXTURE_2D, 0);
 
-        shader.disableIt();
+        shader.disable();
     }
 
     public void render(Camera camera) {

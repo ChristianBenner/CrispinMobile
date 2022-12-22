@@ -11,8 +11,6 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
 
-import java.nio.FloatBuffer;
-
 public class VAODemo extends Scene {
     class VaoShader extends Shader {
         public VaoShader() {
@@ -90,12 +88,12 @@ public class VAODemo extends Scene {
 
     @Override
     public void render() {
-        vaoShader.enableIt();
+        vaoShader.enable();
 
         GLES30.glBindVertexArray(model.vao);
         GLES30.glDrawArrays(GLES30.GL_TRIANGLES, 0, model.vertexCount);
 
-        vaoShader.disableIt();
+        vaoShader.disable();
     }
 
     @Override

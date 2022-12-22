@@ -526,10 +526,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
         // Always clear the buffer bit
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
-                backgroundColour.alpha);
-
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise
         // disable in OpenGL ES
         if (isDepthEnabled()) {
@@ -538,6 +534,10 @@ public class SceneManager implements GLSurfaceView.Renderer {
         } else {
             glDisable(GL_DEPTH_TEST);
         }
+
+        // Clear the graphics surface to the background colour
+        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
+                backgroundColour.alpha);
 
         // If alpha is enabled, enable blend functionality in OpenGL ES and supply a blend function.
         // Otherwise disable in OpenGL ES

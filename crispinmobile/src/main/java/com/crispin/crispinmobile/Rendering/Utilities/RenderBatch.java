@@ -11,7 +11,6 @@ import static android.opengl.GLES30.GL_TRIANGLES;
 import static android.opengl.GLES30.glBindBuffer;
 import static android.opengl.GLES30.glBindTexture;
 import static android.opengl.GLES30.glBufferData;
-import static android.opengl.GLES30.glDrawArraysInstanced;
 import static android.opengl.GLES30.glEnableVertexAttribArray;
 import static android.opengl.GLES30.glGenBuffers;
 import static android.opengl.GLES30.glUniform1i;
@@ -115,7 +114,7 @@ public class RenderBatch {
     }
 
     public void render() {
-        shader.enableIt();
+        shader.enable();
 
         if (lightGroup != null) {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
@@ -201,6 +200,6 @@ public class RenderBatch {
         glBindVertexArray(0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
-        shader.disableIt();
+        shader.disable();
     }
 }

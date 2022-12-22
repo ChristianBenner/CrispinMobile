@@ -179,8 +179,9 @@ public class Cube extends Model {
     public Cube(Material material, boolean renderTexels, boolean renderNormals,
                 boolean renderColour) {
         super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, renderNormals ? NORMAL_DATA : null,
-                RENDER_METHOD, NUMBER_POSITION_COMPONENTS, NUMBER_TEXEL_COMPONENTS,
-                NUMBER_NORMAL_COMPONENTS, material);
+                RENDER_METHOD, NUMBER_POSITION_COMPONENTS,
+                renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
+                renderNormals ? NUMBER_NORMAL_COMPONENTS : 0, material);
     }
 
     /**

@@ -110,7 +110,7 @@ public class Line {
     }
 
     public void render(Camera2D camera) {
-        lineShader.enableIt();
+        lineShader.enable();
         glLineWidth(lineWidth);
 
         glUniform4f(lineShader.materialHandles.colourUniformHandle, material.colour.red,
@@ -132,6 +132,6 @@ public class Line {
         glDisableVertexAttribArray(lineShader.getPositionAttributeHandle());
 
         glLineWidth(1.0f);
-        lineShader.disableIt();
+        lineShader.disable();
     }
 }

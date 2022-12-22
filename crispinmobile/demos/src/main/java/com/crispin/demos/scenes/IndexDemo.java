@@ -1,60 +1,38 @@
 package com.crispin.demos.scenes;
 
 import static android.opengl.GLES20.GL_ARRAY_BUFFER;
+import static android.opengl.GLES20.GL_COLOR_BUFFER_BIT;
+import static android.opengl.GLES20.GL_CULL_FACE;
+import static android.opengl.GLES20.GL_DEPTH_BUFFER_BIT;
 import static android.opengl.GLES20.GL_FLOAT;
-import static android.opengl.GLES20.GL_LINES;
-import static android.opengl.GLES20.GL_POINTS;
+import static android.opengl.GLES20.GL_FRONT_AND_BACK;
 import static android.opengl.GLES20.GL_STATIC_DRAW;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TRIANGLES;
-import static android.opengl.GLES20.glBindBuffer;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
-import static android.opengl.GLES20.glGetUniformLocation;
 import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glVertexAttribPointer;
-import static android.opengl.GLES30.glBindVertexArray;
 
 import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
 
 import android.opengl.GLES30;
-import android.opengl.Matrix;
-import android.util.Pair;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Geometry;
+import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
-import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Models.Cube;
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
-import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
-import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
-import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
 import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.crispinmobile.Utilities.TextureCache;
-import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
+import com.crispin.crispinmobile.Utilities.SceneManager;
 import com.crispin.demos.R;
 
 import java.nio.FloatBuffer;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
-
-import javax.microedition.khronos.opengles.GL;
 
 public class IndexDemo extends Scene {
     class IndexShader extends Shader {
@@ -96,10 +74,10 @@ public class IndexDemo extends Scene {
     private float cameraZCount = 0.0f;
     private int instanceVBO;
 
-    final int NUM_INSTANCES = 5000;
+    final int NUM_INSTANCES = 200000;
     final int vec4Size = BYTES_PER_FLOAT * 4;
     final int stride = 4 * vec4Size; // we want to stride of 4x vec4's (jump a mat4 num bytes each time)
-    final float boxSize = 30.0f;
+    final Scale3D boxSize = new Scale3D(30.0f, 30.0f, 100.0f);
     final int numMatrices = NUM_INSTANCES;
     final int numFloatsPerMatrix = 16;
     final int totalNumFloats = numMatrices * numFloatsPerMatrix;
@@ -110,21 +88,22 @@ public class IndexDemo extends Scene {
         Crispin.setBackgroundColour(Colour.WHITE);
 
         indexShader = new IndexShader();
-        torus = OBJModelLoader.readObjFile(R.raw.torus_uv);
+        torus = new Cube(false, false, false);
+    //    torus = OBJModelLoader.readObjFile(R.raw.monkey);
         torus.useCustomShader(indexShader);
 
         camera = new Camera();
-        camera.setPosition(new Vec3(0.0f, 0f, boxSize));
+        camera.setPosition(new Vec3(0.0f, 0f, boxSize.z));
 
         FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(totalNumFloats);
 
         Random r = new Random();
         for(int i = 0; i < NUM_INSTANCES; i++) {
-            float x = (r.nextFloat() * boxSize) - (boxSize/2.0f);
-            float y = (r.nextFloat() * boxSize) - (boxSize/2.0f);
-            float z = (r.nextFloat() * boxSize) - (boxSize/2.0f);
+            float x = (r.nextFloat() * boxSize.x) - (boxSize.x/2.0f);
+            float y = (r.nextFloat() * boxSize.y) - (boxSize.y/2.0f);
+            float z = (r.nextFloat() * boxSize.z) - (boxSize.z/2.0f);
             float rotateAngle = r.nextFloat() * 360.0f;
-            float scale = (1.0f + r.nextFloat()) / 4f;
+            float scale = (1.0f + r.nextFloat()) / 32f;
 
             ModelMatrix modelMatrix = new ModelMatrix();
             modelMatrix.translate(x, y, z);
@@ -141,7 +120,9 @@ public class IndexDemo extends Scene {
         GLES30.glBufferData(GL_ARRAY_BUFFER, totalBytes, modelMatrixBuffer, GL_STATIC_DRAW);
         indexShader.bindModelMatrixInstanceVAO(torus.vao);
 
-        setPosition(1, 0.0f, -1.0f, 35.0f);
+        setPosition(1, 0.0f, -5.0f, 35.0f);
+
+        Crispin.setCullFaceState(true);
     }
 
     // An example of how to set the position/model matrix of just one of the objects in the group,
@@ -160,19 +141,19 @@ public class IndexDemo extends Scene {
     @Override
     public void update(float deltaTime) {
         cameraZCount += 0.01f * deltaTime;
-        float cameraZ = ((float)Math.sin(cameraZCount) * boxSize * 1.4f) + boxSize;
+        float cameraZ = (((float)Math.sin(cameraZCount)) * (boxSize.z/2f)) + 10.0f;
         camera.setPosition(0.0f, 0.0f, cameraZ);
     }
 
     @Override
     public void render() {
-        indexShader.enableIt();
+        indexShader.enable();
         glUniformMatrix4fv(indexShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
         glUniformMatrix4fv(indexShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
         GLES30.glBindVertexArray(torus.vao);
         GLES30.glDrawArraysInstanced(GL_TRIANGLES, 0, torus.vertexCount, NUM_INSTANCES);
         GLES30.glBindVertexArray(0);
-        indexShader.disableIt();
+        indexShader.disable();
     }
 
     @Override

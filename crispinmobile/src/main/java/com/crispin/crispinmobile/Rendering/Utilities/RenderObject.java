@@ -231,6 +231,7 @@ public class RenderObject {
         int posBufferIndex = 0;
         int texBufferIndex = 0;
         int norBufferIndex = 0;
+
         for(int i = 0; i < vertexBufferLength; i += stride) {
             int offset = 0;
             if(positionBuffer != null) {

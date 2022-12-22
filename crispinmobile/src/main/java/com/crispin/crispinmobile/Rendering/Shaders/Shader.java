@@ -355,7 +355,7 @@ public class Shader {
      *
      * @since 1.0
      */
-    public void enableIt() {
+    public void enable() {
         glUseProgram(programId);
     }
 
@@ -364,7 +364,7 @@ public class Shader {
      *
      * @since 1.0
      */
-    public void disableIt() {
+    public void disable() {
         glUseProgram(0);
     }
 
