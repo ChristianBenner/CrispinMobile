@@ -2,7 +2,7 @@ package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
 /**
@@ -12,7 +12,7 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see Texture
  * @see Colour
  * @since 1.0

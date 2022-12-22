@@ -34,13 +34,13 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.ShaderCache;
 
 import java.util.ArrayList;
 
-public class Model extends RenderObject {
+public class Model extends Mesh {
     // Tag used in logging output
     private static final String TAG = "Model";
 

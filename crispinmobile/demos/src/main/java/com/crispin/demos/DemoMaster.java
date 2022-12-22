@@ -14,17 +14,18 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
+import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.scenes.InstancingDemo;
+import com.crispin.demos.scenes.InstancingEngineDemo;
 import com.crispin.demos.scenes.LightingDemo;
 import com.crispin.demos.scenes.MaterialDemo;
 import com.crispin.demos.scenes.ObjLoadDemo;
 import com.crispin.demos.scenes.RenderBatchDemo;
 import com.crispin.demos.scenes.SpotLightDemo;
 import com.crispin.demos.scenes.TextDemo;
-import com.crispin.demos.scenes.VAODemo;
 
 class DemoMasterScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
@@ -51,10 +52,10 @@ class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("TextDemo", TextDemo::new));
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
-        linearLayout.add(createDemoButton("VAO", VAODemo::new));
-        linearLayout.add(createDemoButton("Index", InstancingDemo::new));
+        linearLayout.add(createDemoButton("Instance Rendering", InstancingDemo::new));
+        linearLayout.add(createDemoButton("Instance Rendering Engine", InstancingEngineDemo::new));
 
-        selectDemoText = new com.crispin.crispinmobile.UserInterface.Text(titleFont, "Select a Demo", true, true,
+        selectDemoText = new Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);
         selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING);
     }

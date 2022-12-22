@@ -17,7 +17,7 @@ import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribDivisor;
 import static android.opengl.GLES30.glVertexAttribPointer;
 
-import static com.crispin.crispinmobile.Rendering.Utilities.RenderObject.BYTES_PER_FLOAT;
+import static com.crispin.crispinmobile.Rendering.Utilities.Mesh.BYTES_PER_FLOAT;
 
 import android.opengl.GLES30;
 

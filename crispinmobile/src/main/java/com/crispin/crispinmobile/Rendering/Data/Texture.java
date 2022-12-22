@@ -19,7 +19,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
@@ -33,7 +33,7 @@ import java.nio.ByteBuffer;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see TextureCache
  * @since 1.0
  */

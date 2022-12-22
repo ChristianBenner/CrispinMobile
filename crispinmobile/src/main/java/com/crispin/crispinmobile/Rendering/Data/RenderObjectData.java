@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.Logger;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class RenderObjectData {
@@ -75,7 +75,7 @@ public class RenderObjectData {
     private FaceData faceData;
 
     // The render method that has been determined
-    private RenderObject.RenderMethod renderMethod;
+    private Mesh.RenderMethod renderMethod;
 
     // The data stride
     private int dataStride;
@@ -109,7 +109,7 @@ public class RenderObjectData {
         normalDataArray = new ArrayList<>();
         faceDataArray = new ArrayList<>();
         faceData = FaceData.NONE;
-        renderMethod = RenderObject.RenderMethod.NONE;
+        renderMethod = Mesh.RenderMethod.NONE;
         positionStartIndex = UNUSED_DATA_ELEMENT;
         texelStartIndex = UNUSED_DATA_ELEMENT;
         normalStartIndex = UNUSED_DATA_ELEMENT;
@@ -160,9 +160,9 @@ public class RenderObjectData {
      * false if the data has already been assigned a render method
      * @since 1.0
      */
-    public boolean setRenderMethod(RenderObject.RenderMethod renderMethod) {
+    public boolean setRenderMethod(Mesh.RenderMethod renderMethod) {
         // Check if the render method has been set yet
-        if (this.renderMethod == RenderObject.RenderMethod.NONE) {
+        if (this.renderMethod == Mesh.RenderMethod.NONE) {
             this.renderMethod = renderMethod;
             return true;
         } else if (this.renderMethod == renderMethod) {
@@ -331,8 +331,8 @@ public class RenderObjectData {
 
         // Create and return a render object using the data format and the vertex data
         return new Model(vertexDataBuffer,
-                RenderObject.RenderMethod.TRIANGLES,
-                RenderObject.AttributeOrder_t.POSITION_THEN_TEXEL_THEN_NORMAL,
+                Mesh.RenderMethod.TRIANGLES,
+                Mesh.AttributeOrder_t.POSITION_THEN_TEXEL_THEN_NORMAL,
                 numberOfPositionComponents,
                 numberOfTexelComponents,
                 numberOfNormalComponents);

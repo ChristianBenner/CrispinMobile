@@ -15,15 +15,14 @@ import static android.opengl.GLES30.glGenVertexArrays;
 import java.nio.FloatBuffer;
 
 /**
- * Render object is a base class for any graphical object. It handles an objects shader (based on
- * its material if a custom one isn't allocated), vertex data upload to the graphics memory and
+ * Mesh is a base class for any graphical object. Vertex data upload to the graphics memory and
  * drawing of objects.
  *
  * @author Christian Benner
  * @version %I%, %G%
  * @since 1.0
  */
-public class RenderObject {
+public class Mesh {
     /**
      * The attribute order type is to store the order that the vertex data elements appear. This
      * means that the data can be submitted to the GPU in the correct order.
@@ -113,9 +112,9 @@ public class RenderObject {
      * @param elementsPerNormal   The number components that the normal data is comprised of
      * @since 1.0
      */
-    public RenderObject(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
-                        RenderObject.RenderMethod renderMethod, int elementsPerPosition,
-                        int elementsPerTexel, int elementsPerNormal) {
+    public Mesh(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
+                Mesh.RenderMethod renderMethod, int elementsPerPosition,
+                int elementsPerTexel, int elementsPerNormal) {
         this.renderMethod = renderMethod;
         this.elementsPerPosition = positionBuffer == null ? 0 : elementsPerPosition;
         this.elementsPerTexel = texelBuffer == null ? 0 : elementsPerTexel;
@@ -156,9 +155,9 @@ public class RenderObject {
      * @param elementsPerNormal   The number components that the normal data is comprised of
      * @since 1.0
      */
-    public RenderObject(float[] vertexData, RenderObject.RenderMethod renderMethod,
-                        AttributeOrder_t attributeOrder, int elementsPerPosition,
-                        int elementsPerTexel, int elementsPerNormal) {
+    public Mesh(float[] vertexData, Mesh.RenderMethod renderMethod,
+                AttributeOrder_t attributeOrder, int elementsPerPosition,
+                int elementsPerTexel, int elementsPerNormal) {
         this.renderMethod = renderMethod;
         this.elementsPerPosition = elementsPerPosition;
         this.elementsPerTexel = elementsPerTexel;
@@ -168,6 +167,26 @@ public class RenderObject {
                 elementsPerNormal);
         createGLObjects(vertexData);
         resolveAttributeOffsets(attributeOrder);
+    }
+
+    /**
+     * Check if the mesh supports a texture
+     *
+     * @return True if the mesh supports textures, else false
+     * @since 1.0
+     */
+    public boolean supportsTexture() {
+        return elementsPerTexel != 0;
+    }
+
+    /**
+     * Check if the mesh supports lighting
+     *
+     * @return True if the mesh supports lighting, else false
+     * @since 1.0
+     */
+    public boolean supportsLighting() {
+        return elementsPerNormal != 0;
     }
 
     /**

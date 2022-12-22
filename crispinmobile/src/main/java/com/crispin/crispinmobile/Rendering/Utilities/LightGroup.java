@@ -13,7 +13,7 @@ import java.util.ArrayList;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class LightGroup {

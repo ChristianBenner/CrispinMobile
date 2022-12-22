@@ -81,6 +81,9 @@ public class Shader {
     // Matrix uniform handle
     public int matrixUniformHandle;
 
+    // Model matrix attribute handle
+    public int modelMatrixAttributeHandle;
+
     // Projection matrix uniform handle
     public int projectionMatrixUniformHandle;
 
@@ -141,6 +144,7 @@ public class Shader {
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
+        modelMatrixAttributeHandle = UNDEFINED_HANDLE;
     }
 
     /**

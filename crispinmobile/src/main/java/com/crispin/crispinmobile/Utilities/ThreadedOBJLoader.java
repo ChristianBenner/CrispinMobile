@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Utilities;
 
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * A class that is currently under development. It is used to load OBJ models on another thread (in
@@ -12,7 +12,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see OBJModelLoader
  * @since 1.0
  */

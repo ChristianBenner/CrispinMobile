@@ -13,7 +13,7 @@ import com.crispin.crispinmobile.Crispin;
  * @author Christian Benner
  * @version %I%, %G%
  * @see Matrix
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class Camera2D {

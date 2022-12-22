@@ -3,7 +3,7 @@ package com.crispin.crispinmobile.Rendering.Entities;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * The light class provides an interface to lighting elements in a graphical scene. The class allows
@@ -11,7 +11,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class PointLight {

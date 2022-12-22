@@ -35,7 +35,7 @@ public class RenderBatch {
     // Number of uniform elements to upload in a single GLSL uniform upload
     private static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
 
-    private RenderObject renderObject;
+    private Mesh renderObject;
     private HashSet<ModelProperties> batch;
 
     private Shader shader;
@@ -46,7 +46,7 @@ public class RenderBatch {
         batch = new HashSet<>();
     }
 
-    public void setRenderObject(RenderObject renderObject) {
+    public void setRenderObject(Mesh renderObject) {
         this.renderObject = renderObject;
     }
 
