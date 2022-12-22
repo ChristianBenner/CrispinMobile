@@ -34,8 +34,10 @@ import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
+import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
+import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
@@ -98,13 +100,17 @@ public class InstancingDemo extends Scene {
     private float cameraZCount = 0.0f;
     private int instanceVBO;
     private Material crateMaterial;
+    private int instanceRenderCount = 0;
+
+    // Different render modes
     private boolean renderTextureInstances;
     private boolean renderGlobalColourInstances;
+    private boolean renderColourInstances;
 
     // Cubes (for each render type)
     private Model texelCube;
-    private Model plainCube;
-   // private Model plainCube2;
+    private Model globalColourCube;
+    private Model colourCube;
 
     // Shaders
     private InstanceTextureShader textureInstanceShader;
@@ -115,6 +121,8 @@ public class InstancingDemo extends Scene {
     private Camera2D uiCamera;
     private Button toggleTextureInstances;
     private Button toggleGlobalColourInstances;
+    private Button toggleColourInstances;
+    private Text instanceCount;
 
     private final int NUM_INSTANCES = 200000;
     private final int vec4Size = BYTES_PER_FLOAT * 4;
@@ -132,7 +140,7 @@ public class InstancingDemo extends Scene {
         Crispin.setCullFaceState(true);
 
         renderTextureInstances = true;
-
+        instanceRenderCount = NUM_INSTANCES;
         initUI();
 
         // Create shaders
@@ -150,16 +158,47 @@ public class InstancingDemo extends Scene {
         instanceVBO = generateInstanceData(textureInstanceShader.modelMatrixAttributeHandle, texelCube.vao);
 
         // Create global colour cube model
-        plainCube = new Cube(false, false, false);
-        plainCube.useCustomShader(instanceGlobalColourShader);
-        generateInstanceData(instanceGlobalColourShader.modelMatrixAttributeHandle, plainCube.vao);
+        globalColourCube = new Cube(false, false, false);
+        globalColourCube.useCustomShader(instanceGlobalColourShader);
+        generateInstanceData(instanceGlobalColourShader.modelMatrixAttributeHandle, globalColourCube.vao);
 
-//        // Create colour cube model
-//        plainCube2 = new Cube(false, false, false);
-//        plainCube2.useCustomShader(instanceColourShader);
-//        generateInstanceData(instanceColourShader.modelMatrixAttributeHandle, plainCube2.vao);
+        // Create colour cube model
+        colourCube = new Cube(false, false, false);
+        colourCube.useCustomShader(instanceColourShader);
+        generateColourData(instanceColourShader.colourAttributeHandle, colourCube.vao);
+        generateInstanceData(instanceColourShader.modelMatrixAttributeHandle, colourCube.vao);
 
         setPosition(1, 0.0f, -5.0f, 35.0f);
+    }
+
+    private int generateColourData(int colourAttributehandle, int meshVao) {
+        FloatBuffer colourBuffer = FloatBuffer.allocate(totalNumFloats);
+
+        Random r = new Random();
+        for(int i = 0; i < NUM_INSTANCES; i++) {
+            float red = r.nextFloat();
+            float green = r.nextFloat();
+            float blue = r.nextFloat();
+            float alpha = 1.0f;
+            colourBuffer.put(red).put(green).put(blue).put(alpha);
+        }
+        colourBuffer.position(0);
+
+        // Upload data
+        int[] instanceVBO = new int[1];
+        GLES30.glGenBuffers(1, instanceVBO, 0);
+        GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
+        GLES30.glBufferData(GL_ARRAY_BUFFER, totalBytes, colourBuffer, GL_STATIC_DRAW);
+
+        // Bind vertex attribs
+        glBindVertexArray(meshVao);
+
+        int h = colourAttributehandle;
+        glEnableVertexAttribArray(h);
+        glVertexAttribPointer(h, 4, GL_FLOAT, false, vec4Size, 0);
+        glVertexAttribDivisor(h, 1);
+        glBindVertexArray(0);
+        return instanceVBO[0];
     }
 
     private int generateInstanceData(int modelMatrixAttributeHandle, int meshVao) {
@@ -214,22 +253,60 @@ public class InstancingDemo extends Scene {
 
     private void initUI() {
         uiCamera = new Camera2D();
+
+        Font instanceCountFont = new Font(R.raw.aileron_regular, 48);
+        instanceCount = new Text(instanceCountFont, "Instances Rendered: " + instanceRenderCount, false, true, Crispin.getSurfaceWidth() - 20);
+        instanceCount.setPosition(10, Crispin.getSurfaceHeight() - 58);
+
         Font buttonFont = new Font(R.raw.aileron_regular, 24);
         toggleTextureInstances = new Button(buttonFont, "Toggle Texture Instances");
         toggleTextureInstances.setPosition(10, 10);
         toggleTextureInstances.setSize(200, 200);
+        toggleTextureInstances.setBorder(new Border(Colour.BLACK));
+        toggleTextureInstances.setColour(Colour.LIGHT_GREY);
         toggleTextureInstances.addTouchListener(e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 renderTextureInstances = !renderTextureInstances;
+                if(renderTextureInstances){
+                    instanceRenderCount += NUM_INSTANCES;
+                } else {
+                    instanceRenderCount -= NUM_INSTANCES;
+                }
+                instanceCount.setText("Instances Rendered: " + instanceRenderCount);
             }
         });
 
         toggleGlobalColourInstances = new Button(buttonFont, "Toggle Global Colour Instances");
-        toggleGlobalColourInstances.setPosition(10, 220);
+        toggleGlobalColourInstances.setPosition(10, 230);
         toggleGlobalColourInstances.setSize(200, 200);
+        toggleGlobalColourInstances.setBorder(new Border(Colour.BLACK));
+        toggleGlobalColourInstances.setColour(Colour.LIGHT_GREY);
         toggleGlobalColourInstances.addTouchListener(e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 renderGlobalColourInstances = !renderGlobalColourInstances;
+                if(renderGlobalColourInstances){
+                    instanceRenderCount += NUM_INSTANCES;
+                } else {
+                    instanceRenderCount -= NUM_INSTANCES;
+                }
+                instanceCount.setText("Instances Rendered: " + instanceRenderCount);
+            }
+        });
+
+        toggleColourInstances = new Button(buttonFont, "Toggle Colour Instances");
+        toggleColourInstances.setPosition(10, 450);
+        toggleColourInstances.setSize(200, 200);
+        toggleColourInstances.setBorder(new Border(Colour.BLACK));
+        toggleColourInstances.setColour(Colour.LIGHT_GREY);
+        toggleColourInstances.addTouchListener(e -> {
+            if(e.getEvent() == TouchEvent.Event.CLICK) {
+                renderColourInstances = !renderColourInstances;
+                if(renderColourInstances){
+                    instanceRenderCount += NUM_INSTANCES;
+                } else {
+                    instanceRenderCount -= NUM_INSTANCES;
+                }
+                instanceCount.setText("Instances Rendered: " + instanceRenderCount);
             }
         });
     }
@@ -263,6 +340,10 @@ public class InstancingDemo extends Scene {
 
         if(renderGlobalColourInstances) {
             renderGlobalColourInstances();
+        }
+
+        if(renderColourInstances) {
+            renderColourInstances();
         }
 
         renderUI();
@@ -299,16 +380,33 @@ public class InstancingDemo extends Scene {
         glUniformMatrix4fv(instanceGlobalColourShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
 
         // Draw instances
-        glBindVertexArray(plainCube.vao);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, plainCube.vertexCount, NUM_INSTANCES);
+        glBindVertexArray(globalColourCube.vao);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, globalColourCube.vertexCount, NUM_INSTANCES);
+        glBindVertexArray(0);
+
+        instanceGlobalColourShader.disable();
+    }
+
+    private void renderColourInstances() {
+        instanceColourShader.enable();
+
+        // Set view matrices
+        glUniformMatrix4fv(instanceGlobalColourShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
+        glUniformMatrix4fv(instanceGlobalColourShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
+
+        // Draw instances
+        glBindVertexArray(colourCube.vao);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, globalColourCube.vertexCount, NUM_INSTANCES);
         glBindVertexArray(0);
 
         instanceGlobalColourShader.disable();
     }
 
     private void renderUI() {
+        instanceCount.draw(uiCamera);
         toggleTextureInstances.draw(uiCamera);
         toggleGlobalColourInstances.draw(uiCamera);
+        toggleColourInstances.draw(uiCamera);
     }
 
     @Override
