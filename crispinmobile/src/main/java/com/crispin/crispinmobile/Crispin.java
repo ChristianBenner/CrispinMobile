@@ -2,6 +2,8 @@ package com.crispin.crispinmobile;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
+import android.content.res.Configuration;
 import android.opengl.GLSurfaceView;
 import android.widget.FrameLayout;
 
@@ -471,7 +473,11 @@ public class Crispin {
      * @since 1.0
      */
     private boolean isOpenGLESSupported() {
-        return ((ActivityManager) CONTEXT.getSystemService(Context.ACTIVITY_SERVICE))
-                .getDeviceConfigurationInfo().reqGlEsVersion >= REQUIRED_OPENGL_ES_VERSION;
+        ConfigurationInfo configurationInfo = ((ActivityManager)CONTEXT.getSystemService(Context.
+                ACTIVITY_SERVICE)).getDeviceConfigurationInfo();
+        int reqGlEsVersion = configurationInfo.reqGlEsVersion;
+        String glEsVersion = configurationInfo.getGlEsVersion();
+        System.out.println("GLES Version: " + glEsVersion + ", reqGlEsVersion: " + reqGlEsVersion + ", APP REQ: " + REQUIRED_OPENGL_ES_VERSION);
+        return reqGlEsVersion >= REQUIRED_OPENGL_ES_VERSION;
     }
 }

@@ -86,7 +86,7 @@ public class InstancingDemo extends Scene {
         public int modelMatrixAttributeHandle;
 
         public InstanceColourShader() {
-            super("Global Colour Instance Demo Shader", R.raw.instance_colour_vert, R.raw.instance_colour_frag);
+            super("Colour Instance Demo Shader", R.raw.instance_colour_vert, R.raw.instance_colour_frag);
             positionAttributeHandle = getAttribute("aPosition");
             colourAttributeHandle = getAttribute("aColour");
             modelMatrixAttributeHandle = getAttribute("aModel");
@@ -391,15 +391,15 @@ public class InstancingDemo extends Scene {
         instanceColourShader.enable();
 
         // Set view matrices
-        glUniformMatrix4fv(instanceGlobalColourShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
-        glUniformMatrix4fv(instanceGlobalColourShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
+        glUniformMatrix4fv(instanceColourShader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
+        glUniformMatrix4fv(instanceColourShader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
 
         // Draw instances
         glBindVertexArray(colourCube.vao);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, globalColourCube.vertexCount, NUM_INSTANCES);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, colourCube.vertexCount, NUM_INSTANCES);
         glBindVertexArray(0);
 
-        instanceGlobalColourShader.disable();
+        instanceColourShader.disable();
     }
 
     private void renderUI() {
