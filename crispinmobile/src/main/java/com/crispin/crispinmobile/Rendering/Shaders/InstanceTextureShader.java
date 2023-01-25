@@ -12,6 +12,7 @@ public class InstanceTextureShader extends Shader {
 
         materialHandles = new MaterialHandles();
         materialHandles.textureUniformHandle = getUniform("uTexture");
+        materialHandles.colourUniformHandle = getUniform("uColour");
 
         projectionMatrixUniformHandle = getUniform("uProjection");
         viewMatrixUniformHandle = getUniform("uView");

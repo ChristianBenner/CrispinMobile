@@ -1,12 +1,14 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
-import static android.opengl.GLES20.glActiveTexture;
-import static android.opengl.GLES20.glBindTexture;
-import static android.opengl.GLES20.glUniform1i;
-import static android.opengl.GLES30.GL_CULL_FACE;
+import static android.opengl.GLES20.glUniform4f;
 import static android.opengl.GLES30.GL_INVALID_INDEX;
+import static android.opengl.GLES30.glGenBuffers;
+import static android.opengl.GLES30.GL_TEXTURE0;
+import static android.opengl.GLES30.GL_TEXTURE_2D;
+import static android.opengl.GLES30.glActiveTexture;
+import static android.opengl.GLES30.glBindTexture;
+import static android.opengl.GLES30.glUniform1i;
+import static android.opengl.GLES30.GL_CULL_FACE;
 import static android.opengl.GLES30.glEnable;
 import static android.opengl.GLES30.GL_FLOAT;
 import static android.opengl.GLES30.GL_TRIANGLES;
@@ -21,9 +23,14 @@ import static android.opengl.GLES30.glBufferData;
 import static android.opengl.GLES30.glDrawArraysInstanced;
 import static android.opengl.GLES30.glVertexAttribDivisor;
 
-import android.opengl.GLES30;
-
+import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.PointLight;
+import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceGlobalColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceLightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
@@ -36,54 +43,76 @@ public class InstanceRenderer {
     private final int NUM_BYTES_MATRIX = NUM_FLOATS_MATRIX * NUM_BYTES_FLOAT;
     private final int NUM_FLOATS_VEC4 = 4;
     private final int NUM_BYTES_VEC4 = NUM_FLOATS_VEC4 * NUM_BYTES_FLOAT;
-
     private Mesh mesh;
     private ArrayList<ModelMatrix> modelMatrices;
     private int matricesVBO;
     private Shader shader;
-    private Texture texture;
+    private Material material;
+    private Colour globalColour = Colour.WHITE;
+    private LightGroup lightGroup;
 
     public InstanceRenderer(Mesh mesh) {
         this.mesh = mesh;
 
         modelMatrices = new ArrayList<>();
+        material = new Material();
 
         // Generate virtual buffer object for matrices instances
         int[] matricesVBO = new int[1];
-        GLES30.glGenBuffers(1, matricesVBO, 0);
+        glGenBuffers(1, matricesVBO, 0);
         this.matricesVBO = matricesVBO[0];
 
         glBindVertexArray(mesh.vao);
         glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
-        if(mesh.supportsTexture() && mesh.supportsLighting()) {
-            // Supports lighting and texture
-            // this.shader = new InstanceTextureLightingShader();
+        this.shader = determineShader(mesh);
+
+        if(mesh.supportsTexture()) {
             glVertexAttribPointer(shader.textureAttributeHandle , mesh.elementsPerTexel, GL_FLOAT,
                     false, mesh.stride, mesh.texelDataOffset * NUM_BYTES_FLOAT);
-            glEnableVertexAttribArray(shader.textureAttributeHandle );
+            glEnableVertexAttribArray(shader.textureAttributeHandle);
+        }
+
+        if(mesh.supportsLighting()) {
             glVertexAttribPointer(shader.normalAttributeHandle, mesh.elementsPerNormal, GL_FLOAT,
                     false, mesh.stride, mesh.normalDataOffset * NUM_BYTES_FLOAT);
             glEnableVertexAttribArray(shader.normalAttributeHandle);
-        } else if(mesh.supportsTexture()) {
-            // Lighting not supported, but texture is
-            this.shader = new InstanceTextureShader();
-            glVertexAttribPointer(shader.textureAttributeHandle , mesh.elementsPerTexel, GL_FLOAT,
-                    false, mesh.stride, mesh.texelDataOffset * NUM_BYTES_FLOAT);
-            glEnableVertexAttribArray(shader.textureAttributeHandle );
-        } else {
-            // Texture and lighting not supported, use uniform colour
-            // this.shader = new InstanceColourShader();
         }
 
         // Enable position regardless of shader choice (they all support position)
-        glVertexAttribPointer(shader.positionAttributeHandle,  mesh.elementsPerPosition,GL_FLOAT,
+        glVertexAttribPointer(shader.positionAttributeHandle,  mesh.elementsPerPosition, GL_FLOAT,
                 false, mesh.stride, mesh.positionDataOffset * NUM_BYTES_FLOAT);
         glEnableVertexAttribArray(shader.positionAttributeHandle);
     }
 
+    public void setLightGroup(LightGroup lightGroup) {
+        this.lightGroup = lightGroup;
+    }
+
+    public void setGlobalColour(Colour colour) {
+        this.globalColour = new Colour(colour);
+    }
+
+    private Shader determineShader(Mesh mesh) {
+        if(mesh.supportsTexture() && mesh.supportsLighting()) {
+            // todo: Supports lighting and texture
+            //return InstanceTextureLightingShader();
+        } else if(mesh.supportsTexture()) {
+            return new InstanceTextureShader();
+        }else if(mesh.supportsLighting()) {
+            return new InstanceLightingShader();
+        }
+
+        // Texture and lighting not supported, use uniform colour
+        return new InstanceGlobalColourShader();
+    }
+
     public void setTexture(Texture texture) {
-        this.texture = texture;
+        this.material.texture = texture;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public void add(ModelMatrix modelMatrix) {
@@ -137,14 +166,51 @@ public class InstanceRenderer {
 
         glEnable(GL_CULL_FACE);
 
-        if(mesh.supportsTexture()) {
-            if(texture == null) {
-                System.err.println("NULL Texture on instance renderer");
-            } else {
-                glActiveTexture(GL_TEXTURE0);
-                glBindTexture(GL_TEXTURE_2D, texture.getId());
-                glUniform1i(shader.materialHandles.textureUniformHandle, 0);
+        if (lightGroup != null) {
+            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
+            if (directionalLight != null) {
+                shader.setDirectionalLightUniforms(directionalLight);
             }
+
+            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
+            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
+                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
+            }
+
+            // Iterate through point lights, uploading each to the shader
+            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
+                final PointLight pointLight = pointLights.get(i);
+                shader.setPointLightUniforms(i, pointLight);
+            }
+
+            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
+            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
+                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
+            }
+
+            // Iterate through spot lights, uploading each to the shader
+            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
+                final SpotLight spotLight = spotLights.get(i);
+                shader.setSpotLightUniforms(i, spotLight);
+            }
+        }
+
+        // Set all material uniforms
+        shader.setMaterialUniforms(material);
+
+//        if(mesh.supportsTexture()) {
+//            if(texture == null) {
+//                System.err.println("NULL Texture on instance renderer");
+//            } else {
+//                glActiveTexture(GL_TEXTURE0);
+//                glBindTexture(GL_TEXTURE_2D, texture.getId());
+//                glUniform1i(shader.materialHandles.textureUniformHandle, 0);
+//            }
+//        }
+
+        // Set global uniform colour
+        if(shader.materialHandles.colourUniformHandle != GL_INVALID_INDEX) {
+            glUniform4f(shader.materialHandles.colourUniformHandle, globalColour.red, globalColour.green, globalColour.blue, globalColour.alpha);
         }
 
         // Set view matrices
