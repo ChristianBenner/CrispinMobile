@@ -40,7 +40,6 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
         linearLayout.add(createDemoButton("Instance Rendering", InstancingDemo::new));
-        linearLayout.add(createDemoButton("Instance Rendering Engine", InstancingEngineDemo::new));
         linearLayout.add(createDemoButton("Instance Vs Batch Rendering", InstancingVsBatchDemo::new));
 
         selectDemoText = new Text(titleFont, "Select a Demo", true, true,

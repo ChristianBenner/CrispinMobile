@@ -10,15 +10,13 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.DefaultMesh.CubeMesh;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.Rendering.Utilities.InstanceRendererFinalise;
+import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
 import com.crispin.crispinmobile.UserInterface.Border;
@@ -33,13 +31,13 @@ import com.crispin.demos.R;
 import java.util.Random;
 
 public class InstancingVsBatchDemo extends Scene {
-    private final int NUM_INSTANCES = 10000;
+    private final int NUM_INSTANCES = 60000;
     private final int NUM_RENDER_BATCH_OBJECTS = 10000;
     private final Scale3D GENERATION_AREA_SIZE = new Scale3D(30.0f, 30.0f, 100.0f);
     private final int NUM_FLOATS_MATRIX = 16;
     private final int NUM_FLOATS_COLOUR = 4;
 
-    private InstanceRendererFinalise instanceRenderer;
+    private InstanceRenderer instanceRenderer;
     private RenderBatch renderBatch;
 
     private final LightGroup lightGroup;
@@ -111,19 +109,17 @@ public class InstancingVsBatchDemo extends Scene {
             colourData[colourOffset + 2] = blue;
             colourData[colourOffset + 3] = alpha;
 
-            ModelProperties mp = new ModelProperties(new Material(TextureCache.loadTexture(R.drawable.crate_texture), new Colour(red, green, blue, alpha)));
-            mp.setPosition(x, y, z);
-            mp.setRotation(rotateAngle, 0.4f, 0.6f, 0.8f);
-            mp.setScale(scale);
-            renderBatch.add(mp);
-            modelProperties[i] = mp;
+            if(i < NUM_RENDER_BATCH_OBJECTS) {
+                ModelProperties mp = new ModelProperties(new Material(TextureCache.loadTexture(R.drawable.crate_texture), new Colour(red, green, blue, alpha)));
+                mp.setPosition(x, y, z);
+                mp.setRotation(rotateAngle, 0.4f, 0.6f, 0.8f);
+                mp.setScale(scale);
+                renderBatch.add(mp);
+                modelProperties[i] = mp;
+            }
         }
 
-//        instanceRenderer = new InstanceRendererFinalise(new CubeMesh(true, true), modelMatrices);
-//        instanceRenderer.setMaterial(new Material(TextureCache.loadTexture(R.drawable.crate_texture), Colour.CYAN));
-//        instanceRenderer.setLightGroup(lightGroup);
-
-        instanceRenderer = new InstanceRendererFinalise(new CubeMesh(true, true), modelMatrices, colourData);
+        instanceRenderer = new InstanceRenderer(new CubeMesh(true, true), modelMatrices, colourData);
         instanceRenderer.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
         instanceRenderer.setLightGroup(lightGroup);
 
@@ -206,14 +202,14 @@ public class InstancingVsBatchDemo extends Scene {
             if(renderAsInstances) {
                 for (int i = 0; i < NUM_INSTANCES; i++) {
                     int offset = NUM_FLOATS_MATRIX * i;
-                    Matrix.rotateM(modelMatrices, offset, 1.0f, 0.4f, 0.6f, 0.8f);
+                    Matrix.rotateM(modelMatrices, offset, deltaTime, 0.4f, 0.6f, 0.8f);
                 }
                 instanceRenderer.uploadModelMatrices(modelMatrices);
             } else {
                 for (int i = 0; i < NUM_RENDER_BATCH_OBJECTS; i++) {
                     modelProperties[i].setRotation(angle, 0.4f, 0.6f, 0.8f);
                 }
-                angle += 1f;
+                angle += 1f * deltaTime;
             }
         }
     }

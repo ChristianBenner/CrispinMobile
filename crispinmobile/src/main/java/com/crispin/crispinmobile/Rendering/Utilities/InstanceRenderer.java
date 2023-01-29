@@ -1,26 +1,21 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
 import static android.opengl.GLES20.GL_STREAM_DRAW;
-import static android.opengl.GLES20.glBufferSubData;
-import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES30.GL_INVALID_INDEX;
-import static android.opengl.GLES30.glGenBuffers;
-import static android.opengl.GLES30.glUniform1i;
+import static android.opengl.GLES30.GL_ARRAY_BUFFER;
 import static android.opengl.GLES30.GL_CULL_FACE;
-import static android.opengl.GLES30.glEnable;
 import static android.opengl.GLES30.GL_FLOAT;
 import static android.opengl.GLES30.GL_TRIANGLES;
-import static android.opengl.GLES30.glEnableVertexAttribArray;
-import static android.opengl.GLES30.glUniformMatrix4fv;
-import static android.opengl.GLES30.glVertexAttribPointer;
-import static android.opengl.GLES30.GL_ARRAY_BUFFER;
 import static android.opengl.GLES30.glBindBuffer;
 import static android.opengl.GLES30.glBindVertexArray;
 import static android.opengl.GLES30.glBufferData;
 import static android.opengl.GLES30.glDrawArraysInstanced;
+import static android.opengl.GLES30.glEnable;
+import static android.opengl.GLES30.glEnableVertexAttribArray;
+import static android.opengl.GLES30.glGenBuffers;
+import static android.opengl.GLES30.glUniform1i;
+import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribDivisor;
-
-import android.opengl.Matrix;
+import static android.opengl.GLES30.glVertexAttribPointer;
 
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
@@ -28,41 +23,57 @@ import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceGlobalColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
+import com.crispin.crispinmobile.Utilities.Logger;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class InstanceRenderer {
-    private final int NUM_BYTES_FLOAT = 4;
-    private final int NUM_FLOATS_MATRIX = 16;
-    private final int NUM_BYTES_MATRIX = NUM_FLOATS_MATRIX * NUM_BYTES_FLOAT;
-    private final int NUM_FLOATS_VEC4 = 4;
-    private final int NUM_BYTES_VEC4 = NUM_FLOATS_VEC4 * NUM_BYTES_FLOAT;
-    private Mesh mesh;
-    private ArrayList<ModelMatrix> modelMatrices;
-    private int matricesVBO;
+    private static final String TAG = "InstanceRenderer";
 
+    protected final int NUM_BYTES_FLOAT = 4;
+    protected final int NUM_FLOATS_MATRIX = 16;
+    protected final int NUM_BYTES_MATRIX = NUM_FLOATS_MATRIX * NUM_BYTES_FLOAT;
+    protected final int NUM_FLOATS_VEC4 = 4;
+    protected final int NUM_BYTES_VEC4 = NUM_FLOATS_VEC4 * NUM_BYTES_FLOAT;
+    protected final int NUM_FLOATS_COLOUR = 4;
+    protected final int NUM_BYTES_COLOUR = NUM_FLOATS_COLOUR * NUM_BYTES_FLOAT;
+
+    private Mesh mesh;
+    private int matricesVBO;
+    private int colourVBO;
     private Shader shader;
     private Material material;
-    private Colour globalColour = Colour.WHITE;
     private LightGroup lightGroup;
-    private FloatBuffer modelMatrixBuffer;
+    private int instances;
+    private boolean instancedColour;
 
-    public InstanceRenderer(Mesh mesh) {
+    public InstanceRenderer(Mesh mesh, boolean instancedColour) {
         this.mesh = mesh;
+        this.instancedColour = instancedColour;
 
-        modelMatrices = new ArrayList<>();
         material = new Material();
 
         // Generate virtual buffer object for matrices instances
         int[] matricesVBO = new int[1];
         glGenBuffers(1, matricesVBO, 0);
         this.matricesVBO = matricesVBO[0];
+
+        if(instancedColour) {
+            // Generate virtual buffer object for colour instances
+            int[] colourVBO = new int[1];
+            glGenBuffers(1, colourVBO, 0);
+            this.colourVBO = colourVBO[0];
+        }
 
         glBindVertexArray(mesh.vao);
         glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
@@ -87,62 +98,45 @@ public class InstanceRenderer {
         glEnableVertexAttribArray(shader.positionAttributeHandle);
     }
 
-    public void setLightGroup(LightGroup lightGroup) {
-        this.lightGroup = lightGroup;
+    public InstanceRenderer(Mesh mesh, ModelMatrix[] modelMatrices) {
+        this(mesh, false);
+        uploadModelMatrices(modelMatrices);
     }
 
-    public void setGlobalColour(Colour colour) {
-        this.globalColour = new Colour(colour);
+    public InstanceRenderer(Mesh mesh, FloatBuffer buffer, int instances) {
+        this(mesh, false);
+        uploadModelMatrices(buffer, instances);
     }
 
-    private Shader determineShader(Mesh mesh) {
-        if(mesh.supportsTexture() && mesh.supportsLighting()) {
-            // todo: Supports lighting and texture
-            //return InstanceTextureLightingShader();
-        } else if(mesh.supportsTexture()) {
-            return new InstanceTextureShader();
-        }else if(mesh.supportsLighting()) {
-            return new InstanceLightingShader();
-        }
-
-        // Texture and lighting not supported, use uniform colour
-        return new InstanceGlobalColourShader();
+    public InstanceRenderer(Mesh mesh, float[] modelMatrices) {
+        this(mesh, false);
+        uploadModelMatrices(modelMatrices);
     }
 
-    public void setTexture(Texture texture) {
-        this.material.texture = texture;
+    public InstanceRenderer(Mesh mesh, ModelMatrix[] modelMatrices, Colour[] colours) {
+        this(mesh, true);
+        uploadModelMatrices(modelMatrices);
+        uploadColourData(colours);
     }
 
-    public void setMaterial(Material material) {
-        this.material = material;
+    public InstanceRenderer(Mesh mesh, FloatBuffer modelMatrixBuffer, FloatBuffer colourBuffer, int instances) {
+        this(mesh, true);
+        uploadModelMatrices(modelMatrixBuffer, instances);
+        uploadColourData(colourBuffer, instances);
     }
 
-    public void add(ModelMatrix modelMatrix) {
-        modelMatrices.add(modelMatrix);
-        upload();
+    public InstanceRenderer(Mesh mesh, float[] modelMatrices, float[] colours) {
+        this(mesh, true);
+        uploadModelMatrices(modelMatrices);
+        uploadColourData(colours);
     }
 
-    public void add(ModelMatrix[] modelMatrices) {
-        for(int i = 0; i < modelMatrices.length; i++){
-            this.modelMatrices.add(modelMatrices[i]);
-        }
-        upload();
-    }
-
-    public void remove(ModelMatrix modelMatrix) {
-        modelMatrices.remove(modelMatrix);
-        upload();
-    }
-
-    private void upload() {
-        modelMatrixBuffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX * modelMatrices.size());
-        for(int i = 0; i < modelMatrices.size(); i++) {
-            modelMatrixBuffer.put(modelMatrices.get(i).getFloats());
-        }
-        modelMatrixBuffer.position(0);
+    public void uploadModelMatrices(FloatBuffer buffer, int instances) {
+        this.instances = instances;
+        buffer.position(0);
 
         glBindBuffer(GL_ARRAY_BUFFER, matricesVBO);
-        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * modelMatrices.size(), modelMatrixBuffer, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * instances, buffer, GL_STREAM_DRAW);
 
         glBindVertexArray(mesh.vao);
         int h = shader.modelMatrixAttributeHandle;
@@ -163,27 +157,77 @@ public class InstanceRenderer {
         glBindVertexArray(0);
     }
 
-    /* todo: Possible solution for being able to update positions and offset the cost to the user.
-        instead of passing in model matrices, we pass an object that holds position, rotation etc
-        (all the things required to make a model matrix). Also object holds colour data so that we
-        can render unique colour instances also if the option is set. Each object will have its own,
-        float buffer for model matrix/colour data. If the user updates anything it will update the
-        float buffer and send the new data to video memory using glBufferSubData.
+    public void uploadModelMatrices(float[] modelMatrices) {
+        int count = modelMatrices.length / NUM_FLOATS_MATRIX;
+        uploadModelMatrices(FloatBuffer.wrap(modelMatrices), count);
+    }
 
-        nah.
-    */
-    Random r = new Random();
-    public void updateAll() {
-        for(int i = 0; i < modelMatrices.size(); i++) {
-            Matrix.translateM(modelMatrices.get(i).getFloats(), 0,  r.nextFloat() * 0.1f, r.nextFloat() * 0.1f, r.nextFloat() * 0.1f);
-            modelMatrixBuffer.position(i * NUM_FLOATS_MATRIX);
-            modelMatrixBuffer.put(modelMatrices.get(i).getFloats());
+    public void uploadModelMatrices(ModelMatrix[] modelMatrices) {
+        int count = modelMatrices.length;
+
+        FloatBuffer buffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX * count);
+        for(int i = 0; i < count; i++) {
+            buffer.put(modelMatrices[i].getFloats());
         }
-        modelMatrixBuffer.position(0);
 
-        glBindBuffer(GL_ARRAY_BUFFER, matricesVBO);
-        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * modelMatrices.size(), null, GL_STREAM_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, NUM_BYTES_MATRIX * modelMatrices.size(), modelMatrixBuffer);
+        uploadModelMatrices(buffer, count);
+    }
+
+    public void uploadColourData(FloatBuffer colourBuffer, int instances) {
+        // If instanced colour is not yet enabled, then generate the buffer, load the correct shader and enable it
+        if(!instancedColour) {
+            Logger.error(TAG, "Colour per-instance rendering not enabled but colour buffer provided");
+            return;
+        }
+
+        colourBuffer.position(0);
+
+        // Upload data
+        glBindBuffer(GL_ARRAY_BUFFER, colourVBO);
+        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_COLOUR * instances, colourBuffer, GL_STREAM_DRAW);
+
+        // Bind vertex attribs
+        glBindVertexArray(mesh.vao);
+
+        int h = shader.colourAttributeHandle;
+        glEnableVertexAttribArray(h);
+        glVertexAttribPointer(h, 4, GL_FLOAT, false, NUM_BYTES_COLOUR, 0);
+        glVertexAttribDivisor(h, 1);
+        glBindVertexArray(0);
+    }
+
+    public void uploadColourData(float[] colours) {
+        int count = colours.length / NUM_FLOATS_COLOUR;
+        uploadColourData(FloatBuffer.wrap(colours), count);
+    }
+
+    public void uploadColourData(Colour[] colours) {
+        int count = colours.length;
+        FloatBuffer colourBuffer = FloatBuffer.allocate(NUM_FLOATS_COLOUR * count);
+        for(int i = 0; i < count; i++) {
+            colourBuffer.put(colours[i].red);
+            colourBuffer.put(colours[i].green);
+            colourBuffer.put(colours[i].blue);
+            colourBuffer.put(colours[i].alpha);
+        }
+
+        uploadColourData(colourBuffer, count);
+    }
+
+    public void setLightGroup(LightGroup lightGroup) {
+        this.lightGroup = lightGroup;
+    }
+
+    public void setGlobalColour(Colour colour) {
+        this.material.colour = new Colour(colour);
+    }
+
+    public void setTexture(Texture texture) {
+        this.material.texture = texture;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
     }
 
     public void render(Camera camera) {
@@ -223,30 +267,48 @@ public class InstanceRenderer {
         // Set all material uniforms
         shader.setMaterialUniforms(material);
 
-//        if(mesh.supportsTexture()) {
-//            if(texture == null) {
-//                System.err.println("NULL Texture on instance renderer");
-//            } else {
-//                glActiveTexture(GL_TEXTURE0);
-//                glBindTexture(GL_TEXTURE_2D, texture.getId());
-//                glUniform1i(shader.materialHandles.textureUniformHandle, 0);
-//            }
-//        }
-
-        // Set global uniform colour
-        if(shader.materialHandles.colourUniformHandle != GL_INVALID_INDEX) {
-            glUniform4f(shader.materialHandles.colourUniformHandle, globalColour.red, globalColour.green, globalColour.blue, globalColour.alpha);
-        }
-
         // Set view matrices
         glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
         glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
 
         // Draw instances
         glBindVertexArray(mesh.vao);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, mesh.vertexCount, modelMatrices.size());
+        glDrawArraysInstanced(GL_TRIANGLES, 0, mesh.vertexCount, instances);
         glBindVertexArray(0);
 
         shader.disable();
+    }
+
+    protected int getMeshVAO() {
+        return mesh.vao;
+    }
+
+    protected Shader getShader() {
+        return shader;
+    }
+
+    protected Shader determineShader(Mesh mesh) {
+        if(instancedColour) {
+            if(mesh.supportsTexture() && mesh.supportsLighting()) {
+                return new InstanceColourLightingTextureShader();
+            } else if(mesh.supportsTexture()) {
+                return new InstanceColourTextureShader();
+            }else if(mesh.supportsLighting()) {
+                return new InstanceColourLightingShader();
+            }
+
+            return new InstanceColourShader();
+        }
+
+        if(mesh.supportsTexture() && mesh.supportsLighting()) {
+            return new InstanceLightingTextureShader();
+        } else if(mesh.supportsTexture()) {
+            return new InstanceTextureShader();
+        }else if(mesh.supportsLighting()) {
+            return new InstanceLightingShader();
+        }
+
+        // Texture and lighting not supported, use uniform colour
+        return new InstanceGlobalColourShader();
     }
 }
