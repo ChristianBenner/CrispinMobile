@@ -4,7 +4,12 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
 import android.content.res.Configuration;
+import android.graphics.Canvas;
+import android.hardware.display.DisplayManager;
+import android.opengl.EGLSurface;
 import android.opengl.GLSurfaceView;
+import android.os.Build;
+import android.view.Surface;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +79,7 @@ public class Crispin {
         if (isOpenGLESSupported()) {
             // Use context to initialise a GLSurfaceView
             glSurfaceView = new GLSurfaceView(CONTEXT);
-
+            
             // Tell the application to use OpenGL ES 3.0
             glSurfaceView.setEGLContextClientVersion(OPENGL_ES_TARGET_VERSION);
 
@@ -441,6 +446,31 @@ public class Crispin {
         }
 
         return 0.0f;
+    }
+
+    /**
+     * Get the most recent fps calculation
+     *
+     * @return Number of frames rendered in the most recent second time window
+     * @since 1.0
+     */
+    public static int getFps() {
+        if (isInit()) {
+            return crispinInstance.sceneManager.getFps();
+        }
+        return 0;
+    }
+
+    /**
+     * Tell the engine to print FPS info
+     *
+     * @param state True to start printing the number of frames per second, else false
+     * @since 1.0
+     */
+    public static void setPrintFps(boolean state) {
+        if (isInit()) {
+            crispinInstance.sceneManager.setPrintFps(state);
+        }
     }
 
     /**

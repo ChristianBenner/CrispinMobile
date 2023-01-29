@@ -77,42 +77,6 @@ public class RenderBatch {
         this.lightGroup = lightGroup;
     }
 
-    private void instanceStuff() {
-        int[] instanceVBO = new int[1];
-        glGenBuffers(1, instanceVBO, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
-
-        // Mat is 4x4 of floats (4 bytes each) so each mat = 4*4*4 bytes
-        int modelMatNumFloats = 4 * 4;
-        int modelMatNumBytes = modelMatNumFloats * 4;
-
-        FloatBuffer md = FloatBuffer.allocate(batch.size() * modelMatNumFloats);
-        for(ModelProperties modelProperties : batch) {
-            md.put(modelProperties.modelMatrix.getModelMatrix());
-        }
-        md.position(0);
-
-        glBufferData(GL_ARRAY_BUFFER, batch.size() * modelMatNumBytes, md, GL_STATIC_DRAW);
-
-
-
-        int aLoc = shader.instanceMatrixAttributeHandle;
-        glBindVertexArray(renderObject.vao);
-        glEnableVertexAttribArray(aLoc);
-        glVertexAttribPointer(aLoc, 4, GL_FLOAT, false, modelMatNumBytes, 0);
-        glEnableVertexAttribArray(aLoc + 1);
-        glVertexAttribPointer(aLoc + 1, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 1 * 4);
-        glEnableVertexAttribArray(aLoc + 2);
-        glVertexAttribPointer(aLoc + 2, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 2 * 4);
-        glEnableVertexAttribArray(aLoc + 3);
-        glVertexAttribPointer(aLoc + 3, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 3 * 4);
-        glVertexAttribDivisor(aLoc, 1);
-        glVertexAttribDivisor(aLoc + 1, 1);
-        glVertexAttribDivisor(aLoc + 2, 1);
-        glVertexAttribDivisor(aLoc + 3, 1);
-        glBindVertexArray(0);
-    }
-
     public void render() {
         shader.enable();
 
@@ -171,13 +135,11 @@ public class RenderBatch {
      //   glDrawArraysInstanced(GL_TRIANGLES, 0, renderObject.vertexCount, batch.size());
 
         for(ModelProperties properties : batch) {
-            properties.updateModelMatrix();
-
             if (shader.validHandle(shader.getModelMatrixUniformHandle())) {
                 glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
                         UNIFORM_UPLOAD_COUNT_SINGLE,
                         false,
-                        properties.modelMatrix.getModelMatrix(),
+                        properties.getModelMatrix().getFloats(),
                         0);
             }
 

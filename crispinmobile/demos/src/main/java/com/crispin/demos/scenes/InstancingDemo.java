@@ -216,7 +216,7 @@ public class InstancingDemo extends Scene {
             modelMatrix.translate(x, y, z);
             modelMatrix.rotate(rotateAngle, 0.4f, 0.6f, 0.8f);
             modelMatrix.scale(scale);
-            modelMatrixBuffer.put(modelMatrix.getModelMatrix());
+            modelMatrixBuffer.put(modelMatrix.getFloats());
         }
         modelMatrixBuffer.position(0);
 
@@ -317,7 +317,7 @@ public class InstancingDemo extends Scene {
         FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(numFloatsPerMatrix);
         ModelMatrix modelMatrix = new ModelMatrix();
         modelMatrix.translate(x, y, z);
-        modelMatrixBuffer.put(modelMatrix.getModelMatrix());
+        modelMatrixBuffer.put(modelMatrix.getFloats());
         modelMatrixBuffer.position(0);
 
         GLES30.glBindBuffer(GL_ARRAY_BUFFER, instanceVBO);

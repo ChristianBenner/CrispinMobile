@@ -3,24 +3,22 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import static android.opengl.GLES20.GL_STREAM_DRAW;
 import static android.opengl.GLES20.glBufferSubData;
 import static android.opengl.GLES20.glUniform4f;
-import static android.opengl.GLES30.GL_INVALID_INDEX;
-import static android.opengl.GLES30.glGenBuffers;
-import static android.opengl.GLES30.glUniform1i;
-import static android.opengl.GLES30.GL_CULL_FACE;
-import static android.opengl.GLES30.glEnable;
-import static android.opengl.GLES30.GL_FLOAT;
-import static android.opengl.GLES30.GL_TRIANGLES;
-import static android.opengl.GLES30.glEnableVertexAttribArray;
-import static android.opengl.GLES30.glUniformMatrix4fv;
-import static android.opengl.GLES30.glVertexAttribPointer;
 import static android.opengl.GLES30.GL_ARRAY_BUFFER;
+import static android.opengl.GLES30.GL_CULL_FACE;
+import static android.opengl.GLES30.GL_FLOAT;
+import static android.opengl.GLES30.GL_INVALID_INDEX;
+import static android.opengl.GLES30.GL_TRIANGLES;
 import static android.opengl.GLES30.glBindBuffer;
 import static android.opengl.GLES30.glBindVertexArray;
 import static android.opengl.GLES30.glBufferData;
 import static android.opengl.GLES30.glDrawArraysInstanced;
+import static android.opengl.GLES30.glEnable;
+import static android.opengl.GLES30.glEnableVertexAttribArray;
+import static android.opengl.GLES30.glGenBuffers;
+import static android.opengl.GLES30.glUniform1i;
+import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribDivisor;
-
-import android.opengl.Matrix;
+import static android.opengl.GLES30.glVertexAttribPointer;
 
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
@@ -35,28 +33,26 @@ import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
-import java.util.Random;
 
-public class InstanceRenderer {
+public class InstanceRendererExplicitAmountTest {
     private final int NUM_BYTES_FLOAT = 4;
     private final int NUM_FLOATS_MATRIX = 16;
     private final int NUM_BYTES_MATRIX = NUM_FLOATS_MATRIX * NUM_BYTES_FLOAT;
     private final int NUM_FLOATS_VEC4 = 4;
     private final int NUM_BYTES_VEC4 = NUM_FLOATS_VEC4 * NUM_BYTES_FLOAT;
     private Mesh mesh;
-    private ArrayList<ModelMatrix> modelMatrices;
     private int matricesVBO;
 
     private Shader shader;
     private Material material;
     private Colour globalColour = Colour.WHITE;
     private LightGroup lightGroup;
-    private FloatBuffer modelMatrixBuffer;
+    private int instances;
 
-    public InstanceRenderer(Mesh mesh) {
+    public InstanceRendererExplicitAmountTest(Mesh mesh, int instances) {
         this.mesh = mesh;
+        this.instances = instances;
 
-        modelMatrices = new ArrayList<>();
         material = new Material();
 
         // Generate virtual buffer object for matrices instances
@@ -85,7 +81,24 @@ public class InstanceRenderer {
         glVertexAttribPointer(shader.positionAttributeHandle,  mesh.elementsPerPosition, GL_FLOAT,
                 false, mesh.stride, mesh.positionDataOffset * NUM_BYTES_FLOAT);
         glEnableVertexAttribArray(shader.positionAttributeHandle);
+
+
+        upload();
     }
+
+    public void uploadSeg(ModelMatrix[] modelMatrices, int start, int end) {
+        int count = end - start;
+        // Create model matrix float buffer and upload it to video memory
+        FloatBuffer modelMatrixBuffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX * count);
+        for(int i = 0; i < count; i++) {
+            modelMatrixBuffer.put(modelMatrices[i].getFloats());
+        }
+        modelMatrixBuffer.position(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, this.matricesVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, start * NUM_BYTES_MATRIX, NUM_BYTES_MATRIX * count, modelMatrixBuffer);
+    }
+
 
     public void setLightGroup(LightGroup lightGroup) {
         this.lightGroup = lightGroup;
@@ -117,32 +130,9 @@ public class InstanceRenderer {
         this.material = material;
     }
 
-    public void add(ModelMatrix modelMatrix) {
-        modelMatrices.add(modelMatrix);
-        upload();
-    }
-
-    public void add(ModelMatrix[] modelMatrices) {
-        for(int i = 0; i < modelMatrices.length; i++){
-            this.modelMatrices.add(modelMatrices[i]);
-        }
-        upload();
-    }
-
-    public void remove(ModelMatrix modelMatrix) {
-        modelMatrices.remove(modelMatrix);
-        upload();
-    }
-
     private void upload() {
-        modelMatrixBuffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX * modelMatrices.size());
-        for(int i = 0; i < modelMatrices.size(); i++) {
-            modelMatrixBuffer.put(modelMatrices.get(i).getFloats());
-        }
-        modelMatrixBuffer.position(0);
-
         glBindBuffer(GL_ARRAY_BUFFER, matricesVBO);
-        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * modelMatrices.size(), modelMatrixBuffer, GL_STREAM_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * instances, null, GL_STREAM_DRAW);
 
         glBindVertexArray(mesh.vao);
         int h = shader.modelMatrixAttributeHandle;
@@ -161,29 +151,6 @@ public class InstanceRenderer {
         glVertexAttribDivisor(h + 3, 1);
 
         glBindVertexArray(0);
-    }
-
-    /* todo: Possible solution for being able to update positions and offset the cost to the user.
-        instead of passing in model matrices, we pass an object that holds position, rotation etc
-        (all the things required to make a model matrix). Also object holds colour data so that we
-        can render unique colour instances also if the option is set. Each object will have its own,
-        float buffer for model matrix/colour data. If the user updates anything it will update the
-        float buffer and send the new data to video memory using glBufferSubData.
-
-        nah.
-    */
-    Random r = new Random();
-    public void updateAll() {
-        for(int i = 0; i < modelMatrices.size(); i++) {
-            Matrix.translateM(modelMatrices.get(i).getFloats(), 0,  r.nextFloat() * 0.1f, r.nextFloat() * 0.1f, r.nextFloat() * 0.1f);
-            modelMatrixBuffer.position(i * NUM_FLOATS_MATRIX);
-            modelMatrixBuffer.put(modelMatrices.get(i).getFloats());
-        }
-        modelMatrixBuffer.position(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, matricesVBO);
-        glBufferData(GL_ARRAY_BUFFER, NUM_BYTES_MATRIX * modelMatrices.size(), null, GL_STREAM_DRAW);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, NUM_BYTES_MATRIX * modelMatrices.size(), modelMatrixBuffer);
     }
 
     public void render(Camera camera) {
@@ -244,7 +211,7 @@ public class InstanceRenderer {
 
         // Draw instances
         glBindVertexArray(mesh.vao);
-        glDrawArraysInstanced(GL_TRIANGLES, 0, mesh.vertexCount, modelMatrices.size());
+        glDrawArraysInstanced(GL_TRIANGLES, 0, mesh.vertexCount, instances);
         glBindVertexArray(0);
 
         shader.disable();

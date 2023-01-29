@@ -590,7 +590,7 @@ public class Model extends Mesh {
 
         float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
         Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
-                modelMatrix.getModelMatrix(), 0);
+                modelMatrix.getFloats(), 0);
 
         glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT_SINGLE, false,
                 modelViewMatrix, 0);
@@ -664,7 +664,7 @@ public class Model extends Mesh {
         if (shader.validHandle(shader.getMatrixUniformHandle())) {
             float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
             Matrix.multiplyMM(modelViewMatrix, 0, camera.getViewMatrix(), 0,
-                    modelMatrix.getModelMatrix(), 0);
+                    modelMatrix.getFloats(), 0);
 
             float[] modelViewProjectionMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
             Matrix.multiplyMM(modelViewProjectionMatrix, 0, camera.getPerspectiveMatrix(), 0,
@@ -700,7 +700,7 @@ public class Model extends Mesh {
             glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
                     UNIFORM_UPLOAD_COUNT_SINGLE,
                     false,
-                    modelMatrix.getModelMatrix(),
+                    modelMatrix.getFloats(),
                     0);
         }
 

@@ -73,7 +73,7 @@ public class ModelMatrix {
         Matrix.scaleM(modelMatrix, 0, scale, scale, scale);
     }
 
-    public float[] getModelMatrix() {
+    public float[] getFloats() {
         return modelMatrix;
     }
 

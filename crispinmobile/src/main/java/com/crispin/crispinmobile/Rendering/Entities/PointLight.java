@@ -243,6 +243,55 @@ public class PointLight {
     }
 
     /**
+     * Translate the light position
+     *
+     * @param x x co-ordinate translation
+     * @param y y co-ordinate translation
+     * @param z z co-ordinate translation
+     * @since 1.0
+     */
+    public void translate(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param x x co-ordinate translation
+     * @param y y co-ordinate translation
+     * @since 1.0
+     */
+    public void translate(float x, float y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param translateVector Vec3 containing translation
+     * @since 1.0
+     */
+    public void translate(Vec3 translateVector) {
+        this.x += translateVector.x;
+        this.y += translateVector.y;
+        this.z += translateVector.z;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param translateVector Vec2 containing translation
+     * @since 1.0
+     */
+    public void translate(Vec2 translateVector) {
+        this.x += translateVector.x;
+        this.y += translateVector.y;
+    }
+
+    /**
      * Set the light colour
      *
      * @param red   Red channel amount (0.0-1.0)

@@ -1,7 +1,8 @@
-package com.crispin.crispinmobile.Rendering.Shaders;
+package com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders;
 
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
 public class InstanceGlobalColourShader extends Shader {
         public InstanceGlobalColourShader() {

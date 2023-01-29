@@ -312,8 +312,7 @@ public class Text implements UIObject {
      */
     public void setText(String text) {
         // Only change the text if it isn't the same as before
-        if (this.textString == null ||
-                text.compareTo(this.textString) != 0) {
+        if (this.textString == null || text.compareTo(this.textString) != 0) {
             this.textString = text;
             generateText();
         }

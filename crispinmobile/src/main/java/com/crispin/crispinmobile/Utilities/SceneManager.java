@@ -1,12 +1,5 @@
 package com.crispin.crispinmobile.Utilities;
 
-import static android.opengl.GLES20.GL_ALWAYS;
-import static android.opengl.GLES20.GL_LEQUAL;
-import static android.opengl.GLES20.GL_NEVER;
-import static android.opengl.GLES20.GL_NOTEQUAL;
-import static android.opengl.GLES20.GL_STENCIL_BUFFER_BIT;
-import static android.opengl.GLES20.GL_STENCIL_TEST;
-import static android.opengl.GLES20.glDepthFunc;
 import static android.opengl.GLES30.GL_BLEND;
 import static android.opengl.GLES30.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES30.GL_CULL_FACE;
@@ -126,6 +119,18 @@ public class SceneManager implements GLSurfaceView.Renderer {
 
     // Touch event thread sync queue
     private final BlockingQueue<MotionEvent> touchEventQueue;
+
+    // Previous seconds frame count
+    private int fps;
+
+    // Number of frames counted in the current second
+    private int frames = 0;
+
+    // Start of the frame measuring time
+    private long frameCalcStartMs = 0;
+
+    // Print FPS calculation to info log
+    private boolean printFps;
 
     /**
      * The constructor for the scene manager sets the member variables for later usage. The
@@ -486,6 +491,26 @@ public class SceneManager implements GLSurfaceView.Renderer {
     }
 
     /**
+     * Get the most recent fps calculation
+     *
+     * @return Number of frames rendered in the most recent second time window
+     * @since 1.0
+     */
+    public int getFps() {
+        return fps;
+    }
+
+    /**
+     * Tell the engine to print FPS info
+     *
+     * @param state True to start printing the number of frames per second, else false
+     * @since 1.0
+     */
+    public void setPrintFps(boolean state) {
+        printFps = state;
+    }
+
+    /**
      * The method is overridden from <code>GLSurfaceView.Renderer</code>, it is called when then
      * surface is ready to be rendered (which can be many times per second). From this position,
      * rendering and logic update mechanics have be implemented so that graphical output can be
@@ -498,6 +523,16 @@ public class SceneManager implements GLSurfaceView.Renderer {
      */
     @Override
     public void onDrawFrame(GL10 gl) {
+        if(frameCalcStartMs == 0 || frameCalcStartMs <= System.currentTimeMillis() - 1000) {
+            frameCalcStartMs = System.currentTimeMillis();
+            fps = frames;
+            if(printFps) {
+                Logger.info("FPS: " + fps);
+            }
+            frames = 0;
+        }
+        frames++;
+
         // Construct the current scene if it hasn't been already
         if (currentScene == null) {
             constructCurrentScene();

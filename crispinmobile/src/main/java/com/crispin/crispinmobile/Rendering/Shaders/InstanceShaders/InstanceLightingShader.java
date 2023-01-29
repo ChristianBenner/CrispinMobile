@@ -1,10 +1,11 @@
-package com.crispin.crispinmobile.Rendering.Shaders;
+package com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders;
 
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
 public class InstanceLightingShader extends Shader {
     // The resource ID of the vertex file
