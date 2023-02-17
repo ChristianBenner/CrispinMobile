@@ -12,6 +12,7 @@ import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.DemoMaster;
 import com.crispin.demos.R;
 
 public class DemoMasterScene extends Scene {
@@ -36,11 +37,13 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
         linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
         linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
-        linearLayout.add(createDemoButton("TextDemo", TextDemo::new));
+        linearLayout.add(createDemoButton("Text", TextDemo::new));
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
         linearLayout.add(createDemoButton("Instance Rendering", InstancingDemo::new));
         linearLayout.add(createDemoButton("Instance Vs Batch Rendering", InstancingVsBatchDemo::new));
+        linearLayout.add(createDemoButton("Instance Rendering 2D", InstancingDemo2D::new));
+        linearLayout.add(createDemoButton("2D Demo", Demo2D::new));
 
         selectDemoText = new Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);

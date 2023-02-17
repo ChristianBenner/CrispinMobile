@@ -17,6 +17,8 @@ import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribDivisor;
 import static android.opengl.GLES30.glVertexAttribPointer;
 
+import android.opengl.Matrix;
+
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
@@ -48,18 +50,23 @@ public class InstanceRenderer {
     protected final int NUM_FLOATS_COLOUR = 4;
     protected final int NUM_BYTES_COLOUR = NUM_FLOATS_COLOUR * NUM_BYTES_FLOAT;
 
-    private Mesh mesh;
+    protected Mesh mesh;
+    protected boolean instancedColour;
+    protected Shader shader;
+    protected Material material;
+    protected LightGroup lightGroup;
+    protected int instances;
+
+    private float[] default2DViewMatrix;
     private int matricesVBO;
     private int colourVBO;
-    private Shader shader;
-    private Material material;
-    private LightGroup lightGroup;
-    private int instances;
-    private boolean instancedColour;
 
     public InstanceRenderer(Mesh mesh, boolean instancedColour) {
         this.mesh = mesh;
         this.instancedColour = instancedColour;
+
+        default2DViewMatrix = new float[16];
+        Matrix.setIdentityM(default2DViewMatrix, 0);
 
         material = new Material();
 
@@ -235,41 +242,22 @@ public class InstanceRenderer {
 
         glEnable(GL_CULL_FACE);
 
-        if (lightGroup != null) {
-            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
-            if (directionalLight != null) {
-                shader.setDirectionalLightUniforms(directionalLight);
-            }
+        setUniforms(camera.getPerspectiveMatrix(), camera.getViewMatrix());
 
-            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
-            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
-                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
-            }
+        // Draw instances
+        glBindVertexArray(mesh.vao);
+        glDrawArraysInstanced(GL_TRIANGLES, 0, mesh.vertexCount, instances);
+        glBindVertexArray(0);
 
-            // Iterate through point lights, uploading each to the shader
-            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
-                final PointLight pointLight = pointLights.get(i);
-                shader.setPointLightUniforms(i, pointLight);
-            }
+        shader.disable();
+    }
 
-            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
-            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
-                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
-            }
+    public void render(Camera2D camera2D) {
+        shader.enable();
 
-            // Iterate through spot lights, uploading each to the shader
-            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
-                final SpotLight spotLight = spotLights.get(i);
-                shader.setSpotLightUniforms(i, spotLight);
-            }
-        }
+        glEnable(GL_CULL_FACE);
 
-        // Set all material uniforms
-        shader.setMaterialUniforms(material);
-
-        // Set view matrices
-        glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),1,false, camera.getPerspectiveMatrix(), 0);
-        glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false, camera.getViewMatrix(), 0);
+        setUniforms(camera2D.getOrthoMatrix(), default2DViewMatrix);
 
         // Draw instances
         glBindVertexArray(mesh.vao);
@@ -310,5 +298,43 @@ public class InstanceRenderer {
 
         // Texture and lighting not supported, use uniform colour
         return new InstanceGlobalColourShader();
+    }
+
+    private void setUniforms(float[] projectionMatrix, float[] viewMatrix) {
+        if (lightGroup != null) {
+            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
+            if (directionalLight != null) {
+                shader.setDirectionalLightUniforms(directionalLight);
+            }
+
+            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
+            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
+                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
+            }
+
+            // Iterate through point lights, uploading each to the shader
+            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
+                final PointLight pointLight = pointLights.get(i);
+                shader.setPointLightUniforms(i, pointLight);
+            }
+
+            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
+            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
+                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
+            }
+
+            // Iterate through spot lights, uploading each to the shader
+            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
+                final SpotLight spotLight = spotLights.get(i);
+                shader.setSpotLightUniforms(i, spotLight);
+            }
+        }
+
+        // Set all material uniforms
+        shader.setMaterialUniforms(material);
+
+        // Set view matrices
+        glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),1,false, projectionMatrix, 0);
+        glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false,viewMatrix, 0);
     }
 }

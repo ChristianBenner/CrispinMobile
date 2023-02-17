@@ -82,7 +82,7 @@ public class InstancingVsBatchDemo extends Scene {
 
         renderBatch = new RenderBatch();
         renderBatch.setCamera(camera);
-        renderBatch.setRenderObject(new CubeMesh(true, true));
+        renderBatch.setMesh(new CubeMesh(true, true));
         renderBatch.setLightGroup(lightGroup);
 
         modelProperties = new ModelProperties[NUM_RENDER_BATCH_OBJECTS];

@@ -9,7 +9,6 @@ import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingBatchShader;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
@@ -50,7 +49,7 @@ public class RenderBatchDemo extends Scene {
 
         renderBatch = new RenderBatch();
         renderBatch.setCamera(camera);
-        renderBatch.setRenderObject(OBJModelLoader.readObjFile(R.raw.torus_uv));
+        renderBatch.setMesh(OBJModelLoader.readObjFile(R.raw.torus_uv));
         renderBatch.setShader(shader);
         renderBatch.setLightGroup(lightGroup);
      //   renderBatch.setRenderObject(OBJModelLoader.readObjFile(R.raw.torus_uv));

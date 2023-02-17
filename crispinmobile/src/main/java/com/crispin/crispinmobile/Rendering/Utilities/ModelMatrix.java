@@ -4,7 +4,9 @@ import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
+import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 
 public class ModelMatrix {
@@ -50,6 +52,14 @@ public class ModelMatrix {
         Matrix.translateM(modelMatrix, 0, x, y, z);
     }
 
+    public void translate(Vec2 point2D) {
+        Matrix.translateM(modelMatrix, 0, point2D.x, point2D.y, 0.0f);
+    }
+
+    public void translate(float x, float y) {
+        Matrix.translateM(modelMatrix, 0, x, y, 0.0f);
+    }
+
     public void rotateAroundPoint(float x, float y, float z, float angle, float rx, float ry,
                                   float rz) {
         translate(x, y, z);
@@ -69,8 +79,20 @@ public class ModelMatrix {
         Matrix.scaleM(modelMatrix, 0, scale3D.x, scale3D.y, scale3D.z);
     }
 
+    public void scale(Scale2D scale2D) {
+        Matrix.scaleM(modelMatrix, 0, scale2D.x, scale2D.y, 1.0f);
+    }
+
     public void scale(float scale) {
         Matrix.scaleM(modelMatrix, 0, scale, scale, scale);
+    }
+
+    public void scale(float x, float y, float z) {
+        Matrix.scaleM(modelMatrix, 0, x, y, z);
+    }
+
+    public void scale(float x, float y) {
+        Matrix.scaleM(modelMatrix, 0, x, y, 1.0f);
     }
 
     public float[] getFloats() {
