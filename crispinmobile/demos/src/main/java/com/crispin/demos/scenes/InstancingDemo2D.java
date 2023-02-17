@@ -23,7 +23,7 @@ import com.crispin.demos.R;
 import java.util.Random;
 
 public class InstancingDemo2D extends Scene {
-    private final int NUM_INSTANCES = 10000;
+    private final int NUM_INSTANCES = 3000;
 
     private InstanceRenderer globalColourInstanceRenderer;
 
@@ -38,6 +38,8 @@ public class InstancingDemo2D extends Scene {
 
     private int instanceRenderCount = 0;
 
+    private PointLight pointLight;
+
     public InstancingDemo2D() {
         Crispin.setBackgroundColour(Colour.BLACK);
 
@@ -46,8 +48,16 @@ public class InstancingDemo2D extends Scene {
 
         camera = new Camera2D();
 
-        globalColourInstanceRenderer = new InstanceRenderer(new SquareMesh(false, false), generateRandomModelTransformations(), generateRandomColours());
-        globalColourInstanceRenderer.setGlobalColour(Colour.GREEN);
+        globalColourInstanceRenderer = new InstanceRenderer(new SquareMesh(false), generateRandomModelTransformations(), generateRandomColours());
+        globalColourInstanceRenderer.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
+
+        LightGroup lightGroup = new LightGroup();
+        pointLight = new PointLight(400f, 400f);
+        pointLight.setLinearAttenuation(0.0001f);
+        pointLight.setQuadraticAttenuation(0.0001f);
+
+        lightGroup.addLight(pointLight);
+        globalColourInstanceRenderer.setLightGroup(lightGroup);
     }
 
     private ModelMatrix[] generateRandomModelTransformations() {
@@ -118,9 +128,18 @@ public class InstancingDemo2D extends Scene {
         });
     }
 
+    private float n = 0.0f;
+    private float sx = Crispin.getSurfaceWidth() / 2.0f;
+    private float sy = Crispin.getSurfaceHeight() / 2.0f;
+
     @Override
     public void update(float deltaTime) {
         fpsText.setText(Crispin.getFps() + "FPS");
+
+        float x = sx + (float)Math.sin(n) * 200.0f;
+        float y = sy + (float)Math.cos(n) * 400.0f;
+        n += 0.02f * deltaTime;
+        pointLight.setPosition(x, y);
     }
 
     @Override

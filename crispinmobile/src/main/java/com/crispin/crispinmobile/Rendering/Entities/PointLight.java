@@ -404,7 +404,7 @@ public class PointLight {
      * @since 1.0
      */
     public void setConstantAttenuation(float constantAttenuation) {
-        this.constantAttenuation = this.constantAttenuation;
+        this.constantAttenuation = constantAttenuation;
     }
 
     /**

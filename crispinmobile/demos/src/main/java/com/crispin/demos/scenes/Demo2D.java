@@ -33,7 +33,7 @@ public class Demo2D extends Scene {
 
         camera = new Camera2D(0.0f, 0.0f, Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
 
-        mesh = new SquareMesh(false, false);
+        mesh = new SquareMesh(false);
         modelMatrix = new ModelMatrix();
         modelMatrix.reset();
         modelMatrix.translate(300, 300);

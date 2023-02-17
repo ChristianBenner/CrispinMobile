@@ -26,6 +26,7 @@ import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourTextureShader;
@@ -223,6 +224,9 @@ public class InstanceRenderer {
 
     public void setLightGroup(LightGroup lightGroup) {
         this.lightGroup = lightGroup;
+
+        // Now lights are in use, check if we should use a different shader
+        this.shader = determineShader(mesh);
     }
 
     public void setGlobalColour(Colour colour) {
@@ -276,6 +280,12 @@ public class InstanceRenderer {
     }
 
     protected Shader determineShader(Mesh mesh) {
+        // todo: for all lighting shaders check mesh elementsPerPosition member variable to see if we need a 3D or 2D lighting
+
+        if(mesh.elementsPerPosition == 2 && lightGroup != null) {
+            return new InstanceColourLightingShader2D();
+        }
+
         if(instancedColour) {
             if(mesh.supportsTexture() && mesh.supportsLighting()) {
                 return new InstanceColourLightingTextureShader();

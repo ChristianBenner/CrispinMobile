@@ -19,9 +19,6 @@ public class SquareMesh extends Mesh {
     // The number of texel components in the texel data (2 because its ST)
     private static final byte NUMBER_TEXEL_COMPONENTS = 2;
 
-    // The number of normal components in the normal data (2 because its xy)
-    private static final byte NUMBER_NORMAL_COMPONENTS = 2;
-
     // Position vertex data that contains XY components
     private static final float[] POSITION_DATA =
             {
@@ -44,12 +41,6 @@ public class SquareMesh extends Mesh {
                     1.0f, 1.0f
             };
 
-    // Normal vertex data that contains XYZ components
-    private static final float[] NORMAL_DATA =
-            {
-
-            };
-
     /**
      * Create a square with specifically allowed data types. This allows you to limit what data is
      * uploaded to the GPU and rendered. This means that a vertex buffer of the minimum size is
@@ -58,14 +49,11 @@ public class SquareMesh extends Mesh {
      * engines as it allows you to prevent the handling of un-required data.
      *
      * @param textureSupport  True to generate the mesh with texel data, else false
-     * @param lightingSupport True to generate the mesh with normal data, else false
      * @since 1.0
      */
-    public SquareMesh(boolean textureSupport, boolean lightingSupport) {
-        super(POSITION_DATA, textureSupport ? TEXEL_DATA : null,
-                lightingSupport ? NORMAL_DATA : null,
+    public SquareMesh(boolean textureSupport) {
+        super(POSITION_DATA, textureSupport ? TEXEL_DATA : null, null,
                 RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
-                textureSupport ? NUMBER_TEXEL_COMPONENTS : 0,
-                lightingSupport ? NUMBER_NORMAL_COMPONENTS : 0);
+                textureSupport ? NUMBER_TEXEL_COMPONENTS : 0, 0);
     }
 }
