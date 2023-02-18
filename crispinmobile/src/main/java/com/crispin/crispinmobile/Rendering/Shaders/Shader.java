@@ -144,6 +144,7 @@ public class Shader {
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
+        numSpotLightsUniformHandle = UNDEFINED_HANDLE;
         modelMatrixAttributeHandle = UNDEFINED_HANDLE;
     }
 
@@ -400,7 +401,11 @@ public class Shader {
      * @since 1.0
      */
     public int getAttribute(String attributeName) {
-        return glGetAttribLocation(programId, attributeName);
+        int attribute = glGetAttribLocation(programId, attributeName);
+        if(attribute == UNDEFINED_HANDLE) {
+            Logger.error(TAG, "Failed to find attribute '" + attributeName + "' in shader '" + name + "'");
+        }
+        return attribute;
     }
 
     /**
@@ -411,7 +416,11 @@ public class Shader {
      * @since 1.0
      */
     public int getUniform(String uniformName) {
-        return glGetUniformLocation(programId, uniformName);
+        int uniform = glGetUniformLocation(programId, uniformName);
+        if(uniform == UNDEFINED_HANDLE) {
+            Logger.error(TAG, "Failed to find uniform '" + uniformName + "' in shader '" + name + "'");
+        }
+        return uniform;
     }
 
     /**

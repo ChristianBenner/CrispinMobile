@@ -16,6 +16,7 @@ import static android.opengl.GLES30.glUniform1i;
 import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribDivisor;
 import static android.opengl.GLES30.glVertexAttribPointer;
+import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
 
 import android.opengl.Matrix;
 
@@ -28,6 +29,7 @@ import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceGlobalColourShader;
@@ -66,7 +68,7 @@ public class InstanceRenderer {
         this.mesh = mesh;
         this.instancedColour = instancedColour;
 
-        default2DViewMatrix = new float[16];
+        default2DViewMatrix = new float[NUM_FLOATS_MATRIX];
         Matrix.setIdentityM(default2DViewMatrix, 0);
 
         material = new Material();
@@ -83,27 +85,8 @@ public class InstanceRenderer {
             this.colourVBO = colourVBO[0];
         }
 
-        glBindVertexArray(mesh.vao);
-        glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
-
-        this.shader = determineShader(mesh);
-
-        if(mesh.supportsTexture()) {
-            glVertexAttribPointer(shader.textureAttributeHandle , mesh.elementsPerTexel, GL_FLOAT,
-                    false, mesh.stride, mesh.texelDataOffset * NUM_BYTES_FLOAT);
-            glEnableVertexAttribArray(shader.textureAttributeHandle);
-        }
-
-        if(mesh.supportsLighting()) {
-            glVertexAttribPointer(shader.normalAttributeHandle, mesh.elementsPerNormal, GL_FLOAT,
-                    false, mesh.stride, mesh.normalDataOffset * NUM_BYTES_FLOAT);
-            glEnableVertexAttribArray(shader.normalAttributeHandle);
-        }
-
-        // Enable position regardless of shader choice (they all support position)
-        glVertexAttribPointer(shader.positionAttributeHandle,  mesh.elementsPerPosition, GL_FLOAT,
-                false, mesh.stride, mesh.positionDataOffset * NUM_BYTES_FLOAT);
-        glEnableVertexAttribArray(shader.positionAttributeHandle);
+        determineShader();
+        setVertexAttributeArrays();
     }
 
     public InstanceRenderer(Mesh mesh, ModelMatrix[] modelMatrices) {
@@ -223,10 +206,15 @@ public class InstanceRenderer {
     }
 
     public void setLightGroup(LightGroup lightGroup) {
+        // Check if lights have started or stopped being used so shader has to be redetermined
+        boolean redetermineShader = (this.lightGroup == null) != (lightGroup == null);
+
         this.lightGroup = lightGroup;
 
-        // Now lights are in use, check if we should use a different shader
-        this.shader = determineShader(mesh);
+        if(redetermineShader) {
+            determineShader();
+            setVertexAttributeArrays();
+        }
     }
 
     public void setGlobalColour(Colour colour) {
@@ -279,35 +267,48 @@ public class InstanceRenderer {
         return shader;
     }
 
-    protected Shader determineShader(Mesh mesh) {
-        // todo: for all lighting shaders check mesh elementsPerPosition member variable to see if we need a 3D or 2D lighting
-
-        if(mesh.elementsPerPosition == 2 && lightGroup != null) {
-            return new InstanceColourLightingShader2D();
-        }
+    protected void determineShader() {
+        // by default, a 2D mesh supports lighting because it's basic and does not require extra data such as normals
+        boolean lightSupport = mesh.elementsPerPosition == 2 || mesh.supportsLighting();
 
         if(instancedColour) {
-            if(mesh.supportsTexture() && mesh.supportsLighting()) {
-                return new InstanceColourLightingTextureShader();
+            if(mesh.supportsTexture() && lightSupport) {
+                if(mesh.elementsPerPosition == 2) {
+                    this.shader = new InstanceColourLightingTextureShader2D();
+                } else {
+                    this.shader = new InstanceColourLightingTextureShader();
+                }
             } else if(mesh.supportsTexture()) {
-                return new InstanceColourTextureShader();
-            }else if(mesh.supportsLighting()) {
-                return new InstanceColourLightingShader();
+                this.shader = new InstanceColourTextureShader();
+            } else if(lightSupport) {
+                if(mesh.elementsPerPosition == 2) {
+                    this.shader = new InstanceColourLightingShader2D();
+                } else {
+                    this.shader = new InstanceColourLightingShader();
+                }
+            } else {
+                this.shader = new InstanceColourShader();
             }
-
-            return new InstanceColourShader();
+        } else {
+            if(mesh.supportsTexture() && lightSupport) {
+                if(mesh.elementsPerPosition == 2) {
+                    //todo: return new InstanceLightingTextureShader2D();
+                } else {
+                    this.shader = new InstanceLightingTextureShader();
+                }
+            } else if(mesh.supportsTexture()) {
+                this.shader = new InstanceTextureShader();
+            } else if(lightSupport) {
+                if(mesh.elementsPerPosition == 2) {
+                    //todo: return new InstanceLightingShader2D();
+                } else {
+                    this.shader = new InstanceLightingShader();
+                }
+            } else {
+                // Texture and lighting not supported, use uniform colour
+                this.shader = new InstanceGlobalColourShader();
+            }
         }
-
-        if(mesh.supportsTexture() && mesh.supportsLighting()) {
-            return new InstanceLightingTextureShader();
-        } else if(mesh.supportsTexture()) {
-            return new InstanceTextureShader();
-        }else if(mesh.supportsLighting()) {
-            return new InstanceLightingShader();
-        }
-
-        // Texture and lighting not supported, use uniform colour
-        return new InstanceGlobalColourShader();
     }
 
     private void setUniforms(float[] projectionMatrix, float[] viewMatrix) {
@@ -346,5 +347,30 @@ public class InstanceRenderer {
         // Set view matrices
         glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),1,false, projectionMatrix, 0);
         glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false,viewMatrix, 0);
+    }
+
+    private void setVertexAttributeArrays() {
+        glBindVertexArray(mesh.vao);
+        glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
+
+        if(shader.textureAttributeHandle != UNDEFINED_HANDLE && mesh.supportsTexture()) {
+            glVertexAttribPointer(shader.textureAttributeHandle , mesh.elementsPerTexel, GL_FLOAT,
+                    false, mesh.stride, mesh.texelDataOffset * NUM_BYTES_FLOAT);
+            glEnableVertexAttribArray(shader.textureAttributeHandle);
+        }
+
+        if(shader.normalAttributeHandle != UNDEFINED_HANDLE && (mesh.supportsLighting() || mesh.elementsPerPosition == 2)) {
+            glVertexAttribPointer(shader.normalAttributeHandle, mesh.elementsPerNormal, GL_FLOAT,
+                    false, mesh.stride, mesh.normalDataOffset * NUM_BYTES_FLOAT);
+            glEnableVertexAttribArray(shader.normalAttributeHandle);
+        }
+
+        // Enable position regardless of shader choice (they all support position)
+        glVertexAttribPointer(shader.positionAttributeHandle,  mesh.elementsPerPosition, GL_FLOAT,
+                false, mesh.stride, mesh.positionDataOffset * NUM_BYTES_FLOAT);
+        glEnableVertexAttribArray(shader.positionAttributeHandle);
+
+        glBindVertexArray(0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 }

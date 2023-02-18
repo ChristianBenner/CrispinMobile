@@ -4,16 +4,6 @@ precision mediump float;
 struct Material {
     vec3 ambient;
     vec3 diffuse;
-    vec3 specular;
-    float shininess;
-};
-
-struct DirectionalLight {
-    vec3 direction;
-    vec3 colour;
-    float ambient;
-    float diffuse;
-    float specular;
 };
 
 struct PointLight {
@@ -27,34 +17,18 @@ struct PointLight {
     float quadratic;
 };
 
-struct SpotLight {
-    vec3 position;
-    vec3 direction;
-    vec3 colour;
-    float ambient;
-    float diffuse;
-    float specular;
-    float constant;
-    float linear;
-    float quadratic;
-    float size;
-    float outerSize;
-};
-
 #define MAX_NUM_POINT_LIGHTS 10
-#define MAX_NUM_SPOT_LIGHTS 5
 
 in vec3 vFragPos;
+in vec2 vTextureCoordinates;
 in vec4 vColour;
 
 out vec4 FragColor;
 
+uniform sampler2D uTexture;
 uniform Material uMaterial;
-uniform DirectionalLight uDirectionalLight;
 uniform PointLight uPointLights[MAX_NUM_POINT_LIGHTS];
 uniform int uNumPointLights;
-uniform SpotLight uSpotLights[MAX_NUM_SPOT_LIGHTS];
-uniform int uNumSpotLights;
 
 vec3 CalculatePointLight(PointLight light, vec3 fragPos);
 
@@ -67,7 +41,7 @@ void main()
         lightCalc += CalculatePointLight(uPointLights[i], vFragPos);
     }
 
-    FragColor = vec4(lightCalc, 1.0) * vColour;
+    FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * vColour;
 }
 
 /**

@@ -7,12 +7,12 @@ import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
-public class InstanceColourLightingShader2D extends Shader {
+public class InstanceColourLightingTextureShader2D extends Shader {
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.instance_colour_lighting_2d_vert;
+    public static final int VERTEX_FILE = R.raw.instance_colour_lighting_texture_2d_vert;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.instance_colour_lighting_2d_frag;
+    public static final int FRAGMENT_FILE = R.raw.instance_colour_lighting_texture_2d_frag;
 
     // Maximum number of point lights supported by the shader
     private static final int MAX_NUM_POINT_LIGHTS = 10;
@@ -24,11 +24,12 @@ public class InstanceColourLightingShader2D extends Shader {
      *
      * @since 1.0
      */
-    public InstanceColourLightingShader2D() {
-        super("Instance Colour Lighting Shader 2D", VERTEX_FILE, FRAGMENT_FILE);
+    public InstanceColourLightingTextureShader2D() {
+        super("Instance Colour Lighting Texture Shader 2D", VERTEX_FILE, FRAGMENT_FILE);
 
         // Attributes
         positionAttributeHandle = getAttribute("aPosition");
+        textureAttributeHandle = getAttribute("aTextureCoordinates");
         colourAttributeHandle = getAttribute("aColour");
         modelMatrixAttributeHandle = getAttribute("aModel");
 
@@ -41,6 +42,8 @@ public class InstanceColourLightingShader2D extends Shader {
 
         // Set all the material handles
         materialHandles = new MaterialHandles();
+        materialHandles.uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+        materialHandles.textureUniformHandle = getUniform("uTexture");
         materialHandles.ambientUniformHandle = getUniform("uMaterial.ambient");
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
         initPointLightHandles();
