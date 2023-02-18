@@ -1,6 +1,9 @@
 package com.crispin.demos.scenes;
 
+import android.view.MotionEvent;
+
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
@@ -47,8 +50,12 @@ public class InstancingDemo2D extends Scene {
         initUI();
 
         camera = new Camera2D();
+        // Set position so that the center of the view is 0,0
+        camera.setPosition(-Crispin.getSurfaceWidth()/2.0f, -Crispin.getSurfaceHeight()/2.0f);
 
-        globalColourInstanceRenderer = new InstanceRenderer(new SquareMesh(false), generateRandomModelTransformations(), generateRandomColours());
+
+        globalColourInstanceRenderer = new InstanceRenderer(new SquareMesh(true),
+                generateRandomModelTransformations(), generateRandomColours());
         globalColourInstanceRenderer.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
 
         LightGroup lightGroup = new LightGroup();
@@ -64,8 +71,8 @@ public class InstancingDemo2D extends Scene {
         Random r = new Random();
         ModelMatrix[] matrices = new ModelMatrix[NUM_INSTANCES];
         for(int i = 0; i < NUM_INSTANCES; i++) {
-            float x = r.nextFloat() * Crispin.getSurfaceWidth();
-            float y = r.nextFloat() * Crispin.getSurfaceHeight();
+            float x = (-Crispin.getSurfaceWidth() / 2.0f) + r.nextFloat() * Crispin.getSurfaceWidth();
+            float y = (-Crispin.getSurfaceHeight() / 2.0f) + r.nextFloat() * Crispin.getSurfaceHeight();
             float scale = r.nextFloat() * 100f;
             ModelMatrix modelMatrix = new ModelMatrix();
             modelMatrix.translate(x, y);
@@ -129,15 +136,13 @@ public class InstancingDemo2D extends Scene {
     }
 
     private float n = 0.0f;
-    private float sx = Crispin.getSurfaceWidth() / 2.0f;
-    private float sy = Crispin.getSurfaceHeight() / 2.0f;
 
     @Override
     public void update(float deltaTime) {
         fpsText.setText(Crispin.getFps() + "FPS");
 
-        float x = sx + (float)Math.sin(n) * 200.0f;
-        float y = sy + (float)Math.cos(n) * 400.0f;
+        float x = (float)Math.sin(n) * 200.0f;
+        float y = (float)Math.cos(n) * 400.0f;
         n += 0.02f * deltaTime;
         pointLight.setPosition(x, y);
     }
@@ -152,8 +157,30 @@ public class InstancingDemo2D extends Scene {
         regenButton.draw(uiCamera);
     }
 
+    Vec2 downPos = new Vec2();
+    long lastClick = 0;
+
     @Override
     public void touch(int type, Vec2 position) {
+        switch (type) {
+            case MotionEvent.ACTION_DOWN:
+                long currentClick = System.currentTimeMillis();
+                if(currentClick - lastClick < 500) {
+                    camera.setZoom(camera.getZoom() + 0.5f);
+                }
+                lastClick = currentClick;
 
+                downPos = new Vec2(position);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                if(downPos != null) {
+                    camera.translate(Geometry.getVectorBetween(downPos, position).x, Geometry.getVectorBetween(downPos, position).y);
+                    downPos = new Vec2(position);
+                }
+                break;
+            case MotionEvent.ACTION_UP:
+                downPos = null;
+                break;
+        }
     }
 }

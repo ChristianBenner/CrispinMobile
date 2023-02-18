@@ -43,6 +43,29 @@ public class Vec2 {
     }
 
     /**
+     * Set xy of a 2D vector object
+     *
+     * @param x The x dimension value
+     * @param y The y dimension value
+     * @since 1.0
+     */
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Set xy of a 2D vector object
+     *
+     * @param v Vec2 containing new position
+     * @since 1.0
+     */
+    public void set(Vec2 v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
+
+    /**
      * Construct a 2D direction object with default values (x: 0.0 and y: 0.0)
      *
      * @since 1.0
@@ -124,6 +147,16 @@ public class Vec2 {
     public void plus(Vec2 vector) {
         this.x += vector.x;
         this.y += vector.y;
+    }
+
+    /**
+     * Invert the vector
+     *
+     * @since 1.0
+     */
+    public void invert() {
+        x = -x;
+        y = -y;
     }
 
     /**

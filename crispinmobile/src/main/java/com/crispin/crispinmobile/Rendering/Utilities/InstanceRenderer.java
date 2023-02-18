@@ -34,7 +34,9 @@ import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColou
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceGlobalColourShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Utilities.Logger;
@@ -206,15 +208,7 @@ public class InstanceRenderer {
     }
 
     public void setLightGroup(LightGroup lightGroup) {
-        // Check if lights have started or stopped being used so shader has to be redetermined
-        boolean redetermineShader = (this.lightGroup == null) != (lightGroup == null);
-
         this.lightGroup = lightGroup;
-
-        if(redetermineShader) {
-            determineShader();
-            setVertexAttributeArrays();
-        }
     }
 
     public void setGlobalColour(Colour colour) {
@@ -292,7 +286,7 @@ public class InstanceRenderer {
         } else {
             if(mesh.supportsTexture() && lightSupport) {
                 if(mesh.elementsPerPosition == 2) {
-                    //todo: return new InstanceLightingTextureShader2D();
+                    this.shader = new InstanceLightingTextureShader2D();
                 } else {
                     this.shader = new InstanceLightingTextureShader();
                 }
@@ -300,7 +294,7 @@ public class InstanceRenderer {
                 this.shader = new InstanceTextureShader();
             } else if(lightSupport) {
                 if(mesh.elementsPerPosition == 2) {
-                    //todo: return new InstanceLightingShader2D();
+                    this.shader = new InstanceLightingShader2D();
                 } else {
                     this.shader = new InstanceLightingShader();
                 }

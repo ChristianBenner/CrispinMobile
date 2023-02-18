@@ -3,6 +3,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Geometry.Vec2;
 
 /**
  * Camera2D provides a simple interface to view matrix operations and control. The class integrates
@@ -51,7 +52,16 @@ public class Camera2D {
     private float far;
 
     // The orthographic matrix
-    private final float[] orthoMatrix;
+    private float[] orthoMatrix;
+
+    // Position of the view
+    private Vec2 position;
+
+    // Update required (if a change has been made should we update the ortho matrix)
+    private boolean update;
+
+    // Zoom amount
+    private float zoom;
 
     /**
      * Construct the camera object with the custom values. Then produce the orthographic matrix
@@ -76,7 +86,9 @@ public class Camera2D {
         this.near = nearBound;
         this.far = farBound;
         this.orthoMatrix = new float[16];
-        updateView();
+        this.position = new Vec2();
+        this.update = true;
+        this.zoom = 1.0f;
     }
 
     /**
@@ -112,6 +124,43 @@ public class Camera2D {
         this(DEFAULT_LEFT, DEFAULT_BOTTOM, Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
     }
 
+    public void translate(float x, float y) {
+        position.x += x;
+        position.y += y;
+        update = true;
+    }
+
+    public void translate(Vec2 position) {
+        this.position.x += position.x;
+        this.position.y += position.y;
+        update = true;
+    }
+
+    public void setPosition(float x, float y) {
+        position.x = x;
+        position.y = y;
+        update = true;
+    }
+
+    public void setPosition(Vec2 position) {
+        this.position.x = position.x;
+        this.position.y = position.y;
+        update = true;
+    }
+
+    public Vec2 getPosition() {
+        return position;
+    }
+
+    public void setZoom(float zoom) {
+        this.zoom = zoom;
+        update = true;
+    }
+
+    public float getZoom() {
+        return zoom;
+    }
+
     /**
      * Get the left bound of the cameras orthographic matrix
      *
@@ -130,7 +179,7 @@ public class Camera2D {
      */
     public void setLeft(float left) {
         this.left = left;
-        updateView();
+        update = true;
     }
 
     /**
@@ -151,7 +200,7 @@ public class Camera2D {
      */
     public void setRight(float right) {
         this.right = right;
-        updateView();
+        update = true;
     }
 
     /**
@@ -172,7 +221,7 @@ public class Camera2D {
      */
     public void setBottom(float bottom) {
         this.bottom = bottom;
-        updateView();
+        update = true;
     }
 
     /**
@@ -193,7 +242,7 @@ public class Camera2D {
      */
     public void setTop(float top) {
         this.top = top;
-        updateView();
+        update = true;
     }
 
     /**
@@ -214,7 +263,7 @@ public class Camera2D {
      */
     public void setNear(float near) {
         this.near = near;
-        updateView();
+        update = true;
     }
 
     /**
@@ -235,7 +284,7 @@ public class Camera2D {
      */
     public void setFar(float far) {
         this.far = far;
-        updateView();
+        update = true;
     }
 
     /**
@@ -245,16 +294,12 @@ public class Camera2D {
      * @since 1.0
      */
     public float[] getOrthoMatrix() {
+        if(update) {
+            Matrix.orthoM(orthoMatrix, 0, left, right, bottom, top, near, far);
+            Matrix.translateM(orthoMatrix, 0, -position.x, -position.y, 0.0f);
+            Matrix.scaleM(orthoMatrix, 0, zoom, zoom, 1.0f);
+            update = false;
+        }
         return orthoMatrix;
-    }
-
-    /**
-     * Update the view by recreating the orthographic matrix
-     *
-     * @see Matrix
-     * @since 1.0
-     */
-    public void updateView() {
-        Matrix.orthoM(orthoMatrix, 0, left, right, bottom, top, near, far);
     }
 }

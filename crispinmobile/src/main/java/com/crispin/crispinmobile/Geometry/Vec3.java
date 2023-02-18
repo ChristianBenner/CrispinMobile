@@ -71,6 +71,32 @@ public class Vec3 {
     }
 
     /**
+     * Set xyz of a 3D vector object
+     *
+     * @param x The x dimension value
+     * @param y The y dimension value
+     * @param z The z dimension value
+     * @since 1.0
+     */
+    public void set(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    /**
+     * Set xyz of a 3D vector object
+     *
+     * @param v Vec3 containing new position
+     * @since 1.0
+     */
+    public void set(Vec3 v) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
+    }
+
+    /**
      * Get the length (magnitude) of the direction
      *
      * @return The length (magnitude) of the direction as a float
