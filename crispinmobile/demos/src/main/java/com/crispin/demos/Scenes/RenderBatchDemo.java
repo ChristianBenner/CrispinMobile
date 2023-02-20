@@ -1,4 +1,4 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes;
 
 import android.util.Pair;
 

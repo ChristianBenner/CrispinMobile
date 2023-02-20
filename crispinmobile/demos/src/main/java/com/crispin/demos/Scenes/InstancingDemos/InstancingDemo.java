@@ -1,4 +1,4 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes.InstancingDemos;
 
 import android.view.MotionEvent;
 
@@ -22,6 +22,7 @@ import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
+import com.crispin.demos.Scenes.DemoMasterScene;
 
 import java.util.Random;
 
@@ -85,12 +86,12 @@ public class InstancingDemo extends Scene {
             lightGroup.addLight(pointLight);
         }
 
-        textureInstanceRenderer = new InstanceRenderer(new CubeMesh(true, true), generateRandomModelTransformations());
+        textureInstanceRenderer = new InstanceRenderer(new CubeMesh(true, true), true, generateRandomModelTransformations());
         textureInstanceRenderer.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
         textureInstanceRenderer.setGlobalColour(Colour.CYAN);
         textureInstanceRenderer.setLightGroup(lightGroup);
 
-        globalColourInstanceRenderer = new InstanceRenderer(new CubeMesh(false, true), generateRandomModelTransformations());
+        globalColourInstanceRenderer = new InstanceRenderer(new CubeMesh(false, true), true, generateRandomModelTransformations());
         globalColourInstanceRenderer.setGlobalColour(Colour.GREEN);
         globalColourInstanceRenderer.setLightGroup(lightGroup);
     }

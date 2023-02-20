@@ -1,4 +1,4 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes;
 
 import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.GL_TRIANGLES;

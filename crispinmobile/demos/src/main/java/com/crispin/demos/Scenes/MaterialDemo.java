@@ -1,4 +1,4 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;

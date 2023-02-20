@@ -1,4 +1,4 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes.InstancingDemos;
 
 import android.opengl.Matrix;
 import android.view.MotionEvent;
@@ -27,6 +27,7 @@ import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
+import com.crispin.demos.Scenes.DemoMasterScene;
 
 import java.util.Random;
 
@@ -119,7 +120,7 @@ public class InstancingVsBatchDemo extends Scene {
             }
         }
 
-        instanceRenderer = new InstanceRenderer(new CubeMesh(true, true), modelMatrices, colourData);
+        instanceRenderer = new InstanceRenderer(new CubeMesh(true, true), true, modelMatrices, colourData);
         instanceRenderer.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
         instanceRenderer.setLightGroup(lightGroup);
 

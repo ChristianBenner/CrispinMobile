@@ -1,21 +1,21 @@
-package com.crispin.demos.scenes;
+package com.crispin.demos.Scenes.InstancingDemos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
-import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.DemoMaster;
 import com.crispin.demos.R;
+import com.crispin.demos.Scenes.DemoMasterScene;
 
-public class DemoMasterScene extends Scene {
+public class InstancingDemoSelectionScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
     private final float SURFACE_HEIGHT = Crispin.getSurfaceHeight();
     private final float PADDING = 20.0f;
@@ -25,33 +25,31 @@ public class DemoMasterScene extends Scene {
 
     private final Camera2D camera2D;
     private final LinearLayout linearLayout;
-    private final com.crispin.crispinmobile.UserInterface.Text selectDemoText;
+    private final Text selectDemoText;
 
-    public DemoMasterScene() {
-        Crispin.setBackgroundColour(Colour.LIGHT_GREY);
+    public InstancingDemoSelectionScene() {
+        Crispin.setBackgroundColour(Colour.DARK_GREY);
         camera2D = new Camera2D(0.0f, 0.0f, SURFACE_WIDTH, SURFACE_HEIGHT);
-        Font titleFont = FontCache.getFont(R.raw.aileron_regular, 72);
+        Font titleFont = new Font(R.raw.aileron_regular, 72);
 
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));
-        linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
-        linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
-        linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
-        linearLayout.add(createDemoButton("Text", TextDemo::new));
-        linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
-        linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
+        linearLayout.add(createDemoButton("Back", DemoMasterScene::new));
         linearLayout.add(createDemoButton("Instance Rendering", InstancingDemo::new));
         linearLayout.add(createDemoButton("Instance Vs Batch Rendering", InstancingVsBatchDemo::new));
-        linearLayout.add(createDemoButton("Instance Rendering 2D", InstancingDemo2D::new));
-        linearLayout.add(createDemoButton("2D Demo", Demo2D::new));
+        linearLayout.add(createDemoButton("Instance Rendering 2D", InstancingLightingDemo2D::new));
 
-        selectDemoText = new Text(titleFont, "Select a Demo", true, true,
-                SURFACE_WIDTH);
+        selectDemoText = new Text(titleFont, "Instance Rendering Demos", true,
+                true, SURFACE_WIDTH);
+        selectDemoText.setColour(Colour.WHITE);
         selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING);
     }
 
     private Button createDemoButton(String text, final Constructor sceneConstructor) {
-        Button demoButton = new Button(FontCache.getFont(R.raw.aileron_regular, 48), text);
+        Button demoButton = new Button(new Font(R.raw.aileron_regular, 48), text);
+        demoButton.setBorder(new Border(Colour.WHITE, 5));
+        demoButton.setColour(new Colour(59, 68, 131));
+        demoButton.setTextColour(Colour.WHITE);
         demoButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
         demoButton.addTouchListener(e -> {
             if (e.getEvent() == TouchEvent.Event.CLICK) {

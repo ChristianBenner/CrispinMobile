@@ -57,6 +57,7 @@ public class InstanceRenderer {
 
     protected Mesh mesh;
     protected boolean instancedColour;
+    protected boolean lightingSupport;
     protected Shader shader;
     protected Material material;
     protected LightGroup lightGroup;
@@ -66,8 +67,15 @@ public class InstanceRenderer {
     private int matricesVBO;
     private int colourVBO;
 
-    public InstanceRenderer(Mesh mesh, boolean instancedColour) {
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, boolean instancedColour) {
         this.mesh = mesh;
+        if(lightingSupport) {
+            if(mesh.supportsLighting()) {
+                this.lightingSupport = true;
+            } else {
+                Logger.error(TAG, "Lighting cannot be enabled for a mesh that does not support lighting");
+            }
+        }
         this.instancedColour = instancedColour;
 
         default2DViewMatrix = new float[NUM_FLOATS_MATRIX];
@@ -91,35 +99,35 @@ public class InstanceRenderer {
         setVertexAttributeArrays();
     }
 
-    public InstanceRenderer(Mesh mesh, ModelMatrix[] modelMatrices) {
-        this(mesh, false);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, ModelMatrix[] modelMatrices) {
+        this(mesh, lightingSupport, false);
         uploadModelMatrices(modelMatrices);
     }
 
-    public InstanceRenderer(Mesh mesh, FloatBuffer buffer, int instances) {
-        this(mesh, false);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, FloatBuffer buffer, int instances) {
+        this(mesh, lightingSupport, false);
         uploadModelMatrices(buffer, instances);
     }
 
-    public InstanceRenderer(Mesh mesh, float[] modelMatrices) {
-        this(mesh, false);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, float[] modelMatrices) {
+        this(mesh, lightingSupport, false);
         uploadModelMatrices(modelMatrices);
     }
 
-    public InstanceRenderer(Mesh mesh, ModelMatrix[] modelMatrices, Colour[] colours) {
-        this(mesh, true);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, ModelMatrix[] modelMatrices, Colour[] colours) {
+        this(mesh, lightingSupport, true);
         uploadModelMatrices(modelMatrices);
         uploadColourData(colours);
     }
 
-    public InstanceRenderer(Mesh mesh, FloatBuffer modelMatrixBuffer, FloatBuffer colourBuffer, int instances) {
-        this(mesh, true);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, FloatBuffer modelMatrixBuffer, FloatBuffer colourBuffer, int instances) {
+        this(mesh, lightingSupport, true);
         uploadModelMatrices(modelMatrixBuffer, instances);
         uploadColourData(colourBuffer, instances);
     }
 
-    public InstanceRenderer(Mesh mesh, float[] modelMatrices, float[] colours) {
-        this(mesh, true);
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, float[] modelMatrices, float[] colours) {
+        this(mesh, lightingSupport, true);
         uploadModelMatrices(modelMatrices);
         uploadColourData(colours);
     }
@@ -262,11 +270,8 @@ public class InstanceRenderer {
     }
 
     protected void determineShader() {
-        // by default, a 2D mesh supports lighting because it's basic and does not require extra data such as normals
-        boolean lightSupport = mesh.elementsPerPosition == 2 || mesh.supportsLighting();
-
         if(instancedColour) {
-            if(mesh.supportsTexture() && lightSupport) {
+            if(mesh.supportsTexture() && lightingSupport) {
                 if(mesh.elementsPerPosition == 2) {
                     this.shader = new InstanceColourLightingTextureShader2D();
                 } else {
@@ -274,7 +279,7 @@ public class InstanceRenderer {
                 }
             } else if(mesh.supportsTexture()) {
                 this.shader = new InstanceColourTextureShader();
-            } else if(lightSupport) {
+            } else if(lightingSupport) {
                 if(mesh.elementsPerPosition == 2) {
                     this.shader = new InstanceColourLightingShader2D();
                 } else {
@@ -284,7 +289,7 @@ public class InstanceRenderer {
                 this.shader = new InstanceColourShader();
             }
         } else {
-            if(mesh.supportsTexture() && lightSupport) {
+            if(mesh.supportsTexture() && lightingSupport) {
                 if(mesh.elementsPerPosition == 2) {
                     this.shader = new InstanceLightingTextureShader2D();
                 } else {
@@ -292,7 +297,7 @@ public class InstanceRenderer {
                 }
             } else if(mesh.supportsTexture()) {
                 this.shader = new InstanceTextureShader();
-            } else if(lightSupport) {
+            } else if(lightingSupport) {
                 if(mesh.elementsPerPosition == 2) {
                     this.shader = new InstanceLightingShader2D();
                 } else {
@@ -347,13 +352,13 @@ public class InstanceRenderer {
         glBindVertexArray(mesh.vao);
         glBindBuffer(GL_ARRAY_BUFFER, mesh.vbo);
 
-        if(shader.textureAttributeHandle != UNDEFINED_HANDLE && mesh.supportsTexture()) {
+        if(shader.textureAttributeHandle != UNDEFINED_HANDLE && mesh.elementsPerTexel != 0) {
             glVertexAttribPointer(shader.textureAttributeHandle , mesh.elementsPerTexel, GL_FLOAT,
                     false, mesh.stride, mesh.texelDataOffset * NUM_BYTES_FLOAT);
             glEnableVertexAttribArray(shader.textureAttributeHandle);
         }
 
-        if(shader.normalAttributeHandle != UNDEFINED_HANDLE && (mesh.supportsLighting() || mesh.elementsPerPosition == 2)) {
+        if(shader.normalAttributeHandle != UNDEFINED_HANDLE && lightingSupport) {
             glVertexAttribPointer(shader.normalAttributeHandle, mesh.elementsPerNormal, GL_FLOAT,
                     false, mesh.stride, mesh.normalDataOffset * NUM_BYTES_FLOAT);
             glEnableVertexAttribArray(shader.normalAttributeHandle);

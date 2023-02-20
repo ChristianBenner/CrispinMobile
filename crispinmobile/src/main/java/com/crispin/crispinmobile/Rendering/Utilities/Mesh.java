@@ -53,7 +53,7 @@ public class Mesh {
     }
 
     // Tag used in logging output
-    private static final String TAG = "RenderObject";
+    private static final String TAG = "Mesh";
 
     // The 'numVerticesPerGroup' if the vertices are not grouped
     public static final int UNGROUPED = 1;
@@ -81,9 +81,6 @@ public class Mesh {
 
     // The position index of the texel data in the vertex data buffer
     public int texelDataOffset;
-
-    // The position index of the colour data in the vertex data buffer
-    public int colourDataOffset;
 
     // The position index of the direction data in the vertex data buffer
     public int normalDataOffset;
@@ -180,20 +177,21 @@ public class Mesh {
     }
 
     /**
-     * Check if the mesh supports lighting
+     * Check if the mesh supports lighting. A mesh is treated as having lighting support if it has
+     * normal data/elements or only has two components per position (is 2D)
      *
      * @return True if the mesh supports lighting, else false
      * @since 1.0
      */
     public boolean supportsLighting() {
-        return elementsPerNormal != 0;
+        return elementsPerPosition == 2 || elementsPerNormal != 0;
     }
 
     /**
      * Creates OpenGL objects such as virtual buffer object (VBO) to store the vertex data in VRAM
      * and a virtual array object (VAO) to specify how OpenGL should utilise that data on draw.
      *
-     * @param vertexData          Float buffer containing the vertex data
+     * @param vertexData    Float buffer containing the vertex data
      * @since 1.0
      */
     private void createGLObjects(float[] vertexData) {

@@ -6,7 +6,7 @@ import android.view.Window;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.demos.scenes.DemoMasterScene;
+import com.crispin.demos.Scenes.DemoMasterScene;
 
 public class DemoMaster extends AppCompatActivity {
     @Override
