@@ -1,10 +1,15 @@
 package com.crispin.demos.Scenes;
 
+import static android.opengl.GLES20.glEnable;
+
+import android.opengl.GLES20;
 import android.view.MotionEvent;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Border;
@@ -12,6 +17,7 @@ import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.R;
 
 /**
  * A demonstration scene designed to show the touch capabilities of the engine
@@ -22,7 +28,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
  */
 public class TouchDemo extends Scene {
     private final int DRAW_CAP = 100;
-    private final float TOUCH_SPRITE_SIZE = 16f;
+    private final float TOUCH_SPRITE_SIZE = 32f;
 
     // 2-dimensional camera
     private final Camera2D camera2D;
@@ -47,14 +53,8 @@ public class TouchDemo extends Scene {
 
         camera2D = new Camera2D();
 
-        touchLocationSprite = new Square();
+        touchLocationSprite = new Square(new Material(new Texture(R.drawable.touch_demo_circle)));
         touchLocationSprite.setScale(TOUCH_SPRITE_SIZE, TOUCH_SPRITE_SIZE);
-        touchLocationSprite.setColour(Colour.RED);
-      //  touchLocationSprite.getMaterial().setTexture(new Texture(R.drawable.touch_demo_circle));
-     //   touchLocationSprite.setScale(16f, 16f);
-
-      //  touchLocationSprite = new Square(new Material(R.drawable.touch_demo_circle));
-       // touchLocationSprite.setScale(16f, 16f);
 
         Font homeButtonFont = new Font(com.crispin.demos.R.raw.aileron_regular, 36);
         homeButton = new Button(homeButtonFont, "Back");
@@ -88,7 +88,7 @@ public class TouchDemo extends Scene {
      */
     @Override
     public void render() {
-        for(int i = 0; i < touchLocations.length; i++) {
+        for(int i = touchLocations.length - 1; i >= 0; i--) {
             if(touchLocations[i] != null) {
                 touchLocationSprite.setPosition(touchLocations[i].x - (TOUCH_SPRITE_SIZE / 2f),
                         touchLocations[i].y - (TOUCH_SPRITE_SIZE / 2f));

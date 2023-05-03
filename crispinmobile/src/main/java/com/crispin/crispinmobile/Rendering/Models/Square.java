@@ -91,7 +91,7 @@ public class Square extends Model {
      * @since 1.0
      */
     public Square(Material material) {
-        this(material, true);
+        this(material, material.hasTexture());
     }
 
     /**

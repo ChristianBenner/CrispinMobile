@@ -33,9 +33,7 @@ public class TextureShader extends Shader {
 
         positionAttributeHandle = getAttribute("aPosition");
         textureAttributeHandle = getAttribute("aTextureCoordinates");
-        projectionMatrixUniformHandle = getUniform("uProjection");
-        viewMatrixUniformHandle = getUniform("uView");
-        modelMatrixUniformHandle = getUniform("uModel");
+        matrixUniformHandle = getUniform("uMatrix");
 
         materialHandles = new MaterialHandles();
         materialHandles.colourUniformHandle = getUniform("uColour");

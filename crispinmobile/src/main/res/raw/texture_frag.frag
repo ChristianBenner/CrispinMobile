@@ -10,5 +10,9 @@ in vec2 vTextureCoordinates;
 
 void main()
 {
-    FragColor = uColour * texture(uTexture, vTextureCoordinates);
+    vec4 calc = uColour * texture(uTexture, vTextureCoordinates);
+    if(calc.a < 0.1) {
+        discard;
+    }
+    FragColor = calc;
 }
