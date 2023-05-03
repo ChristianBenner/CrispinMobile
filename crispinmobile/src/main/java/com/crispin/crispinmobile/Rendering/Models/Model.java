@@ -40,18 +40,21 @@ import com.crispin.crispinmobile.Utilities.ShaderCache;
 
 import java.util.ArrayList;
 
-public class Model extends Mesh {
+public class Model {
     // Tag used in logging output
     private static final String TAG = "Model";
 
     // The number of elements in a 4x4 view matrix
-    private static final int NUM_VALUES_PER_VIEW_MATRIX = 16;
+    protected static final int NUM_VALUES_PER_VIEW_MATRIX = 16;
 
     // Number of uniform elements to upload in a single GLSL uniform upload
-    private static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
+    protected static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
+
+    // The mesh
+    private final Mesh mesh;
 
     // The model matrix
-    private final ModelMatrix modelMatrix;
+    protected final ModelMatrix modelMatrix;
 
     // Position of the object
     private final Vec3 position;
@@ -77,46 +80,33 @@ public class Model extends Mesh {
     // If the model has a custom shader
     private boolean hasCustomShader;
 
-    public Model(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
-                 RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
-                 int elementsPerNormal, Material material) {
-        super(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
-                elementsPerTexel, elementsPerNormal);
-        modelMatrix = new ModelMatrix();
-        position = new Vec3();
-        rotation = new Rotation3D();
-        scale = new Scale3D();
-        rotationPoint = new Vec3();
-        rotationPointAngle = new Rotation3D();
+    public Model(Mesh mesh, Material material) {
+        this.mesh = mesh;
+        this.modelMatrix = new ModelMatrix();
+        this.position = new Vec3();
+        this.rotation = new Rotation3D();
+        this.scale = new Scale3D();
+        this.rotationPoint = new Vec3();
+        this.rotationPointAngle = new Rotation3D();
         this.material = material;
-        hasCustomShader = false;
+        this.hasCustomShader = false;
+    }
+
+    public Model(Mesh mesh) {
+        this(mesh, new Material());
     }
 
     public Model(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
-                 RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
+                 Mesh.RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
+                 int elementsPerNormal, Material material) {
+        this(new Mesh(positionBuffer, texelBuffer, normalBuffer, renderMethod,
+                elementsPerPosition, elementsPerTexel, elementsPerNormal), material);
+    }
+
+    public Model(float[] positionBuffer, float[] texelBuffer, float[] normalBuffer,
+                 Mesh.RenderMethod renderMethod, int elementsPerPosition, int elementsPerTexel,
                  int elementsPerNormal) {
         this(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
-                elementsPerTexel, elementsPerNormal, new Material());
-    }
-
-    public Model(float[] vertexData, RenderMethod renderMethod, AttributeOrder_t attributeOrder,
-                 int elementsPerPosition, int elementsPerTexel, int elementsPerNormal,
-                 Material material) {
-        super(vertexData, renderMethod, attributeOrder, elementsPerPosition, elementsPerTexel,
-                elementsPerNormal);
-        modelMatrix = new ModelMatrix();
-        position = new Vec3();
-        rotation = new Rotation3D();
-        scale = new Scale3D();
-        rotationPoint = new Vec3();
-        rotationPointAngle = new Rotation3D();
-        this.material = material;
-        hasCustomShader = false;
-    }
-
-    public Model(float[] vertexData, RenderMethod renderMethod, AttributeOrder_t attributeOrder,
-                 int elementsPerPosition, int elementsPerTexel, int elementsPerNormal) {
-        this(vertexData, renderMethod, attributeOrder, elementsPerPosition,
                 elementsPerTexel, elementsPerNormal, new Material());
     }
 
@@ -571,8 +561,9 @@ public class Model extends Mesh {
         if (customShader != null) {
             hasCustomShader = true;
             shader = customShader;
-            setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
-                    shader.normalAttributeHandle);
+            mesh.setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                    shader.normalAttributeHandle, shader.tangentAttributeHandle,
+                    shader.bitangentAttributeHandle);
         } else {
             Logger.error(TAG, "Custom shader supplied is null");
         }
@@ -598,17 +589,17 @@ public class Model extends Mesh {
         // Set all material uniforms
         shader.setMaterialUniforms(material);
 
-        GLES30.glBindVertexArray(vao);
+        GLES30.glBindVertexArray(mesh.vao);
         // Draw the vertex data with the specified render method
-        switch (renderMethod) {
+        switch (mesh.renderMethod) {
             case POINTS:
-                glDrawArrays(GL_POINTS, 0, vertexCount);
+                glDrawArrays(GL_POINTS, 0, mesh.vertexCount);
                 break;
             case LINES:
-                glDrawArrays(GL_LINES, 0, vertexCount);
+                glDrawArrays(GL_LINES, 0, mesh.vertexCount);
                 break;
             case TRIANGLES:
-                glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+                glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
                 break;
         }
         GLES30.glBindVertexArray(0);
@@ -704,17 +695,17 @@ public class Model extends Mesh {
                     0);
         }
 
-        GLES30.glBindVertexArray(vao);
+        GLES30.glBindVertexArray(mesh.vao);
         // Draw the vertex data with the specified render method
-        switch (renderMethod) {
+        switch (mesh.renderMethod) {
             case POINTS:
-                glDrawArrays(GL_POINTS, 0, vertexCount);
+                glDrawArrays(GL_POINTS, 0, mesh.vertexCount);
                 break;
             case LINES:
-                glDrawArrays(GL_LINES, 0, vertexCount);
+                glDrawArrays(GL_LINES, 0, mesh.vertexCount);
                 break;
             case TRIANGLES:
-                glDrawArrays(GL_TRIANGLES, 0, vertexCount);
+                glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
                 break;
         }
         GLES30.glBindVertexArray(0);
@@ -744,11 +735,11 @@ public class Model extends Mesh {
 
         // Check that the object has all of the components required to render normal data
         final boolean supportsNormals = !material.isIgnoringNormalData() &&
-                elementsPerNormal != 0;
+                mesh.elementsPerNormal != 0;
 
         // Check that the object has all of the components required to render a texture
         final boolean supportsTexture = material.hasTexture() &&
-                (elementsPerTexel != 0) &&
+                (mesh.elementsPerTexel != 0) &&
                 !material.isIgnoringTexelData();
 
         // Select a shader based on what data attributes and uniforms the object supports
@@ -795,7 +786,8 @@ public class Model extends Mesh {
             }
         }
 
-        setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
-                shader.normalAttributeHandle);
+        mesh.setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                shader.normalAttributeHandle, shader.tangentAttributeHandle,
+                shader.bitangentAttributeHandle);
     }
 }

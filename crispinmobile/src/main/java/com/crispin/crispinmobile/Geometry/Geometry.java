@@ -135,6 +135,16 @@ public class Geometry {
     }
 
     /**
+     * Divide each component of the vector
+     *
+     * @param divisor
+     * @since 1.0
+     */
+    public static Vec3 divide(Vec3 vector, float divisor) {
+        return new Vec3(vector.x / divisor, vector.y / divisor, vector.z / divisor);
+    }
+
+    /**
      * Translate a vector by a vector
      *
      * @param vector3D The vector to translate

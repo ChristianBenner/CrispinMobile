@@ -62,7 +62,7 @@ public class Square extends Model {
      */
     public Square(Material material, boolean renderTexels) {
         super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, null,
-                RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
+                Mesh.RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
                 renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
                 (byte)0, material);
     }

@@ -23,7 +23,7 @@ import com.crispin.demos.R;
 
 import java.util.Random;
 
-public class InstancingLightingDemo2D extends Scene {
+public class InstancingDemo2D extends Scene {
     private final int TEXT_PADDING = 10;
     private final int NUM_INSTANCES = 3000;
 
@@ -55,7 +55,7 @@ public class InstancingLightingDemo2D extends Scene {
     private Text fpsText;
     private Vec2 touchDownPos;
 
-    public InstancingLightingDemo2D() {
+    public InstancingDemo2D() {
         Crispin.setBackgroundColour(Colour.BLACK);
 
         instanceRenderCount = NUM_INSTANCES;

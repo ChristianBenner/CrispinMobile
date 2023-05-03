@@ -1,9 +1,9 @@
 package com.crispin.crispinmobile.Utilities;
 
-import com.crispin.crispinmobile.Rendering.Models.Model;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 import java.util.EventListener;
 
 public interface LoadListener extends EventListener {
-    void onLoad(Model model);
+    void onLoad(Mesh mesh);
 }

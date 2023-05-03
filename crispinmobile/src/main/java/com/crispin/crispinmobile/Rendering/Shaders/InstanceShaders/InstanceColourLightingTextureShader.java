@@ -9,10 +9,10 @@ import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
 public class InstanceColourLightingTextureShader extends Shader {
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.instance_colour_lighting_texture_vert;
+    public static final int VERTEX_FILE = R.raw.instance_colour_lighting_texture_normal_map_vert;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.instance_colour_lighting_texture_frag;
+    public static final int FRAGMENT_FILE = R.raw.instance_colour_lighting_texture_normal_map_frag;
 
     // Maximum number of point lights supported by the shader
     private static final int MAX_NUM_POINT_LIGHTS = 10;
@@ -33,6 +33,8 @@ public class InstanceColourLightingTextureShader extends Shader {
         // Attributes
         positionAttributeHandle = getAttribute("aPosition");
         normalAttributeHandle = getAttribute("aNormal");
+        tangentAttributeHandle = getAttribute("aTangent");
+        bitangentAttributeHandle = getAttribute("aBiTangent");
         textureAttributeHandle = getAttribute("aTextureCoordinates");
         colourAttributeHandle = getAttribute("aColour");
         modelMatrixAttributeHandle = getAttribute("aModel");
@@ -49,9 +51,10 @@ public class InstanceColourLightingTextureShader extends Shader {
         // Set all the material handles
         materialHandles = new MaterialHandles();
         materialHandles.uvMultiplierUniformHandle = getUniform("uUvMultiplier");
-        materialHandles.textureUniformHandle = getUniform("uTexture");
-        materialHandles.specularMapUniformHandle = getUniform("uSpecularMap");
-        materialHandles.normalMapUniformHandle = getUniform("uNormalMap");
+        materialHandles.textureUniformHandle = getUniform("uMaterial.theTexture");
+        materialHandles.diffuseMapUniformHandle = getUniform("uMaterial.diffuse");
+        materialHandles.specularMapUniformHandle = getUniform("uMaterial.specularMap");
+        materialHandles.normalMapUniformHandle = getUniform("uMaterial.normalMap");
         materialHandles.ambientUniformHandle = getUniform("uMaterial.ambient");
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
         materialHandles.specularUniformHandle = getUniform("uMaterial.specular");

@@ -267,10 +267,10 @@ public class RenderObjectData {
      * Process the data. The function produces the vertex data based on positional, texel and normal
      * face data.
      *
-     * @return A RenderObject built from the processed data
+     * @return A Mesh built from the processed data
      * @since 1.0
      */
-    public Model processData() {
+    public Mesh processData() {
         final int NUMBER_OF_FACE_DATA = faceDataArray.size() / dataStride;
 
         final int NUMBER_OF_POSITION_ELEMENTS = numberOfPositionComponents;
@@ -285,10 +285,13 @@ public class RenderObjectData {
                 NUMBER_OF_NORMAL_ELEMENTS * NUMBER_OF_FACE_DATA;
 
         // Create a float buffer for all of the vertex data
-        float[] vertexDataBuffer = new float[POSITION_BUFFER_SIZE + TEXEL_BUFFER_SIZE +
-                NORMAL_BUFFER_SIZE];
+        float[] positionDataBuffer = new float[POSITION_BUFFER_SIZE];
+        float[] texelDataBuffer = new float[TEXEL_BUFFER_SIZE];
+        float[] normalDataBuffer = new float[NORMAL_BUFFER_SIZE];
 
-        int vertexDataBufferIndex = 0;
+        int positionDataBufferIndex = 0;
+        int texelDataBufferIndex = 0;
+        int normalDataBufferIndex = 0;
 
         // Determine how many elements the face data includes
         int faceDataStride = 1;
@@ -306,35 +309,31 @@ public class RenderObjectData {
         for (int fi = 0; fi < faceDataArray.size(); fi += faceDataStride) {
             // Add the vertex positions
             for (int pi = 0; pi < NUMBER_OF_POSITION_ELEMENTS; pi++) {
-                vertexDataBuffer[vertexDataBufferIndex] = positionDataArray.get(((
+                positionDataBuffer[positionDataBufferIndex] = positionDataArray.get(((
                         faceDataArray.get(fi + positionStartIndex) + FACE_DATA_INDEX_OFFSET) *
                         NUMBER_OF_POSITION_ELEMENTS) + pi);
-                vertexDataBufferIndex++;
+                positionDataBufferIndex++;
             }
 
             // Add the vertex texel data
             for (int ti = 0; ti < NUMBER_OF_TEXEL_ELEMENTS; ti++) {
-                vertexDataBuffer[vertexDataBufferIndex] = texelDataArray.get((((
+                texelDataBuffer[texelDataBufferIndex] = texelDataArray.get((((
                         faceDataArray.get(fi + texelStartIndex) + FACE_DATA_INDEX_OFFSET) *
                         NUMBER_OF_TEXEL_ELEMENTS) + ti));
-                vertexDataBufferIndex++;
+                texelDataBufferIndex++;
             }
 
             // Add the vertex normal data
             for (int ni = 0; ni < NUMBER_OF_NORMAL_ELEMENTS; ni++) {
-                vertexDataBuffer[vertexDataBufferIndex] = normalDataArray.get((((
+                normalDataBuffer[normalDataBufferIndex] = normalDataArray.get((((
                         faceDataArray.get(fi + normalStartIndex) + FACE_DATA_INDEX_OFFSET) *
                         NUMBER_OF_NORMAL_ELEMENTS) + ni));
-                vertexDataBufferIndex++;
+                normalDataBufferIndex++;
             }
         }
 
-        // Create and return a render object using the data format and the vertex data
-        return new Model(vertexDataBuffer,
-                Mesh.RenderMethod.TRIANGLES,
-                Mesh.AttributeOrder_t.POSITION_THEN_TEXEL_THEN_NORMAL,
-                numberOfPositionComponents,
-                numberOfTexelComponents,
+        return new Mesh(positionDataBuffer, texelDataBuffer, normalDataBuffer,
+                Mesh.RenderMethod.TRIANGLES, numberOfPositionComponents, numberOfTexelComponents,
                 numberOfNormalComponents);
     }
 

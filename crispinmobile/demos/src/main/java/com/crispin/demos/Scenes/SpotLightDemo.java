@@ -37,8 +37,8 @@ public class SpotLightDemo extends Scene {
         Material wood = new Material(R.drawable.tiledwood16);
         wood.setSpecularMap(TextureCache.loadTexture(R.drawable.tiledwood16_specular));
         wood.setUvMultiplier(16.0f, 4.0f);
-        ThreadedOBJLoader.loadModel(R.raw.torus_uv, loadListener -> {
-            this.torus = loadListener;
+        ThreadedOBJLoader.loadModel(R.raw.torus_uv, mesh -> {
+            this.torus = new Model(mesh);
             this.torus.setMaterial(wood);
         });
 
@@ -62,8 +62,8 @@ public class SpotLightDemo extends Scene {
         lightBulbLight = new PointLight();
         lightBulbGroup.addLight(lightBulbLight);
 
-        ThreadedOBJLoader.loadModel(R.raw.torch, loadListener -> {
-            this.torch = loadListener;
+        ThreadedOBJLoader.loadModel(R.raw.torch, mesh -> {
+            this.torch = new Model(mesh);
             this.torch.setScale(0.1f);
             this.torch.setRotation(90.0f, 1.0f, 0.0f, 0.0f);
         });

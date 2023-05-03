@@ -37,7 +37,9 @@ public class InstancingDemoSelectionScene extends Scene {
         linearLayout.add(createDemoButton("Back", DemoMasterScene::new));
         linearLayout.add(createDemoButton("Instance Rendering", InstancingDemo::new));
         linearLayout.add(createDemoButton("Instance Vs Batch Rendering", InstancingVsBatchDemo::new));
-        linearLayout.add(createDemoButton("Instance Rendering 2D", InstancingLightingDemo2D::new));
+        linearLayout.add(createDemoButton("Instance Rendering 2D", InstancingDemo2D::new));
+        linearLayout.add(createDemoButton("Instance Rendering 3D", InstancingDemo3D::new));
+        linearLayout.add(createDemoButton("Instance Lighting Test", InstancingLightingTest::new));
 
         selectDemoText = new Text(titleFont, "Instance Rendering Demos", true,
                 true, SURFACE_WIDTH);

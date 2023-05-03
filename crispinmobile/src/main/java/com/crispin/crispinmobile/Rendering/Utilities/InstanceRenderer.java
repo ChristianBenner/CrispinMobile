@@ -1,9 +1,11 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
 import static android.opengl.GLES20.GL_STREAM_DRAW;
+import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES30.GL_ARRAY_BUFFER;
 import static android.opengl.GLES30.GL_CULL_FACE;
 import static android.opengl.GLES30.GL_FLOAT;
+import static android.opengl.GLES30.GL_INVALID_INDEX;
 import static android.opengl.GLES30.GL_TRIANGLES;
 import static android.opengl.GLES30.glBindBuffer;
 import static android.opengl.GLES30.glBindVertexArray;
@@ -20,6 +22,7 @@ import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDL
 
 import android.opengl.Matrix;
 
+import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
@@ -236,7 +239,7 @@ public class InstanceRenderer {
 
         glEnable(GL_CULL_FACE);
 
-        setUniforms(camera.getPerspectiveMatrix(), camera.getViewMatrix());
+        setUniforms(camera.getPerspectiveMatrix(), camera.getViewMatrix(), camera.getPosition());
 
         // Draw instances
         glBindVertexArray(mesh.vao);
@@ -310,6 +313,16 @@ public class InstanceRenderer {
         }
     }
 
+    private void setUniforms(float[] projectionMatrix, float[] viewMatrix, Vec3 viewPosition) {
+        if (shader.validHandle(shader.getViewPositionUniformHandle())) {
+            final Vec3 cameraPos = viewPosition;
+            glUniform3f(shader.getViewPositionUniformHandle(), cameraPos.x, cameraPos.y,
+                    cameraPos.z);
+        }
+
+        setUniforms(projectionMatrix, viewMatrix);
+    }
+
     private void setUniforms(float[] projectionMatrix, float[] viewMatrix) {
         if (lightGroup != null) {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
@@ -362,6 +375,18 @@ public class InstanceRenderer {
             glVertexAttribPointer(shader.normalAttributeHandle, mesh.elementsPerNormal, GL_FLOAT,
                     false, mesh.stride, mesh.normalDataOffset * NUM_BYTES_FLOAT);
             glEnableVertexAttribArray(shader.normalAttributeHandle);
+        }
+
+        if(shader.tangentAttributeHandle != UNDEFINED_HANDLE && mesh.elementsPerTangent != 0) {
+            glVertexAttribPointer(shader.tangentAttributeHandle, mesh.elementsPerTangent, GL_FLOAT,
+                    false, mesh.stride, mesh.tangentDataOffset * NUM_BYTES_FLOAT);
+            glEnableVertexAttribArray(shader.tangentAttributeHandle);
+        }
+
+        if(shader.bitangentAttributeHandle != UNDEFINED_HANDLE && mesh.elementsPerBitangent != 0) {
+            glVertexAttribPointer(shader.bitangentAttributeHandle, mesh.elementsPerBitangent,
+                    GL_FLOAT, false, mesh.stride, mesh.bitangentDataOffset * NUM_BYTES_FLOAT);
+            glEnableVertexAttribArray(shader.bitangentAttributeHandle);
         }
 
         // Enable position regardless of shader choice (they all support position)

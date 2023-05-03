@@ -42,6 +42,7 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
         linearLayout.add(createDemoButton("Instance Rendering Demos", InstancingDemoSelectionScene::new));
         linearLayout.add(createDemoButton("2D Demo", Demo2D::new));
+        linearLayout.add(createDemoButton("Normal Map Demo", NormalMapDemo::new));
 
         selectDemoText = new Text(titleFont, "Select a Demo", true, true,
                 SURFACE_WIDTH);

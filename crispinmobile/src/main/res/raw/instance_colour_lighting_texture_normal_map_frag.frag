@@ -1,5 +1,8 @@
 #version 300 es
+#ifdef GL_ES
 precision mediump float;
+precision mediump int;
+#endif
 
 struct Material {
     vec3 ambient;
@@ -9,6 +12,7 @@ struct Material {
     sampler2D theTexture;
     sampler2D diffuseMap;
     sampler2D specularMap;
+    sampler2D normalMap;
 };
 
 struct DirectionalLight {
@@ -48,13 +52,14 @@ struct SpotLight {
 #define MAX_NUM_SPOT_LIGHTS 5
 
 in vec3 vFragPos;
-in vec3 vNormal;
 in vec2 vTextureCoordinates;
+in vec3 vTangentViewPos;
+in vec3 vTangentFragPos;
+in vec3 vTangentPointLightPos[MAX_NUM_POINT_LIGHTS];
 in vec4 vColour;
 
 out vec4 FragColor;
 
-uniform vec3 uViewPosition;
 uniform Material uMaterial;
 uniform DirectionalLight uDirectionalLight;
 uniform PointLight uPointLights[MAX_NUM_POINT_LIGHTS];
@@ -63,23 +68,26 @@ uniform SpotLight uSpotLights[MAX_NUM_SPOT_LIGHTS];
 uniform int uNumSpotLights;
 
 vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDirection, float specularModifier, vec3 diffuseModifier);
-vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection, float specularModifier, vec3 diffuseModifier);
+vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 lightPos, vec3 viewDirection, float specularModifier, vec3 diffuseModifier);
 vec3 CalculateSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDirection, float specularModifier, vec3 diffuseModifier);
 
 void main()
 {
-    vec3 viewDirection = normalize(uViewPosition - vFragPos);
-    vec3 normal = normalize(vNormal);
-
+    vec3 viewDirection = normalize(vTangentViewPos - vTangentFragPos);
     vec3 lightCalc = vec3(0.0);
 
     float specularModifier = texture(uMaterial.specularMap, vTextureCoordinates).r;
     vec3 diffuseModifier = texture(uMaterial.diffuseMap, vTextureCoordinates).rgb;
+    vec3 normal = texture(uMaterial.normalMap, vTextureCoordinates).rgb;
+
+    // Transform normal vectors to the range of -1 to 1
+    normal = normalize(normal * 2.0 - 1.0);
+
     lightCalc = CalculateDirectionalLight(uDirectionalLight, normal, viewDirection, specularModifier, diffuseModifier);
 
     // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
-        lightCalc += CalculatePointLight(uPointLights[i], normal, vFragPos, viewDirection, specularModifier, diffuseModifier);
+        lightCalc += CalculatePointLight(uPointLights[i], normal, vTangentFragPos, vTangentPointLightPos[i], viewDirection, specularModifier, diffuseModifier);
     }
 
     // Calculate all the spot lights
@@ -88,6 +96,7 @@ void main()
     }
 
     FragColor = vec4(lightCalc, 1.0) * texture(uMaterial.theTexture, vTextureCoordinates) * vColour;
+   //FragColor = vec4(lightCalc, 1.0);
 }
 
 /**
@@ -136,27 +145,29 @@ vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal, vec3 viewDir
  *                              specular map can provide a specularModifier
  * @return                  vec3 containing the colour data from the point light calculation
  */
-vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDirection, float specularModifier, vec3 diffuseModifier) {
+vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 lightPos, vec3 viewDirection, float specularModifier, vec3 diffuseModifier) {
     // Calculate the distance of the light from the point
-    float distance = length(light.position - fragPos);
+    float distance = length(lightPos - fragPos);
     float attenuation = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
 
     // Direction that the light is travelling from the source to the frag
-    vec3 lightDirection = normalize(light.position - fragPos);
+    vec3 lightDirection = normalize(fragPos - lightPos);
 
     // Ambient lighting calculation
     vec3 ambient = uMaterial.ambient * light.ambient * light.colour * attenuation;
 
     // Diffuse lighting calculation
-    float normalDiffuseStrength = max(dot(normal, lightDirection), 0.0);
-    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * attenuation * light.diffuse * diffuseModifier;
+    float normalDiffuseStrength = max(dot(lightDirection, normal), 0.0);
+    //vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * attenuation * light.diffuse * diffuseModifier;
+    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * attenuation * light.diffuse * 5.0;
 
     // Specular lighting calculation
     vec3 reflectDirection = reflect(-lightDirection, normal);
     float viewRefractionStrength = pow(max(dot(viewDirection, reflectDirection), 0.0), uMaterial.shininess);
     vec3 specular = uMaterial.specular * light.specular * viewRefractionStrength * light.colour * attenuation * specularModifier;
 
-    return ambient + diffuse + specular;
+    //return ambient + diffuse + specular;
+    return vec3(diffuse);
 }
 
 /**

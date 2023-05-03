@@ -141,6 +141,18 @@ public class Vec3 {
     }
 
     /**
+     * Divide each component of the vector
+     *
+     * @param divisor
+     * @since 1.0
+     */
+    public void divide(float divisor) {
+        this.x /= divisor;
+        this.y /= divisor;
+        this.z /= divisor;
+    }
+
+    /**
      * Scale the direction by a multiplier
      *
      * @param scale Scale multiplier (multiplies all dimensions x, y and z)

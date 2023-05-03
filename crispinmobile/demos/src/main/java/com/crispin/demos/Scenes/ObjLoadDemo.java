@@ -21,8 +21,8 @@ public class ObjLoadDemo extends Scene {
         // the application can continue whilst loading the model. This is especially useful for
         // loading large models in some situations. If you do not wish to use a threaded loader,
         // call OBJModelLoader.readObjFile(resourceId) instead.
-        ThreadedOBJLoader.loadModel(R.raw.monkey, loadListener -> {
-            this.monkey = loadListener;
+        ThreadedOBJLoader.loadModel(R.raw.monkey, mesh -> {
+            this.monkey = new Model(mesh);
             this.monkey.setColour(1.0f, 0.5f, 0.31f);
             this.monkey.setScale(0.7f);
         });

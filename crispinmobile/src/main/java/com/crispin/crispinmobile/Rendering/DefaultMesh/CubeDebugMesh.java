@@ -1,18 +1,17 @@
-package com.crispin.crispinmobile.Rendering.Models;
+package com.crispin.crispinmobile.Rendering.DefaultMesh;
 
-import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Utilities.DebugMesh;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
- * Cube class is a default 3D model of a cube. It is a render object and therefor can be drawn to
- * the display. It contains texture, colour and positional data.
+ * CubeMesh contains the mesh data for a cube object
  *
  * @author Christian Benner
  * @version %I%, %G%
  * @see Mesh
  * @since 1.0
  */
-public class Cube extends Model {
+public class CubeDebugMesh extends DebugMesh {
     // The number of position components in the position data (3 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 3;
 
@@ -24,7 +23,7 @@ public class Cube extends Model {
 
     // The render method to draw the data with (triangles because that's how the data is
     // constructed)
-    private static final Mesh.RenderMethod RENDER_METHOD = Mesh.RenderMethod.TRIANGLES;
+    private static final RenderMethod RENDER_METHOD = RenderMethod.TRIANGLES;
 
     // Position vertex data that contains XYZ components
     private static final float[] POSITION_DATA =
@@ -170,61 +169,14 @@ public class Cube extends Model {
      * in scenarios where multiple cubes are going to be created in a short amount of time such as
      * particle engines as it allows you to prevent the handling of un-required data.
      *
-     * @param material      A material to apply to the rendered object
-     * @param renderTexels  True if the model is allowed to use texel data, else false
-     * @param renderNormals True if the model is allowed to use normal data, else false
-     * @param renderColour  True if the model is allowed to use colour data, else false
+     * @param textureSupport  True to generate the mesh with texel data, else false
+     * @param lightingSupport True to generate the mesh with normal data, else false
      * @since 1.0
      */
-    public Cube(Material material, boolean renderTexels, boolean renderNormals,
-                boolean renderColour) {
-        super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, renderNormals ? NORMAL_DATA : null,
-                RENDER_METHOD, NUMBER_POSITION_COMPONENTS,
-                renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
-                renderNormals ? NUMBER_NORMAL_COMPONENTS : 0, material);
-    }
-
-    /**
-     * Create a cube with specifically allowed data types. This means that on creation of the object
-     * that a controllable amount of vertex data is submitted to a buffer. This can prove efficient
-     * in scenarios where multiple cubes are going to be created in a short amount of time such as
-     * particle engines as it allows you to prevent the handling of un-required data.
-     *
-     * @param renderTexels  True if the model is allowed to use texel data, else false
-     * @param renderNormals True if the model is allowed to use normal data, else false
-     * @param renderColour  True if the model is allowed to use colour data, else false
-     * @since 1.0
-     */
-    public Cube(boolean renderTexels, boolean renderNormals, boolean renderColour) {
-        this(new Material(), renderTexels, renderNormals, renderColour);
-    }
-
-    /**
-     * Create a cube with default properties. By default, the cube will upload texel data
-     * (supporting textures) and normal data (supporting lighting). De-activating unused data types
-     * on the cube may result in more efficient construction so it is recommended to use a different
-     * Cube constructor unless you know you want all the default data (or just don't care). You
-     * could also use ignore data flags on an attached material, however this wouldn't provide the
-     * efficiency of not uploading the data in the first place.
-     *
-     * @param material Material to apply to the object
-     * @since 1.0
-     */
-    public Cube(Material material) {
-        this(material, true, false, false);
-    }
-
-    /**
-     * Create a cube with default properties. By default, the cube will upload texel data
-     * (supporting textures) and normal data (supporting lighting). De-activating unused data types
-     * on the cube may result in more efficient construction so it is recommended to use a different
-     * Cube constructor unless you know you want all the default data (or just don't care). You
-     * could also use ignore data flags on an attached material, however this wouldn't provide the
-     * efficiency of not uploading the data in the first place.
-     *
-     * @since 1.0
-     */
-    public Cube() {
-        this(new Material(), true, false, false);
+    public CubeDebugMesh(boolean textureSupport, boolean lightingSupport) {
+        super(POSITION_DATA, textureSupport ? TEXEL_DATA : null,
+                lightingSupport ? NORMAL_DATA : null, RENDER_METHOD, NUMBER_POSITION_COMPONENTS,
+                textureSupport ? NUMBER_TEXEL_COMPONENTS : 0,
+                lightingSupport ? NUMBER_NORMAL_COMPONENTS : 0);
     }
 }

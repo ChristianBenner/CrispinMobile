@@ -75,6 +75,12 @@ public class Shader {
     // Normal attribute handle
     public int normalAttributeHandle;
 
+    // Tangent attribute handle
+    public int tangentAttributeHandle;
+
+    // Bi-tangent attribute handle
+    public int bitangentAttributeHandle;
+
     // Instance matrix attribute handle
     public int instanceMatrixAttributeHandle;
 
@@ -137,6 +143,8 @@ public class Shader {
         colourAttributeHandle = UNDEFINED_HANDLE;
         textureAttributeHandle = UNDEFINED_HANDLE;
         normalAttributeHandle = UNDEFINED_HANDLE;
+        tangentAttributeHandle = UNDEFINED_HANDLE;
+        bitangentAttributeHandle = UNDEFINED_HANDLE;
         instanceMatrixAttributeHandle = UNDEFINED_HANDLE;
         matrixUniformHandle = UNDEFINED_HANDLE;
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
@@ -461,6 +469,26 @@ public class Shader {
      */
     public int getNormalAttributeHandle() {
         return normalAttributeHandle;
+    }
+
+    /**
+     * Get the tangent attribute handle
+     *
+     * @return Integer ID of the tangent attribute handle
+     * @since 1.0
+     */
+    public int getTangentAttributeHandle() {
+        return tangentAttributeHandle;
+    }
+
+    /**
+     * Get the bi-tangent attribute handle
+     *
+     * @return Integer ID of the bi-tangent attribute handle
+     * @since 1.0
+     */
+    public int getBitangentAttributeHandle() {
+        return bitangentAttributeHandle;
     }
 
     /**

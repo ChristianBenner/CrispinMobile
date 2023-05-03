@@ -52,7 +52,9 @@ public class Demo2D extends Scene {
     @Override
     public void render() {
         shader.enable();
-        mesh.setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle, shader.normalAttributeHandle);
+        mesh.setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                shader.normalAttributeHandle, shader.tangentAttributeHandle,
+                shader.bitangentAttributeHandle);
 
         float[] modelViewMatrix = new float[16];
         Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0, modelMatrix.getFloats(), 0);

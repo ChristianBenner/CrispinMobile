@@ -57,7 +57,8 @@ public class RenderBatch {
     public void setShader(Shader shader) {
         this.shader = shader;
         renderObject.setAttributePointers(shader.positionAttributeHandle,
-                shader.textureAttributeHandle, shader.normalAttributeHandle);
+                shader.textureAttributeHandle, shader.normalAttributeHandle,
+                shader.tangentAttributeHandle, shader.bitangentAttributeHandle);
        // instanceStuff();
     }
 

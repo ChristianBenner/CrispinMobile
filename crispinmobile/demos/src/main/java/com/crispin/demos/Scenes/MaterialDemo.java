@@ -39,8 +39,8 @@ public class MaterialDemo extends Scene {
         materialIterator = materialList.iterator();
         materialSetTimeMs = System.currentTimeMillis();
 
-        ThreadedOBJLoader.loadModel(R.raw.torus_uv, model -> {
-            this.torus = model;
+        ThreadedOBJLoader.loadModel(R.raw.torus_uv, mesh -> {
+            this.torus = new Model(mesh);
             this.torus.setMaterial(materialIterator.next());
             this.torus.setRotation(15.0f, 1.0f, 0.0f, 0.0f);
         });
@@ -48,16 +48,16 @@ public class MaterialDemo extends Scene {
         // Load the light bulb model (used to show light position)
         Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
         lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
-        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
-            this.lightBulb = loadListener;
+        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, mesh -> {
+            this.lightBulb = new Model(mesh);
             this.lightBulb.setMaterial(lightBulbMaterial);
             this.lightBulb.setScale(0.2f);
             this.lightBulb.setPosition(0.0f, 1.0f, 0.0f);
         });
 
         // Load the light bulb model (used to show light position)
-        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
-            this.lightBulb2 = loadListener;
+        ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, mesh -> {
+            this.lightBulb2 = new Model(mesh);
             this.lightBulb2.setMaterial(lightBulbMaterial);
             this.lightBulb2.setScale(0.2f);
             this.lightBulb2.setPosition(0.0f, 1.0f, 0.0f);

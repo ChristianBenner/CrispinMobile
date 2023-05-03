@@ -126,7 +126,7 @@ public class LightingDemo extends Scene {
         torusWoodMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.tiledwood16_specular));
         torusWoodMaterial.setUvMultiplier(16.0f, 4.0f);
         ThreadedOBJLoader.loadModel(R.raw.torus_uv, loadListener -> {
-            this.torus = loadListener;
+            this.torus = new Model(loadListener);
             this.torus.setMaterial(torusWoodMaterial);
             this.torus.setColour(1.0f, 0.5f, 0.31f);
             this.torus.setAlpha(0.0f);
@@ -136,7 +136,7 @@ public class LightingDemo extends Scene {
         Material lightBulbMaterial = new Material(R.drawable.lightbulb_texture);
         lightBulbMaterial.setSpecularMap(TextureCache.loadTexture(R.drawable.lightbulb_specular));
         ThreadedOBJLoader.loadModel(R.raw.lightbulb_flipped_normals, loadListener -> {
-            this.lightBulb = loadListener;
+            this.lightBulb = new Model(loadListener);
             this.lightBulb.setMaterial(lightBulbMaterial);
             this.lightBulb.setScale(0.3f);
             this.lightBulb.setPosition(0.0f, 1.0f, 0.0f);

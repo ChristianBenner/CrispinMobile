@@ -21,7 +21,7 @@ public class ThreadedOBJLoader implements Runnable {
     private final int resourceId;
 
     // The render object
-    private Model model;
+    private Mesh mesh;
 
     // Whether or not the model has been loaded or not
     private boolean complete = false;
@@ -59,8 +59,8 @@ public class ThreadedOBJLoader implements Runnable {
      */
     @Override
     public void run() {
-        model = OBJModelLoader.readObjFile(resourceId);
-        this.loadListener.onLoad(model);
+        mesh = OBJModelLoader.readObjFile(resourceId);
+        this.loadListener.onLoad(mesh);
         complete = true;
     }
 
@@ -80,7 +80,7 @@ public class ThreadedOBJLoader implements Runnable {
      * @return The state of the model loading. True if the model has finished loading, else false
      * @since 1.0
      */
-    public Model getRenderObject() {
-        return model;
+    public Mesh getMesh() {
+        return mesh;
     }
 }

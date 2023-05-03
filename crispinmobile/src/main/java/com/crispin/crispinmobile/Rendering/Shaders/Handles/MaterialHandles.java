@@ -39,6 +39,9 @@ public class MaterialHandles {
     // Texture uniform handle
     public int textureUniformHandle = UNDEFINED_HANDLE;
 
+    // Diffuse map uniform handle
+    public int diffuseMapUniformHandle = UNDEFINED_HANDLE;
+
     // Specular map uniform handle
     public int specularMapUniformHandle = UNDEFINED_HANDLE;
 
@@ -84,6 +87,12 @@ public class MaterialHandles {
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, material.texture.getId());
             glUniform1i(textureUniformHandle, 0);
+        }
+
+        if (diffuseMapUniformHandle != UNDEFINED_HANDLE && material.hasDiffuseMap()) {
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D, material.diffuseMap.getId());
+            glUniform1i(diffuseMapUniformHandle, 1);
         }
 
         if (specularMapUniformHandle != UNDEFINED_HANDLE && material.hasSpecularMap()) {
