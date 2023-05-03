@@ -262,8 +262,7 @@ public class SceneManager implements GLSurfaceView.Renderer {
                             event.getY());
 
                     if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        System.out.println("Event Y: " + event.getY());
-                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " +
+                        Logger.debug(TAG, "Touch Event Down (x: " + position.x + ", y: " +
                                 position.y + ")");
                     }
 

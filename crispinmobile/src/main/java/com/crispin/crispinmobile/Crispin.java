@@ -51,6 +51,9 @@ public class Crispin {
     // Scene manager
     private SceneManager sceneManager;
 
+    // Location in window (used to correct touch location to be relative to app location)
+    int[] locationInWindow;
+
     /**
      * Constructs the Crispin engine object. The object handles the major components to the
      * engine such as the graphics surface and the scene manager. Constructor is private because
@@ -95,9 +98,13 @@ public class Crispin {
             // Set the renderer to the scene manager
             glSurfaceView.setRenderer(sceneManager);
 
+            locationInWindow = new int[2];
+
             // Add an on touch listener that will feed the scene manager any motion events
             glSurfaceView.setOnTouchListener((v, event) ->
             {
+                glSurfaceView.getLocationInWindow(locationInWindow);
+                event.setLocation(event.getX() - locationInWindow[0], event.getY() - locationInWindow[1]);
                 sceneManager.addTouchEvent(event);
                 return true;
             });
