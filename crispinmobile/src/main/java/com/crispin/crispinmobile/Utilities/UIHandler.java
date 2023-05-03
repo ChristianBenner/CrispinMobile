@@ -45,6 +45,11 @@ public class UIHandler {
                             uiObjects.get(i).sendReleaseEvent(position);
                         }
                         break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (uiObjects.get(i).isClicked()) {
+                            uiObjects.get(i).sendDownEvent(position);
+                        }
+                        break;
                 }
             }
         }

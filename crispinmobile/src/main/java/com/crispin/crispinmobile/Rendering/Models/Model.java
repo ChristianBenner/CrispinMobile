@@ -744,8 +744,6 @@ public class Model {
 
         // Select a shader based on what data attributes and uniforms the object supports
         if (supportsNormals && supportsTexture) {
-            System.out.println("NORMAL AND TEXTURE SHADER");
-
             if (ShaderCache.existsInCache(LightingTextureShader.VERTEX_FILE,
                     LightingTextureShader.FRAGMENT_FILE)) {
                 shader = ShaderCache.getShader(LightingTextureShader.VERTEX_FILE,
@@ -754,8 +752,6 @@ public class Model {
                 shader = new LightingTextureShader();
             }
         } else if (supportsNormals) {
-            System.out.println("NORMAL SHADER");
-
             if (ShaderCache.existsInCache(LightingShader.VERTEX_FILE, LightingShader.FRAGMENT_FILE)) {
                 shader = ShaderCache.getShader(LightingShader.VERTEX_FILE,
                         LightingShader.FRAGMENT_FILE);
@@ -763,8 +759,6 @@ public class Model {
                 shader = new LightingShader();
             }
         } else if (supportsTexture) {
-            System.out.println("TEXTURE SHADER");
-
             // Just a texture shader
             if (ShaderCache.existsInCache(TextureShader.VERTEX_FILE,
                     TextureShader.FRAGMENT_FILE)) {
@@ -774,8 +768,6 @@ public class Model {
                 shader = new TextureShader();
             }
         } else {
-            System.out.println("UniformColourShader");
-
             // Just use a colour shader
             if (ShaderCache.existsInCache(UniformColourShader.VERTEX_FILE,
                     UniformColourShader.FRAGMENT_FILE)) {
