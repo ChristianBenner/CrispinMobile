@@ -28,10 +28,10 @@ public class Geometry {
     /**
      * Get the cross product of two vectors
      *
-     * @param lhs   Left hand side vector
-     * @param rhs   Right hand side vector
-     * @return      The cross product direction
-     * @since       1.0
+     * @param lhs Left hand side vector
+     * @param rhs Right hand side vector
+     * @return The cross product direction
+     * @since 1.0
      */
     public static Vec3 crossProduct(Vec3 lhs, Vec3 rhs) {
         return new Vec3((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z),
@@ -153,9 +153,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec3 translate(Vec3 vector3D, Vec3 vector) {
-        return new Vec3(
-                vector3D.x + vector.x,
-                vector3D.y + vector.y,
+        return new Vec3(vector3D.x + vector.x, vector3D.y + vector.y,
                 vector3D.z + vector.z);
     }
 
@@ -169,14 +167,8 @@ public class Geometry {
      * @return The translated vector
      * @since 1.0
      */
-    public static Vec3 translate(Vec3 vector3D,
-                                 float x,
-                                 float y,
-                                 float z) {
-        return new Vec3(
-                vector3D.x + x,
-                vector3D.y + y,
-                vector3D.z + z);
+    public static Vec3 translate(Vec3 vector3D, float x, float y, float z) {
+        return new Vec3(vector3D.x + x, vector3D.y + y, vector3D.z + z);
     }
 
     /**
@@ -212,10 +204,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec3 scaleVector(Vec3 vector, float scale) {
-        return new Vec3(
-                vector.x * scale,
-                vector.y * scale,
-                vector.z * scale);
+        return new Vec3(vector.x * scale, vector.y * scale, vector.z * scale);
     }
 
     /**
@@ -227,14 +216,8 @@ public class Geometry {
      * @return The scaled vector
      * @since 1.0
      */
-    public static Vec3 scaleVector(Vec3 vector,
-                                   float x,
-                                   float y,
-                                   float z) {
-        return new Vec3(
-                vector.x * x,
-                vector.y * y,
-                vector.z * z);
+    public static Vec3 scaleVector(Vec3 vector, float x, float y, float z) {
+        return new Vec3(vector.x * x, vector.y * y, vector.z * z);
     }
 
     /**
@@ -245,9 +228,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec2 scaleVector(Vec2 vector, float scale) {
-        return new Vec2(
-                vector.x * scale,
-                vector.y * scale);
+        return new Vec2(vector.x * scale, vector.y * scale);
     }
 
     /**
@@ -258,12 +239,8 @@ public class Geometry {
      * @return The scaled vector
      * @since 1.0
      */
-    public static Vec2 scaleVector(Vec2 vector,
-                                   float x,
-                                   float y) {
-        return new Vec2(
-                vector.x * x,
-                vector.y * y);
+    public static Vec2 scaleVector(Vec2 vector, float x, float y) {
+        return new Vec2(vector.x * x, vector.y * y);
     }
 
     /**

@@ -95,6 +95,16 @@ public class Square extends Model {
     }
 
     /**
+     * Create a square render object with a texture resource
+     *
+     * @param textureResource Texture resource handle
+     * @since 1.0
+     */
+    public Square(int textureResource) {
+        this(new Material(textureResource), true);
+    }
+
+    /**
      * Create a square render object. By default the object supports textures, meaning that texel
      * data is included in the vertex buffer construction. If not using textures on the object it
      * may be more efficient to construct an object without texel data using a different square
