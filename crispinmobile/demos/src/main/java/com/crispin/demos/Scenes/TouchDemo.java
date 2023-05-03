@@ -88,7 +88,18 @@ public class TouchDemo extends Scene {
      */
     @Override
     public void render() {
-        for(int i = touchLocations.length - 1; i >= 0; i--) {
+        int startIndex = index == 0 ? DRAW_CAP - 1 : index - 1;
+        int endIndex = startIndex + 1 == DRAW_CAP ? 0 : startIndex + 1;
+
+        for(int i = startIndex; i != endIndex; i--) {
+            if(i < 0) {
+                i = DRAW_CAP - 1;
+
+                if(i == endIndex) {
+                    break;
+                }
+            }
+
             if(touchLocations[i] != null) {
                 touchLocationSprite.setPosition(touchLocations[i].x - (TOUCH_SPRITE_SIZE / 2f),
                         touchLocations[i].y - (TOUCH_SPRITE_SIZE / 2f));
@@ -104,12 +115,11 @@ public class TouchDemo extends Scene {
         switch (type) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
+                touchLocations[index] = new Vec2(position.x, position.y);
+                index++;
                 if(index >= DRAW_CAP) {
                     index = 0;
                 }
-
-                touchLocations[index] = new Vec2(position.x, position.y);
-                index++;
                 break;
         }
     }
