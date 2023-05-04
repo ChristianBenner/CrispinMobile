@@ -62,6 +62,18 @@ public class Vec3 {
     }
 
     /**
+     * Construct a 3D vector object copying values from a Scale3D object
+     *
+     * @param s Scale3D object to copy from
+     * @since 1.0
+     */
+    public Vec3(Scale3D s) {
+        this.x = s.x;
+        this.y = s.y;
+        this.z = s.z;
+    }
+
+    /**
      * Construct a 3D direction object with default values (x: 0.0, y: 0.0 and z: 0.0)
      *
      * @since 1.0

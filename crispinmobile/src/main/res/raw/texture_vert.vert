@@ -11,6 +11,6 @@ out vec2 vTextureCoordinates;
 
 void main()
 {
-    vTextureCoordinates = uUVOffset + (uUvMultiplier * vec2(aTextureCoordinates.s, -aTextureCoordinates.t));
+    vTextureCoordinates = uUVOffset + (uUvMultiplier * vec2(aTextureCoordinates.s, aTextureCoordinates.t));
     gl_Position = uMatrix * aPosition;
 }

@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
@@ -92,6 +93,16 @@ public class Square extends Model {
      */
     public Square(Material material) {
         this(material, material.hasTexture());
+    }
+
+    /**
+     * Create a square render object with a texture
+     *
+     * @param texture Texture
+     * @since 1.0
+     */
+    public Square(Texture texture) {
+        this(new Material(texture), true);
     }
 
     /**
