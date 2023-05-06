@@ -93,6 +93,10 @@ public class AnimatedSquare extends Square {
         }
     }
 
+    public void setAnimationDurationMs(int animationDurationMs) {
+        this.animationFrameDurationMs = animationDurationMs / frames;
+    }
+
     public void setSpriteHeight(int height) {
         // Calculate frames from sprite height
         this.spriteHeight = height;
