@@ -13,6 +13,7 @@ import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
+import com.crispin.demos.Scenes.GameDemo2D.GameDemo2D;
 import com.crispin.demos.Scenes.InstancingDemos.InstancingDemoSelectionScene;
 
 public class DemoMasterScene extends Scene {

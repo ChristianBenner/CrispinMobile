@@ -14,6 +14,15 @@ package com.crispin.crispinmobile.Geometry;
  * @since 1.0
  */
 public class Geometry {
+    // 2 dimensional direction values
+    public enum Direction2D {
+        NONE,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
+
     /**
      * Invert a Vec2 object. This flips the x and y co-ordinate polarity
      *
@@ -327,5 +336,43 @@ public class Geometry {
     public static Vec3 normalize(Vec3 v) {
         final float length = (float) Math.sqrt(Math.abs((v.x * v.x) + (v.y * v.y) + (v.z + v.z)));
         return new Vec3(v.x / length, v.y / length, v.z / length);
+    }
+
+    /**
+     * Normalize a 2D vector. Returns the vector / length
+     *
+     * @param v Vec2
+     * @return Normalized vector. Vector / Length
+     * @since 1.0
+     */
+    public static Vec2 normalize(Vec2 v) {
+        final float length = (float) Math.sqrt(Math.abs((v.x * v.x) + (v.y * v.y)));
+        return new Vec2(v.x / length, v.y / length);
+    }
+
+    /**
+     * Get a direction from a vector
+     *
+     * @param v Vec2
+     * @return Direction2D of the vector
+     * @since 1.0
+     */
+    public static Direction2D getDirection(Vec2 v) {
+        Vec2 norm = normalize(v);
+
+        // See what component is larger (x or y) and return it
+        if(Math.abs(norm.x) > Math.abs(norm.y)) {
+            if(v.x > 0f) {
+                return Direction2D.RIGHT;
+            }
+            return Direction2D.LEFT;
+        } else if(Math.abs(norm.y) > Math.abs(norm.x)) {
+            if(v.y > 0f) {
+                return Direction2D.UP;
+            }
+            return Direction2D.DOWN;
+        } else {
+            return Direction2D.NONE;
+        }
     }
 }

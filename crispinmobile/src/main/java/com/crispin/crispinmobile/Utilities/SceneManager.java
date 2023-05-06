@@ -142,7 +142,7 @@ public class SceneManager implements GLSurfaceView.Renderer {
         currentScene = null;
         currentSceneConstructor = null;
         setBackgroundColour(DEFAULT_BACKGROUND_COLOUR);
-        setDepthState(DEFAULT_DEPTH_ENABLED_STATE);
+// todo: investigate        setDepthState(DEFAULT_DEPTH_ENABLED_STATE);
         setAlphaState(DEFAULT_ALPHA_ENABLED_STATE);
         setCullFaceState(DEFAULT_CULL_FACE_ENABLED_STATE);
         surfaceWidth = 0;

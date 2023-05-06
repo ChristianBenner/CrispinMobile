@@ -10,6 +10,6 @@ out vec2 vTextureCoordinates;
 
 void main()
 {
-    vTextureCoordinates = vec2(aTextureCoordinates.s, -aTextureCoordinates.t);
+    vTextureCoordinates = vec2(aTextureCoordinates.s, aTextureCoordinates.t);
     gl_Position = uProjection * uView * aModel * vec4(aPosition, 1.0f);
 }

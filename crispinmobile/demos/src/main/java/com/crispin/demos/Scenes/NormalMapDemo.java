@@ -30,7 +30,7 @@ public class NormalMapDemo extends Scene {
         private int lightPositionUniformHandle = UNDEFINED_HANDLE;
 
         protected NormalMapShader() {
-            super("NormalMapShader", R.raw.test_vert, R.raw.test_frag);
+            super("NormalMapShader", R.raw.test_vert, R.raw.texture_frag); // todo: shader
 
             // Attributes
             positionAttributeHandle = getAttribute("aPosition");
@@ -86,9 +86,9 @@ public class NormalMapDemo extends Scene {
 //        Material material = new Material(new Texture(R.drawable.substance_graph_basecolor));
 //        material.setNormalMap(new Texture(R.drawable.substance_graph_normal));
 //        material.setDiffuseMap(new Texture(R.drawable.substance_graph_basecolor));
-        Material material = new Material(new Texture(R.drawable.stacked_rock_cliff_albedo));
-        material.setNormalMap(new Texture(R.drawable.stacked_rock_cliff_ao));
-        material.setDiffuseMap(new Texture(R.drawable.stacked_rock_cliff_albedo));
+// todo: texture        Material material = new Material(new Texture(R.drawable.stacked_rock_cliff_albedo));
+// todo: texture        material.setNormalMap(new Texture(R.drawable.stacked_rock_cliff_ao));
+// todo: texture        material.setDiffuseMap(new Texture(R.drawable.stacked_rock_cliff_albedo));
 //        Material material = new Material(new Texture(R.drawable.floor_base));
 //        material.setNormalMap(new Texture(R.drawable.floor_normal));
 //        material.setDiffuseMap(new Texture(R.drawable.floor_base));
@@ -97,7 +97,7 @@ public class NormalMapDemo extends Scene {
 //        material.setDiffuseMap(new Texture(R.drawable.metal_plate));
 
 
-        cube = new Model(OBJModelLoader.readObjFile(R.raw.highpoly_sphere), material);
+// todo: texture        cube = new Model(OBJModelLoader.readObjFile(R.raw.highpoly_sphere), material);
 
 //        cube = new Model(new CubeMesh(true, true), material);
         cube.setPosition(0f, 0f, -8f);

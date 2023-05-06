@@ -12,10 +12,12 @@ import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.FreeTypeCharData;
 import com.crispin.crispinmobile.Rendering.Models.FontSquare;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Shaders.TextShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Utilities.Logger;
+import com.crispin.crispinmobile.Utilities.ShaderCache;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -81,7 +83,7 @@ public class Text implements UIObject {
     // Wiggle state
     private boolean wiggle;
     // Text shader designed to render the characters
-    private final TextShader textShader;
+    private final Shader textShader;
     // Timing used in wiggle calculation
     private float wiggleTime;
     // Speed of the wiggle
@@ -124,7 +126,14 @@ public class Text implements UIObject {
         width = 0.0f;
         height = 0.0f;
 
-        textShader = new TextShader();
+        // Check if an existing text shader can be used
+        if(ShaderCache.existsInCache(TextShader.VERTEX_FILE, TextShader.FRAGMENT_FILE)) {
+            textShader = ShaderCache.getShader(TextShader.VERTEX_FILE, TextShader.FRAGMENT_FILE);
+        } else {
+            textShader = new TextShader();
+            ShaderCache.registerShader(TextShader.VERTEX_FILE, TextShader.FRAGMENT_FILE, textShader);
+        }
+
         position = new Vec2();
         squares = new ArrayList<>();
 

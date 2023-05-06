@@ -43,6 +43,7 @@ import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLight
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Utilities.Logger;
+import com.crispin.crispinmobile.Utilities.TextureCache;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
@@ -228,6 +229,10 @@ public class InstanceRenderer {
 
     public void setTexture(Texture texture) {
         this.material.texture = texture;
+    }
+
+    public void setTexture(int texture) {
+        this.material.texture = TextureCache.loadTexture(texture);
     }
 
     public void setMaterial(Material material) {

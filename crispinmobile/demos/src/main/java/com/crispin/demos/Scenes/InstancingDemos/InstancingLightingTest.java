@@ -67,10 +67,10 @@ public class InstancingLightingTest extends Scene {
 
         renderer = new InstanceRenderer(new CubeMesh(true, true), true, modelMatrix, colourData);
         Material material = new Material();
-        material.setTexture(TextureCache.loadTexture(R.drawable.floor_base));
+// todo: texture        material.setTexture(TextureCache.loadTexture(R.drawable.floor_base));
        // material.setDiffuseMap(TextureCache.loadTexture(R.drawable.stacked_rock_cliff_albedo));
-        material.setSpecularMap(TextureCache.loadTexture(R.drawable.floor_spec));
-        material.setNormalMap(TextureCache.loadTexture(R.drawable.floor_normal));
+// todo: texture        material.setSpecularMap(TextureCache.loadTexture(R.drawable.floor_spec));
+// todo: texture        material.setNormalMap(TextureCache.loadTexture(R.drawable.floor_normal));
         renderer.setMaterial(material);
 
         LightGroup lightGroup = new LightGroup();

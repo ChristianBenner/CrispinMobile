@@ -21,6 +21,7 @@ import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
@@ -454,6 +455,17 @@ public class Model {
      */
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    /**
+     * Set the texture. The existing material will be updated to use the provided texture
+     *
+     * @param texture The texture to apply to the render object
+     * @see Texture
+     * @since 1.0
+     */
+    public void setTexture(Texture texture) {
+        this.material.setTexture(texture);
     }
 
     /**
