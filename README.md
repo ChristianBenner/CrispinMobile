@@ -4,6 +4,7 @@ A 3D graphics engine built on OpenGL ES. Written in Java and C.
 Features:
 - OBJ Model Loading
 - Particle Engine
+- Instanced Rendering
 - Normal mapping
 - Specular mapping
 - User interface
