@@ -9,6 +9,7 @@ import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.FontCache;
@@ -73,7 +74,7 @@ public class InstancingDemoSelectionScene extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
+    public void touch(int eventType, Pointer pointer) {
 
     }
 }

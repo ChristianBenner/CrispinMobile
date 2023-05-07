@@ -1,8 +1,5 @@
 package com.crispin.demos.Scenes;
 
-import static android.opengl.GLES20.glEnable;
-
-import android.opengl.GLES20;
 import android.view.MotionEvent;
 
 import com.crispin.crispinmobile.Crispin;
@@ -15,6 +12,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
@@ -111,11 +109,13 @@ public class TouchDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
-        switch (type) {
+    public void touch(int eventType, Pointer pointer) {
+        Vec2 position = new Vec2(pointer.getPosition());
+
+        switch (eventType) {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
-                touchLocations[index] = new Vec2(position.x, position.y);
+                touchLocations[index] = position;
                 index++;
                 if(index >= DRAW_CAP) {
                     index = 0;

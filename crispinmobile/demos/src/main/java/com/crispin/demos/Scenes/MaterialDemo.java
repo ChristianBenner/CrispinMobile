@@ -1,7 +1,6 @@
 package com.crispin.demos.Scenes;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
@@ -9,6 +8,7 @@ import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
@@ -119,7 +119,7 @@ public class MaterialDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
+    public void touch(int eventType, Pointer pointer) {
 
     }
 

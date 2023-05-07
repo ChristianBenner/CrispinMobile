@@ -17,6 +17,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.Utilities.Scene;
@@ -220,14 +221,16 @@ public class InstancingDemo extends Scene {
 
     Vec2 downPos = new Vec2();
     @Override
-    public void touch(int type, Vec2 position) {
-        switch (type) {
+    public void touch(int eventType, Pointer pointer) {
+        Vec2 position = new Vec2(pointer.getPosition());
+
+        switch (eventType) {
             case MotionEvent.ACTION_DOWN:
-                downPos = new Vec2(position);
+                downPos = position;
                 break;
             case MotionEvent.ACTION_MOVE:
                 camera.translate(0.0f, 0.0f, Geometry.getVectorBetween(downPos, position).y/50.0f);
-                downPos = new Vec2(position);
+                downPos = position;
                 break;
         }
     }

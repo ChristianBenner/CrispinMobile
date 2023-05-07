@@ -5,7 +5,7 @@ import com.crispin.crispinmobile.Utilities.UIHandler;
 
 import java.util.ArrayList;
 
-public abstract class InteractableUIObject implements UIObject {
+public abstract class InteractiveUIObject implements UIObject, InteractiveElement {
     private final ArrayList<TouchListener> touchListeners = new ArrayList<>();
 
     private boolean clicked = false;

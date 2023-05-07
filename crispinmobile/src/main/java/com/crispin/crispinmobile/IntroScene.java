@@ -8,6 +8,7 @@ import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Data.TextureOptions;
 import com.crispin.crispinmobile.UserInterface.Image;
 import com.crispin.crispinmobile.UserInterface.Plane;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.Scene;
 
@@ -147,7 +148,7 @@ public class IntroScene extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
+    public void touch(int eventType, Pointer pointer) {
 
     }
 

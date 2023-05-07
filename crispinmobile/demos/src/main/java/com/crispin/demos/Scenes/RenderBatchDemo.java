@@ -3,7 +3,6 @@ package com.crispin.demos.Scenes;
 import android.util.Pair;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
@@ -12,6 +11,7 @@ import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
 import com.crispin.crispinmobile.Utilities.Scene;
@@ -102,7 +102,7 @@ public class RenderBatchDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
+    public void touch(int eventType, Pointer pointer) {
 
     }
 

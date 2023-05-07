@@ -8,8 +8,6 @@ import android.view.MotionEvent;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.DefaultMesh.CubeMesh;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
@@ -17,12 +15,8 @@ import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
-import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
-import com.crispin.crispinmobile.UserInterface.Text;
-import com.crispin.crispinmobile.Utilities.Logger;
-import com.crispin.crispinmobile.Utilities.OBJModelLoader;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 
 public class NormalMapDemo extends Scene {
@@ -140,15 +134,17 @@ public class NormalMapDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
-        switch (type) {
+    public void touch(int eventType, Pointer pointer) {
+        Vec2 position = new Vec2(pointer.getPosition());
+
+        switch (eventType) {
             case MotionEvent.ACTION_DOWN:
-                touchDownPos = new Vec2(position);
+                touchDownPos = position;
                 break;
             case MotionEvent.ACTION_MOVE:
                 if(touchDownPos != null) {
                     camera.translate(0.0f, 0.0f, Geometry.getVectorBetween(touchDownPos, position).y / 50.0f);
-                    touchDownPos = new Vec2(position);
+                    touchDownPos = position;
                 }
                 break;
             case MotionEvent.ACTION_UP:

@@ -8,6 +8,7 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Scene;
 
 /**
@@ -172,7 +173,7 @@ public class TextDemo extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {
+    public void touch(int eventType, Pointer pointer) {
 
     }
 }

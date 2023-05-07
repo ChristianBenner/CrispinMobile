@@ -1,5 +1,12 @@
 package com.crispin.crispinmobile.Geometry;
 
+import android.graphics.Point;
+import android.opengl.Matrix;
+
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+
+import java.util.Vector;
+
 /**
  * Geometry class provides some public static functions for useful calculations and operations based
  * on vectors and vectors.

@@ -10,6 +10,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.UserInterface.Joystick;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
@@ -99,5 +100,5 @@ public class GameDemo2D extends Scene {
     }
 
     @Override
-    public void touch(int type, Vec2 position) {}
+    public void touch(int eventType, Pointer pointer) {}
 }
