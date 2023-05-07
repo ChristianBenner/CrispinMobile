@@ -1,16 +1,12 @@
 package com.crispin.crispinmobile.UserInterface;
 
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
-
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 
-public class Button extends InteractableUIObject {
+public class Button extends InteractiveUIObject {
     private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
     private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.WHITE;
     private static final Colour DEFAULT_COLOUR_TEXT = Colour.BLACK;
@@ -324,13 +320,10 @@ public class Button extends InteractableUIObject {
 
     @Override
     public void draw(Camera2D camera) {
-        glDisable(GL_DEPTH_TEST);
         this.plane.draw(camera);
 
         if (text != null) {
             text.draw(camera);
         }
-
-        glEnable(GL_DEPTH_TEST);
     }
 }

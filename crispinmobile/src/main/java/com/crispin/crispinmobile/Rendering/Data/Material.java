@@ -2,7 +2,7 @@ package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
 /**
@@ -12,7 +12,7 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see Texture
  * @see Colour
  * @since 1.0
@@ -41,6 +41,9 @@ public class Material {
 
     // The material texture
     public Texture texture;
+
+    // The diffuse map texture
+    public Texture diffuseMap;
 
     // The specular map texture
     public Texture specularMap;
@@ -102,6 +105,7 @@ public class Material {
         this.ignorePositionData = false;
         this.ignoreTexelData = false;
         this.ignoreNormalData = false;
+        this.diffuseMap = null;
         this.specularMap = null;
         this.normalMap = null;
         setTexture(texture);
@@ -412,6 +416,27 @@ public class Material {
     }
 
     /**
+     * Set the diffuse map attached to the material
+     *
+     * @param texture The diffuse map of the material
+     * @see Texture
+     * @since 1.0
+     */
+    public void setDiffuseMap(final Texture texture) {
+        this.diffuseMap = texture;
+    }
+
+    /**
+     * Check if the material has a diffuse map attached.
+     *
+     * @return True if the material has a diffuse map, else false
+     * @since 1.0
+     */
+    public boolean hasDiffuseMap() {
+        return diffuseMap != null;
+    }
+
+    /**
      * Set the specular map attached to the material
      *
      * @param texture The specular map of the material
@@ -477,5 +502,6 @@ public class Material {
         this.colour.red = colour.red;
         this.colour.green = colour.green;
         this.colour.blue = colour.blue;
+        this.colour.alpha = colour.alpha;
     }
 }

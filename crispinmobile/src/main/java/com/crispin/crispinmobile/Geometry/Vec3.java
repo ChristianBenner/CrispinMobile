@@ -62,12 +62,50 @@ public class Vec3 {
     }
 
     /**
+     * Construct a 3D vector object copying values from a Scale3D object
+     *
+     * @param s Scale3D object to copy from
+     * @since 1.0
+     */
+    public Vec3(Scale3D s) {
+        this.x = s.x;
+        this.y = s.y;
+        this.z = s.z;
+    }
+
+    /**
      * Construct a 3D direction object with default values (x: 0.0, y: 0.0 and z: 0.0)
      *
      * @since 1.0
      */
     public Vec3() {
         this(0.0f, 0.0f, 0.0f);
+    }
+
+    /**
+     * Set xyz of a 3D vector object
+     *
+     * @param x The x dimension value
+     * @param y The y dimension value
+     * @param z The z dimension value
+     * @since 1.0
+     */
+    public void set(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    /**
+     * Set xyz of a 3D vector object
+     *
+     * @param v Vec3 containing new position
+     * @since 1.0
+     */
+    public void set(Vec3 v) {
+        this.x = v.x;
+        this.y = v.y;
+        this.z = v.z;
     }
 
     /**
@@ -112,6 +150,18 @@ public class Vec3 {
      */
     public float dotProduct(Vec3 other) {
         return (x * other.x) + (y * other.y) + (z * other.z);
+    }
+
+    /**
+     * Divide each component of the vector
+     *
+     * @param divisor
+     * @since 1.0
+     */
+    public void divide(float divisor) {
+        this.x /= divisor;
+        this.y /= divisor;
+        this.z /= divisor;
     }
 
     /**

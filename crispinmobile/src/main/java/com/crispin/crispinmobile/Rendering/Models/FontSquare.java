@@ -3,7 +3,7 @@ package com.crispin.crispinmobile.Rendering.Models;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * FontSquare class derived from the Square class. It is a square render object with some extra
@@ -11,7 +11,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see Square
  * @see com.crispin.crispinmobile.UserInterface.Text
  * @since 1.0

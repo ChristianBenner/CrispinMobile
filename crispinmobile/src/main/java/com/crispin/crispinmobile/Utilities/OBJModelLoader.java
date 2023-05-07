@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Rendering.Data.RenderObjectData;
 import com.crispin.crispinmobile.Rendering.Models.Model;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 import java.io.InputStream;
 
@@ -16,7 +16,7 @@ import java.io.InputStream;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class OBJModelLoader {
@@ -112,10 +112,10 @@ public class OBJModelLoader {
      *
      * @param resourceId The OBJ model file resource ID
      * @return A RenderObject built from the model data. The model can be rendered to a scene
-     * @see RenderObject
+     * @see Mesh
      * @since 1.0
      */
-    public static Model readObjFile(int resourceId) {
+    public static Mesh readObjFile(int resourceId) {
         // Attempt to open and read an OBJ file
         try {
             // Measure how long it takes to load load and read the model file
@@ -128,7 +128,7 @@ public class OBJModelLoader {
 
             byte[] theFile = new byte[inputStream.available()];
             inputStream.read(theFile);
-            Model ro = processObj(theFile);
+            Mesh ro = processObj(theFile);
 
             // End of time measurement
             long end = System.nanoTime();
@@ -149,11 +149,11 @@ public class OBJModelLoader {
      * Process the OBJ model
      *
      * @param theFile The model file as an array of bytes
-     * @return A RenderObject built from the model data. The model can be rendered to a scene
-     * @see RenderObject
+     * @return A Mesh built from the model data. The model can be rendered to a scene
+     * @see Mesh
      * @since 1.0
      */
-    private static Model processObj(byte[] theFile) {
+    private static Mesh processObj(byte[] theFile) {
         RenderObjectData renderObjectData = new RenderObjectData();
 
         // Keep track of the type of data we are looking at
@@ -463,13 +463,13 @@ public class OBJModelLoader {
         // Set the render method depending on how much face data appears in a line
         switch (numberFaceDataPerLine) {
             case ONE_FACE_DATA_ELEMENT:
-                renderObjectData.setRenderMethod(RenderObject.RenderMethod.POINTS);
+                renderObjectData.setRenderMethod(Mesh.RenderMethod.POINTS);
                 break;
             case TWO_FACE_DATA_ELEMENTS:
-                renderObjectData.setRenderMethod(RenderObject.RenderMethod.LINES);
+                renderObjectData.setRenderMethod(Mesh.RenderMethod.LINES);
                 break;
             case THREE_FACE_DATA_ELEMENTS:
-                renderObjectData.setRenderMethod(RenderObject.RenderMethod.TRIANGLES);
+                renderObjectData.setRenderMethod(Mesh.RenderMethod.TRIANGLES);
                 break;
             case FOUR_FACE_DATA_ELEMENTS:
                 Logger.error(TAG, "QUADS are not supported as they require GLES 30");

@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * Cube class is a default 3D model of a cube. It is a render object and therefor can be drawn to
@@ -9,7 +9,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class Cube extends Model {
@@ -24,7 +24,7 @@ public class Cube extends Model {
 
     // The render method to draw the data with (triangles because that's how the data is
     // constructed)
-    private static final RenderMethod RENDER_METHOD = RenderMethod.TRIANGLES;
+    private static final Mesh.RenderMethod RENDER_METHOD = Mesh.RenderMethod.TRIANGLES;
 
     // Position vertex data that contains XYZ components
     private static final float[] POSITION_DATA =
@@ -179,8 +179,9 @@ public class Cube extends Model {
     public Cube(Material material, boolean renderTexels, boolean renderNormals,
                 boolean renderColour) {
         super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, renderNormals ? NORMAL_DATA : null,
-                RENDER_METHOD, NUMBER_POSITION_COMPONENTS, NUMBER_TEXEL_COMPONENTS,
-                NUMBER_NORMAL_COMPONENTS, material);
+                RENDER_METHOD, NUMBER_POSITION_COMPONENTS,
+                renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
+                renderNormals ? NUMBER_NORMAL_COMPONENTS : 0, material);
     }
 
     /**

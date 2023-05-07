@@ -1,5 +1,12 @@
 package com.crispin.crispinmobile.Geometry;
 
+import android.graphics.Point;
+import android.opengl.Matrix;
+
+import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+
+import java.util.Vector;
+
 /**
  * Geometry class provides some public static functions for useful calculations and operations based
  * on vectors and vectors.
@@ -14,6 +21,15 @@ package com.crispin.crispinmobile.Geometry;
  * @since 1.0
  */
 public class Geometry {
+    // 2 dimensional direction values
+    public enum Direction2D {
+        NONE,
+        LEFT,
+        RIGHT,
+        UP,
+        DOWN
+    }
+
     /**
      * Invert a Vec2 object. This flips the x and y co-ordinate polarity
      *
@@ -28,10 +44,10 @@ public class Geometry {
     /**
      * Get the cross product of two vectors
      *
-     * @param lhs   Left hand side vector
-     * @param rhs   Right hand side vector
-     * @return      The cross product direction
-     * @since       1.0
+     * @param lhs Left hand side vector
+     * @param rhs Right hand side vector
+     * @return The cross product direction
+     * @since 1.0
      */
     public static Vec3 crossProduct(Vec3 lhs, Vec3 rhs) {
         return new Vec3((lhs.y * rhs.z) - (lhs.z * rhs.y), (lhs.z * rhs.x) - (lhs.x * rhs.z),
@@ -135,6 +151,26 @@ public class Geometry {
     }
 
     /**
+     * Divide each component of the vector
+     *
+     * @param divisor
+     * @since 1.0
+     */
+    public static Vec3 divide(Vec3 vector, float divisor) {
+        return new Vec3(vector.x / divisor, vector.y / divisor, vector.z / divisor);
+    }
+
+    /**
+     * Divide each component of the vector
+     *
+     * @param divisor
+     * @since 1.0
+     */
+    public static Vec2 divide(Vec2 vector, float divisor) {
+        return new Vec2(vector.x / divisor, vector.y / divisor);
+    }
+
+    /**
      * Translate a vector by a vector
      *
      * @param vector3D The vector to translate
@@ -143,9 +179,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec3 translate(Vec3 vector3D, Vec3 vector) {
-        return new Vec3(
-                vector3D.x + vector.x,
-                vector3D.y + vector.y,
+        return new Vec3(vector3D.x + vector.x, vector3D.y + vector.y,
                 vector3D.z + vector.z);
     }
 
@@ -159,14 +193,8 @@ public class Geometry {
      * @return The translated vector
      * @since 1.0
      */
-    public static Vec3 translate(Vec3 vector3D,
-                                 float x,
-                                 float y,
-                                 float z) {
-        return new Vec3(
-                vector3D.x + x,
-                vector3D.y + y,
-                vector3D.z + z);
+    public static Vec3 translate(Vec3 vector3D, float x, float y, float z) {
+        return new Vec3(vector3D.x + x, vector3D.y + y, vector3D.z + z);
     }
 
     /**
@@ -202,10 +230,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec3 scaleVector(Vec3 vector, float scale) {
-        return new Vec3(
-                vector.x * scale,
-                vector.y * scale,
-                vector.z * scale);
+        return new Vec3(vector.x * scale, vector.y * scale, vector.z * scale);
     }
 
     /**
@@ -217,14 +242,8 @@ public class Geometry {
      * @return The scaled vector
      * @since 1.0
      */
-    public static Vec3 scaleVector(Vec3 vector,
-                                   float x,
-                                   float y,
-                                   float z) {
-        return new Vec3(
-                vector.x * x,
-                vector.y * y,
-                vector.z * z);
+    public static Vec3 scaleVector(Vec3 vector, float x, float y, float z) {
+        return new Vec3(vector.x * x, vector.y * y, vector.z * z);
     }
 
     /**
@@ -235,9 +254,7 @@ public class Geometry {
      * @since 1.0
      */
     public static Vec2 scaleVector(Vec2 vector, float scale) {
-        return new Vec2(
-                vector.x * scale,
-                vector.y * scale);
+        return new Vec2(vector.x * scale, vector.y * scale);
     }
 
     /**
@@ -248,12 +265,8 @@ public class Geometry {
      * @return The scaled vector
      * @since 1.0
      */
-    public static Vec2 scaleVector(Vec2 vector,
-                                   float x,
-                                   float y) {
-        return new Vec2(
-                vector.x * x,
-                vector.y * y);
+    public static Vec2 scaleVector(Vec2 vector, float x, float y) {
+        return new Vec2(vector.x * x, vector.y * y);
     }
 
     /**
@@ -330,5 +343,43 @@ public class Geometry {
     public static Vec3 normalize(Vec3 v) {
         final float length = (float) Math.sqrt(Math.abs((v.x * v.x) + (v.y * v.y) + (v.z + v.z)));
         return new Vec3(v.x / length, v.y / length, v.z / length);
+    }
+
+    /**
+     * Normalize a 2D vector. Returns the vector / length
+     *
+     * @param v Vec2
+     * @return Normalized vector. Vector / Length
+     * @since 1.0
+     */
+    public static Vec2 normalize(Vec2 v) {
+        final float length = (float) Math.sqrt(Math.abs((v.x * v.x) + (v.y * v.y)));
+        return new Vec2(v.x / length, v.y / length);
+    }
+
+    /**
+     * Get a direction from a vector
+     *
+     * @param v Vec2
+     * @return Direction2D of the vector
+     * @since 1.0
+     */
+    public static Direction2D getDirection(Vec2 v) {
+        Vec2 norm = normalize(v);
+
+        // See what component is larger (x or y) and return it
+        if(Math.abs(norm.x) > Math.abs(norm.y)) {
+            if(v.x > 0f) {
+                return Direction2D.RIGHT;
+            }
+            return Direction2D.LEFT;
+        } else if(Math.abs(norm.y) > Math.abs(norm.x)) {
+            if(v.y > 0f) {
+                return Direction2D.UP;
+            }
+            return Direction2D.DOWN;
+        } else {
+            return Direction2D.NONE;
+        }
     }
 }

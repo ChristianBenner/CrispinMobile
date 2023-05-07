@@ -2,15 +2,23 @@ package com.crispin.crispinmobile;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.pm.ConfigurationInfo;
 import android.opengl.GLSurfaceView;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.ViewTouchListener;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.SceneManager;
+import com.crispin.crispinmobile.Utilities.UIHandler;
+
+import java.util.HashMap;
 
 /**
  * Crispin class provides core engine functionality. It is crucial in order to position a graphics
@@ -72,7 +80,7 @@ public class Crispin {
         if (isOpenGLESSupported()) {
             // Use context to initialise a GLSurfaceView
             glSurfaceView = new GLSurfaceView(CONTEXT);
-
+            
             // Tell the application to use OpenGL ES 3.0
             glSurfaceView.setEGLContextClientVersion(OPENGL_ES_TARGET_VERSION);
 
@@ -89,11 +97,7 @@ public class Crispin {
             glSurfaceView.setRenderer(sceneManager);
 
             // Add an on touch listener that will feed the scene manager any motion events
-            glSurfaceView.setOnTouchListener((v, event) ->
-            {
-                sceneManager.addTouchEvent(event);
-                return true;
-            });
+            glSurfaceView.setOnTouchListener(new ViewTouchListener());
 
             // Set the application view to the graphics view
             appCompatActivity.setContentView(glSurfaceView);
@@ -442,6 +446,31 @@ public class Crispin {
     }
 
     /**
+     * Get the most recent fps calculation
+     *
+     * @return Number of frames rendered in the most recent second time window
+     * @since 1.0
+     */
+    public static int getFps() {
+        if (isInit()) {
+            return crispinInstance.sceneManager.getFps();
+        }
+        return 0;
+    }
+
+    /**
+     * Tell the engine to print FPS info
+     *
+     * @param state True to start printing the number of frames per second, else false
+     * @since 1.0
+     */
+    public static void setPrintFps(boolean state) {
+        if (isInit()) {
+            crispinInstance.sceneManager.setPrintFps(state);
+        }
+    }
+
+    /**
      * Checks whether or not the engine has been freeTypeInitialised. If the engine hasn't been freeTypeInitialised
      * then an error message is printed.
      *
@@ -471,7 +500,11 @@ public class Crispin {
      * @since 1.0
      */
     private boolean isOpenGLESSupported() {
-        return ((ActivityManager) CONTEXT.getSystemService(Context.ACTIVITY_SERVICE))
-                .getDeviceConfigurationInfo().reqGlEsVersion >= REQUIRED_OPENGL_ES_VERSION;
+        ConfigurationInfo configurationInfo = ((ActivityManager)CONTEXT.getSystemService(Context.
+                ACTIVITY_SERVICE)).getDeviceConfigurationInfo();
+        int reqGlEsVersion = configurationInfo.reqGlEsVersion;
+        String glEsVersion = configurationInfo.getGlEsVersion();
+        System.out.println("GLES Version: " + glEsVersion + ", reqGlEsVersion: " + reqGlEsVersion + ", APP REQ: " + REQUIRED_OPENGL_ES_VERSION);
+        return reqGlEsVersion >= REQUIRED_OPENGL_ES_VERSION;
     }
 }

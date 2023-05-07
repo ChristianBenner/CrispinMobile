@@ -43,6 +43,62 @@ public class Vec2 {
     }
 
     /**
+     * Construct a 2D vector object copying x,y values from a 3D vector object
+     *
+     * @param v Vector to copy from
+     * @since 1.0
+     */
+    public Vec2(Vec3 v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
+
+    /**
+     * Construct a 2D vector object copying values from a Scale2D object
+     *
+     * @param s Scale2D object to copy from
+     * @since 1.0
+     */
+    public Vec2(Scale2D s) {
+        this.x = s.x;
+        this.y = s.y;
+    }
+
+    /**
+     * Construct a 2D vector object copying x, y values from a Scale3D object
+     *
+     * @param s Scale3D object to copy from
+     * @since 1.0
+     */
+    public Vec2(Scale3D s) {
+        this.x = s.x;
+        this.y = s.y;
+    }
+
+    /**
+     * Set xy of a 2D vector object
+     *
+     * @param x The x dimension value
+     * @param y The y dimension value
+     * @since 1.0
+     */
+    public void set(float x, float y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * Set xy of a 2D vector object
+     *
+     * @param v Vec2 containing new position
+     * @since 1.0
+     */
+    public void set(Vec2 v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
+
+    /**
      * Construct a 2D direction object with default values (x: 0.0 and y: 0.0)
      *
      * @since 1.0
@@ -124,6 +180,16 @@ public class Vec2 {
     public void plus(Vec2 vector) {
         this.x += vector.x;
         this.y += vector.y;
+    }
+
+    /**
+     * Invert the vector
+     *
+     * @since 1.0
+     */
+    public void invert() {
+        x = -x;
+        y = -y;
     }
 
     /**

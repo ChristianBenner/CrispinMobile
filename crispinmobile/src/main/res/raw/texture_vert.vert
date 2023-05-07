@@ -1,8 +1,6 @@
 #version 300 es
 
-uniform mat4 uProjection;
-uniform mat4 uView;
-uniform mat4 uModel;
+uniform mat4 uMatrix;
 uniform vec2 uUvMultiplier;
 uniform vec2 uUVOffset;
 
@@ -13,6 +11,6 @@ out vec2 vTextureCoordinates;
 
 void main()
 {
-    vTextureCoordinates = uUVOffset + (uUvMultiplier * vec2(aTextureCoordinates.s, -aTextureCoordinates.t));
-    gl_Position = uProjection * uView * uModel * aPosition;
+    vTextureCoordinates = uUVOffset + (uUvMultiplier * vec2(aTextureCoordinates.s, aTextureCoordinates.t));
+    gl_Position = uMatrix * aPosition;
 }

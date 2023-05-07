@@ -1,7 +1,8 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * Square class is a default render object model that allows you to render a 2-dimensional square.
@@ -9,7 +10,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @see Square
  * @see com.crispin.crispinmobile.UserInterface.Text
  * @since 1.0
@@ -62,7 +63,8 @@ public class Square extends Model {
      */
     public Square(Material material, boolean renderTexels) {
         super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, null,
-                RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS, NUMBER_TEXEL_COMPONENTS,
+                Mesh.RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
+                renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
                 (byte)0, material);
     }
 
@@ -90,7 +92,27 @@ public class Square extends Model {
      * @since 1.0
      */
     public Square(Material material) {
-        this(material, true);
+        this(material, material.hasTexture());
+    }
+
+    /**
+     * Create a square render object with a texture
+     *
+     * @param texture Texture
+     * @since 1.0
+     */
+    public Square(Texture texture) {
+        this(new Material(texture), true);
+    }
+
+    /**
+     * Create a square render object with a texture resource
+     *
+     * @param textureResource Texture resource handle
+     * @since 1.0
+     */
+    public Square(int textureResource) {
+        this(new Material(textureResource), true);
     }
 
     /**

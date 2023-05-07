@@ -3,7 +3,7 @@ package com.crispin.crispinmobile.Rendering.Entities;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * The light class provides an interface to lighting elements in a graphical scene. The class allows
@@ -11,7 +11,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class PointLight {
@@ -243,6 +243,55 @@ public class PointLight {
     }
 
     /**
+     * Translate the light position
+     *
+     * @param x x co-ordinate translation
+     * @param y y co-ordinate translation
+     * @param z z co-ordinate translation
+     * @since 1.0
+     */
+    public void translate(float x, float y, float z) {
+        this.x += x;
+        this.y += y;
+        this.z += z;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param x x co-ordinate translation
+     * @param y y co-ordinate translation
+     * @since 1.0
+     */
+    public void translate(float x, float y) {
+        this.x += x;
+        this.y += y;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param translateVector Vec3 containing translation
+     * @since 1.0
+     */
+    public void translate(Vec3 translateVector) {
+        this.x += translateVector.x;
+        this.y += translateVector.y;
+        this.z += translateVector.z;
+    }
+
+    /**
+     * Translate the light position
+     *
+     * @param translateVector Vec2 containing translation
+     * @since 1.0
+     */
+    public void translate(Vec2 translateVector) {
+        this.x += translateVector.x;
+        this.y += translateVector.y;
+    }
+
+    /**
      * Set the light colour
      *
      * @param red   Red channel amount (0.0-1.0)
@@ -355,7 +404,7 @@ public class PointLight {
      * @since 1.0
      */
     public void setConstantAttenuation(float constantAttenuation) {
-        this.constantAttenuation = this.constantAttenuation;
+        this.constantAttenuation = constantAttenuation;
     }
 
     /**

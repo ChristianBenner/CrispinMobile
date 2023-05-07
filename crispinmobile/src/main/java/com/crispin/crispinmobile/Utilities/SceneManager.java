@@ -1,12 +1,5 @@
 package com.crispin.crispinmobile.Utilities;
 
-import static android.opengl.GLES20.GL_ALWAYS;
-import static android.opengl.GLES20.GL_LEQUAL;
-import static android.opengl.GLES20.GL_NEVER;
-import static android.opengl.GLES20.GL_NOTEQUAL;
-import static android.opengl.GLES20.GL_STENCIL_BUFFER_BIT;
-import static android.opengl.GLES20.GL_STENCIL_TEST;
-import static android.opengl.GLES20.glDepthFunc;
 import static android.opengl.GLES30.GL_BLEND;
 import static android.opengl.GLES30.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES30.GL_CULL_FACE;
@@ -23,12 +16,15 @@ import static android.opengl.GLES30.glViewport;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -124,8 +120,17 @@ public class SceneManager implements GLSurfaceView.Renderer {
     // Time paused in nanoseconds during the timing calculations
     private long timePausedInNanos;
 
-    // Touch event thread sync queue
-    private final BlockingQueue<MotionEvent> touchEventQueue;
+    // Previous seconds frame count
+    private int fps;
+
+    // Number of frames counted in the current second
+    private int frames = 0;
+
+    // Start of the frame measuring time
+    private long frameCalcStartMs = 0;
+
+    // Print FPS calculation to info log
+    private boolean printFps;
 
     /**
      * The constructor for the scene manager sets the member variables for later usage. The
@@ -144,7 +149,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
         surfaceHeight = 0;
         startSceneSpecified = false;
         targetRefreshRate = DEFAULT_REFRESH_RATE;
-        touchEventQueue = new LinkedBlockingQueue<>(TOUCH_EVENT_BLOCKING_QUEUE_SIZE);
         resetTimingValues();
     }
 
@@ -234,67 +238,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
      */
     public Scene getCurrentScene() {
         return currentScene;
-    }
-
-    /**
-     * Feed the touch events to the current scene and the user interface handler
-     *
-     * @since 1.0
-     */
-    public void sendTouchEvents() {
-        // Only pass to current scene if the scene is initialised
-        if (currentScene != null) {
-            while (!touchEventQueue.isEmpty()) {
-                try {
-                    // Retrieve the event from the queue
-                    MotionEvent event = touchEventQueue.take();
-
-                    // Retrieve the action of the event
-                    int action = event.getAction();
-
-                    // Retrieve the position of the event
-                    Vec2 position = new Vec2(event.getX(), Crispin.getSurfaceHeight() -
-                            event.getY());
-
-                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                        System.out.println("Event Y: " + event.getY());
-                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " +
-                                position.y + ")");
-                    }
-
-                    // Provide the current scene with the motion event information
-                    currentScene.touch(action, position);
-
-                    // Send the touch event to the UI handler to activate touch on the ui elements on the
-                    // current scene
-                    UIHandler.sendTouchEvent(action, position);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Add a touch event to the touch event blocking queue. This is so that the touch event can run
-     * on the correct thread (the OpenGL thread used elsewhere in scenes) and so that it can be
-     * accomplished in a thread safe manner.
-     *
-     * @param event The motion event
-     * @since 1.0
-     */
-    public void addTouchEvent(MotionEvent event) {
-        // Adds a touch event to the blocking queue so that it can be processed on the OpenGL thread
-        // in a safe way
-        try {
-            if (touchEventQueue.add(event) == false) {
-                System.err.println("Error, touch event queue is full. It has exceeded that size of " +
-                        "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-            }
-        } catch (Exception e) {
-            System.err.println("Error, touch event queue is full. It has exceeded that size of " +
-                    "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-        }
     }
 
     /**
@@ -484,6 +427,26 @@ public class SceneManager implements GLSurfaceView.Renderer {
     }
 
     /**
+     * Get the most recent fps calculation
+     *
+     * @return Number of frames rendered in the most recent second time window
+     * @since 1.0
+     */
+    public int getFps() {
+        return fps;
+    }
+
+    /**
+     * Tell the engine to print FPS info
+     *
+     * @param state True to start printing the number of frames per second, else false
+     * @since 1.0
+     */
+    public void setPrintFps(boolean state) {
+        printFps = state;
+    }
+
+    /**
      * The method is overridden from <code>GLSurfaceView.Renderer</code>, it is called when then
      * surface is ready to be rendered (which can be many times per second). From this position,
      * rendering and logic update mechanics have be implemented so that graphical output can be
@@ -496,6 +459,16 @@ public class SceneManager implements GLSurfaceView.Renderer {
      */
     @Override
     public void onDrawFrame(GL10 gl) {
+        if (frameCalcStartMs == 0 || frameCalcStartMs <= System.currentTimeMillis() - 1000) {
+            frameCalcStartMs = System.currentTimeMillis();
+            fps = frames;
+            if (printFps) {
+                Logger.info("FPS: " + fps);
+            }
+            frames = 0;
+        }
+        frames++;
+
         // Construct the current scene if it hasn't been already
         if (currentScene == null) {
             constructCurrentScene();
@@ -518,15 +491,8 @@ public class SceneManager implements GLSurfaceView.Renderer {
         // Run the current scenes update function
         currentScene.update(deltaTime);
 
-        // Send the touch events to the current scene
-        sendTouchEvents();
-
         // Always clear the buffer bit
         glClear(GL_COLOR_BUFFER_BIT);
-
-        // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
-                backgroundColour.alpha);
 
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise
         // disable in OpenGL ES
@@ -536,6 +502,10 @@ public class SceneManager implements GLSurfaceView.Renderer {
         } else {
             glDisable(GL_DEPTH_TEST);
         }
+
+        // Clear the graphics surface to the background colour
+        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
+                backgroundColour.alpha);
 
         // If alpha is enabled, enable blend functionality in OpenGL ES and supply a blend function.
         // Otherwise disable in OpenGL ES
@@ -570,8 +540,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
     private void constructCurrentScene() {
         // Check if the current scene has a constructor
         if (currentSceneConstructor != null) {
-            Logger.info("Constructing current scene");
-
             // Create the scene via its constructor lambda and then set it as the current scene
             currentScene = currentSceneConstructor.init();
         } else {

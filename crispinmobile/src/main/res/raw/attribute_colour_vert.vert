@@ -1,4 +1,4 @@
-
+#version 300 es
 attribute vec3 vPosition;
 attribute vec4 vColour;
 

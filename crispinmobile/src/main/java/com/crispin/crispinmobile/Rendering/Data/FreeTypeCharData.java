@@ -1,7 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Data;
 
 import com.crispin.crispinmobile.Native.CrispinNativeInterface;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * FreeTypeCharData class holds important data on FreeType character faces. This is so that a
@@ -10,7 +10,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
  *
  * @author Christian Benner
  * @version %I%, %G%
- * @see RenderObject
+ * @see Mesh
  * @since 1.0
  */
 public class FreeTypeCharData {

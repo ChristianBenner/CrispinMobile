@@ -24,6 +24,24 @@ public class AnimatedSquare extends Square {
         setSpriteHeight(spriteHeight);
     }
 
+    public AnimatedSquare(Texture texture, int spriteHeight, int animationDurationMs) {
+        super(texture);
+        this.repeat = true;
+        this.reverseFrameCount = false;
+        this.animationDurationMs = animationDurationMs;
+
+        setSpriteHeight(spriteHeight);
+    }
+
+    public AnimatedSquare(int textureResource, int spriteHeight, int animationDurationMs) {
+        super(textureResource);
+        this.repeat = true;
+        this.reverseFrameCount = false;
+        this.animationDurationMs = animationDurationMs;
+
+        setSpriteHeight(spriteHeight);
+    }
+
     // false to repeat the animation (go to frame 0 after the last frame)
     // true to traverse back through the frames back to 0
     public void setReverse(boolean reverse) {
@@ -73,6 +91,10 @@ public class AnimatedSquare extends Square {
 
             lastFrameStart = System.currentTimeMillis();
         }
+    }
+
+    public void setAnimationDurationMs(int animationDurationMs) {
+        this.animationFrameDurationMs = animationDurationMs / frames;
     }
 
     public void setSpriteHeight(int height) {

@@ -75,11 +75,20 @@ public class Shader {
     // Normal attribute handle
     public int normalAttributeHandle;
 
+    // Tangent attribute handle
+    public int tangentAttributeHandle;
+
+    // Bi-tangent attribute handle
+    public int bitangentAttributeHandle;
+
     // Instance matrix attribute handle
     public int instanceMatrixAttributeHandle;
 
     // Matrix uniform handle
     public int matrixUniformHandle;
+
+    // Model matrix attribute handle
+    public int modelMatrixAttributeHandle;
 
     // Projection matrix uniform handle
     public int projectionMatrixUniformHandle;
@@ -134,6 +143,8 @@ public class Shader {
         colourAttributeHandle = UNDEFINED_HANDLE;
         textureAttributeHandle = UNDEFINED_HANDLE;
         normalAttributeHandle = UNDEFINED_HANDLE;
+        tangentAttributeHandle = UNDEFINED_HANDLE;
+        bitangentAttributeHandle = UNDEFINED_HANDLE;
         instanceMatrixAttributeHandle = UNDEFINED_HANDLE;
         matrixUniformHandle = UNDEFINED_HANDLE;
         projectionMatrixUniformHandle = UNDEFINED_HANDLE;
@@ -141,6 +152,8 @@ public class Shader {
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
+        numSpotLightsUniformHandle = UNDEFINED_HANDLE;
+        modelMatrixAttributeHandle = UNDEFINED_HANDLE;
     }
 
     /**
@@ -355,7 +368,7 @@ public class Shader {
      *
      * @since 1.0
      */
-    public void enableIt() {
+    public void enable() {
         glUseProgram(programId);
     }
 
@@ -364,7 +377,7 @@ public class Shader {
      *
      * @since 1.0
      */
-    public void disableIt() {
+    public void disable() {
         glUseProgram(0);
     }
 
@@ -396,7 +409,11 @@ public class Shader {
      * @since 1.0
      */
     public int getAttribute(String attributeName) {
-        return glGetAttribLocation(programId, attributeName);
+        int attribute = glGetAttribLocation(programId, attributeName);
+        if(attribute == UNDEFINED_HANDLE) {
+            Logger.error(TAG, "Failed to find attribute '" + attributeName + "' in shader '" + name + "'");
+        }
+        return attribute;
     }
 
     /**
@@ -407,7 +424,11 @@ public class Shader {
      * @since 1.0
      */
     public int getUniform(String uniformName) {
-        return glGetUniformLocation(programId, uniformName);
+        int uniform = glGetUniformLocation(programId, uniformName);
+        if(uniform == UNDEFINED_HANDLE) {
+            Logger.error(TAG, "Failed to find uniform '" + uniformName + "' in shader '" + name + "'");
+        }
+        return uniform;
     }
 
     /**
@@ -448,6 +469,26 @@ public class Shader {
      */
     public int getNormalAttributeHandle() {
         return normalAttributeHandle;
+    }
+
+    /**
+     * Get the tangent attribute handle
+     *
+     * @return Integer ID of the tangent attribute handle
+     * @since 1.0
+     */
+    public int getTangentAttributeHandle() {
+        return tangentAttributeHandle;
+    }
+
+    /**
+     * Get the bi-tangent attribute handle
+     *
+     * @return Integer ID of the bi-tangent attribute handle
+     * @since 1.0
+     */
+    public int getBitangentAttributeHandle() {
+        return bitangentAttributeHandle;
     }
 
     /**

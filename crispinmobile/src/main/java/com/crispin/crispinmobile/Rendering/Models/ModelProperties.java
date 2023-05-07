@@ -15,7 +15,7 @@ public class ModelProperties {
     public Material material;
 
     // The model matrix
-    public final ModelMatrix modelMatrix;
+    private final ModelMatrix modelMatrix;
 
     // Position of the object
     private final Vec3 position;
@@ -32,6 +32,9 @@ public class ModelProperties {
     // Point rotation
     private final Rotation3D rotationPointAngle;
 
+    // Model matrix requires update
+    private boolean modelMatrixUpdate;
+
     public ModelProperties(Material material) {
         this.material = material;
         modelMatrix = new ModelMatrix();
@@ -40,6 +43,18 @@ public class ModelProperties {
         scale = new Scale3D();
         rotationPoint = new Vec3();
         rotationPointAngle = new Rotation3D();
+        modelMatrixUpdate = true;
+    }
+
+    public ModelProperties() {
+        this.material = new Material();
+        modelMatrix = new ModelMatrix();
+        position = new Vec3();
+        rotation = new Rotation3D();
+        scale = new Scale3D();
+        rotationPoint = new Vec3();
+        rotationPointAngle = new Rotation3D();
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -54,6 +69,7 @@ public class ModelProperties {
         this.position.x = x;
         this.position.y = y;
         this.position.z = z;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -66,6 +82,7 @@ public class ModelProperties {
     public void setPosition(float x, float y) {
         this.position.x = x;
         this.position.y = y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -97,6 +114,7 @@ public class ModelProperties {
     public void setPosition(Vec2 position) {
         this.position.x = position.x;
         this.position.y = position.y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -111,6 +129,7 @@ public class ModelProperties {
         this.scale.x = w;
         this.scale.y = h;
         this.scale.z = l;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -123,6 +142,7 @@ public class ModelProperties {
     public void setScale(float w, float h) {
         this.scale.x = w;
         this.scale.y = h;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -133,6 +153,7 @@ public class ModelProperties {
      */
     public void setScaleX(float x) {
         this.scale.x = x;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -143,6 +164,7 @@ public class ModelProperties {
      */
     public void setScaleY(float y) {
         this.scale.y = y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -153,6 +175,7 @@ public class ModelProperties {
      */
     public void setScaleZ(float z) {
         this.scale.z = z;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -219,6 +242,7 @@ public class ModelProperties {
         this.rotation.x = x;
         this.rotation.y = y;
         this.rotation.z = z;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -243,6 +267,7 @@ public class ModelProperties {
         this.rotation.angle = angle;
         this.rotation.x = x;
         this.rotation.y = y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -316,6 +341,7 @@ public class ModelProperties {
         this.rotationPointAngle.x = rotationX;
         this.rotationPointAngle.y = rotationY;
         this.rotationPointAngle.z = rotationZ;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -326,6 +352,7 @@ public class ModelProperties {
      */
     public void translate(Vec3 point) {
         this.position.translate(point);
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -340,6 +367,7 @@ public class ModelProperties {
         this.position.x += x;
         this.position.y += y;
         this.position.z += z;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -351,6 +379,7 @@ public class ModelProperties {
     public void translate(Vec2 point) {
         this.position.x += point.x;
         this.position.y += point.y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -363,6 +392,7 @@ public class ModelProperties {
     public void translate(float x, float y) {
         this.position.x += x;
         this.position.y += y;
+        modelMatrixUpdate = true;
     }
 
     /**
@@ -460,12 +490,24 @@ public class ModelProperties {
     }
 
     /**
+     * Get the model matrix. If a model property has changed since, it will be updated first
+     *
+     * @since 1.0
+     */
+    public ModelMatrix getModelMatrix() {
+        if(modelMatrixUpdate) {
+            updateModelMatrix();
+        }
+        return modelMatrix;
+    }
+
+    /**
      * Update the model matrix. This can update the model matrix if a transformation property of the
      * object such as a position, scale or rotation has changed.
      *
      * @since 1.0
      */
-    public void updateModelMatrix() {
+    private void updateModelMatrix() {
         modelMatrix.reset();
         modelMatrix.translate(position);
 
@@ -478,5 +520,6 @@ public class ModelProperties {
         }
 
         modelMatrix.scale(scale);
+        modelMatrixUpdate = false;
     }
 }

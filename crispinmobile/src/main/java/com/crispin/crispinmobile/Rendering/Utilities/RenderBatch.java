@@ -3,23 +3,15 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.glDrawArrays;
-import static android.opengl.GLES30.GL_ARRAY_BUFFER;
-import static android.opengl.GLES30.GL_FLOAT;
-import static android.opengl.GLES30.GL_STATIC_DRAW;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
 import static android.opengl.GLES30.GL_TRIANGLES;
-import static android.opengl.GLES30.glBindBuffer;
 import static android.opengl.GLES30.glBindTexture;
-import static android.opengl.GLES30.glBufferData;
-import static android.opengl.GLES30.glDrawArraysInstanced;
-import static android.opengl.GLES30.glEnableVertexAttribArray;
 import static android.opengl.GLES30.glGenBuffers;
 import static android.opengl.GLES30.glUniform1i;
 import static android.opengl.GLES30.glUniform3f;
 import static android.opengl.GLES30.glUniformMatrix4fv;
 import static android.opengl.GLES30.glVertexAttribPointer;
 import static android.opengl.GLES30.glBindVertexArray;
-import static android.opengl.GLES30.glVertexAttribDivisor;
 
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
@@ -28,7 +20,6 @@ import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.HashSet;
 
@@ -36,7 +27,7 @@ public class RenderBatch {
     // Number of uniform elements to upload in a single GLSL uniform upload
     private static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
 
-    private RenderObject renderObject;
+    private Mesh renderObject;
     private HashSet<ModelProperties> batch;
 
     private Shader shader;
@@ -47,7 +38,7 @@ public class RenderBatch {
         batch = new HashSet<>();
     }
 
-    public void setRenderObject(RenderObject renderObject) {
+    public void setMesh(Mesh renderObject) {
         this.renderObject = renderObject;
     }
 
@@ -66,7 +57,8 @@ public class RenderBatch {
     public void setShader(Shader shader) {
         this.shader = shader;
         renderObject.setAttributePointers(shader.positionAttributeHandle,
-                shader.textureAttributeHandle, shader.normalAttributeHandle);
+                shader.textureAttributeHandle, shader.normalAttributeHandle,
+                shader.tangentAttributeHandle, shader.bitangentAttributeHandle);
        // instanceStuff();
     }
 
@@ -78,44 +70,8 @@ public class RenderBatch {
         this.lightGroup = lightGroup;
     }
 
-    private void instanceStuff() {
-        int[] instanceVBO = new int[1];
-        glGenBuffers(1, instanceVBO, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, instanceVBO[0]);
-
-        // Mat is 4x4 of floats (4 bytes each) so each mat = 4*4*4 bytes
-        int modelMatNumFloats = 4 * 4;
-        int modelMatNumBytes = modelMatNumFloats * 4;
-
-        FloatBuffer md = FloatBuffer.allocate(batch.size() * modelMatNumFloats);
-        for(ModelProperties modelProperties : batch) {
-            md.put(modelProperties.modelMatrix.getModelMatrix());
-        }
-        md.position(0);
-
-        glBufferData(GL_ARRAY_BUFFER, batch.size() * modelMatNumBytes, md, GL_STATIC_DRAW);
-
-
-
-        int aLoc = shader.instanceMatrixAttributeHandle;
-        glBindVertexArray(renderObject.vao);
-        glEnableVertexAttribArray(aLoc);
-        glVertexAttribPointer(aLoc, 4, GL_FLOAT, false, modelMatNumBytes, 0);
-        glEnableVertexAttribArray(aLoc + 1);
-        glVertexAttribPointer(aLoc + 1, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 1 * 4);
-        glEnableVertexAttribArray(aLoc + 2);
-        glVertexAttribPointer(aLoc + 2, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 2 * 4);
-        glEnableVertexAttribArray(aLoc + 3);
-        glVertexAttribPointer(aLoc + 3, 4, GL_FLOAT, false, modelMatNumBytes, 4 * 3 * 4);
-        glVertexAttribDivisor(aLoc, 1);
-        glVertexAttribDivisor(aLoc + 1, 1);
-        glVertexAttribDivisor(aLoc + 2, 1);
-        glVertexAttribDivisor(aLoc + 3, 1);
-        glBindVertexArray(0);
-    }
-
     public void render() {
-        shader.enableIt();
+        shader.enable();
 
         if (lightGroup != null) {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
@@ -172,13 +128,11 @@ public class RenderBatch {
      //   glDrawArraysInstanced(GL_TRIANGLES, 0, renderObject.vertexCount, batch.size());
 
         for(ModelProperties properties : batch) {
-            properties.updateModelMatrix();
-
             if (shader.validHandle(shader.getModelMatrixUniformHandle())) {
                 glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
                         UNIFORM_UPLOAD_COUNT_SINGLE,
                         false,
-                        properties.modelMatrix.getModelMatrix(),
+                        properties.getModelMatrix().getFloats(),
                         0);
             }
 
@@ -201,6 +155,6 @@ public class RenderBatch {
         glBindVertexArray(0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
-        shader.disableIt();
+        shader.disable();
     }
 }

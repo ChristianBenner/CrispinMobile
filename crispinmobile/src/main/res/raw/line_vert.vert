@@ -1,4 +1,4 @@
-
+#version 300 es
 attribute vec4 vPosition;
 uniform mat4 uMatrix;
 
