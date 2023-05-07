@@ -31,16 +31,16 @@ public class UIHandler {
         }
     }
 
-    // send a touch event to all the UI in the current scene
-    public static void sendTouchEvent(int type, Pointer pointer) {
-        if(type == MotionEvent.ACTION_DOWN) {
-            Vec2 position = pointer.getPosition();
-            for (int i = 0; i < uiObjects.size(); i++) {
-                if (uiObjects.get(i).isEnabled() && InteractiveUIObject.interacts(uiObjects.get(i), position)) {
-                    pointer.setControlOver(uiObjects.get(i));
-                    break;
-                }
+    // true if consumed, else false
+    public static boolean consume(Pointer pointer) {
+        for (int i = 0; i < uiObjects.size(); i++) {
+            InteractiveUIObject uiElement = uiObjects.get(i);
+            if (uiElement.isEnabled() && InteractiveUIObject.interacts(uiElement, pointer.getPosition())) {
+                pointer.click(uiElement);
+                return true;
             }
         }
+
+        return false;
     }
 }

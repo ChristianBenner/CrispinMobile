@@ -3,21 +3,21 @@ package com.crispin.crispinmobile;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ConfigurationInfo;
-import android.content.res.Configuration;
-import android.graphics.Canvas;
-import android.hardware.display.DisplayManager;
-import android.opengl.EGLSurface;
 import android.opengl.GLSurfaceView;
-import android.os.Build;
-import android.view.Surface;
+import android.view.MotionEvent;
 import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.Utilities.Logger;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.SceneManager;
+import com.crispin.crispinmobile.Utilities.UIHandler;
+
+import java.util.HashMap;
 
 /**
  * Crispin class provides core engine functionality. It is crucial in order to position a graphics
@@ -100,12 +100,74 @@ public class Crispin {
 
             locationInWindow = new int[2];
 
+            HashMap<Integer, Pointer> pointers = new HashMap();
             // Add an on touch listener that will feed the scene manager any motion events
             glSurfaceView.setOnTouchListener((v, event) ->
             {
-                glSurfaceView.getLocationInWindow(locationInWindow);
-                event.setLocation(event.getX() - locationInWindow[0], event.getY() - locationInWindow[1]);
-                sceneManager.addTouchEvent(event);
+                int pointerIndex = event.getActionIndex();
+                int pointerId = event.getPointerId(pointerIndex);
+
+                String actionString = "";
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
+                    actionString = MotionEvent.actionToString(event.getActionMasked());
+                } else {
+                    actionString = Integer.toString(event.getActionMasked());
+                }
+
+                switch (event.getActionMasked()) {
+                    case MotionEvent.ACTION_DOWN:
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        Vec2 downPositionCorrected = toSceneCoordinates(event.getX(pointerIndex), event.getY(pointerIndex));
+                        System.out.println(actionString + "[" + pointerId + "]: " + downPositionCorrected);
+
+                        Pointer newPointer = new Pointer(downPositionCorrected);
+                        pointers.put(pointerId, newPointer);
+
+                        // Now we want to check if the pointer should be consumed by any UI components
+                        UIHandler.consume(newPointer);
+                        if(getCurrentScene() != null) {
+                            getCurrentScene().touch(MotionEvent.ACTION_DOWN, newPointer);
+                        }
+                        break;
+                    // ACTION_MOVE is called for any pointer movement, update positions of all pointers
+                    case MotionEvent.ACTION_MOVE:
+                        System.out.print(actionString + ":");
+                        for(int pi = 0; pi < event.getPointerCount(); pi++) {
+                            int movePointerId = event.getPointerId(pi);
+                            Vec2 movePositionCorrected = toSceneCoordinates(event.getX(pi), event.getY(pi));
+                            System.out.print("\t[" + movePointerId + "]: " + movePositionCorrected);
+                            pointers.get(movePointerId).move(movePositionCorrected);
+                            if(getCurrentScene() != null) {
+                                getCurrentScene().touch(MotionEvent.ACTION_MOVE, pointers.get(movePointerId));
+                            }
+                        }
+                        System.out.println();
+                        break;
+                    case MotionEvent.ACTION_UP:
+                    case MotionEvent.ACTION_POINTER_UP:
+                    case MotionEvent.ACTION_CANCEL:
+                        Vec2 upPositionCorrected = toSceneCoordinates(event.getX(pointerIndex), event.getY(pointerIndex));
+
+                        System.out.println(actionString + "[" + pointerId + "]: " + upPositionCorrected);
+                        if(event.getActionMasked() == MotionEvent.ACTION_UP) {
+                            System.out.println("\n");
+                        }
+
+                        pointers.get(pointerId).release(upPositionCorrected);
+                        if(getCurrentScene() != null) {
+                            getCurrentScene().touch(MotionEvent.ACTION_UP, pointers.get(pointerId));
+                        }
+                        pointers.remove(pointerIndex);
+                        break;
+                    default:
+                        System.out.println(actionString + "[" + pointerId + "]: UNHANDLED");
+                        break;
+                }
+               // sceneManager.getCurrentScene()
+//
+//                glSurfaceView.getLocationInWindow(locationInWindow);
+//                event.setLocation(event.getX() - locationInWindow[0], event.getY() - locationInWindow[1]);
+//                sceneManager.addTouchEvent(event);
                 return true;
             });
 
@@ -115,6 +177,10 @@ public class Crispin {
             // Set the application view to the graphics view
             appCompatActivity.setContentView(R.layout.activity_unsupported_device);
         }
+    }
+
+    private Vec2 toSceneCoordinates(float x, float y) {
+        return new Vec2(x, Crispin.getSurfaceHeight() - y);
     }
 
     /**

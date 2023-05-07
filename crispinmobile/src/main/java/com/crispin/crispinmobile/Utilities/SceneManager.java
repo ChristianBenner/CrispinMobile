@@ -22,7 +22,6 @@ import android.view.MotionEvent;
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.UserInterface.Pointer;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -136,9 +135,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
     // Print FPS calculation to info log
     private boolean printFps;
 
-    // Keep track of active pointers touching view
-    private SparseArray<Pointer> activePointers;
-
     /**
      * The constructor for the scene manager sets the member variables for later usage. The
      * application context is first supplied to the scene manager from this position.
@@ -156,7 +152,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
         surfaceHeight = 0;
         startSceneSpecified = false;
         targetRefreshRate = DEFAULT_REFRESH_RATE;
-        activePointers = new SparseArray<>();
         touchEventQueue = new LinkedBlockingQueue<>(TOUCH_EVENT_BLOCKING_QUEUE_SIZE);
         resetTimingValues();
     }
@@ -257,147 +252,7 @@ public class SceneManager implements GLSurfaceView.Renderer {
     public void sendTouchEvents() {
         // Only pass to current scene if the scene is initialised
         if (currentScene != null) {
-            while (!touchEventQueue.isEmpty()) {
-                try {
-                    // Retrieve the event from the queue
-                    MotionEvent event = touchEventQueue.take();
 
-                    // The index of the pointer in the event object
-                    final int POINTER_INDEX = event.getActionIndex();
-
-                    // The identifier of the pointer
-                    final int POINTER_ID = event.getPointerId(POINTER_INDEX);
-
-                    // The action of the motion event (masked means it can pick up pointers)
-                    final int ACTION_MASKED = event.getActionMasked();
-
-                    // See what the action is
-                    switch (ACTION_MASKED) {
-                        // The first finger down is not registered the same as the others, this gets all
-                        case MotionEvent.ACTION_DOWN:
-                        case MotionEvent.ACTION_POINTER_DOWN:
-                            // Create a pointer object that keeps track of what UI is being interacted with
-                            Pointer pointerDown = new Pointer(POINTER_ID,
-                                    new Vec2(event.getX(POINTER_INDEX), Crispin.getSurfaceHeight() - event.getY(POINTER_INDEX)));
-
-                            // Check if the object doesn't exist in the pointer array
-                            if (activePointers.get(POINTER_ID) == null) {
-                                // Add the pointer to the array
-                                activePointers.put(POINTER_ID, pointerDown);
-
-                                // Handle UI touch press
-                                UIHandler.sendTouchEvent(MotionEvent.ACTION_DOWN, pointerDown);
-
-                                if(currentScene != null) {
-                                    currentScene.touch(MotionEvent.ACTION_DOWN, pointerDown);
-                                }
-                            }
-                            break;
-                        case MotionEvent.ACTION_MOVE: {
-                            // Sometimes it seems that additional pointers do not get a release
-                            // event. This will determine if on move any pointers have gone missing
-                            // and remove them as well as releasing whatever interactive element
-                            // they had control over.
-                            if(event.getPointerCount() < activePointers.size()) {
-                                Set<Integer> existingPointers = new HashSet<>();
-                                for (int i = 0; i < event.getPointerCount(); i++) {
-                                    existingPointers.add(event.getPointerId(i));
-                                }
-
-                                for (int i = 0; i < activePointers.size(); i++) {
-                                    Pointer movedPointerNotTracked = activePointers.valueAt(i);
-                                    if(!existingPointers.contains(movedPointerNotTracked.getPointerId())) {
-                                        if(currentScene != null) {
-                                            currentScene.touch(MotionEvent.ACTION_UP, movedPointerNotTracked);
-                                        }
-                                        movedPointerNotTracked.releaseControl();
-                                        activePointers.remove(movedPointerNotTracked.getPointerId());
-                                    }
-                                }
-                            }
-
-                            // A pointer moved, so update all the pointer positions
-                            for (int i = 0; i < event.getPointerCount(); i++) {
-                                if (activePointers.get(event.getPointerId(i)) != null) {
-                                    activePointers.get(event.getPointerId(i)).setPosition(event.getX(i), Crispin.getSurfaceHeight() - event.getY(i));
-                                } else {
-                                    // Not really sure how but sometimes a new pointer seems to be
-                                    // able to spawn without a ACTION_DOWN or ACTION_POINTER_DOWN.
-                                    // This catches that occurrence
-                                    Pointer pointerDiscoveredFromDrag = new Pointer(event.getPointerId(i),
-                                            new Vec2(event.getX(i), Crispin.getSurfaceHeight() - event.getY(i)));
-
-                                    // Check if the object doesn't exist in the pointer array
-                                    if (activePointers.get(event.getPointerId(i)) == null) {
-                                        // Add the pointer to the array
-                                        activePointers.put(event.getPointerId(i), pointerDiscoveredFromDrag);
-
-                                        // Handle UI touch press
-                                        UIHandler.sendTouchEvent(MotionEvent.ACTION_DOWN, pointerDiscoveredFromDrag);
-
-                                        if(currentScene != null) {
-                                            currentScene.touch(MotionEvent.ACTION_DOWN, pointerDiscoveredFromDrag);
-                                        }
-                                    }
-                                }
-                            }
-                            break;
-                        }
-                        case MotionEvent.ACTION_UP:
-                            // No fingers left, release all
-                            for (int i = 0; i < activePointers.size(); i++) {
-                                Pointer pointer = activePointers.valueAt(i);
-
-                                // Tell the pointer to handle drag
-                                if (pointer != null) {
-                                    if(currentScene != null) {
-                                        currentScene.touch(MotionEvent.ACTION_UP, pointer);
-                                    }
-                                    pointer.releaseControl();
-                                }
-                            }
-
-                            activePointers.clear();
-                            break;
-                        case MotionEvent.ACTION_POINTER_UP:
-                        case MotionEvent.ACTION_CANCEL: {
-                            Pointer pointerUp = activePointers.get(POINTER_ID);
-
-                            // Check if the pointer still exists in the array
-                            if (pointerUp != null) {
-                                if(currentScene != null) {
-                                    currentScene.touch(MotionEvent.ACTION_UP, pointerUp);
-                                }
-
-                                pointerUp.releaseControl();
-
-                                // Remove the Pointer from the array as it is no longer in use
-                                activePointers.remove(POINTER_ID);
-                            }
-
-                            break;
-                        }
-                    }
-
-                    // Check if there was drag in this event
-                    if (ACTION_MASKED == MotionEvent.ACTION_MOVE) {
-                        // Iterate through the pointers
-                        for (int i = 0; i < activePointers.size(); i++) {
-                            Pointer pointer = activePointers.valueAt(i);
-
-                            // Tell the pointer to handle drag
-                            if (pointer != null) {
-                                if(currentScene != null) {
-                                    currentScene.touch(MotionEvent.ACTION_MOVE, pointer);
-                                }
-                                pointer.handleDrag();
-                            }
-                        }
-                    }
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
         }
     }
 
