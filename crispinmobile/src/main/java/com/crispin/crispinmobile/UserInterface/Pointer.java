@@ -16,7 +16,6 @@ public class Pointer {
     public void click(InteractiveElement element) {
         this.element = element;
         this.element.sendClickEvent(position);
-        System.out.println("ELEMENT CLICKED");
     }
 
     public void release(Vec2 position) {
@@ -24,7 +23,6 @@ public class Pointer {
         this.position.y = position.y;
         if(element != null) {
             element.sendReleaseEvent(position);
-            System.out.println("ELEMENT RELEASED");
         }
     }
 
@@ -33,7 +31,6 @@ public class Pointer {
         this.position.y = position.y;
         if(element != null) {
             element.sendDownEvent(position);
-            System.out.println("ELEMENT MOVE");
         }
     }
 

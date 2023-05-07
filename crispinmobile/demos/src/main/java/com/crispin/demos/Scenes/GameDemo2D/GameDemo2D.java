@@ -34,10 +34,6 @@ public class GameDemo2D extends Scene {
     private InstanceRenderer rock;
 
     public GameDemo2D() {
-//        GLES30.glDisable(GLES30.GL_DEPTH_TEST);
-//        GLES30.glDisable(GLES30.GL_DEPTH);
-////        GLES30.glDepthMask(false);
-
         cactus = new InstanceRenderer(new SquareMesh(true), false, generateRandomModelTransformations(100, 100f, 200f));
         cactus.setTexture(TextureCache.loadTexture(R.drawable.cactus));
 

@@ -120,9 +120,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
     // Time paused in nanoseconds during the timing calculations
     private long timePausedInNanos;
 
-    // Touch event thread sync queue
-    private final BlockingQueue<MotionEvent> touchEventQueue;
-
     // Previous seconds frame count
     private int fps;
 
@@ -152,7 +149,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
         surfaceHeight = 0;
         startSceneSpecified = false;
         targetRefreshRate = DEFAULT_REFRESH_RATE;
-        touchEventQueue = new LinkedBlockingQueue<>(TOUCH_EVENT_BLOCKING_QUEUE_SIZE);
         resetTimingValues();
     }
 
@@ -242,40 +238,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
      */
     public Scene getCurrentScene() {
         return currentScene;
-    }
-
-    /**
-     * Feed the touch events to the current scene and the user interface handler
-     *
-     * @since 1.0
-     */
-    public void sendTouchEvents() {
-        // Only pass to current scene if the scene is initialised
-        if (currentScene != null) {
-
-        }
-    }
-
-    /**
-     * Add a touch event to the touch event blocking queue. This is so that the touch event can run
-     * on the correct thread (the OpenGL thread used elsewhere in scenes) and so that it can be
-     * accomplished in a thread safe manner.
-     *
-     * @param event The motion event
-     * @since 1.0
-     */
-    public void addTouchEvent(MotionEvent event) {
-        // Adds a touch event to the blocking queue so that it can be processed on the OpenGL thread
-        // in a safe way
-        try {
-            if (touchEventQueue.add(event) == false) {
-                Logger.error(TAG, "Error, touch event queue is full. It has exceeded that size of " +
-                        "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-            }
-        } catch (Exception e) {
-            Logger.error(TAG, "Error, touch event queue is full. It has exceeded that size of " +
-                    "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-        }
     }
 
     /**
@@ -528,9 +490,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
 
         // Run the current scenes update function
         currentScene.update(deltaTime);
-
-        // Send the touch events to the current scene
-        sendTouchEvents();
 
         // Always clear the buffer bit
         glClear(GL_COLOR_BUFFER_BIT);
