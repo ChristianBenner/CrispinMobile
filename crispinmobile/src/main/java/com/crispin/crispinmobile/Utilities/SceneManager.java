@@ -1,27 +1,5 @@
 package com.crispin.crispinmobile.Utilities;
 
-import android.content.Context;
-import android.graphics.Point;
-import android.opengl.GLSurfaceView;
-import android.os.Looper;
-import android.util.Pair;
-import android.view.MotionEvent;
-import android.view.View;
-
-import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.UserInterface.Button;
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
 import static android.opengl.GLES30.GL_BLEND;
 import static android.opengl.GLES30.GL_COLOR_BUFFER_BIT;
 import static android.opengl.GLES30.GL_CULL_FACE;
@@ -36,6 +14,23 @@ import static android.opengl.GLES30.glDisable;
 import static android.opengl.GLES30.glEnable;
 import static android.opengl.GLES30.glViewport;
 
+import android.content.Context;
+import android.opengl.GLSurfaceView;
+import android.util.SparseArray;
+import android.view.MotionEvent;
+
+import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Rendering.Data.Colour;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
+
 /**
  * SceneManager class handles scene rendering and updates. The scene manager is the initial place
  * where rendering begins. It calculates the timing for updates so that logic can be updated the
@@ -45,19 +40,15 @@ import static android.opengl.GLES30.glViewport;
  * ES memory. The SceneManager inherits from the <code>GLSurfaceView.Renderer</code> in order to
  * implement and handle Android Activity lifecycle methods.
  *
- * @author      Christian Benner
- * @see         Scene
- * @see         GLSurfaceView.Renderer
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Scene
+ * @see GLSurfaceView.Renderer
+ * @since 1.0
  */
-public class SceneManager implements GLSurfaceView.Renderer
-{
+public class SceneManager implements GLSurfaceView.Renderer {
     // Tag used in logging debug and error messages
     private static final String TAG = "SceneManager";
-
-    // Singleton instance of scene manager
-    private static SceneManager sceneManagerInstance;
 
     // The default background colour of the graphics surface
     private static final Colour DEFAULT_BACKGROUND_COLOUR =
@@ -83,6 +74,9 @@ public class SceneManager implements GLSurfaceView.Renderer
 
     // Max size of the touch event blocking queue
     private static final int TOUCH_EVENT_BLOCKING_QUEUE_SIZE = 10;
+
+    // Singleton instance of scene manager
+    private static SceneManager sceneManagerInstance;
 
     // The current scene
     private Scene currentScene;
@@ -126,8 +120,37 @@ public class SceneManager implements GLSurfaceView.Renderer
     // Time paused in nanoseconds during the timing calculations
     private long timePausedInNanos;
 
-    // Touch event thread sync queue
-    private BlockingQueue<MotionEvent> touchEventQueue;
+    // Previous seconds frame count
+    private int fps;
+
+    // Number of frames counted in the current second
+    private int frames = 0;
+
+    // Start of the frame measuring time
+    private long frameCalcStartMs = 0;
+
+    // Print FPS calculation to info log
+    private boolean printFps;
+
+    /**
+     * The constructor for the scene manager sets the member variables for later usage. The
+     * application context is first supplied to the scene manager from this position.
+     *
+     * @since 1.0
+     */
+    private SceneManager() {
+        currentScene = null;
+        currentSceneConstructor = null;
+        setBackgroundColour(DEFAULT_BACKGROUND_COLOUR);
+        setDepthState(DEFAULT_DEPTH_ENABLED_STATE);
+        setAlphaState(DEFAULT_ALPHA_ENABLED_STATE);
+        setCullFaceState(DEFAULT_CULL_FACE_ENABLED_STATE);
+        surfaceWidth = 0;
+        surfaceHeight = 0;
+        startSceneSpecified = false;
+        targetRefreshRate = DEFAULT_REFRESH_RATE;
+        resetTimingValues();
+    }
 
     /**
      * Retrieve the singleton instance of the scene manager. The scene manager can only be
@@ -135,15 +158,13 @@ public class SceneManager implements GLSurfaceView.Renderer
      * pattern which limits only one to be constructed in the application context. If the object
      * has not been constructed yet, it will first be constructed before it is returned
      *
-     * @see             Context
-     * @see             Scene.Constructor
-     * @since           1.0
+     * @see Context
+     * @see Scene.Constructor
+     * @since 1.0
      */
-    public static SceneManager getInstance()
-    {
+    public static SceneManager getInstance() {
         // Check if a scene manager exists before creating one
-        if(sceneManagerInstance == null)
-        {
+        if (sceneManagerInstance == null) {
             // If scene manager hasn't been constructed yet, create one
             sceneManagerInstance = new SceneManager();
         }
@@ -162,20 +183,16 @@ public class SceneManager implements GLSurfaceView.Renderer
      * @param startSceneConstructor Start scene constructor lambda. Should contain function that
      *                              constructs a new <code>Scene</code> so that the Scene
      *                              Manager can decide how and when to construct the Scene.
-     * @see                         Scene.Constructor
-     * @see                         #setScene(Scene.Constructor)
-     * @since                       1.0
+     * @see Scene.Constructor
+     * @see #setScene(Scene.Constructor)
+     * @since 1.0
      */
-    public void setStartScene(Scene.Constructor startSceneConstructor)
-    {
+    public void setStartScene(Scene.Constructor startSceneConstructor) {
         // Check if there is already a position scene
-        if(currentScene == null)
-        {
+        if (currentScene == null) {
             startSceneSpecified = true;
             setScene(startSceneConstructor);
-        }
-        else
-        {
+        } else {
             Logger.error(TAG,
                     "Failed to set position scene as one has already been specified");
         }
@@ -187,23 +204,19 @@ public class SceneManager implements GLSurfaceView.Renderer
      * associated scene will be constructed and then set. Note that the method can only be used once
      * a position scene has been set using the <code>setStartScene</code> method.
      *
-     * @param sceneConstructor  Scene constructor lambda. Should contain function that
-     *                          constructs a new <code>Scene</code> so that the Scene Manager
-     *                          can decide how and when to construct the Scene.
-     * @see                     Scene.Constructor
-     * @see                     #setStartScene(Scene.Constructor)
-     * @since                   1.0
+     * @param sceneConstructor Scene constructor lambda. Should contain function that
+     *                         constructs a new <code>Scene</code> so that the Scene Manager
+     *                         can decide how and when to construct the Scene.
+     * @see Scene.Constructor
+     * @see #setStartScene(Scene.Constructor)
+     * @since 1.0
      */
-    public void setScene(Scene.Constructor sceneConstructor)
-    {
+    public void setScene(Scene.Constructor sceneConstructor) {
         // Check if the a position scene has been selected first
-        if(!startSceneSpecified)
-        {
+        if (!startSceneSpecified) {
             Logger.error(TAG, "Failed to set scene because no position scene has been " +
                     "specified. Use method 'setStartScene' before set 'setScene'");
-        }
-        else
-        {
+        } else {
             currentSceneConstructor = sceneConstructor;
             currentScene = null;
 
@@ -219,162 +232,82 @@ public class SceneManager implements GLSurfaceView.Renderer
     /**
      * Get the currently active scene
      *
-     * @see     SceneManager
-     * @see     Scene
-     * @since   1.0
+     * @see SceneManager
+     * @see Scene
+     * @since 1.0
      */
-    public Scene getCurrentScene()
-    {
+    public Scene getCurrentScene() {
         return currentScene;
     }
 
     /**
-     * Feed the touch events to the current scene and the user interface handler
+     * Get the current background colour of the graphics surface
      *
+     * @retrun The current background colour
+     * @see Colour
      * @since 1.0
      */
-    public void sendTouchEvents()
-    {
-        // Only pass to current scene if the scene is initialised
-        if(currentScene != null)
-        {
-            while (!touchEventQueue.isEmpty())
-            {
-                try
-                {
-                    // Retrieve the event from the queue
-                    MotionEvent event = touchEventQueue.take();
-
-                    // Retrieve the action of the event
-                    int action = event.getAction();
-
-                    // Retrieve the position of the event
-                    Point2D position = new Point2D(event.getX(), Crispin.getSurfaceHeight() -
-                            event.getY());
-
-                    if(event.getAction() == MotionEvent.ACTION_DOWN)
-                    {
-                        System.out.println("Event Y: " + event.getY());
-                        System.out.println("ACTION DOWN (x: " + position.x + ", y: " +
-                                position.y + ")");
-                    }
-
-                    // Provide the current scene with the motion event information
-                    currentScene.touch(action, position);
-
-                    // Send the touch event to the UI handler to activate touch on the ui elements on the
-                    // current scene
-                    UIHandler.sendTouchEvent(action, position);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    /**
-     * Add a touch event to the touch event blocking queue. This is so that the touch event can run
-     * on the correct thread (the OpenGL thread used elsewhere in scenes) and so that it can be
-     * accomplished in a thread safe manner.
-     *
-     * @param event  The motion event
-     * @since 1.0
-     */
-    public void addTouchEvent(MotionEvent event)
-    {
-        // Adds a touch event to the blocking queue so that it can be processed on the OpenGL thread
-        // in a safe way
-        try
-        {
-            if(touchEventQueue.add(event) == false)
-            {
-                System.err.println("Error, touch event queue is full. It has exceeded that size of " +
-                        "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-            }
-        }
-        catch (Exception e)
-        {
-            System.err.println("Error, touch event queue is full. It has exceeded that size of " +
-                    "the queue (" + TOUCH_EVENT_BLOCKING_QUEUE_SIZE + ")");
-        }
+    public Colour getBackgroundColour() {
+        return this.backgroundColour;
     }
 
     /**
      * Set the background colour of the graphics surface. This will only take effect at the
      * beginning of the render cycle.
      *
-     * @param backgroundColour  The new background colour for the graphics surface
-     * @see                     Colour
-     * @since                   1.0
+     * @param backgroundColour The new background colour for the graphics surface
+     * @see Colour
+     * @since 1.0
      */
-    public void setBackgroundColour(Colour backgroundColour)
-    {
+    public void setBackgroundColour(Colour backgroundColour) {
         this.backgroundColour = backgroundColour;
-    }
-
-    /**
-     * Get the current background colour of the graphics surface
-     *
-     * @retrun  The current background colour
-     * @see     Colour
-     * @since   1.0
-     */
-    public Colour getBackgroundColour()
-    {
-        return this.backgroundColour;
     }
 
     /**
      * Set the depth state boolean.
      *
-     * @param depthState    The new depth state. Setting to <code>true</code> allows depth
-     *                      processing - a feature essential to 3D application that means that the Z
-     *                      buffer will be taken into consideration when drawing objects in-front or
-     *                      behind each other. If <code>false</code>, the objects would be rendered
-     *                      on-top of each-other in the order of their render calls (suitable for 2D
-     *                      graphical applications).
-     * @since               1.0
+     * @param depthState The new depth state. Setting to <code>true</code> allows depth
+     *                   processing - a feature essential to 3D application that means that the Z
+     *                   buffer will be taken into consideration when drawing objects in-front or
+     *                   behind each other. If <code>false</code>, the objects would be rendered
+     *                   on-top of each-other in the order of their render calls (suitable for 2D
+     *                   graphical applications).
+     * @since 1.0
      */
-    public void setDepthState(boolean depthState)
-    {
+    public void setDepthState(boolean depthState) {
         this.depthEnabled = depthState;
     }
 
     /**
      * Get the depth state
      *
-     * @return  <code>true</code> if depth is enabled, otherwise <code>false</code>
-     * @since   1.0
+     * @return <code>true</code> if depth is enabled, otherwise <code>false</code>
+     * @since 1.0
      */
-    public boolean isDepthEnabled()
-    {
+    public boolean isDepthEnabled() {
         return this.depthEnabled;
     }
 
     /**
      * Set the alpha state boolean.
      *
-     * @param alphaState    The new alpha state. Setting to <code>true</code> allows alpha blending.
-     *                      Alpha blending is essential when creating graphics with transparent
-     *                      effects. If set to <code>false</code>, objects will have no
-     *                      transparency.
-     * @since               1.0
+     * @param alphaState The new alpha state. Setting to <code>true</code> allows alpha blending.
+     *                   Alpha blending is essential when creating graphics with transparent
+     *                   effects. If set to <code>false</code>, objects will have no
+     *                   transparency.
+     * @since 1.0
      */
-    public void setAlphaState(boolean alphaState)
-    {
+    public void setAlphaState(boolean alphaState) {
         this.alphaEnabled = alphaState;
     }
 
     /**
      * Get the alpha state
      *
-     * @return  <code>true</code> if alpha is enabled, otherwise <code>false</code>
-     * @since   1.0
+     * @return <code>true</code> if alpha is enabled, otherwise <code>false</code>
+     * @since 1.0
      */
-    public boolean isAlphaEnabled()
-    {
+    public boolean isAlphaEnabled() {
         return this.alphaEnabled;
     }
 
@@ -387,44 +320,51 @@ public class SceneManager implements GLSurfaceView.Renderer
      *                      it cuts out the need to render any faces that wouldn't be visible. If
      *                      set to <code>false</code>, faces won't be culled.
      *                      transparency.
-     * @since               1.0
+     * @since 1.0
      */
-    public void setCullFaceState(boolean cullFaceState)
-    {
+    public void setCullFaceState(boolean cullFaceState) {
         this.cullFaceEnabled = cullFaceState;
     }
 
     /**
      * Get the cull face state
      *
-     * @return  <code>true</code> if face culling is enabled, otherwise <code>false</code>
-     * @since   1.0
+     * @return <code>true</code> if face culling is enabled, otherwise <code>false</code>
+     * @since 1.0
      */
-    public boolean isCullFaceEnabled()
-    {
+    public boolean isCullFaceEnabled() {
         return cullFaceEnabled;
     }
 
     /**
      * Get the graphics surface width
      *
-     * @return  An integer of the graphics surface width in pixels
-     * @since   1.0
+     * @return An integer of the graphics surface width in pixels
+     * @since 1.0
      */
-    public int getSurfaceWidth()
-    {
+    public int getSurfaceWidth() {
         return this.surfaceWidth;
     }
 
     /**
      * Get the graphics surface height
      *
-     * @return  An integer of the graphics surface height in pixels
-     * @since   1.0
+     * @return An integer of the graphics surface height in pixels
+     * @since 1.0
      */
-    public int getSurfaceHeight()
-    {
+    public int getSurfaceHeight() {
         return this.surfaceHeight;
+    }
+
+    /**
+     * Get the target refresh rate. This is the target refresh rate for both the logic and draw
+     * calls.
+     *
+     * @return A float of the target refresh rate
+     * @since 1.0
+     */
+    public float getTargetRefreshRate() {
+        return targetRefreshRate;
     }
 
     /**
@@ -432,21 +372,8 @@ public class SceneManager implements GLSurfaceView.Renderer
      *
      * @since 1.0
      */
-    public void setTargetRefreshRate(float targetRefreshRate)
-    {
+    public void setTargetRefreshRate(float targetRefreshRate) {
         this.targetRefreshRate = targetRefreshRate;
-    }
-
-    /**
-     * Get the target refresh rate. This is the target refresh rate for both the logic and draw
-     * calls.
-     *
-     * @return  A float of the target refresh rate
-     * @since   1.0
-     */
-    public float getTargetRefreshRate()
-    {
-        return targetRefreshRate;
     }
 
     /**
@@ -454,20 +381,18 @@ public class SceneManager implements GLSurfaceView.Renderer
      * surface gets created. At this position OpenGL ES memory has been destroyed so its a good time
      * to re-initialise components that depend on this memory.
      *
-     * @param gl        A reference to the GL10 library. This is a legacy parameter that no longer
-     *                  has a use (due to the usage of a newer OpenGL version).
-     * @param config    Configuration of OpenGL ES
-     * @see             EGLConfig
-     * @see             GLSurfaceView.Renderer
-     * @since           1.0
+     * @param gl     A reference to the GL10 library. This is a legacy parameter that no longer
+     *               has a use (due to the usage of a newer OpenGL version).
+     * @param config Configuration of OpenGL ES
+     * @see EGLConfig
+     * @see GLSurfaceView.Renderer
+     * @since 1.0
      */
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config)
-    {
+    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         // Check if there is currently a scene bound (before attempting to re-initialise its
         // OpenGL ES memory components)
-        if(currentScene != null)
-        {
+        if (currentScene != null) {
             // Re-initialise the shaders and textures because there memory no longer exists
             ShaderCache.reinitialiseAll();
             TextureCache.reinitialiseAll();
@@ -481,28 +406,44 @@ public class SceneManager implements GLSurfaceView.Renderer
      * surface changes. From this position, changes in surface width and height can be detected and
      * the graphics surface can be resized so that it fits the new dimensions.
      *
-     * @param gl        A reference to the GL10 library. This is a legacy parameter that no longer
-     *                  has a use (due to the usage of a newer OpenGL version).
-     * @param width     The new width of the surface
-     * @param height    The new height of the surface
-     * @see             GLSurfaceView.Renderer
-     * @since           1.0
+     * @param gl     A reference to the GL10 library. This is a legacy parameter that no longer
+     *               has a use (due to the usage of a newer OpenGL version).
+     * @param width  The new width of the surface
+     * @param height The new height of the surface
+     * @see GLSurfaceView.Renderer
+     * @since 1.0
      */
     @Override
     public void onSurfaceChanged(GL10 gl,
                                  int width,
-                                 int height)
-    {
+                                 int height) {
         this.surfaceWidth = width;
         this.surfaceHeight = height;
 
         resetTimingValues();
 
         // Set the OpenGL viewport to fill the entire surface
-        glViewport(0,
-                0,
-                width,
-                height);
+        glViewport(0, 0, width, height);
+    }
+
+    /**
+     * Get the most recent fps calculation
+     *
+     * @return Number of frames rendered in the most recent second time window
+     * @since 1.0
+     */
+    public int getFps() {
+        return fps;
+    }
+
+    /**
+     * Tell the engine to print FPS info
+     *
+     * @param state True to start printing the number of frames per second, else false
+     * @since 1.0
+     */
+    public void setPrintFps(boolean state) {
+        printFps = state;
     }
 
     /**
@@ -511,27 +452,34 @@ public class SceneManager implements GLSurfaceView.Renderer
      * rendering and logic update mechanics have be implemented so that graphical output can be
      * processed.
      *
-     * @param gl    A reference to the GL10 library. This is a legacy parameter that no longer has a
-     *              use (due to the usage of a newer OpenGL version).
-     * @see         GLSurfaceView.Renderer
-     * @since       1.0
+     * @param gl A reference to the GL10 library. This is a legacy parameter that no longer has a
+     *           use (due to the usage of a newer OpenGL version).
+     * @see GLSurfaceView.Renderer
+     * @since 1.0
      */
     @Override
-    public void onDrawFrame(GL10 gl)
-    {
+    public void onDrawFrame(GL10 gl) {
+        if (frameCalcStartMs == 0 || frameCalcStartMs <= System.currentTimeMillis() - 1000) {
+            frameCalcStartMs = System.currentTimeMillis();
+            fps = frames;
+            if (printFps) {
+                Logger.info("FPS: " + fps);
+            }
+            frames = 0;
+        }
+        frames++;
+
         // Construct the current scene if it hasn't been already
-        if(currentScene == null)
-        {
+        if (currentScene == null) {
             constructCurrentScene();
         }
 
         // This method calls the update functionality with a delta time value so that all things
         // updated move at the same speed independent on the rate the update function is called.
-        if(updateCount == FRAMES_TO_CALCULATE)
-        {
+        if (updateCount == FRAMES_TO_CALCULATE) {
             deltaTime = targetRefreshRate / (1000 /
                     (((System.nanoTime() - startNanoTime - timePausedInNanos) / 1000000) /
-                            (float)FRAMES_TO_CALCULATE));
+                            (float) FRAMES_TO_CALCULATE));
             startNanoTime = System.nanoTime();
 
             //  System.out.println("Debug : DeltaTime (" + deltaTime + ")");
@@ -543,79 +491,42 @@ public class SceneManager implements GLSurfaceView.Renderer
         // Run the current scenes update function
         currentScene.update(deltaTime);
 
-        // Send the touch events to the current scene
-        sendTouchEvents();
-
         // Always clear the buffer bit
         glClear(GL_COLOR_BUFFER_BIT);
 
-        // Clear the graphics surface to the background colour
-        glClearColor(backgroundColour.getRed(),
-                backgroundColour.getGreen(),
-                backgroundColour.getBlue(),
-                backgroundColour.getAlpha());
-
         // If depth is enabled, clear the depth buffer bit and enable it in OpenGL ES. Otherwise
         // disable in OpenGL ES
-        if(isDepthEnabled())
-        {
+        if (isDepthEnabled()) {
             glClear(GL_DEPTH_BUFFER_BIT);
             glEnable(GL_DEPTH_TEST);
-        }
-        else
-        {
+        } else {
             glDisable(GL_DEPTH_TEST);
         }
 
+        // Clear the graphics surface to the background colour
+        glClearColor(backgroundColour.red, backgroundColour.green, backgroundColour.blue,
+                backgroundColour.alpha);
+
         // If alpha is enabled, enable blend functionality in OpenGL ES and supply a blend function.
         // Otherwise disable in OpenGL ES
-        if(isAlphaEnabled())
-        {
+        if (isAlphaEnabled()) {
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        }
-        else
-        {
+        } else {
             glDisable(GL_BLEND);
         }
 
         // If cull face is enabled, enable cull face in OpenGL ES, otherwise disable in OpenGL ES.
-        if(isCullFaceEnabled())
-        {
+        if (isCullFaceEnabled()) {
             glEnable(GL_CULL_FACE);
-        }
-        else
-        {
+        } else {
             glDisable(GL_CULL_FACE);
         }
 
         // If the current scene exists, render it
-        if (currentScene != null)
-        {
+        if (currentScene != null) {
             currentScene.render();
         }
-    }
-
-    /**
-     * The constructor for the scene manager sets the member variables for later usage. The
-     * application context is first supplied to the scene manager from this position.
-     *
-     * @since 1.0
-     */
-    private SceneManager()
-    {
-        currentScene = null;
-        currentSceneConstructor = null;
-        setBackgroundColour(DEFAULT_BACKGROUND_COLOUR);
-        setDepthState(DEFAULT_DEPTH_ENABLED_STATE);
-        setAlphaState(DEFAULT_ALPHA_ENABLED_STATE);
-        setCullFaceState(DEFAULT_CULL_FACE_ENABLED_STATE);
-        surfaceWidth = 0;
-        surfaceHeight = 0;
-        startSceneSpecified = false;
-        targetRefreshRate = DEFAULT_REFRESH_RATE;
-        touchEventQueue = new LinkedBlockingQueue<>(TOUCH_EVENT_BLOCKING_QUEUE_SIZE);
-        resetTimingValues();
     }
 
     /**
@@ -626,20 +537,14 @@ public class SceneManager implements GLSurfaceView.Renderer
      *
      * @since 1.0
      */
-    private void constructCurrentScene()
-    {
+    private void constructCurrentScene() {
         // Check if the current scene has a constructor
-        if(currentSceneConstructor != null)
-        {
-            Logger.info("Constructing current scene");
-
+        if (currentSceneConstructor != null) {
             // Create the scene via its constructor lambda and then set it as the current scene
             currentScene = currentSceneConstructor.init();
-        }
-        else
-        {
+        } else {
             Logger.error(TAG, "Cannot construct the current scene because no scene " +
-                            "constructor has been provided");
+                    "constructor has been provided");
         }
     }
 
@@ -649,8 +554,7 @@ public class SceneManager implements GLSurfaceView.Renderer
      *
      * @since 1.0
      */
-    private void resetTimingValues()
-    {
+    private void resetTimingValues() {
         updateCount = 0;
         deltaTime = DEFAULT_DELTA_TIME;
         startNanoTime = System.nanoTime();

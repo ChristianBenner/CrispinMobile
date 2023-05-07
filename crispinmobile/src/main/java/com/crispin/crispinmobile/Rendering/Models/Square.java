@@ -1,22 +1,21 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.Model;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * Square class is a default render object model that allows you to render a 2-dimensional square.
  * It contains position and texture data.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         RenderObject
- * @see         Square
- * @see         com.crispin.crispinmobile.UserInterface.Text
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Mesh
+ * @see Square
+ * @see com.crispin.crispinmobile.UserInterface.Text
+ * @since 1.0
  */
-public class Square extends Model
-{
+public class Square extends Model {
     // The number of position components in the position data (2 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 2;
 
@@ -58,24 +57,15 @@ public class Square extends Model
      * square. This can prove efficient when making high performance software such as particle
      * engines as it allows you to prevent the handling of un-required data.
      *
-     * @param material      A material to apply to the rendered object
-     * @param renderTexels  True if the model is allowed to use texel data, else false
-     * @since   1.0
+     * @param material     A material to apply to the rendered object
+     * @param renderTexels True if the model is allowed to use texel data, else false
+     * @since 1.0
      */
-    public Square(Material material,
-                  boolean renderTexels)
-    {
-        super(POSITION_DATA,
-                renderTexels ? TEXEL_DATA : null,
-                null,
-                null,
-                RenderMethod.TRIANGLES,
-                POSITION_DATA.length / NUMBER_POSITION_COMPONENTS,
-                NUMBER_POSITION_COMPONENTS,
-                NUMBER_TEXEL_COMPONENTS,
-                (byte)0,
-                (byte)0,
-                material);
+    public Square(Material material, boolean renderTexels) {
+        super(POSITION_DATA, renderTexels ? TEXEL_DATA : null, null,
+                Mesh.RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
+                renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
+                (byte)0, material);
     }
 
     /**
@@ -85,11 +75,10 @@ public class Square extends Model
      * square. This can prove efficient when making high performance software such as particle
      * engines as it allows you to prevent the handling of un-required data.
      *
-     * @param renderTexels  True if the model is allowed to use texel data, else false
-     * @since   1.0
+     * @param renderTexels True if the model is allowed to use texel data, else false
+     * @since 1.0
      */
-    public Square(boolean renderTexels)
-    {
+    public Square(boolean renderTexels) {
         this(new Material(), renderTexels);
     }
 
@@ -99,12 +88,31 @@ public class Square extends Model
      * may be more efficient to construct an object without texel data using a different square
      * constructor.
      *
-     * @param material      A material to apply to the rendered object
-     * @since   1.0
+     * @param material A material to apply to the rendered object
+     * @since 1.0
      */
-    public Square(Material material)
-    {
-        this(material, true);
+    public Square(Material material) {
+        this(material, material.hasTexture());
+    }
+
+    /**
+     * Create a square render object with a texture
+     *
+     * @param texture Texture
+     * @since 1.0
+     */
+    public Square(Texture texture) {
+        this(new Material(texture), true);
+    }
+
+    /**
+     * Create a square render object with a texture resource
+     *
+     * @param textureResource Texture resource handle
+     * @since 1.0
+     */
+    public Square(int textureResource) {
+        this(new Material(textureResource), true);
     }
 
     /**
@@ -113,10 +121,9 @@ public class Square extends Model
      * may be more efficient to construct an object without texel data using a different square
      * constructor.
      *
-     * @since   1.0
+     * @since 1.0
      */
-    public Square()
-    {
+    public Square() {
         this(new Material(), true);
     }
 }

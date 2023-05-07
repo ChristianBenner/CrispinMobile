@@ -135,7 +135,7 @@ Java_com_crispin_crispinmobile_Native_CrispinNativeInterface_loadCharacter(JNIEn
                                         sizeof(unsigned char),
                                         reinterpret_cast<jbyte*>(face->glyph->bitmap.buffer));
                 //  FT_Done_Face(face);
-                log(ANDROID_LOG_DEBUG, "Loaded Glyph");
+                //log(ANDROID_LOG_DEBUG, "Loaded Glyph");
                 return array;
             }
             else

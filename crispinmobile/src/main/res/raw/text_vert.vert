@@ -1,13 +1,14 @@
+#version 300 es
 
-attribute vec4 vPosition;
-attribute vec2 vTextureCoordinates;
+layout (location = 0) in vec4 aPosition;
+layout (location = 2) in vec2 aTextureCoordinates;
 
 uniform mat4 uMatrix;
 
-varying vec2 aTextureCoordinates;
+out vec2 vTextureCoordinates;
 
 void main()
 {
-    aTextureCoordinates = vTextureCoordinates;
-    gl_Position = uMatrix * vPosition;
+    vTextureCoordinates = aTextureCoordinates;
+    gl_Position = uMatrix * aPosition;
 }

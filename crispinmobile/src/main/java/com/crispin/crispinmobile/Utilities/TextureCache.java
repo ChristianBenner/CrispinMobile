@@ -1,8 +1,7 @@
 package com.crispin.crispinmobile.Utilities;
 
-import com.crispin.crispinmobile.Rendering.Utilities.Texture;
+import com.crispin.crispinmobile.Rendering.Data.Texture;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,22 +10,19 @@ import java.util.Map;
  * resource is referenced. This is used to significantly reduce loading times of scenes, reduce
  * memory and reduce video memory. The class consists of static only functions.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @since 1.0
  */
-public class TextureCache
-{
+public class TextureCache {
     // Tag used for logging
     private static final String TAG = "TextureCache";
 
     // Array of textures
-    private static Map<Integer, Texture> textures = new HashMap<>();
+    private static final Map<Integer, Texture> textures = new HashMap<>();
 
-    public static Texture loadTexture(int resourceId)
-    {
-        if(containsTexture(resourceId))
-        {
+    public static Texture loadTexture(int resourceId) {
+        if (containsTexture(resourceId)) {
             return getTexture(resourceId);
         }
 
@@ -34,13 +30,11 @@ public class TextureCache
         return newTexture;
     }
 
-    public static boolean containsTexture(int resourceId)
-    {
+    public static boolean containsTexture(int resourceId) {
         return textures.containsKey(resourceId);
     }
 
-    public static Texture getTexture(int resourceId)
-    {
+    public static Texture getTexture(int resourceId) {
         return textures.get(resourceId);
     }
 
@@ -49,8 +43,7 @@ public class TextureCache
      *
      * @since 1.0
      */
-    public static void registerTexture(int resourceId, Texture texture)
-    {
+    public static void registerTexture(int resourceId, Texture texture) {
         textures.put(resourceId, texture);
     }
 
@@ -59,11 +52,9 @@ public class TextureCache
      *
      * @since 1.0
      */
-    public static void removeAll()
-    {
+    public static void removeAll() {
         // Remove the texture from graphics memory
-        for (Map.Entry<Integer,Texture> texture : textures.entrySet())
-        {
+        for (Map.Entry<Integer, Texture> texture : textures.entrySet()) {
             texture.getValue().destroy();
         }
 
@@ -78,18 +69,13 @@ public class TextureCache
      *
      * @since 1.0
      */
-    public static void reinitialiseAll()
-    {
+    public static void reinitialiseAll() {
         // Iterate through the textures array, re-initialising all of them
-        for (Map.Entry<Integer,Texture> texture : textures.entrySet())
-        {
+        for (Map.Entry<Integer, Texture> texture : textures.entrySet()) {
             // Attempt to reload the texture
-            try
-            {
+            try {
                 texture.getValue().reload();
-            }
-            catch(Exception e)
-            {
+            } catch (Exception e) {
                 Logger.error(TAG, "Failed to re-initialise texture");
                 e.printStackTrace();
             }

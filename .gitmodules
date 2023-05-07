@@ -5,4 +5,3 @@
 [submodule "crispinmobile/src/main/cpp/oboe"]
 	path = crispinmobile/src/main/cpp/oboe
 	url = https://github.com/google/oboe.git
-	branch = 1.6.1

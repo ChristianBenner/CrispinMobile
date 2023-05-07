@@ -10,34 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CrispinMobile">
         <activity
-            android:name="com.crispin.demos.TextDemo"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.crispin.demos.LinearLayoutDemo"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.crispin.demos.AbsoluteLayoutDemo"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.crispin.demos.ObjLoadDemo"
+            android:name="com.crispin.demos.DemoMaster"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

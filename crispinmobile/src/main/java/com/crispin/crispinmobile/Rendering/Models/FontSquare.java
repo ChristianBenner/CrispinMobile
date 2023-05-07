@@ -1,52 +1,43 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Geometry.Point2D;
-import com.crispin.crispinmobile.Geometry.Point3D;
-import com.crispin.crispinmobile.Rendering.Utilities.Material;
-import com.crispin.crispinmobile.Rendering.Utilities.RenderObject;
+import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Geometry.Vec3;
+import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 
 /**
  * FontSquare class derived from the Square class. It is a square render object with some extra
  * functionality to make it more usable in rendering a text UI object.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         RenderObject
- * @see         Square
- * @see         com.crispin.crispinmobile.UserInterface.Text
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Mesh
+ * @see Square
+ * @see com.crispin.crispinmobile.UserInterface.Text
+ * @since 1.0
  */
-public class FontSquare extends Square
-{
+public class FontSquare extends Square {
     // The position of the text UI object associated to the character
-    private Point3D textPosition;
+    private final Vec3 textPosition;
 
     // The offset of the character from the text position
-    private Point2D characterOffset;
+    private final Vec2 characterOffset;
 
     /**
      * Construct a FontSquare object with a material and position
      *
-     * @param material          The material to apply to the object
-     * @param textPosition      The position of the text object. This is not the position of the
-     *                          character itself, rather the position of the text UI object it is a
-     *                          part of
-     * @param characterOffset   The position offset of the character from the text position
+     * @param material        The material to apply to the object
+     * @param textPosition    The position of the text object. This is not the position of the
+     *                        character itself, rather the position of the text UI object it is a
+     *                        part of
+     * @param characterOffset The position offset of the character from the text position
      * @since 1.0
      */
-    public FontSquare(Material material,
-                      Point3D textPosition,
-                      Point2D characterOffset)
-    {
+    public FontSquare(Material material, Vec3 textPosition, Vec2 characterOffset) {
         super(material);
-
-        // Because text shouldn't have colour per vertex ignore the data if it is present
-        super.material.ignoreData(Material.IGNORE_COLOUR_DATA_FLAG);
         this.textPosition = textPosition;
         this.characterOffset = characterOffset;
-
         updatePosition();
-
     }
 
     /**
@@ -54,14 +45,10 @@ public class FontSquare extends Square
      *
      * @since 1.0
      */
-    public FontSquare()
-    {
+    public FontSquare() {
         super();
-
-        // Because text shouldn't have colour per vertex ignore the data if it is present
-        super.material.ignoreData(Material.IGNORE_COLOUR_DATA_FLAG);
-        textPosition = new Point3D();
-        characterOffset = new Point2D();
+        textPosition = new Vec3();
+        characterOffset = new Vec2();
     }
 
     /**
@@ -70,24 +57,9 @@ public class FontSquare extends Square
      *
      * @since 1.0
      */
-    private void updatePosition()
-    {
-        super.setPosition(textPosition.x + characterOffset.x,
-                textPosition.y + characterOffset.y,
-                textPosition.z);
-    }
-
-    /**
-     * Set the text position. This should be done if the position of the associated text UI object
-     * has been changed. This causes a position update.
-     *
-     * @param textPosition  The new position of the text
-     * @since 1.0
-     */
-    public void setTextPosition(Point3D textPosition)
-    {
-        setTextPosition(textPosition.x, textPosition.y, textPosition.z);
-        updatePosition();
+    private void updatePosition() {
+        super.setPosition(textPosition.x + characterOffset.x, textPosition.y +
+                characterOffset.y, textPosition.z);
     }
 
     /**
@@ -99,26 +71,10 @@ public class FontSquare extends Square
      * @param z The text z position
      * @since 1.0
      */
-    public void setTextPosition(float x,
-                                float y,
-                                float z)
-    {
+    public void setTextPosition(float x, float y, float z) {
         this.textPosition.x = x;
         this.textPosition.y = y;
         this.textPosition.z = z;
-        updatePosition();
-    }
-
-    /**
-     * Set the text position. This should be done if the position of the associated text UI object
-     * has been changed. This causes a position update.
-     *
-     * @param textPosition  The new position of the text
-     * @since 1.0
-     */
-    public void setTextPosition(Point2D textPosition)
-    {
-        setTextPosition(textPosition.x, textPosition.y);
         updatePosition();
     }
 
@@ -130,8 +86,7 @@ public class FontSquare extends Square
      * @param y The text y position
      * @since 1.0
      */
-    public void setTextPosition(float x, float y)
-    {
+    public void setTextPosition(float x, float y) {
         this.textPosition.x = x;
         this.textPosition.y = y;
         updatePosition();
@@ -140,24 +95,34 @@ public class FontSquare extends Square
     /**
      * Get the text position
      *
-     * @return The position of the text as a Point3D object
+     * @return The position of the text as a Vec3 object
      * @since 1.0
      */
-    public Point3D getTextPosition()
-    {
+    public Vec3 getTextPosition() {
         return this.textPosition;
     }
 
     /**
-     * Set the character offset. This should be if the character position relative to the text UI
-     * objects position changes. This function causes a position update.
+     * Set the text position. This should be done if the position of the associated text UI object
+     * has been changed. This causes a position update.
      *
-     * @param characterOffset The new character offset
+     * @param textPosition The new position of the text
      * @since 1.0
      */
-    public void setCharacterOffset(Point2D characterOffset)
-    {
-        setCharacterOffset(characterOffset.x, characterOffset.y);
+    public void setTextPosition(Vec3 textPosition) {
+        setTextPosition(textPosition.x, textPosition.y, textPosition.z);
+        updatePosition();
+    }
+
+    /**
+     * Set the text position. This should be done if the position of the associated text UI object
+     * has been changed. This causes a position update.
+     *
+     * @param textPosition The new position of the text
+     * @since 1.0
+     */
+    public void setTextPosition(Vec2 textPosition) {
+        setTextPosition(textPosition.x, textPosition.y);
         updatePosition();
     }
 
@@ -169,8 +134,7 @@ public class FontSquare extends Square
      * @param y The character y offset
      * @since 1.0
      */
-    public void setCharacterOffset(float x, float y)
-    {
+    public void setCharacterOffset(float x, float y) {
         this.characterOffset.x = x;
         this.characterOffset.y = y;
         updatePosition();
@@ -179,12 +143,23 @@ public class FontSquare extends Square
     /**
      * Get the character offset
      *
-     * @return The character offset as a Point2D object
+     * @return The character offset as a Vec2 object
      * @since 1.0
      */
-    public Point2D getCharacterOffset()
-    {
-        return new Point2D(this.characterOffset);
+    public Vec2 getCharacterOffset() {
+        return new Vec2(this.characterOffset);
+    }
+
+    /**
+     * Set the character offset. This should be if the character position relative to the text UI
+     * objects position changes. This function causes a position update.
+     *
+     * @param characterOffset The new character offset
+     * @since 1.0
+     */
+    public void setCharacterOffset(Vec2 characterOffset) {
+        setCharacterOffset(characterOffset.x, characterOffset.y);
+        updatePosition();
     }
 
     /**
@@ -193,8 +168,7 @@ public class FontSquare extends Square
      * @return The font square width
      * @since 1.0
      */
-    public float getWidth()
-    {
+    public float getWidth() {
         return super.getScale().x;
     }
 
@@ -204,8 +178,7 @@ public class FontSquare extends Square
      * @return The font square height
      * @since 1.0
      */
-    public float getHeight()
-    {
+    public float getHeight() {
         return super.getScale().y;
     }
 }

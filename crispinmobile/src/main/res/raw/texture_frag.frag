@@ -1,11 +1,18 @@
+#version 300 es
 precision mediump float;
+
+out vec4 FragColor;
 
 uniform vec4 uColour;
 uniform sampler2D uTexture;
 
-varying vec2 aTextureCoordinates;
+in vec2 vTextureCoordinates;
 
 void main()
 {
-    gl_FragColor = uColour * texture2D(uTexture, aTextureCoordinates);
+    vec4 calc = uColour * texture(uTexture, vTextureCoordinates);
+    if(calc.a < 0.1) {
+        discard;
+    }
+    FragColor = calc;
 }

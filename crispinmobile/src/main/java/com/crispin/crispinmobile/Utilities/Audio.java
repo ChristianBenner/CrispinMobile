@@ -17,39 +17,32 @@ import java.util.Map;
 
 public class Audio {
     private static Audio single_instance = null;
-
+    static private int currentPosition = 0;
+    private final boolean trackFinished = true;
     // Store the current playing music ID
     private int currentMusicID = -1;
-    static private int currentPosition = 0;
     private MediaPlayer mediaPlayer;
-
     // Store the loaded sound effects
     // Key = Resource Id, Value = Loaded
     private Map<Integer, Sound> soundList;
     private SoundPool soundPool;
     private AudioManager audioManager;
-
     private boolean musicInnit = false;
     private boolean soundInnit = false;
 
-    private boolean trackFinished = true;
-
-    private Audio()
-    {
+    private Audio() {
         System.out.println("Created Audio class instance");
     }
 
-    public static Audio getInstance()
-    {
-        if(single_instance == null)
-        {
+    public static Audio getInstance() {
+        if (single_instance == null) {
             single_instance = new Audio();
         }
 
         return single_instance;
     }
 
-    public void initSoundChannel(int maxStreams){
+    public void initSoundChannel(int maxStreams) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             soundPool = new SoundPool.Builder()
                     .setMaxStreams(maxStreams)
@@ -65,50 +58,38 @@ public class Audio {
         soundInnit = true;
     }
 
-    public void playSound(final int resourceId)
-    {
+    public void playSound(final int resourceId) {
         playSound(resourceId, 0);
     }
 
-    public void playSound(final int resourceId, int priority)
-    {
+    public void playSound(final int resourceId, int priority) {
         boolean exists = soundList.containsKey(resourceId);
         boolean isLoaded = false;
 
-        if(exists)
-        {
+        if (exists) {
             isLoaded = soundList.get(resourceId).isLoaded();
         }
 
-        if(!exists)
-        {
+        if (!exists) {
             int soundId = soundPool.load(Crispin.getApplicationContext(), resourceId, priority);
             soundList.put(resourceId, new Sound(soundId, false));
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener()
-            {
+            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
                 @Override
-                public void onLoadComplete(SoundPool soundPool, int soundId, int status)
-                {
+                public void onLoadComplete(SoundPool soundPool, int soundId, int status) {
                     soundList.get(resourceId).setLoaded(true);
                     soundPool.play(soundId, 1.0f, 1.0f, 0, 0, 1.0f);
                 }
             });
-        }
-        else
-        {
-            if(!isLoaded)
-            {
+        } else {
+            if (!isLoaded) {
                 System.out.println("Cannot play sound resource because it is being loaded.");
-            }
-            else
-            {
+            } else {
                 soundPool.play(soundList.get(resourceId).getSound(), 1.0f, 1.0f, 0, 0, 1.0f);
             }
         }
     }
 
-    public SoundPool getSoundPool()
-    {
+    public SoundPool getSoundPool() {
         return soundPool;
     }
 
@@ -119,9 +100,8 @@ public class Audio {
         soundPool = null;
     }
 
-    public final void cleanMusic(){
-        if(mediaPlayer != null && mediaPlayer.isPlaying())
-        {
+    public final void cleanMusic() {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
         }
@@ -129,7 +109,7 @@ public class Audio {
         mediaPlayer = null;
     }
 
-    public final void cleanAll(){
+    public final void cleanAll() {
         soundList.clear();
         soundList = null;
         soundPool.release();
@@ -139,73 +119,66 @@ public class Audio {
         mediaPlayer = null;
     }
 
-    public void initMusicChannel()
-    {
+    public void initMusicChannel() {
         this.musicInnit = true;
     }
 
-    public boolean isMusicInnit()
-    {
+    public boolean isMusicInnit() {
         return this.musicInnit;
     }
 
-    public boolean isSoundInnit()
-    {
+    public boolean isSoundInnit() {
         return this.soundInnit;
     }
 
-    public void playMusic(int resourceID){
+    public void playMusic(int resourceID) {
         currentMusicID = resourceID;
         mediaPlayer = MediaPlayer.create(Crispin.getApplicationContext(), resourceID);
         mediaPlayer.start();
     }
 
-    public void setLooping(boolean looping)
-    {
+    public void setLooping(boolean looping) {
         mediaPlayer.setLooping(looping);
     }
 
-    public void pause(){
+    public void pause() {
         System.out.println("Paused audio.");
-        if(currentMusicID != -1 && mediaPlayer.isPlaying()){
+        if (currentMusicID != -1 && mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             currentPosition = mediaPlayer.getCurrentPosition();
         }
     }
 
-    public void resume(){
+    public void resume() {
         System.out.println("Playing audio from position " + currentPosition + ".");
-        if(currentMusicID != -1 && !mediaPlayer.isPlaying()){
+        if (currentMusicID != -1 && !mediaPlayer.isPlaying()) {
             mediaPlayer = MediaPlayer.create(Crispin.getApplicationContext(), currentMusicID);
             mediaPlayer.seekTo(currentPosition);
             mediaPlayer.start();
         }
     }
 
-    public void setOnMusicComlete(MediaPlayer.OnCompletionListener listener)
-    {
+    public void setOnMusicComlete(MediaPlayer.OnCompletionListener listener) {
         mediaPlayer.setOnCompletionListener(listener);
     }
 
-    public void playMusic(int resourceID, int position){
+    public void playMusic(int resourceID, int position) {
         currentMusicID = resourceID;
         mediaPlayer = MediaPlayer.create(Crispin.getApplicationContext(), resourceID);
         mediaPlayer.seekTo(position);
         mediaPlayer.start();
     }
 
-    public int getMusicPos(){
-        if(currentMusicID != -1){
+    public int getMusicPos() {
+        if (currentMusicID != -1) {
             return mediaPlayer.getCurrentPosition();
-        }else{
+        } else {
             return 0;
         }
     }
 
-    public void setVolume(float volume)
-    {
-        if(currentMusicID != -1 && mediaPlayer != null)
-        {
+    public void setVolume(float volume) {
+        if (currentMusicID != -1 && mediaPlayer != null) {
             mediaPlayer.setVolume(volume, volume);
         }
     }

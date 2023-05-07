@@ -4,13 +4,12 @@ package com.crispin.crispinmobile.Geometry;
  * Rotation3D provides a singular object that can represent three dimensions (x, y and z) of
  * rotation. It is a subclass of the Rotation2D class.
  *
- * @author      Christian Benner
- * @version     %I%, %G%
- * @see         Rotation2D
- * @since       1.0
+ * @author Christian Benner
+ * @version %I%, %G%
+ * @see Rotation2D
+ * @since 1.0
  */
-public class Rotation3D extends Rotation2D
-{
+public class Rotation3D extends Rotation2D {
     // Tag used in logging output
     private static final String TAG = "Rotation3D";
 
@@ -21,16 +20,15 @@ public class Rotation3D extends Rotation2D
      * Construct a 3D rotation object
      *
      * @param angle The angle to rotate
-     * @param x The x rotation multiplier
-     * @param y The y rotation multiplier
-     * @param z The z rotation multiplier
+     * @param x     The x rotation multiplier
+     * @param y     The y rotation multiplier
+     * @param z     The z rotation multiplier
      * @since 1.0
      */
     public Rotation3D(float angle,
                       float x,
                       float y,
-                      float z)
-    {
+                      float z) {
         super(angle, x, y);
         this.z = z;
     }
@@ -40,8 +38,7 @@ public class Rotation3D extends Rotation2D
      *
      * @since 1.0
      */
-    public Rotation3D()
-    {
+    public Rotation3D() {
         super();
         this.z = 0.0f;
     }
@@ -49,12 +46,11 @@ public class Rotation3D extends Rotation2D
     /**
      * Get a string that contains the rotation data that can be used in a log
      *
-     * @return  String in the format 'Rotation3D[x:X,y:Y,z:Z]'
-     * @since   1.0
+     * @return String in the format 'Rotation3D[x:X,y:Y,z:Z]'
+     * @since 1.0
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return TAG + "[angle: " + angle + ",x:" + x + ",y:" + y + ",z:" + z + "]";
     }
 }

@@ -1,5 +1,4 @@
 package com.crispin.crispinmobile.Utilities;
 
-public class OBJModelCache
-{
+public class OBJModelCache {
 }
