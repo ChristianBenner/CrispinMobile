@@ -30,5 +30,6 @@ public class FontCache {
         for (Font font : fontCache.values()) {
             font.unload();
         }
+        fontCache.clear();
     }
 }

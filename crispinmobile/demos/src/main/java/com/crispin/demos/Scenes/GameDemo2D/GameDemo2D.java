@@ -23,7 +23,6 @@ public class GameDemo2D extends Scene {
     private Camera2D uiCamera;
 
     private Joystick movementJoystick;
-
     private Joystick aimJoystick;
 
     private Player player;

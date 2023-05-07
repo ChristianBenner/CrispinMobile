@@ -9,6 +9,7 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Utilities.TextureCache;
 
 public class Button extends InteractableUIObject {
     private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
@@ -324,13 +325,10 @@ public class Button extends InteractableUIObject {
 
     @Override
     public void draw(Camera2D camera) {
-        glDisable(GL_DEPTH_TEST);
         this.plane.draw(camera);
 
         if (text != null) {
             text.draw(camera);
         }
-
-        glEnable(GL_DEPTH_TEST);
     }
 }

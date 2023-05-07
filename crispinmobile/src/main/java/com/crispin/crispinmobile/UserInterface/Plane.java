@@ -4,12 +4,15 @@ import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
+import android.opengl.GLES30;
+
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Utilities.TextureCache;
 
 public class Plane implements UIObject {
     protected Vec2 position;
@@ -78,7 +81,7 @@ public class Plane implements UIObject {
 
     public void setImage(int resourceId) {
         plane.getMaterial().setIgnoreTexelData(false);
-        plane.getMaterial().setTexture(new Texture(resourceId));
+        plane.getMaterial().setTexture(TextureCache.loadTexture(resourceId));
     }
 
     public void setBorder(Border border) {
@@ -321,17 +324,26 @@ public class Plane implements UIObject {
     }
 
     /**
-     * Draw function designed to be overridden
+     * Draw border and plane
      *
      * @since 1.0
      */
     @Override
     public void draw(Camera2D camera) {
-        glDisable(GL_DEPTH_TEST);
+        // Check if depth is enabled, and disable it
+        final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
+        if(DEPTH_ENABLED) {
+            GLES30.glDisable(GL_DEPTH_TEST);
+        }
+
         if (borderEnabled) {
             border.draw(camera, disabledBorderFlags);
         }
         plane.render(camera);
-        glEnable(GL_DEPTH_TEST);
+
+        // If depth was enabled before this call, re-enable
+        if(DEPTH_ENABLED) {
+            GLES30.glEnable(GL_DEPTH_TEST);
+        }
     }
 }

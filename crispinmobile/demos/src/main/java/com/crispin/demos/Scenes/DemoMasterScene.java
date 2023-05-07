@@ -11,6 +11,7 @@ import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
+import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.GameDemo2D.GameDemo2D;
@@ -54,7 +55,7 @@ public class DemoMasterScene extends Scene {
     }
 
     private Button createDemoButton(String text, final Constructor sceneConstructor) {
-        Button demoButton = new Button(new Font(R.raw.aileron_regular, 48), text);
+        Button demoButton = new Button(FontCache.getFont(R.raw.aileron_regular, 48), text);
         demoButton.setBorder(new Border(Colour.WHITE, 5));
         demoButton.setColour(new Colour(211, 124, 65));
         demoButton.setTextColour(Colour.WHITE);

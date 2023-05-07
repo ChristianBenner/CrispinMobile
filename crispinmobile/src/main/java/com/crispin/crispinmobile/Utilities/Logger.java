@@ -12,7 +12,7 @@ package com.crispin.crispinmobile.Utilities;
  */
 public class Logger {
     // Enable debug logging (if false debug logs are hidden from console)
-    private static boolean debugLoggingEnabled = false;
+    private static boolean debugLoggingEnabled = true;
 
     /**
      * Get the debug logging state

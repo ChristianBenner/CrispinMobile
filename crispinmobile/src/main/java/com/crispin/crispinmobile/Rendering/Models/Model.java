@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import static android.opengl.GLES20.GL_TEXTURE0;
+import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -615,7 +617,6 @@ public class Model {
                 break;
         }
         GLES30.glBindVertexArray(0);
-
         glBindTexture(GL_TEXTURE_2D, 0);
 
         shader.disable();

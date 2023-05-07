@@ -4,6 +4,8 @@ import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
+import android.opengl.GLES30;
+
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
@@ -131,7 +133,6 @@ public class Text implements UIObject {
             textShader = ShaderCache.getShader(TextShader.VERTEX_FILE, TextShader.FRAGMENT_FILE);
         } else {
             textShader = new TextShader();
-            ShaderCache.registerShader(TextShader.VERTEX_FILE, TextShader.FRAGMENT_FILE, textShader);
         }
 
         position = new Vec2();
@@ -914,8 +915,11 @@ public class Text implements UIObject {
      */
     @Override
     public void draw(Camera2D camera) {
-        final boolean REENABLE_DEPTH = Crispin.isDepthEnabled();
-        glDisable(GL_DEPTH_TEST);
+        // Check if depth is enabled, and disable it
+        final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
+        if(DEPTH_ENABLED) {
+            GLES30.glDisable(GL_DEPTH_TEST);
+        }
 
         // If show bounds is enabled, render the boundary
         if (showBounds) {
@@ -947,7 +951,7 @@ public class Text implements UIObject {
         }
 
         // If depth was enabled before calling the function then re-enable it
-        if (REENABLE_DEPTH) {
+        if (DEPTH_ENABLED) {
             glEnable(GL_DEPTH_TEST);
         }
     }

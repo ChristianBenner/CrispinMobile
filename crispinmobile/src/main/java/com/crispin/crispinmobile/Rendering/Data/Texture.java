@@ -15,6 +15,7 @@ import static android.opengl.GLES30.glPixelStorei;
 import static android.opengl.GLES30.glTexImage2D;
 import static android.opengl.GLES30.glTexParameteri;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES30;
@@ -217,11 +218,14 @@ public class Texture {
      * @since 1.0
      */
     private static Bitmap resourceToBitmap(int resourceId) {
+        Resources resources = Crispin.getApplicationContext().getResources();
+        Logger.debug(TAG, "Reading texture resource: ID[" + resourceId + "], Name[" +
+                resources.getResourceEntryName(resourceId) + "]");
+
         final BitmapFactory.Options IMAGE_OPTIONS = new BitmapFactory.Options();
         IMAGE_OPTIONS.inScaled = false;
 
-        final Bitmap BITMAP = BitmapFactory.decodeResource(
-                Crispin.getApplicationContext().getResources(), resourceId, IMAGE_OPTIONS);
+        final Bitmap BITMAP = BitmapFactory.decodeResource(resources, resourceId, IMAGE_OPTIONS);
 
         return BITMAP;
     }

@@ -35,7 +35,7 @@ public class FileResourceReader {
             inputStream.read(bytes);
 
             Logger.debug(TAG, "Read resource file: ID[" + resourceId + "], Bytes[" +
-                    SIZE_BYTES + "]");
+                    SIZE_BYTES + "], Name[" + resources.getResourceEntryName(resourceId) + "]");
 
             return bytes;
         } catch (Exception e) {

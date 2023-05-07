@@ -502,5 +502,6 @@ public class Material {
         this.colour.red = colour.red;
         this.colour.green = colour.green;
         this.colour.blue = colour.blue;
+        this.colour.alpha = colour.alpha;
     }
 }
