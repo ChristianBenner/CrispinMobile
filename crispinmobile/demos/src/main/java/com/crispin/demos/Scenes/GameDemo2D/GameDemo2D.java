@@ -52,7 +52,7 @@ public class GameDemo2D extends Scene {
 
         player = new Player(5000f, 5000f, PLAYER_SIZE);
 
-        Material grassRepeatMaterial = new Material(R.drawable.dirt_center);
+        Material grassRepeatMaterial = new Material(R.drawable.grass_tile);
         grassRepeatMaterial.setUvMultiplier(100f, 100f);
         mapBase = new Square(grassRepeatMaterial);
         mapBase.setScale(10000f);

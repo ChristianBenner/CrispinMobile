@@ -1,7 +1,9 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_TEXTURE0;
 import static android.opengl.GLES20.glActiveTexture;
+import static android.opengl.GLES20.glEnable;
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -584,6 +586,12 @@ public class Model {
     }
 
     public void render(Camera2D camera) {
+        // Check if depth is enabled, and disable it
+        final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
+        if(DEPTH_ENABLED) {
+            GLES30.glDisable(GL_DEPTH_TEST);
+        }
+
         updateModelMatrix();
 
         // If the shader is null, create a shader for the object
@@ -620,6 +628,11 @@ public class Model {
         glBindTexture(GL_TEXTURE_2D, 0);
 
         shader.disable();
+
+        // If depth was enabled before calling the function then re-enable it
+        if (DEPTH_ENABLED) {
+            glEnable(GL_DEPTH_TEST);
+        }
     }
 
     public void render(Camera camera, final LightGroup lightGroup) {

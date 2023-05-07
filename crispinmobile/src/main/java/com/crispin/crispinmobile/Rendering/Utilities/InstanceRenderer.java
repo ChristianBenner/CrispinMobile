@@ -1,5 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
+import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_STREAM_DRAW;
 import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES30.GL_ARRAY_BUFFER;
@@ -20,6 +21,7 @@ import static android.opengl.GLES30.glVertexAttribDivisor;
 import static android.opengl.GLES30.glVertexAttribPointer;
 import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
 
+import android.opengl.GLES30;
 import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Geometry.Vec3;
@@ -255,9 +257,13 @@ public class InstanceRenderer {
     }
 
     public void render(Camera2D camera2D) {
-        shader.enable();
+        // Check if depth is enabled, and disable it
+        final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
+        if(DEPTH_ENABLED) {
+            GLES30.glDisable(GL_DEPTH_TEST);
+        }
 
-        glEnable(GL_CULL_FACE);
+        shader.enable();
 
         setUniforms(camera2D.getOrthoMatrix(), default2DViewMatrix);
 
@@ -267,6 +273,11 @@ public class InstanceRenderer {
         glBindVertexArray(0);
 
         shader.disable();
+
+        // If depth was enabled before calling the function then re-enable it
+        if (DEPTH_ENABLED) {
+            glEnable(GL_DEPTH_TEST);
+        }
     }
 
     protected int getMeshVAO() {
