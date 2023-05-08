@@ -61,7 +61,7 @@ public class Border {
     }
 
     // Updates the position of all enabled borders around a given object (based on position and scale)
-    public void updatePosition(UIObject uiObject) {
+    public void updatePosition(UIElement uiObject) {
         final Vec2 parentPos = uiObject.getPosition();
         final Scale2D parentSize = uiObject.getSize();
 

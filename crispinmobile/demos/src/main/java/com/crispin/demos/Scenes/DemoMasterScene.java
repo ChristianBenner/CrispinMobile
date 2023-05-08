@@ -12,6 +12,7 @@ import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
@@ -80,7 +81,7 @@ public class DemoMasterScene extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
 
     }
 }

@@ -1,12 +1,10 @@
 package com.crispin.crispinmobile.UserInterface;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
 import static android.opengl.GLES20.glEnable;
 
 import android.opengl.GLES30;
 
-import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -32,10 +30,10 @@ import java.util.Queue;
  * @author Christian Benner
  * @version %I%, %G%
  * @see Font
- * @see UIObject
+ * @see UIElement
  * @since 1.0
  */
-public class Text implements UIObject {
+public class Text implements UIElement {
     // Tag used in logging
     private static final String TAG = "Text";
     // The default scale value if one is not provided

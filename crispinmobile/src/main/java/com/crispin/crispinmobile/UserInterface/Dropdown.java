@@ -6,10 +6,11 @@ import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Utilities.UIHandler;
 
 import java.util.ArrayList;
 
-public class Dropdown extends InteractiveUIObject {
+public class Dropdown extends InteractiveUI {
     public static final int NO_ITEM_SELECTED = -1;
     public static final int ALL_BORDERS = 16;
     public static final int NO_BORDERS = 0;
@@ -180,7 +181,7 @@ public class Dropdown extends InteractiveUIObject {
 
             // Check if any items interact with the pointer position
             for (Item item : items) {
-                if (InteractiveUIObject.interacts(item.plane, position)) {
+                if (UIHandler.interacts(item.plane, position)) {
                     selectedId = item.id;
 
                     baseText.setText(item.text.getTextString());
@@ -189,7 +190,7 @@ public class Dropdown extends InteractiveUIObject {
         }
 
         // Check if the object still has focus from the pointer
-        if (InteractiveUIObject.interacts(this, position)) {
+        if (interacts(position)) {
             if (expanded) {
                 collapse();
             } else {

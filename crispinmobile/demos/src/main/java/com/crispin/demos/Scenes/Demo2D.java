@@ -18,6 +18,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 
 public class Demo2D extends Scene {
@@ -68,7 +69,7 @@ public class Demo2D extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
 
     }
 }

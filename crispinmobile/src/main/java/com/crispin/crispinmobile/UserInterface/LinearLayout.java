@@ -15,7 +15,7 @@ public class LinearLayout extends Plane {
     private static final float DEFAULT_PADDING_X = 10.0f;
     private static final float DEFAULT_PADDING_Y = 10.0f;
     private boolean vertical;
-    private final ArrayList<UIObject> uiObjects;
+    private final ArrayList<UIElement> uiObjects;
     private float cursorX;
     private float cursorY;
     private float endX;
@@ -66,7 +66,7 @@ public class LinearLayout extends Plane {
         this(new Vec2(), new Scale2D(0.0f, 0.0f), false);
     }
 
-    public void addUI(UIObject uiObject) {
+    public void addUI(UIElement uiObject) {
         uiObjects.add(uiObject);
     }
 
@@ -174,7 +174,7 @@ public class LinearLayout extends Plane {
         cursorY = 0.0f;
 
         if (uiObjects != null) {
-            for (UIObject uiObject : uiObjects) {
+            for (UIElement uiObject : uiObjects) {
                 positionUIObject(uiObject);
             }
         }
@@ -188,7 +188,7 @@ public class LinearLayout extends Plane {
         }
     }
 
-    private void positionUIObject(UIObject uiObject) {
+    private void positionUIObject(UIElement uiObject) {
         if (vertical) {
             // UI Start position
             final float POS_X = position.x + cursorX;
@@ -232,7 +232,7 @@ public class LinearLayout extends Plane {
         }
     }
 
-    public void add(UIObject uiObject) {
+    public void add(UIElement uiObject) {
         uiObject.setOpacity(super.getOpacity());
         this.uiObjects.add(uiObject);
         positionUIObject(uiObject);

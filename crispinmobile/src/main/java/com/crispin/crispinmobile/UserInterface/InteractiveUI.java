@@ -5,28 +5,26 @@ import com.crispin.crispinmobile.Utilities.UIHandler;
 
 import java.util.ArrayList;
 
-public abstract class InteractiveUIObject implements UIObject, InteractiveElement {
+public abstract class InteractiveUI implements UIElement, InteractiveElement {
     private final ArrayList<TouchListener> touchListeners = new ArrayList<>();
 
-    private boolean clicked = false;
-    private boolean enabled = true;
+    private boolean clicked;
+    private boolean enabled;
 
-    public static boolean interacts(UIObject uiObject, Vec2 pointer) {
-        Vec2 pos = new Vec2();
-        pos.x = pointer.x;
-        pos.y = pointer.y;
+    public InteractiveUI() {
+        this.clicked = false;
+        this.enabled = true;
+    }
 
-        // Check if the pointer is inside the button
-        return pos.x > uiObject.getPosition().x && pos.x < uiObject.getPosition().x +
-                uiObject.getWidth() &&
-                pos.y < uiObject.getPosition().y + uiObject.getHeight() && pos.y >
-                uiObject.getPosition().y;
+    public boolean interacts(Vec2 position) {
+        return position.x > getPosition().x && position.x < getPosition().x + getWidth() &&
+                position.y < getPosition().y + getHeight() && position.y > getPosition().y;
     }
 
     public void removeAllTouchListeners() {
         touchListeners.clear();
 
-        UIHandler.removeUI(this);
+        UIHandler.remove(this);
     }
 
     public boolean isEnabled() {
@@ -46,21 +44,18 @@ public abstract class InteractiveUIObject implements UIObject, InteractiveElemen
     }
 
     public void addTouchListener(TouchListener listener) {
+        if(touchListeners.isEmpty()) {
+            UIHandler.add(this);
+        }
 
         touchListeners.add(listener);
-
-        if (touchListeners.size() == 1) {
-            // Add the piece of UI to the UIHandler
-            UIHandler.addUI(this);
-        }
     }
 
     public void removeTouchListener(TouchListener listener) {
         touchListeners.remove(listener);
 
         if (touchListeners.isEmpty()) {
-            // Remove the UI from the UIHandler
-            UIHandler.removeUI(this);
+            UIHandler.remove(this);
         }
     }
 

@@ -6,7 +6,7 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 
-public class Button extends InteractiveUIObject {
+public class Button extends InteractiveUI {
     private static final Colour DEFAULT_COLOUR_BORDER = Colour.BLUE;
     private static final Colour DEFAULT_COLOUR_BACKGROUND = Colour.WHITE;
     private static final Colour DEFAULT_COLOUR_TEXT = Colour.BLACK;

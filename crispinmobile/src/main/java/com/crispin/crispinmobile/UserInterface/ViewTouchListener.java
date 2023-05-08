@@ -31,7 +31,7 @@ public class ViewTouchListener implements View.OnTouchListener {
                 // Now we want to check if the pointer should be consumed by any UI components
                 UIHandler.consume(newPointer);
                 if(Crispin.getCurrentScene() != null) {
-                    Crispin.getCurrentScene().touch(MotionEvent.ACTION_DOWN, newPointer);
+                    Crispin.getCurrentScene().touch(TouchType.DOWN, newPointer);
                 }
                 break;
             // ACTION_MOVE is called for any pointer movement, update positions of all pointers
@@ -41,7 +41,7 @@ public class ViewTouchListener implements View.OnTouchListener {
                     Vec2 movePositionCorrected = toSceneCoordinates(event.getX(pi), event.getY(pi));
                     pointers.get(movePointerId).move(movePositionCorrected);
                     if(Crispin.getCurrentScene() != null) {
-                        Crispin.getCurrentScene().touch(MotionEvent.ACTION_MOVE, pointers.get(movePointerId));
+                        Crispin.getCurrentScene().touch(TouchType.MOVE, pointers.get(movePointerId));
                     }
                 }
                 break;
@@ -51,7 +51,7 @@ public class ViewTouchListener implements View.OnTouchListener {
                 Vec2 upPositionCorrected = toSceneCoordinates(event.getX(pointerIndex), event.getY(pointerIndex));
                 pointers.get(pointerId).release(upPositionCorrected);
                 if(Crispin.getCurrentScene() != null) {
-                    Crispin.getCurrentScene().touch(MotionEvent.ACTION_UP, pointers.get(pointerId));
+                    Crispin.getCurrentScene().touch(TouchType.UP, pointers.get(pointerId));
                 }
                 pointers.remove(pointerIndex);
                 break;

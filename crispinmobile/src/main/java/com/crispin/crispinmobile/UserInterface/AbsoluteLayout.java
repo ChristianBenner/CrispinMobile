@@ -7,17 +7,17 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import java.util.ArrayList;
 
 public class AbsoluteLayout extends Plane {
-    private final ArrayList<UIObject> uiObjects;
+    private final ArrayList<UIElement> uiObjects;
 
     public AbsoluteLayout() {
         uiObjects = new ArrayList<>();
     }
 
-    public void add(UIObject uiObject) {
+    public void add(UIElement uiObject) {
         uiObjects.add(uiObject);
     }
 
-    public void remove(UIObject uiObject) {
+    public void remove(UIElement uiObject) {
         uiObjects.remove(uiObject);
     }
 

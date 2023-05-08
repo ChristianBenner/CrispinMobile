@@ -16,6 +16,7 @@ import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
 
@@ -134,20 +135,20 @@ public class NormalMapDemo extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
         Vec2 position = new Vec2(pointer.getPosition());
 
-        switch (eventType) {
-            case MotionEvent.ACTION_DOWN:
+        switch (touchType) {
+            case DOWN:
                 touchDownPos = position;
                 break;
-            case MotionEvent.ACTION_MOVE:
+            case MOVE:
                 if(touchDownPos != null) {
                     camera.translate(0.0f, 0.0f, Geometry.getVectorBetween(touchDownPos, position).y / 50.0f);
                     touchDownPos = position;
                 }
                 break;
-            case MotionEvent.ACTION_UP:
+            case UP:
                 touchDownPos = null;
                 break;
         }

@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Utilities;
 
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 
 /**
  * Scene base class. This provides functions that are controlled by the SceneManager object in
@@ -33,7 +34,7 @@ public abstract class Scene {
     public abstract void render();
 
     // Single pointer motion event
-    public abstract void touch(int eventType, Pointer pointer);
+    public abstract void touch(TouchType touchType, Pointer pointer);
 
     /**
      * This is the initialisation function that is to be assigned by the deriving class. This is

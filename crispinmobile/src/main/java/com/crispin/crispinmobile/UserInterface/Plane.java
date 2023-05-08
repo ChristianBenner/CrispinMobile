@@ -1,8 +1,6 @@
 package com.crispin.crispinmobile.UserInterface;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.glDisable;
-import static android.opengl.GLES20.glEnable;
 
 import android.opengl.GLES30;
 
@@ -14,7 +12,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
-public class Plane implements UIObject {
+public class Plane implements UIElement {
     protected Vec2 position;
     protected Scale2D size;
 

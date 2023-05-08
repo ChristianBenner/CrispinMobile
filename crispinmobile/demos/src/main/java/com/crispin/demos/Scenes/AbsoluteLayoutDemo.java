@@ -7,6 +7,7 @@ import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 
@@ -47,7 +48,7 @@ public class AbsoluteLayoutDemo extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
 
     }
 }

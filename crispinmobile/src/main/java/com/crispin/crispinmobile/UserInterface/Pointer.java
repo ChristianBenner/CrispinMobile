@@ -16,6 +16,7 @@ public class Pointer {
     public void click(InteractiveElement element) {
         this.element = element;
         this.element.sendClickEvent(position);
+        this.inUse = true;
     }
 
     public void release(Vec2 position) {
@@ -24,6 +25,7 @@ public class Pointer {
         if(element != null) {
             element.sendReleaseEvent(position);
         }
+        this.inUse = false;
     }
 
     public void move(Vec2 position) {

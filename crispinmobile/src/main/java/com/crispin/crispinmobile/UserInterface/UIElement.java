@@ -13,7 +13,7 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
  * @version %I%, %G%
  * @since 1.0
  */
-public interface UIObject {
+public interface UIElement {
     /**
      * Set the position of the user interface
      *

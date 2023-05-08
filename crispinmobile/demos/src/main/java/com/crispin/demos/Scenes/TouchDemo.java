@@ -14,6 +14,7 @@ import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
 
@@ -109,12 +110,12 @@ public class TouchDemo extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
         Vec2 position = new Vec2(pointer.getPosition());
 
-        switch (eventType) {
-            case MotionEvent.ACTION_DOWN:
-            case MotionEvent.ACTION_MOVE:
+        switch (touchType) {
+            case DOWN:
+            case MOVE:
                 touchLocations[index] = position;
                 index++;
                 if(index >= DRAW_CAP) {

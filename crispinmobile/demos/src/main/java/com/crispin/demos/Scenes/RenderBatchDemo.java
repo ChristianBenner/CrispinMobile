@@ -12,6 +12,7 @@ import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
 import com.crispin.crispinmobile.Utilities.Scene;
@@ -102,7 +103,7 @@ public class RenderBatchDemo extends Scene {
     }
 
     @Override
-    public void touch(int eventType, Pointer pointer) {
+    public void touch(TouchType touchType, Pointer pointer) {
 
     }
 
