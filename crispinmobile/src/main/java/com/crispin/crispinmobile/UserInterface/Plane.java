@@ -102,7 +102,7 @@ public class Plane implements UIElement {
             this.border.updatePosition(this);
         }
 
-        this.plane.setScale(new Scale2D(size.x, size.y));
+        this.plane.setScale(new Scale2D(size.w, size.h));
         this.plane.setPosition(position);
     }
 
@@ -152,7 +152,7 @@ public class Plane implements UIElement {
      */
     @Override
     public float getWidth() {
-        return size.x;
+        return size.w;
     }
 
     /**
@@ -163,7 +163,7 @@ public class Plane implements UIElement {
      */
     @Override
     public void setWidth(float width) {
-        size.x = width;
+        size.w = width;
         updatePosition();
     }
 
@@ -175,7 +175,7 @@ public class Plane implements UIElement {
      */
     @Override
     public float getHeight() {
-        return size.y;
+        return size.h;
     }
 
     /**
@@ -186,7 +186,7 @@ public class Plane implements UIElement {
      */
     @Override
     public void setHeight(float height) {
-        size.y = height;
+        size.h = height;
         updatePosition();
     }
 
@@ -199,8 +199,8 @@ public class Plane implements UIElement {
      */
     @Override
     public void setSize(float width, float height) {
-        this.size.x = width;
-        this.size.y = height;
+        this.size.w = width;
+        this.size.h = height;
         updatePosition();
     }
 
@@ -223,7 +223,7 @@ public class Plane implements UIElement {
      */
     @Override
     public void setSize(Scale2D size) {
-        this.setSize(size.x, size.y);
+        this.setSize(size.w, size.h);
     }
 
     /**

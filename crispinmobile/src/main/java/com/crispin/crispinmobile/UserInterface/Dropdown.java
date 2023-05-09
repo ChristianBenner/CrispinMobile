@@ -107,19 +107,19 @@ public class Dropdown extends InteractiveUI {
 
         // Position the text to be padded to the right and centered on the y-axis
         baseText.setPosition(PADDING + position.x, position.y +
-                (itemSize.y / 2.0f) - (baseText.getHeight() / 2.0f));
+                (itemSize.h / 2.0f) - (baseText.getHeight() / 2.0f));
 
         // Position the dropdown status image to hug the right side of the base box
-        dropdownStatusImage.setPosition(position.x + baseBox.getSize().x -
-                dropdownStatusImage.getSize().x, position.y);
-        dropdownStatusImage.setSize(dropdownStatusImage.size.x, size.y);
+        dropdownStatusImage.setPosition(position.x + baseBox.getSize().w -
+                dropdownStatusImage.getSize().w, position.y);
+        dropdownStatusImage.setSize(dropdownStatusImage.size.w, size.h);
 
         for (int i = 0; i < items.size(); i++) {
             Item item = items.get(i);
 
-            item.text.setPosition(position.x + PADDING, position.y - ((i + 1) * itemSize.y) +
-                    (itemSize.y / 2.0f) - (item.text.getHeight() / 2.0f));
-            item.plane.setPosition(baseBox.getPosition().x, position.y - ((i + 1) * itemSize.y));
+            item.text.setPosition(position.x + PADDING, position.y - ((i + 1) * itemSize.h) +
+                    (itemSize.h / 2.0f) - (item.text.getHeight() / 2.0f));
+            item.plane.setPosition(baseBox.getPosition().x, position.y - ((i + 1) * itemSize.h));
         }
 
         applyBorderFlags();
@@ -127,7 +127,7 @@ public class Dropdown extends InteractiveUI {
         // Update the overall position (the position including the expanded items)
         if (expanded) {
             overallPosition.x = position.x;
-            overallPosition.y = position.y - (items.size() * itemSize.y);
+            overallPosition.y = position.y - (items.size() * itemSize.h);
         } else {
             overallPosition.x = position.x;
             overallPosition.y = position.y;
@@ -137,7 +137,7 @@ public class Dropdown extends InteractiveUI {
     public void expand() {
         this.expanded = true;
         dropdownStatusImage.setImage(collapseIcon);
-        overallPosition.y = position.y - (items.size() * itemSize.y);
+        overallPosition.y = position.y - (items.size() * itemSize.h);
     }
 
     public void collapse() {
@@ -248,7 +248,7 @@ public class Dropdown extends InteractiveUI {
 
     // Return the height of the combo box itself (and not the items)
     public float getBaseHeight() {
-        return this.size.y;
+        return this.size.h;
     }
 
     @Override
@@ -263,24 +263,24 @@ public class Dropdown extends InteractiveUI {
 
     @Override
     public float getWidth() {
-        return size.x;
+        return size.w;
     }
 
     @Override
     public void setWidth(float width) {
-        this.size.x = width;
+        this.size.w = width;
 
         updatePosition();
     }
 
     @Override
     public float getHeight() {
-        return expanded ? itemSize.y * (items.size() + 1) : itemSize.y;
+        return expanded ? itemSize.h * (items.size() + 1) : itemSize.h;
     }
 
     @Override
     public void setHeight(float height) {
-        this.size.y = height;
+        this.size.h = height;
 
         updatePosition();
     }
@@ -294,14 +294,14 @@ public class Dropdown extends InteractiveUI {
      */
     @Override
     public void setSize(float width, float height) {
-        this.size.x = width;
-        this.size.y = height;
+        this.size.w = width;
+        this.size.h = height;
         updatePosition();
     }
 
     @Override
     public Scale2D getSize() {
-        return new Scale2D(size.x, getHeight());
+        return new Scale2D(size.w, getHeight());
     }
 
     /**
@@ -312,7 +312,7 @@ public class Dropdown extends InteractiveUI {
      */
     @Override
     public void setSize(Scale2D size) {
-        setSize(size.x, size.y);
+        setSize(size.w, size.h);
     }
 
     public Colour getTextColour() {

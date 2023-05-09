@@ -60,8 +60,8 @@ public class Vec2 {
      * @since 1.0
      */
     public Vec2(Scale2D s) {
-        this.x = s.x;
-        this.y = s.y;
+        this.x = s.w;
+        this.y = s.h;
     }
 
     /**
@@ -71,8 +71,8 @@ public class Vec2 {
      * @since 1.0
      */
     public Vec2(Scale3D s) {
-        this.x = s.x;
-        this.y = s.y;
+        this.x = s.w;
+        this.y = s.h;
     }
 
     /**

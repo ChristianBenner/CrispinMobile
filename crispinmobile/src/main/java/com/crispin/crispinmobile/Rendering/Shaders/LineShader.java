@@ -16,7 +16,7 @@ public class LineShader extends Shader {
     public LineShader() {
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
 
-        positionAttributeHandle = getAttribute("vPosition");
+        positionAttributeHandle = getAttribute("aPosition");
         matrixUniformHandle = getUniform("uMatrix");
 
         materialHandles = new MaterialHandles();

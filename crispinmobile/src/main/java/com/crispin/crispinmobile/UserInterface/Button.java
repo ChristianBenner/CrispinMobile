@@ -42,7 +42,7 @@ public class Button extends InteractiveUI {
 
         this.position = new Vec2();
         this.size = new Scale2D();
-        this.text = new Text(font, textString, true, true, size.x);
+        this.text = new Text(font, textString, true, true, size.w);
 
         plane = new Plane(size);
         plane.setColour(colourBackground);
@@ -178,7 +178,7 @@ public class Button extends InteractiveUI {
 
     @Override
     public float getWidth() {
-        return size.x;
+        return size.w;
     }
 
     @Override
@@ -187,18 +187,18 @@ public class Button extends InteractiveUI {
             this.text = new Text(font, textString, true, true, width);
         }
 
-        this.size.x = width;
+        this.size.w = width;
         updatePosition();
     }
 
     @Override
     public float getHeight() {
-        return size.y;
+        return size.h;
     }
 
     @Override
     public void setHeight(float height) {
-        this.size.y = height;
+        this.size.h = height;
         updatePosition();
     }
 
@@ -211,8 +211,8 @@ public class Button extends InteractiveUI {
      */
     @Override
     public void setSize(float width, float height) {
-        this.size.x = width;
-        this.size.y = height;
+        this.size.w = width;
+        this.size.h = height;
 
         if (text != null) {
             this.text = new Text(font, textString, true, true, width);
@@ -240,7 +240,7 @@ public class Button extends InteractiveUI {
      */
     @Override
     public void setSize(Scale2D size) {
-        this.setSize(size.x, size.y);
+        this.setSize(size.w, size.h);
     }
 
     public void setAlpha(float alpha) {

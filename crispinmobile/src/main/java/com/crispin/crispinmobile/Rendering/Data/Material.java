@@ -306,8 +306,8 @@ public class Material {
      * @since 1.0
      */
     public void setUvMultiplier(float sMultiplier, float tMultiplier) {
-        this.uvMultiplier.x = sMultiplier;
-        this.uvMultiplier.y = tMultiplier;
+        this.uvMultiplier.w = sMultiplier;
+        this.uvMultiplier.h = tMultiplier;
     }
 
     /**
@@ -330,8 +330,8 @@ public class Material {
      * @since 1.0
      */
     public void setUvMultiplier(Scale2D uvMultiplier) {
-        this.uvMultiplier.x = uvMultiplier.x;
-        this.uvMultiplier.y = uvMultiplier.y;
+        this.uvMultiplier.w = uvMultiplier.w;
+        this.uvMultiplier.h = uvMultiplier.h;
     }
 
     /**

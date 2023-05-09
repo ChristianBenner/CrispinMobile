@@ -169,7 +169,7 @@ public class FontSquare extends Square {
      * @since 1.0
      */
     public float getWidth() {
-        return super.getScale().x;
+        return super.getScale().w;
     }
 
     /**
@@ -179,6 +179,6 @@ public class FontSquare extends Square {
      * @since 1.0
      */
     public float getHeight() {
-        return super.getScale().y;
+        return super.getScale().h;
     }
 }

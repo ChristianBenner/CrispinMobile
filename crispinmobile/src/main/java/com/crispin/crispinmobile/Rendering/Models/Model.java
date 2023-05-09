@@ -1,9 +1,10 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.glActiveTexture;
+import static android.opengl.GLES20.glDrawElements;
 import static android.opengl.GLES20.glEnable;
+import static android.opengl.GLES20.glLineWidth;
+import static android.opengl.GLES20.glUniform4f;
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -13,7 +14,8 @@ import static android.opengl.GLES30.glDrawArrays;
 import static android.opengl.GLES30.glUniform1i;
 import static android.opengl.GLES30.glUniform3f;
 import static android.opengl.GLES30.glUniformMatrix4fv;
-import static android.opengl.GLES30.glVertexAttribPointer;
+
+import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDLE;
 
 import android.opengl.GLES30;
 import android.opengl.Matrix;
@@ -55,6 +57,9 @@ public class Model {
     // Number of uniform elements to upload in a single GLSL uniform upload
     protected static final int UNIFORM_UPLOAD_COUNT_SINGLE = 1;
 
+    // The default width of lines when wireframes are being rendered
+    private static final float DEFAULT_WIREFRAME_LINE_WIDTH = 5f;
+
     // The mesh
     private final Mesh mesh;
 
@@ -85,6 +90,12 @@ public class Model {
     // If the model has a custom shader
     private boolean hasCustomShader;
 
+    // Should we render the wireframe (useful for debugging)
+    private boolean renderWireframe;
+
+    // Width of the wireframe lines
+    private float wireframeLineWidth;
+
     public Model(Mesh mesh, Material material) {
         this.mesh = mesh;
         this.modelMatrix = new ModelMatrix();
@@ -95,6 +106,8 @@ public class Model {
         this.rotationPointAngle = new Rotation3D();
         this.material = material;
         this.hasCustomShader = false;
+        this.renderWireframe = false;
+        this.wireframeLineWidth = DEFAULT_WIREFRAME_LINE_WIDTH;
     }
 
     public Model(Mesh mesh) {
@@ -113,6 +126,30 @@ public class Model {
                  int elementsPerNormal) {
         this(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
                 elementsPerTexel, elementsPerNormal, new Material());
+    }
+
+    /**
+     * If enabled, a wireframe outlining the mesh will be rendered next render call. This is useful
+     * for debugging purposes to see how a mesh is being rendered. You can also set the width of the
+     * wireframe lines.
+     *
+     * @param state True to render wireframes, else false
+     * @see @setWireframeLineWidth
+     * @since 1.0
+     */
+    public void setRenderWireframe(boolean state) {
+        this.renderWireframe = state;
+    }
+
+    /**
+     * Width of the wireframe lines. Wireframe needs to be enabled seperately
+     *
+     * @param width Width of the wireframe lines
+     * @see @setRenderWireframe
+     * @since 1.0
+     */
+    public void setWireframeLineWidth(int width) {
+        this.wireframeLineWidth = width;
     }
 
     /**
@@ -181,9 +218,9 @@ public class Model {
      * @since 1.0
      */
     public void setScale(float w, float h, float l) {
-        this.scale.x = w;
-        this.scale.y = h;
-        this.scale.z = l;
+        this.scale.w = w;
+        this.scale.h = h;
+        this.scale.l = l;
     }
 
     /**
@@ -194,8 +231,8 @@ public class Model {
      * @since 1.0
      */
     public void setScale(float w, float h) {
-        this.scale.x = w;
-        this.scale.y = h;
+        this.scale.w = w;
+        this.scale.h = h;
     }
 
     /**
@@ -205,7 +242,7 @@ public class Model {
      * @since 1.0
      */
     public void setScaleX(float x) {
-        this.scale.x = x;
+        this.scale.w = x;
     }
 
     /**
@@ -215,7 +252,7 @@ public class Model {
      * @since 1.0
      */
     public void setScaleY(float y) {
-        this.scale.y = y;
+        this.scale.h = y;
     }
 
     /**
@@ -225,7 +262,7 @@ public class Model {
      * @since 1.0
      */
     public void setScaleZ(float z) {
-        this.scale.z = z;
+        this.scale.l = z;
     }
 
     /**
@@ -255,7 +292,7 @@ public class Model {
      * @since 1.0
      */
     public void setScale(Scale3D scale) {
-        setScale(scale.x, scale.y, scale.z);
+        setScale(scale.w, scale.h, scale.l);
     }
 
     /**
@@ -265,7 +302,7 @@ public class Model {
      * @since 1.0
      */
     public void setScale(Scale2D scale) {
-        setScale(scale.x, scale.y);
+        setScale(scale.w, scale.h);
     }
 
     /**
@@ -624,8 +661,18 @@ public class Model {
                 glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
                 break;
         }
-        GLES30.glBindVertexArray(0);
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        if(renderWireframe) {
+            if (shader.materialHandles.colourUniformHandle != UNDEFINED_HANDLE) {
+                glUniform4f(shader.materialHandles.colourUniformHandle, 0f, 0f, 0f, material.colour.alpha);
+            }
+            glLineWidth(wireframeLineWidth);
+            glDrawArrays(GL_LINES, 0, mesh.vertexCount);
+            glDrawArrays(GL_LINES, 1, mesh.vertexCount);
+        }
+
+        GLES30.glBindVertexArray(0);
 
         shader.disable();
 
@@ -734,9 +781,18 @@ public class Model {
                 glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
                 break;
         }
-        GLES30.glBindVertexArray(0);
 
         glBindTexture(GL_TEXTURE_2D, 0);
+
+        if(renderWireframe) {
+            if (shader.materialHandles.colourUniformHandle != UNDEFINED_HANDLE) {
+                glUniform4f(shader.materialHandles.colourUniformHandle, 0f, 0f, 0f, material.colour.alpha);
+            }
+            glLineWidth(wireframeLineWidth);
+            glDrawArrays(GL_LINES, 0, mesh.vertexCount);
+            glDrawArrays(GL_LINES, 1, mesh.vertexCount);
+        }
+        GLES30.glBindVertexArray(0);
 
         shader.disable();
     }

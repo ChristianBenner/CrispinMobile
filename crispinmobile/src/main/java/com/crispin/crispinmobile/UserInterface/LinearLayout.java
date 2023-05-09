@@ -30,8 +30,8 @@ public class LinearLayout extends Plane {
         this.vertical = vertical;
         this.showBackground = false;
 
-        this.automaticWidth = size.x == 0.0f;
-        this.automaticHeight = size.y == 0.0f;
+        this.automaticWidth = size.w == 0.0f;
+        this.automaticHeight = size.h == 0.0f;
 
         uiObjects = new ArrayList<>();
 
@@ -75,8 +75,8 @@ public class LinearLayout extends Plane {
     }
 
     public void setPadding(Scale2D padding) {
-        this.padding.x = padding.x;
-        this.padding.y = padding.y;
+        this.padding.w = padding.w;
+        this.padding.h = padding.h;
 
         updateUIElementPositions();
     }
@@ -144,7 +144,7 @@ public class LinearLayout extends Plane {
      */
     @Override
     public void setSize(Scale2D size) {
-        super.setSize(size.x, size.y);
+        super.setSize(size.w, size.h);
         updateUIElementPositions();
     }
 
@@ -182,9 +182,9 @@ public class LinearLayout extends Plane {
 
     private float getRemainingSpace() {
         if (vertical) {
-            return getHeight() - (padding.y * 2.0f) - cursorY;
+            return getHeight() - (padding.h * 2.0f) - cursorY;
         } else {
-            return getWidth() - (padding.x * 2.0f) - cursorX;
+            return getWidth() - (padding.w * 2.0f) - cursorX;
         }
     }
 
@@ -192,25 +192,25 @@ public class LinearLayout extends Plane {
         if (vertical) {
             // UI Start position
             final float POS_X = position.x + cursorX;
-            final float POS_Y = position.y + cursorY + padding.y;
+            final float POS_Y = position.y + cursorY + padding.h;
 
-            cursorY += padding.y + uiObject.getHeight();
+            cursorY += padding.h + uiObject.getHeight();
 
-            uiObject.setPosition(padding.x + POS_X, POS_Y);
+            uiObject.setPosition(padding.w + POS_X, POS_Y);
         } else {
             // Check if the object will fit on the current line
-            if (size.x != 0 && cursorX + uiObject.getWidth() > size.x) {
+            if (size.w != 0 && cursorX + uiObject.getWidth() > size.w) {
                 cursorY += endY;
                 cursorX = 0.0f;
                 endY = 0.0f;
             }
 
             // UI start position
-            final float POS_X = padding.x + position.x + cursorX;
-            final float POS_Y = padding.y + position.y + cursorY;
+            final float POS_X = padding.w + position.x + cursorX;
+            final float POS_Y = padding.h + position.y + cursorY;
 
             // Set the end of the UI object as the new cursorX
-            cursorX += padding.x + uiObject.getWidth();
+            cursorX += padding.w + uiObject.getWidth();
 
             // If the object and width exceeds the current end X, set the new end X
             if (POS_X + uiObject.getWidth() > endX) {
@@ -218,13 +218,13 @@ public class LinearLayout extends Plane {
             }
 
             // If the object and height exceeds the current end Y, set the new end Y
-            if (uiObject.getHeight() + padding.y > endY) {
-                endY = uiObject.getHeight() + padding.y;
+            if (uiObject.getHeight() + padding.h > endY) {
+                endY = uiObject.getHeight() + padding.h;
 
                 final float NEW_HEIGHT = POS_Y + endY - position.y;
-                if (automaticHeight && NEW_HEIGHT > size.y) {
-                    size.y = NEW_HEIGHT;
-                    super.setHeight(size.y);
+                if (automaticHeight && NEW_HEIGHT > size.h) {
+                    size.h = NEW_HEIGHT;
+                    super.setHeight(size.h);
                 }
             }
 

@@ -20,6 +20,7 @@ public class Player {
     private AnimatedSquare legsSidestepUpSprite;
     private AnimatedSquare legsSidestepDownSprite;
     private float size;
+    private float movementSpeed;
 
     private int animation;
 
@@ -30,18 +31,22 @@ public class Player {
         torsoSprite = new Square(TextureCache.loadTexture(R.drawable.player_top_down));
         torsoSprite.setPosition(x, y);
         torsoSprite.setScale(size, size);
+        torsoSprite.setRenderWireframe(true);
 
         legsSprite = new AnimatedSquare(R.drawable.player_top_down_legs, 32, 1000);
         legsSprite.setPosition(x, y);
         legsSprite.setScale(size, size);
+        legsSprite.setRenderWireframe(true);
 
         legsSidestepUpSprite = new AnimatedSquare(R.drawable.player_top_down_legs_sidestep_up, 32, 500);
         legsSidestepUpSprite.setPosition(x, y);
         legsSidestepUpSprite.setScale(size, size);
+        legsSidestepUpSprite.setRenderWireframe(true);
 
         legsSidestepDownSprite = new AnimatedSquare(R.drawable.player_top_down_legs_sidestep_down, 32, 500);
         legsSidestepDownSprite.setPosition(x, y);
         legsSidestepDownSprite.setScale(size, size);
+        legsSidestepDownSprite.setRenderWireframe(true);
     }
 
     public void update(Vec2 movement, Vec2 aim) {
@@ -69,7 +74,7 @@ public class Player {
         // While the angle is unsigned, calculate the movement speed. If the player is facing
         // forward enough, full movement speed is applied. Otherwise its decreased. Forward is
         // considered to be within 60 degrees either way of the aim direction.
-        float movementSpeed = MAX_MOVEMENT_SPEED;
+        movementSpeed = MAX_MOVEMENT_SPEED;
         if(angleMoveAimDegrees > 60.0) {
             movementSpeed = MAX_MOVEMENT_SPEED * 0.5f;
 
@@ -138,7 +143,25 @@ public class Player {
         return new Vec2(torsoSprite.getPosition());
     }
 
+    public void setPosition(Vec2 position) {
+        legsSprite.setPosition(position);
+        legsSidestepUpSprite.setPosition(position);
+        legsSidestepDownSprite.setPosition(position);
+        torsoSprite.setPosition(position);
+    }
+
+    public void translate(Vec2 translation) {
+        legsSprite.translate(translation);
+        legsSidestepUpSprite.translate(translation);
+        legsSidestepDownSprite.translate(translation);
+        torsoSprite.translate(translation);
+    }
+
     public Vec2 getSize() {
         return new Vec2(size, size);
+    }
+
+    public float getMovementSpeed() {
+        return movementSpeed;
     }
 }

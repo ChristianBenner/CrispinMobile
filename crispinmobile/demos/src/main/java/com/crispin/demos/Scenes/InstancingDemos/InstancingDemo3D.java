@@ -1,7 +1,6 @@
 package com.crispin.demos.Scenes.InstancingDemos;
 
 import android.opengl.Matrix;
-import android.view.MotionEvent;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
@@ -140,9 +139,9 @@ public class InstancingDemo3D extends Scene {
         float[] modelMatrices = new float[NUM_FLOATS_MATRIX * NUM_INSTANCES];
         for(int i = 0; i < NUM_INSTANCES; i++) {
             int matrixOffset = NUM_FLOATS_MATRIX * i;
-            float x = (r.nextFloat() * GENERATION_AREA_SIZE.x) - (GENERATION_AREA_SIZE.x/2.0f);
-            float y = (r.nextFloat() * GENERATION_AREA_SIZE.y) - (GENERATION_AREA_SIZE.y/2.0f);
-            float z = (r.nextFloat() * GENERATION_AREA_SIZE.z) - (GENERATION_AREA_SIZE.z/2.0f);
+            float x = (r.nextFloat() * GENERATION_AREA_SIZE.w) - (GENERATION_AREA_SIZE.w /2.0f);
+            float y = (r.nextFloat() * GENERATION_AREA_SIZE.h) - (GENERATION_AREA_SIZE.h /2.0f);
+            float z = (r.nextFloat() * GENERATION_AREA_SIZE.l) - (GENERATION_AREA_SIZE.l /2.0f);
             float rotateAngle = r.nextFloat() * 360.0f;
             float scale = (1.0f + r.nextFloat()) / 32f;
 

@@ -68,9 +68,9 @@ public class Vec3 {
      * @since 1.0
      */
     public Vec3(Scale3D s) {
-        this.x = s.x;
-        this.y = s.y;
-        this.z = s.z;
+        this.x = s.w;
+        this.y = s.h;
+        this.z = s.l;
     }
 
     /**
@@ -238,6 +238,16 @@ public class Vec3 {
         this.x += vector.x;
         this.y += vector.y;
         this.z += vector.z;
+    }
+
+    /**
+     * Return a Vec2 built from x and y components, discarding z component.
+     *
+     * @return Vec2 built from x and y components, discarding z component
+     * @since 1.0
+     */
+    public Vec2 toVec2() {
+        return new Vec2(x, y);
     }
 
     /**

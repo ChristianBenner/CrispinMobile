@@ -75,8 +75,8 @@ public class MaterialHandles {
         }
 
         if (uvMultiplierUniformHandle != UNDEFINED_HANDLE) {
-            glUniform2f(uvMultiplierUniformHandle, material.uvMultiplier.x,
-                    material.uvMultiplier.y);
+            glUniform2f(uvMultiplierUniformHandle, material.uvMultiplier.w,
+                    material.uvMultiplier.h);
         }
 
         if (uvOffsetUniformHandle != UNDEFINED_HANDLE) {

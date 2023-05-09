@@ -1,8 +1,9 @@
 #version 300 es
-attribute vec4 vPosition;
+
 uniform mat4 uMatrix;
 
-void main()
-{
-    gl_Position = uMatrix * vPosition;
+layout (location = 0) in vec4 aPosition;
+
+void main() {
+    gl_Position = uMatrix * aPosition;
 }

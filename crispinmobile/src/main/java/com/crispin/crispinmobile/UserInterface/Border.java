@@ -65,15 +65,15 @@ public class Border {
         final Vec2 parentPos = uiObject.getPosition();
         final Scale2D parentSize = uiObject.getSize();
 
-        borderTop.setPosition(parentPos.x, parentPos.y + parentSize.y);
-        borderRight.setPosition(parentPos.x + parentSize.x, parentPos.y - width);
+        borderTop.setPosition(parentPos.x, parentPos.y + parentSize.h);
+        borderRight.setPosition(parentPos.x + parentSize.w, parentPos.y - width);
         borderBottom.setPosition(parentPos.x, parentPos.y - width);
         borderLeft.setPosition(parentPos.x - width, parentPos.y - width);
 
-        borderTop.setScale(parentSize.x, width);
-        borderRight.setScale(width, parentSize.y + (width * 2.0f));
-        borderBottom.setScale(parentSize.x, width);
-        borderLeft.setScale(width, parentSize.y + (width * 2.0f));
+        borderTop.setScale(parentSize.w, width);
+        borderRight.setScale(width, parentSize.h + (width * 2.0f));
+        borderBottom.setScale(parentSize.w, width);
+        borderLeft.setScale(width, parentSize.h + (width * 2.0f));
     }
 
     public void draw(Camera2D camera2D) {

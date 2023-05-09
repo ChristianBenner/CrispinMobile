@@ -57,8 +57,8 @@ public class ParticleBatch {
                 graphic.setScale(particles[i].size, particles[i].size);
                 graphic.setColour(particles[i].colour);
                 graphic.setRotationAroundPoint(
-                        graphic.getScale().x / 2.0f,
-                        graphic.getScale().y / 2.0f,
+                        graphic.getScale().w / 2.0f,
+                        graphic.getScale().h / 2.0f,
                         0.0f,
                         particles[i].angle,
                         0.0f,

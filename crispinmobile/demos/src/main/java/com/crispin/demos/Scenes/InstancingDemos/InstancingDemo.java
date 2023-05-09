@@ -1,7 +1,5 @@
 package com.crispin.demos.Scenes.InstancingDemos;
 
-import android.view.MotionEvent;
-
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale3D;
@@ -66,7 +64,7 @@ public class InstancingDemo extends Scene {
 
         camera = new Camera();
        // camera.setPosition(new Vec3(0.0f, 0f, GENERATION_AREA_SIZE.z));
-        float cameraZ = (((float)Math.sin(cameraZCount)) * (GENERATION_AREA_SIZE.z/2f)) + 10.0f;
+        float cameraZ = (((float)Math.sin(cameraZCount)) * (GENERATION_AREA_SIZE.l /2f)) + 10.0f;
         camera.setPosition(0.0f, 0.0f, cameraZ);
 
         lightGroup = new LightGroup();
@@ -109,9 +107,9 @@ public class InstancingDemo extends Scene {
         Random r = new Random();
         ModelMatrix[] matrices = new ModelMatrix[NUM_INSTANCES];
         for(int i = 0; i < NUM_INSTANCES; i++) {
-            float x = (r.nextFloat() * GENERATION_AREA_SIZE.x) - (GENERATION_AREA_SIZE.x/2.0f);
-            float y = (r.nextFloat() * GENERATION_AREA_SIZE.y) - (GENERATION_AREA_SIZE.y/2.0f);
-            float z = (r.nextFloat() * GENERATION_AREA_SIZE.z) - (GENERATION_AREA_SIZE.z/2.0f);
+            float x = (r.nextFloat() * GENERATION_AREA_SIZE.w) - (GENERATION_AREA_SIZE.w /2.0f);
+            float y = (r.nextFloat() * GENERATION_AREA_SIZE.h) - (GENERATION_AREA_SIZE.h /2.0f);
+            float z = (r.nextFloat() * GENERATION_AREA_SIZE.l) - (GENERATION_AREA_SIZE.l /2.0f);
             float rotateAngle = r.nextFloat() * 360.0f;
             float scale = (1.0f + r.nextFloat()) / 32f;
 

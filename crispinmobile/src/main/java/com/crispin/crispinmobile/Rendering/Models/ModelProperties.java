@@ -126,9 +126,9 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScale(float w, float h, float l) {
-        this.scale.x = w;
-        this.scale.y = h;
-        this.scale.z = l;
+        this.scale.w = w;
+        this.scale.h = h;
+        this.scale.l = l;
         modelMatrixUpdate = true;
     }
 
@@ -140,8 +140,8 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScale(float w, float h) {
-        this.scale.x = w;
-        this.scale.y = h;
+        this.scale.w = w;
+        this.scale.h = h;
         modelMatrixUpdate = true;
     }
 
@@ -152,7 +152,7 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScaleX(float x) {
-        this.scale.x = x;
+        this.scale.w = x;
         modelMatrixUpdate = true;
     }
 
@@ -163,7 +163,7 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScaleY(float y) {
-        this.scale.y = y;
+        this.scale.h = y;
         modelMatrixUpdate = true;
     }
 
@@ -174,7 +174,7 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScaleZ(float z) {
-        this.scale.z = z;
+        this.scale.l = z;
         modelMatrixUpdate = true;
     }
 
@@ -205,7 +205,7 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScale(Scale3D scale) {
-        setScale(scale.x, scale.y, scale.z);
+        setScale(scale.w, scale.h, scale.l);
     }
 
     /**
@@ -215,7 +215,7 @@ public class ModelProperties {
      * @since 1.0
      */
     public void setScale(Scale2D scale) {
-        setScale(scale.x, scale.y);
+        setScale(scale.w, scale.h);
     }
 
     /**

@@ -76,11 +76,11 @@ public class ModelMatrix {
     }
 
     public void scale(Scale3D scale3D) {
-        Matrix.scaleM(modelMatrix, 0, scale3D.x, scale3D.y, scale3D.z);
+        Matrix.scaleM(modelMatrix, 0, scale3D.w, scale3D.h, scale3D.l);
     }
 
     public void scale(Scale2D scale2D) {
-        Matrix.scaleM(modelMatrix, 0, scale2D.x, scale2D.y, 1.0f);
+        Matrix.scaleM(modelMatrix, 0, scale2D.w, scale2D.h, 1.0f);
     }
 
     public void scale(float scale) {
