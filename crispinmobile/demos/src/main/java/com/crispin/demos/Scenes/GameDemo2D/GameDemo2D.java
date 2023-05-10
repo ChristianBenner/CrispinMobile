@@ -32,7 +32,6 @@ public class GameDemo2D extends Scene {
     private Joystick aimJoystick;
 
     private Player player;
-    private ModelMatrix playerHitboxModelMatrix;
     private HitboxRectangle playerHitbox;
 
     private Square mapBase;
@@ -51,7 +50,6 @@ public class GameDemo2D extends Scene {
         aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
 
         player = new Player(5000f, 5000f, PLAYER_SIZE);
-        playerHitboxModelMatrix = new ModelMatrix();
         playerHitbox = new HitboxRectangle();
 
         Material grassRepeatMaterial = new Material(R.drawable.grass_tile);
