@@ -151,6 +151,22 @@ public class Geometry {
     }
 
     /**
+     * Get the distance between two points using pythagoras theorem
+     *
+     * @param x1 First points x-coordinate
+     * @param y1 First points y-coordinate
+     * @param x2 Second points x-coordinate
+     * @param y2 Second points y-coordinate
+     * @return Distance between the two given points
+     * @since 1.0
+     */
+    public static float getDistance(float x1, float y1, float x2, float y2) {
+        final float a = x1 - x2;
+        final float b = y1 - y2;
+        return (float) Math.sqrt((a * a) + (b * b));
+    }
+
+    /**
      * Divide each component of the vector
      *
      * @param divisor

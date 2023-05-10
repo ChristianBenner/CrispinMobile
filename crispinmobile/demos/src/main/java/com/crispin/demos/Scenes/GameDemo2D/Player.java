@@ -6,6 +6,7 @@ import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Models.AnimatedSquare;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 
@@ -31,22 +32,22 @@ public class Player {
         torsoSprite = new Square(TextureCache.loadTexture(R.drawable.player_top_down));
         torsoSprite.setPosition(x, y);
         torsoSprite.setScale(size, size);
-        torsoSprite.setRenderWireframe(true);
 
         legsSprite = new AnimatedSquare(R.drawable.player_top_down_legs, 32, 1000);
         legsSprite.setPosition(x, y);
         legsSprite.setScale(size, size);
-        legsSprite.setRenderWireframe(true);
 
         legsSidestepUpSprite = new AnimatedSquare(R.drawable.player_top_down_legs_sidestep_up, 32, 500);
         legsSidestepUpSprite.setPosition(x, y);
         legsSidestepUpSprite.setScale(size, size);
-        legsSidestepUpSprite.setRenderWireframe(true);
 
         legsSidestepDownSprite = new AnimatedSquare(R.drawable.player_top_down_legs_sidestep_down, 32, 500);
         legsSidestepDownSprite.setPosition(x, y);
         legsSidestepDownSprite.setScale(size, size);
-        legsSidestepDownSprite.setRenderWireframe(true);
+    }
+
+    public ModelMatrix getModelMatrix() {
+        return torsoSprite.getModelMatrix();
     }
 
     public void update(Vec2 movement, Vec2 aim) {

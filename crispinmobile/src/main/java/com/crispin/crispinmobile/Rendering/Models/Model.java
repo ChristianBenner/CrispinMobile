@@ -128,6 +128,10 @@ public class Model {
                 elementsPerTexel, elementsPerNormal, new Material());
     }
 
+    public ModelMatrix getModelMatrix() {
+        return modelMatrix;
+    }
+
     /**
      * If enabled, a wireframe outlining the mesh will be rendered next render call. This is useful
      * for debugging purposes to see how a mesh is being rendered. You can also set the width of the

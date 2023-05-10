@@ -4,7 +4,7 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Physics.Collision;
+import com.crispin.crispinmobile.Physics.HitboxRectangle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.DefaultMesh.SquareMesh;
@@ -31,12 +31,15 @@ public class GameDemo2D extends Scene {
     private Joystick aimJoystick;
 
     private Player player;
+    private ModelMatrix playerHitboxModelMatrix;
+    private HitboxRectangle playerHitbox;
 
     private Square mapBase;
 
     private InstanceRenderer cactus;
     private InstanceRenderer rock;
     private Building building;
+    private HitboxRectangle buildingHitbox;
 
     public GameDemo2D() {
         camera = new Camera2D();
@@ -47,6 +50,8 @@ public class GameDemo2D extends Scene {
         aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
 
         player = new Player(5000f, 5000f, PLAYER_SIZE);
+        playerHitboxModelMatrix = new ModelMatrix();
+        playerHitbox = new HitboxRectangle();
 
         Material grassRepeatMaterial = new Material(R.drawable.grass_tile);
         grassRepeatMaterial.setUvMultiplier(100f, 100f);
@@ -60,16 +65,20 @@ public class GameDemo2D extends Scene {
         rock.setTexture(TextureCache.loadTexture(R.drawable.rock));
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
+        buildingHitbox = new HitboxRectangle();
     }
 
     @Override
     public void update(float deltaTime) {
         player.update(movementJoystick.getDirection(), aimJoystick.getDirection());
+        playerHitbox.transform(player.getModelMatrix());
+        buildingHitbox.transform(building.getModelMatrix());
 
-//        if(building.isColliding(player)) {
-//            Vec2 undoMovement = Geometry.scaleVector(Geometry.invert(movementJoystick.getDirection()), player.getMovementSpeed());
-//            player.translate(undoMovement);
-//        }
+        mapBase.setColour(Colour.WHITE);
+        if(playerHitbox.isColliding(buildingHitbox)) {
+            mapBase.setColour(Colour.RED);
+        }
+
         camera.setPosition(getCenteredCameraPosition());
     }
 
@@ -81,32 +90,9 @@ public class GameDemo2D extends Scene {
         building.render(camera);
         player.render(camera);
 
-
-//        if(Collision.checkCollisionRotation(
-//                new HitboxRectangle(player.getPosition(), new Scale2D(player.getSize().x, player.getSize().y)),
-//                new HitboxRectangle(building.getPosition(), building.getSize()), camera)) {
-//            mapBase.setColour(Colour.RED);
-//        }
-
-        mapBase.setColour(Colour.WHITE);
-        Vec2[] triangle = new Vec2[8];
-        triangle[0] = new Vec2(4000f, 4000f);
-        triangle[1] = new Vec2(4250f, 4350f);
-        triangle[2] = new Vec2(4500f, 4500f);
-        triangle[3] = new Vec2(4750f, 4350f);
-        triangle[4] = new Vec2(5000f, 4000f);
-        triangle[5] = new Vec2(4750f, 3650f);
-        triangle[6] = new Vec2(4500f, 3500f);
-        triangle[7] = new Vec2(4250f, 3650f);
-
-        Vec2[] playerPolygon = new Vec2[4];
-        playerPolygon[0] = new Vec2(player.getPosition().x, player.getPosition().y);
-        playerPolygon[1] = new Vec2(player.getPosition().x, player.getPosition().y + player.getSize().y);
-        playerPolygon[2] = new Vec2(player.getPosition().x + player.getSize().x, player.getPosition().y + player.getSize().y);
-        playerPolygon[3] = new Vec2(player.getPosition().x + player.getSize().x, player.getPosition().y);
-        if(Collision.checkCollision(triangle, playerPolygon, camera)) {
-            mapBase.setColour(Colour.RED);
-        }
+        // Debugging
+        playerHitbox.render(camera);
+        buildingHitbox.render(camera);
 
         // UI
         movementJoystick.render(uiCamera);

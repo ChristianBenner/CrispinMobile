@@ -5,6 +5,7 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 
 public class Building {
     private static final float WALL_THICKNESS = 15f;
@@ -43,6 +44,10 @@ public class Building {
         floor.setColour(Colour.LIGHT_GREY);
 
         setPosition(position);
+    }
+
+    public ModelMatrix getModelMatrix() {
+        return floor.getModelMatrix();
     }
 
     public void setPosition(Vec2 position) {
