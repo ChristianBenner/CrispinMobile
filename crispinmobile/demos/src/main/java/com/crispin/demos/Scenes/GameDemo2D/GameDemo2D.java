@@ -23,6 +23,7 @@ import java.util.Random;
 
 public class GameDemo2D extends Scene {
     private static final float PLAYER_SIZE = 128f;
+    private static final int NUM_CRATES = 100;
 
     private Camera2D camera;
     private Camera2D uiCamera;
@@ -36,10 +37,10 @@ public class GameDemo2D extends Scene {
 
     private Square mapBase;
 
-    private InstanceRenderer cactus;
-    private InstanceRenderer rock;
     private Building building;
     private HitboxRectangle buildingHitbox;
+    private InstanceRenderer crates;
+    private HitboxRectangle[] crateHitboxes;
 
     public GameDemo2D() {
         camera = new Camera2D();
@@ -58,11 +59,14 @@ public class GameDemo2D extends Scene {
         mapBase = new Square(grassRepeatMaterial);
         mapBase.setScale(10000f);
 
-        cactus = new InstanceRenderer(new SquareMesh(true), false, generateRandomModelTransformations(100, 100f, 200f));
-        cactus.setTexture(TextureCache.loadTexture(R.drawable.cactus));
-
-        rock = new InstanceRenderer(new SquareMesh(true), false, generateRandomModelTransformations(300, 50f, 250f));
-        rock.setTexture(TextureCache.loadTexture(R.drawable.rock));
+        ModelMatrix[] crateModelMatrixes = generateRandomModelTransformations(NUM_CRATES, 100f, 200f);
+        crates = new InstanceRenderer(new SquareMesh(true), false, crateModelMatrixes);
+        crates.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
+        crateHitboxes = new HitboxRectangle[NUM_CRATES];
+        for(int i = 0; i < NUM_CRATES; i++) {
+            crateHitboxes[i] = new HitboxRectangle();
+            crateHitboxes[i].transform(crateModelMatrixes[i]);
+        }
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
         buildingHitbox = new HitboxRectangle();
@@ -79,20 +83,22 @@ public class GameDemo2D extends Scene {
             mapBase.setColour(Colour.RED);
         }
 
+        for(int i = 0; i < NUM_CRATES; i++) {
+            if(playerHitbox.isColliding(crateHitboxes[i])) {
+                mapBase.setColour(Colour.RED);
+            }
+        }
+
         camera.setPosition(getCenteredCameraPosition());
     }
 
     @Override
     public void render() {
         mapBase.render(camera);
-        rock.render(camera);
-        cactus.render(camera);
+        crates.render(camera);
         building.render(camera);
-        player.render(camera);
-
-        // Debugging
         playerHitbox.render(camera);
-        buildingHitbox.render(camera);
+        player.render(camera);
 
         // UI
         movementJoystick.render(uiCamera);
@@ -112,6 +118,7 @@ public class GameDemo2D extends Scene {
             ModelMatrix modelMatrix = new ModelMatrix();
             modelMatrix.translate(x, y);
             modelMatrix.scale(scale, scale);
+            modelMatrix.rotate(r.nextFloat() * 360f, 0f, 0f, 1f);
             matrices[i] = modelMatrix;
         }
 
