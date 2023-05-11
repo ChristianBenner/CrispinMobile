@@ -8,7 +8,7 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;
 
 public class HitboxPolygonTest {
-    private static final int NUM_RUNS = 100000;
+    private static final int NUM_RUNS = 10000;
 
     private final HitboxPolygon polygon1;
     private final HitboxPolygon polygon2;
@@ -30,7 +30,7 @@ public class HitboxPolygonTest {
     private float[] generateCirclePolygon(Vec2 center, float radius, int numPoints) {
         float[] polygon = new float[numPoints * 2];
         float angleIncrement = (float)(2f * Math.PI / (double)numPoints);
-        for (int i = 0; i < numPoints; i++) {
+        for (int i = 0; i < numPoints * 2; i += 2) {
             float angle = i * angleIncrement;
             polygon[i] = center.x + radius * (float) Math.cos(angle);
             polygon[i + 1] = center.y + radius * (float) Math.sin(angle);
@@ -74,7 +74,7 @@ public class HitboxPolygonTest {
     public void CustomCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertTrue(p1.isColliding(p2));
+            assertTrue(p1.isCollidingSAT(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomCollisionPerformanceCheck MS: " + (timeEnd - timeStart));
@@ -83,7 +83,7 @@ public class HitboxPolygonTest {
     public void CustomNonCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertFalse(p1.isColliding(p2));
+            assertFalse(p1.isCollidingSAT(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomNonCollisionPerformanceCheck MS: " + (timeEnd - timeStart));

@@ -14,7 +14,7 @@ import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.Scene;
 
 public class IntroScene extends Scene {
-    final float TRANSITION_RATE = 0.015f;
+    final float TRANSITION_RATE = 0.01f;
     // UI Camera
     private final Camera2D uiCamera;
 
