@@ -196,7 +196,7 @@ public class Vec3 {
      * @param vector Vector to subtract from this vector
      * @since 1.0
      */
-    public void minus(Vec3 vector) {
+    public void subtract(Vec3 vector) {
         this.x -= vector.x;
         this.y -= vector.y;
         this.z -= vector.z;
@@ -208,7 +208,7 @@ public class Vec3 {
      * @param vector Vector to add to this vector
      * @since 1.0
      */
-    public void plus(Vec3 vector) {
+    public void add(Vec3 vector) {
         this.x += vector.x;
         this.y += vector.y;
         this.z += vector.z;

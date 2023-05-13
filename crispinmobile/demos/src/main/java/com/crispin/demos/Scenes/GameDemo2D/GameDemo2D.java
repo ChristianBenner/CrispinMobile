@@ -4,7 +4,6 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Physics.HitboxRectangle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
@@ -41,7 +40,6 @@ public class GameDemo2D extends Scene {
     private HitboxRectangle buildingHitbox;
     private InstanceRenderer crates;
     private HitboxRectangle[] crateHitboxes;
-    private HitboxPolygon hitboxPolygon;
 
     public GameDemo2D() {
         camera = new Camera2D();
@@ -70,19 +68,6 @@ public class GameDemo2D extends Scene {
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
         buildingHitbox = new HitboxRectangle();
-
-        hitboxPolygon = new HitboxPolygon(new float[]{
-                300f, 300f,
-                400f, 400f,
-                500f, 450f,
-                600f, 400f,
-                500f, 250f,
-                400f, 250f,
-        });
-
-        ModelMatrix modelMatrix = new ModelMatrix();
-        modelMatrix.scale(4f);
-        hitboxPolygon.transform(modelMatrix);
     }
 
     @Override
@@ -107,20 +92,15 @@ public class GameDemo2D extends Scene {
         // when needed, and also update on retrieval of model matrix if needed.
         playerHitbox.transform(player.getModelMatrix());
         mapBase.setColour(Colour.WHITE);
-        if(playerHitbox.isCollidingSAT(buildingHitbox)) {
+        if(playerHitbox.isColliding(buildingHitbox)) {
             mapBase.setColour(Colour.RED);
         }
 
         for(int i = 0; i < NUM_CRATES; i++) {
-            if(playerHitbox.isCollidingSAT(crateHitboxes[i])) {
+            if(playerHitbox.isColliding(crateHitboxes[i])) {
                 mapBase.setColour(Colour.RED);
             }
         }
-
-        if(playerHitbox.isCollidingSAT(hitboxPolygon)) {
-            mapBase.setColour(Colour.RED);
-        }
-        hitboxPolygon.render(camera);
 
         playerHitbox.render(camera);
 

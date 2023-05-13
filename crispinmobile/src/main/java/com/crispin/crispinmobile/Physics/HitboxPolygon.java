@@ -8,14 +8,14 @@ import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 public class HitboxPolygon {
     private float[] data;
     private float[] transformedPoints;
-    private float[] axes;
-
-    // A reference to the points that should be used (either data or transformedPoints)
-    private float[] points;
 
     // These lines are only initialised when attempting to render for the first time. Rendering will
     // likely only occur in debugging scenarios to show hitboxes in development.
     private Line[] lines;
+
+    // A reference to the points that should be used (either data or transformedPoints)
+    float[] points;
+    float[] axes;
 
     // Assumes two components (xy)
     public HitboxPolygon(float[] data) {
@@ -27,8 +27,16 @@ public class HitboxPolygon {
         calculateAxes();
     }
 
+    public boolean isColliding(HitboxPolygon other) {
+        return Collision.isColliding(this, other);
+    }
+
+    public boolean isColliding(HitboxCircle circle) {
+        return Collision.isColliding(this, circle);
+    }
+
     public void transform(ModelMatrix modelMatrix) {
-        if(transformedPoints == null) {
+        if (transformedPoints == null) {
             // Allocate now so it does not need to be allocate every transform call (expensive)
             this.transformedPoints = new float[data.length];
             this.points = transformedPoints;
@@ -42,18 +50,6 @@ public class HitboxPolygon {
         }
 
         calculateAxes();
-    }
-
-    private void calculateAxes() {
-        // Calculate axes for this polygon
-        for (int i = 0; i < points.length; i += 2) {
-            int next = (i + 2) % points.length;
-            float edgeX = points[next] - points[i];
-            float edgeY = -(points[next + 1] - points[i + 1]);
-            float length = (float) Math.sqrt(Math.abs((edgeY * edgeY) + (edgeX * edgeX)));
-            axes[i] = edgeY / length;
-            axes[i + 1] = edgeX / length;
-        }
     }
 
     public void render(Camera2D camera2D) {
@@ -73,49 +69,15 @@ public class HitboxPolygon {
         }
     }
 
-    // Using SAT collision algorithm
-    public boolean isCollidingSAT(HitboxPolygon other) {
-        float[] projectionMyAxis = new float[2];
-        float[] projectionOtherAxis = new float[2];
-
-        // Collision check using this polygons axes
-        for (int i = 0; i < axes.length; i += 2) {
-            projectPolygon(projectionMyAxis, axes[i], axes[i + 1], points);
-            projectPolygon(projectionOtherAxis, axes[i], axes[i + 1], other.points);
-            if (!overlap(projectionMyAxis, projectionOtherAxis)) {
-                return false;
-            }
+    private void calculateAxes() {
+        // Calculate axes for this polygon
+        for (int i = 0; i < points.length; i += 2) {
+            int next = (i + 2) % points.length;
+            float edgeX = points[next] - points[i];
+            float edgeY = -(points[next + 1] - points[i + 1]);
+            float length = (float) Math.sqrt(Math.abs((edgeY * edgeY) + (edgeX * edgeX)));
+            axes[i] = edgeY / length;
+            axes[i + 1] = edgeX / length;
         }
-
-        // Collision check using other polygons axes
-        for (int i = 0; i < other.axes.length; i += 2) {
-            projectPolygon(projectionMyAxis, other.axes[i], other.axes[i + 1], points);
-            projectPolygon(projectionOtherAxis, other.axes[i], other.axes[i + 1], other.points);
-            if (!overlap(projectionMyAxis, projectionOtherAxis)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private void projectPolygon(float[] projectionOut, float axisX, float axisY, float[] polygon) {
-        float min = (axisX * polygon[0]) + (axisY * polygon[1]); // dot product
-        float max = min;
-        for (int i = 2; i < polygon.length; i += 2) {
-            float dot = (axisX * polygon[i]) + (axisY * polygon[i + 1]); // dot product
-            if (dot < min) {
-                min = dot;
-            } else if (dot > max) {
-                max = dot;
-            }
-        }
-
-        projectionOut[0] = min;
-        projectionOut[1] = max;
-    }
-
-    private boolean overlap(float[] proj1, float[] proj2) {
-        return !(proj1[1] < proj2[0] || proj2[1] < proj1[0]);
     }
 }

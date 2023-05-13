@@ -138,6 +138,16 @@ public class Vec2 {
     }
 
     /**
+     * Get the dot product of the perpendicular to the vector
+     *
+     * @return The dot product of the perpendicular direction as a float
+     * @since 1.0
+     */
+    public float getPerpendicularDotProduct(Vec2 other) {
+        return x * other.y - y * other.x;
+    }
+
+    /**
      * Scale the direction by a multiplier
      *
      * @param scale Scale multiplier (multiplies both dimensions x and y)
@@ -166,7 +176,7 @@ public class Vec2 {
      * @param vector Vector to subtract from this vector
      * @since 1.0
      */
-    public void minus(Vec2 vector) {
+    public void subtract(Vec2 vector) {
         this.x -= vector.x;
         this.y -= vector.y;
     }
@@ -177,7 +187,7 @@ public class Vec2 {
      * @param vector Vector to add to this vector
      * @since 1.0
      */
-    public void plus(Vec2 vector) {
+    public void add(Vec2 vector) {
         this.x += vector.x;
         this.y += vector.y;
     }
