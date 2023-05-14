@@ -37,6 +37,7 @@ public class DemoMasterScene extends Scene {
     private final Camera2D camera2D;
     private final LinearLayout linearLayout;
     private final Text selectDemoText;
+    private final Square titleBackground;
     private Square background;
     private BackgroundShader backgroundShader;
     private float time;
@@ -82,8 +83,6 @@ public class DemoMasterScene extends Scene {
         background.setScale(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
         background.useCustomShader(backgroundShader);
 
-        Font titleFont = new Font(R.raw.aileron_regular, 72);
-
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));
         linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
@@ -98,10 +97,15 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("2D Game Demo", GameDemo2D::new));
         linearLayout.add(createDemoButton("2D Collision Demo", CollisionDemo2D::new));
 
-        selectDemoText = new Text(titleFont, "Select a Demo", true, true,
-                SURFACE_WIDTH);
+        Font titleFont = new Font(R.raw.aileron_bold, 72);
+        selectDemoText = new Text(titleFont, "Select a Demo", true, true, SURFACE_WIDTH);
         selectDemoText.setColour(Colour.WHITE);
-        selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING);
+        selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING - PADDING);
+
+        titleBackground = new Square(false);
+        titleBackground.setColour(new Colour(0f, 0f, 0f, 0.3f));
+        titleBackground.setPosition((Crispin.getSurfaceWidth() / 2f) - (selectDemoText.getWidth() / 2f) - PADDING, selectDemoText.getPosition().y - PADDING);
+        titleBackground.setScale(selectDemoText.getWidth() + PADDING + PADDING, selectDemoText.getHeight() + PADDING + PADDING);
     }
 
     private Button createDemoButton(String text, final Constructor sceneConstructor) {
@@ -120,7 +124,7 @@ public class DemoMasterScene extends Scene {
 
     @Override
     public void update(float deltaTime) {
-        time += 0.05f * deltaTime;
+        time += 0.01f * deltaTime;
         backgroundShader.setTime(time);
     }
 
@@ -128,6 +132,7 @@ public class DemoMasterScene extends Scene {
     public void render() {
         background.render(camera2D);
         linearLayout.draw(camera2D);
+        titleBackground.render(camera2D);
         selectDemoText.draw(camera2D);
     }
 

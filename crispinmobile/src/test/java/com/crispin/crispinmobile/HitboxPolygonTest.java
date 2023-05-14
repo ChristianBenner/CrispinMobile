@@ -39,6 +39,12 @@ public class HitboxPolygonTest {
     }
 
     @Test
+    public void RotateVectorTest() {
+        float collisionAngle = 10f;
+        assertEquals(Math.cos(collisionAngle + Math.PI / 2), -Math.sin(collisionAngle), 0.01f);
+    }
+
+    @Test
     public void CollisionPerformanceCheck() {
         System.out.println("LOW POLY RECTANGLE:");
         CustomNonCollisionPerformanceCheck(polygon1, polygon2);
@@ -74,7 +80,7 @@ public class HitboxPolygonTest {
     public void CustomCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertTrue(p1.isCollidingSAT(p2));
+            assertTrue(p1.isColliding(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomCollisionPerformanceCheck MS: " + (timeEnd - timeStart));
@@ -83,7 +89,7 @@ public class HitboxPolygonTest {
     public void CustomNonCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertFalse(p1.isCollidingSAT(p2));
+            assertFalse(p1.isColliding(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomNonCollisionPerformanceCheck MS: " + (timeEnd - timeStart));

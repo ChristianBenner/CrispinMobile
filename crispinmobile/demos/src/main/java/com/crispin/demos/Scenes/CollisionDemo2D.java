@@ -171,11 +171,14 @@ public class CollisionDemo2D extends Scene {
             float finalVelocityY1 = velocityY1;
             float finalVelocityY2 = velocityY2;
 
-            // Convert the final velocities back into velocity components
-            ball1.velocityX = (float) (Math.cos(collisionAngle) * finalVelocityX1 + Math.cos(collisionAngle + Math.PI / 2) * finalVelocityY1);
-            ball1.velocityY = (float) (Math.sin(collisionAngle) * finalVelocityX1 + Math.sin(collisionAngle + Math.PI / 2) * finalVelocityY1);
-            ball2.velocityX = (float) (Math.cos(collisionAngle) * finalVelocityX2 + Math.cos(collisionAngle + Math.PI / 2) * finalVelocityY2);
-            ball2.velocityY = (float) (Math.sin(collisionAngle) * finalVelocityX2 + Math.sin(collisionAngle + Math.PI / 2) * finalVelocityY2);
+            // Rotate the vectors by the collision angle to convert the final velocities back into velocity components
+            // Formula for rotating vectors:
+            //  x2 = x1cos(a) - y1sin(a)
+            //  y2 = x1sin(a) + y1cos(a)
+            ball1.velocityX = (float) ((finalVelocityX1 * Math.cos(collisionAngle)) - (finalVelocityY1 * Math.sin(collisionAngle)));
+            ball1.velocityY = (float) ((finalVelocityX1 * Math.sin(collisionAngle)) + (finalVelocityY1 * Math.cos(collisionAngle)));
+            ball2.velocityX = (float) ((finalVelocityX2 * Math.cos(collisionAngle)) - (finalVelocityY2 * Math.sin(collisionAngle)));
+            ball2.velocityY = (float) ((finalVelocityX2 * Math.sin(collisionAngle)) + (finalVelocityY2 * Math.cos(collisionAngle)));
         }
     }
 

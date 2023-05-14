@@ -373,6 +373,10 @@ public class Geometry {
         return new Vec2(v.x / length, v.y / length);
     }
 
+//    public static Vec2 rotate(Vec2 v, float angleDegrees) {
+//
+//    }
+
     /**
      * Get a direction from a vector
      *

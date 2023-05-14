@@ -19,7 +19,7 @@ public class ShaderCache {
     private static final String TAG = "ShaderCache";
 
     // The array of shader programs
-    private static final Map<Integer, Shader> shaderArray = new HashMap<>();
+    private static final Map<Integer, Shader> shaderMap = new HashMap<>();
 
     // Pairing function
     private static int generateUniqueId(int a, int b) {
@@ -27,13 +27,12 @@ public class ShaderCache {
     }
 
     public static boolean existsInCache(int vertexShaderResourceId, int fragmentShaderResourceId) {
-        return shaderArray.containsKey(generateUniqueId(vertexShaderResourceId,
+        return shaderMap.containsKey(generateUniqueId(vertexShaderResourceId,
                 fragmentShaderResourceId));
     }
 
     public static Shader getShader(int vertexShaderResourceId, int fragmentShaderResourceId) {
-        return shaderArray.get(generateUniqueId(vertexShaderResourceId,
-                fragmentShaderResourceId));
+        return shaderMap.get(generateUniqueId(vertexShaderResourceId, fragmentShaderResourceId));
     }
 
     /**
@@ -43,7 +42,7 @@ public class ShaderCache {
      */
     public static void registerShader(int vertexShaderResource, int fragmentShaderResource,
                                       Shader shader) {
-        shaderArray.put(generateUniqueId(vertexShaderResource, fragmentShaderResource), shader);
+        shaderMap.put(generateUniqueId(vertexShaderResource, fragmentShaderResource), shader);
     }
 
     /**
@@ -54,11 +53,11 @@ public class ShaderCache {
     public static void removeAll() {
         // Iterate through the shader array, destroying all of the shaders. This will also remove
         // shader from OpenGL controlled memory.
-        for (Map.Entry<Integer, Shader> shader : shaderArray.entrySet()) {
+        for (Map.Entry<Integer, Shader> shader : shaderMap.entrySet()) {
             shader.getValue().destroy();
         }
 
-        shaderArray.clear();
+        shaderMap.clear();
     }
 
     /**
@@ -70,7 +69,7 @@ public class ShaderCache {
      */
     public static void reinitialiseAll() {
         // Iterate through the shader array, reconstructing all of them
-        for (Map.Entry<Integer, Shader> shader : shaderArray.entrySet()) {
+        for (Map.Entry<Integer, Shader> shader : shaderMap.entrySet()) {
             // Attempt to reconstruct
             try {
                 shader.getValue().reconstruct();
