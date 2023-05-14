@@ -14,11 +14,14 @@ import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 public class NormalMapDemo extends Scene {
     class NormalMapShader extends Shader {
@@ -54,6 +57,8 @@ public class NormalMapDemo extends Scene {
         }
     }
 
+    private Camera2D camera2D;
+    private Button backButton;
     private NormalMapShader normalMapShader;
     private Model cube;
     private Model light;
@@ -71,6 +76,9 @@ public class NormalMapDemo extends Scene {
 
 
     public NormalMapDemo() {
+        camera2D = new Camera2D();
+        backButton = Util.createBackButton(DemoMasterScene::new);
+
         normalMapShader = new NormalMapShader();
         normalMapShader.setLightPosition(1f, 0f, 0f);
 
@@ -132,6 +140,7 @@ public class NormalMapDemo extends Scene {
     public void render() {
         cube.render(camera);
         light.render(camera);
+        backButton.draw(camera2D);
     }
 
     @Override

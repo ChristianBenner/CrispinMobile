@@ -1,9 +1,16 @@
 package com.crispin.demos.Scenes;
 
+import static android.opengl.GLES20.glUniform1f;
+import static android.opengl.GLES20.glUniform2f;
+import static android.opengl.GLES20.glUniform4f;
+
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Models.Square;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
@@ -29,11 +36,52 @@ public class DemoMasterScene extends Scene {
 
     private final Camera2D camera2D;
     private final LinearLayout linearLayout;
-    private final com.crispin.crispinmobile.UserInterface.Text selectDemoText;
+    private final Text selectDemoText;
+    private Square background;
+    private BackgroundShader backgroundShader;
+    private float time;
+
+    class BackgroundShader extends Shader {
+        private int timeUniformHandle = UNDEFINED_HANDLE;
+        private int centerUniformHandle = UNDEFINED_HANDLE;
+
+        public BackgroundShader() {
+            super("BackgroundShader", R.raw.background_vert, R.raw.background_frag);
+
+            positionAttributeHandle = getAttribute("aPosition");
+            matrixUniformHandle = getUniform("uMatrix");
+
+            timeUniformHandle = getUniform("uTime");
+            centerUniformHandle = getUniform("uCenter");
+        }
+
+        public void setTime(float time) {
+            super.enable();
+            glUniform1f(timeUniformHandle, time);
+            super.disable();
+        }
+
+        public void setCenter(float x, float y) {
+            super.enable();
+            glUniform2f(centerUniformHandle, x, y);
+            super.disable();
+        }
+    }
 
     public DemoMasterScene() {
+        System.out.println("WIDTH: " + Crispin.getSurfaceWidth() + ", HEIGHT: " + Crispin.getSurfaceHeight());
         Crispin.setBackgroundColour(Colour.DARK_GREY);
         camera2D = new Camera2D(0.0f, 0.0f, SURFACE_WIDTH, SURFACE_HEIGHT);
+
+        backgroundShader = new BackgroundShader();
+        backgroundShader.setCenter(Crispin.getSurfaceWidth() / 2f, Crispin.getSurfaceHeight() / 2f);
+        time = 0.0f;
+
+        background = new Square();
+        background.setPosition(0f, 0f);
+        background.setScale(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
+        background.useCustomShader(backgroundShader);
+
         Font titleFont = new Font(R.raw.aileron_regular, 72);
 
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
@@ -45,7 +93,6 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
         linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
         linearLayout.add(createDemoButton("Instance Rendering Demos", InstancingDemoSelectionScene::new));
-        linearLayout.add(createDemoButton("2D Demo", Demo2D::new));
         linearLayout.add(createDemoButton("Normal Map Demo", NormalMapDemo::new));
         linearLayout.add(createDemoButton("Touch Demo", TouchDemo::new));
         linearLayout.add(createDemoButton("2D Game Demo", GameDemo2D::new));
@@ -73,10 +120,13 @@ public class DemoMasterScene extends Scene {
 
     @Override
     public void update(float deltaTime) {
+        time += 0.05f * deltaTime;
+        backgroundShader.setTime(time);
     }
 
     @Override
     public void render() {
+        background.render(camera2D);
         linearLayout.draw(camera2D);
         selectDemoText.draw(camera2D);
     }

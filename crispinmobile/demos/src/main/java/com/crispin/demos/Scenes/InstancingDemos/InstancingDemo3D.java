@@ -24,6 +24,7 @@ import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 import java.util.Random;
 
@@ -186,25 +187,8 @@ public class InstancingDemo3D extends Scene {
         fpsText.setPosition(10, Crispin.getSurfaceHeight() - (textOffset * 3f));
         fpsText.setColour(Colour.WHITE);
 
-        Font homeButtonFont = new Font(R.raw.aileron_regular, 36);
-
-        homeButton = new Button(homeButtonFont, "Back");
-        homeButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 10);
-        homeButton.setSize(200, 200);
-        homeButton.setBorder(new Border(Colour.BLACK));
-        homeButton.setColour(Colour.LIGHT_GREY);
-        homeButton.addTouchListener(e -> {
-            if(e.getEvent() == TouchEvent.Event.CLICK) {
-                Crispin.setScene(InstancingDemoSelectionScene::new);
-            }
-        });
-
-        regenButton = new Button(homeButtonFont, "Regenerate");
-        regenButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 230);
-        regenButton.setSize(200, 200);
-        regenButton.setBorder(new Border(Colour.BLACK));
-        regenButton.setColour(Colour.LIGHT_GREY);
-        regenButton.addTouchListener(e -> {
+        homeButton = Util.createBackButton(InstancingDemoSelectionScene::new);
+        regenButton = Util.createStyledButton("Regenerate", 10, 230, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 float[] modelTransformations = generateRandomModelTransformations();
                 float[] colourData = generateRandomColours();
@@ -213,19 +197,13 @@ public class InstancingDemo3D extends Scene {
                 }
 
                 renderers[RENDER_UNIQUE_COLOUR_TEXTURE_LIGHTING].uploadColourData(colourData);
-                renderers[RENDER_COLOUR_LIGHTING].uploadColourData(colourData);
+                renderers[RENDER_UNIQUE_COLOUR_LIGHTING].uploadColourData(colourData);
                 renderers[RENDER_UNIQUE_COLOUR_TEXTURE].uploadColourData(colourData);
-                renderers[RENDER_COLOUR].uploadColourData(colourData);
                 renderers[RENDER_UNIQUE_COLOUR].uploadColourData(colourData);
             }
         });
 
-        nextDataSetButton = new Button(homeButtonFont, "Next Data Set");
-        nextDataSetButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 450);
-        nextDataSetButton.setSize(200, 200);
-        nextDataSetButton.setBorder(new Border(Colour.BLACK));
-        nextDataSetButton.setColour(Colour.LIGHT_GREY);
-        nextDataSetButton.addTouchListener(e -> {
+        nextDataSetButton = Util.createStyledButton("Next Data Set", 10, 450, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 rendererIndex++;
                 if(rendererIndex >= NUM_RENDERERS) {

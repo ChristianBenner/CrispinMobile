@@ -97,7 +97,7 @@ public class Crispin {
             glSurfaceView.setRenderer(sceneManager);
 
             // Add an on touch listener that will feed the scene manager any motion events
-            glSurfaceView.setOnTouchListener(new ViewTouchListener());
+            glSurfaceView.setOnTouchListener(new ViewTouchListener(glSurfaceView));
 
             // Set the application view to the graphics view
             appCompatActivity.setContentView(glSurfaceView);
@@ -467,6 +467,18 @@ public class Crispin {
     public static void setPrintFps(boolean state) {
         if (isInit()) {
             crispinInstance.sceneManager.setPrintFps(state);
+        }
+    }
+
+    /**
+     * Queue an event to run on the GL thread
+     *
+     * @param runnable Runnable to queue
+     * @since 1.0
+     */
+    public static void queueEvent(Runnable runnable) {
+        if (isInit()) {
+            crispinInstance.glSurfaceView.queueEvent(runnable);
         }
     }
 

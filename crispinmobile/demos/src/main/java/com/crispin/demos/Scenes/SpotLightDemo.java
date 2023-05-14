@@ -9,16 +9,21 @@ import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 public class SpotLightDemo extends Scene {
+    private Camera2D camera2D;
+    private Button backButton;
     private Model torus;
     private Camera camera3D;
     private LightGroup lightGroup;
@@ -31,6 +36,9 @@ public class SpotLightDemo extends Scene {
 
     public SpotLightDemo() {
         Crispin.setBackgroundColour(Colour.BLACK);
+
+        camera2D = new Camera2D();
+        backButton = Util.createBackButton(DemoMasterScene::new);
 
         lightXCount = 0.0f;
         lightZCount = (float)Math.PI / 2.0f;
@@ -92,6 +100,8 @@ public class SpotLightDemo extends Scene {
         }
 
         torus.render(camera3D, lightGroup);
+
+        backButton.draw(camera2D);
     }
 
     @Override

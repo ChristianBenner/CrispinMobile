@@ -6,11 +6,14 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.Util;
 
 /**
  * A demonstration scene designed to show the usage of text in the Crispin engine
@@ -31,47 +34,52 @@ public class TextDemo extends Scene {
     // String for the text with standard formatting
     private static final String STANDARD_TEXT_STRING = "This is standard text. It doesn't even " +
             "have a max line length.";
+
     // TextDemo string for the text object with standard formatting that has a maximum line length
     private static final String STANDARD_MAX_LENGTH_TEXT_STRING = "This is standard text. It has " +
             "a max line length so it will wrap characters when it reaches it's maximum line length";
+
     // TextDemo string for the text object with centered text format
     private static final String CENTERED_TEXT_STRING = "This text has the centered format applied" +
             " to it!";
+
     // TextDemo string for the text object with wrapped format
     private static final String WRAPPED_TEXT_STRING = "This text has the word wrap format applied" +
             " to it!";
+
     // TextDemo string for the text object with both wrapped and centered formatting
     private static final String WRAPPED_CENTERED_TEXT_STRING = "This text has both word wrap and " +
             "centering formats.";
+
     // TextDemo string for the text object that wiggles
     private static final String WIGGLE_TEXT_STRING = "Wiggle wiggle wiggle!";
+
     // Amount to divide the text width by to get half of the width
-    final float TEXT_WIDTH_DIVIDE = 2.0f;
+    private final float TEXT_WIDTH_DIVIDE = 2.0f;
+
+    // Back button
+    private Button backButton;
+
     // Standard text
-    private final com.crispin.crispinmobile.UserInterface.Text standardText;
+    private final Text standardText;
 
     // Standard text with a maximum length
-    private final com.crispin.crispinmobile.UserInterface.Text standardTextMaxLength;
+    private final Text standardTextMaxLength;
 
     // Centered text
-    private final com.crispin.crispinmobile.UserInterface.Text centeredText;
+    private final Text centeredText;
 
     // Wrapped text
-    private final com.crispin.crispinmobile.UserInterface.Text wrappedText;
+    private final Text wrappedText;
 
     // Wrapped and centered text
-    private final com.crispin.crispinmobile.UserInterface.Text wrappedCenteredText;
+    private final Text wrappedCenteredText;
 
     // TextDemo that wiggles
-    private final com.crispin.crispinmobile.UserInterface.Text wiggleText;
+    private final Text wiggleText;
 
     // 2-dimensional camera
     private final Camera2D camera2D;
-
-    // Linear layout for the text tests
-    private final LinearLayout linearLayout;
-
-    private final com.crispin.crispinmobile.UserInterface.Text demo;
 
     /**
      * Construct the text demo scene
@@ -82,7 +90,7 @@ public class TextDemo extends Scene {
         Crispin.setBackgroundColour(Colour.DARK_GREY);
 
         camera2D = new Camera2D();
-
+        backButton = Util.createBackButton(DemoMasterScene::new);
 
         // Load the font that the text objects will use
         final Font AILERON_REGULAR = new Font(R.raw.aileron_regular, FONT_SIZE);
@@ -129,15 +137,6 @@ public class TextDemo extends Scene {
                 wrappedCenteredText.getPosition().y - wiggleText.getHeight() -
                         (PADDING_PIXELS * WIGGLE_MULTIPLIER));
 
-        linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight()), false);
-
-        for (int i = 0; i < 10; i++) {
-//            linearLayout.add(new TextDemo(AILERON_REGULAR, "Test", false, false, 0.0f));
-        }
-
-        demo = new com.crispin.crispinmobile.UserInterface.Text(AILERON_REGULAR, "Demo TextDemo");
-        demo.setPosition(0.0f, 0.0f);
-
         System.out.println("Standard TextDemo Height: " + standardText.getHeight());
         System.out.println("Standard TextDemo Max: " + standardTextMaxLength.getHeight());
     }
@@ -167,10 +166,7 @@ public class TextDemo extends Scene {
         wrappedText.draw(camera2D);
         wrappedCenteredText.draw(camera2D);
         wiggleText.draw(camera2D);
-
-        //  linearLayout.draw(camera2D);
-
-        // demo.draw(camera2D);
+        backButton.draw(camera2D);
     }
 
     @Override

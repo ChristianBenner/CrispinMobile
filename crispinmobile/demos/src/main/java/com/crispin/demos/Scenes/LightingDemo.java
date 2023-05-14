@@ -22,6 +22,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 import java.util.HashMap;
 
@@ -49,6 +50,8 @@ public class LightingDemo extends Scene {
     private final int STAGE_RESET_POSITION = 6;
     private final int STAGE_RESET_LIGHT = 7;
     private final int STAGE_MAX = 8;
+
+    private Button backButton;
 
     // A model for our torus (donut) shape
     private Model torus;
@@ -93,6 +96,7 @@ public class LightingDemo extends Scene {
 
     public LightingDemo() {
         Crispin.setBackgroundColour(Colour.BLACK);
+        backButton = Util.createBackButton(DemoMasterScene::new);
 
         currentStage = STAGE_INTRODUCTION;
         stageStartMs = System.currentTimeMillis();
@@ -362,6 +366,7 @@ public class LightingDemo extends Scene {
         }
 
         toggleShader.draw(uiView);
+        backButton.draw(uiView);
     }
 
     @Override

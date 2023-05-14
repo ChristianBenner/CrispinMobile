@@ -29,6 +29,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.DemoMasterScene;
+import com.crispin.demos.Util;
 
 import java.util.Random;
 
@@ -148,35 +149,15 @@ public class InstancingVsBatchDemo extends Scene {
 
         Font homeButtonFont = new Font(R.raw.aileron_regular, 36);
 
-        homeButton = new Button(homeButtonFont, "Home");
-        homeButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 10);
-        homeButton.setSize(200, 200);
-        homeButton.setBorder(new Border(Colour.BLACK));
-        homeButton.setColour(Colour.LIGHT_GREY);
-        homeButton.addTouchListener(e -> {
-            if(e.getEvent() == TouchEvent.Event.CLICK) {
-                Crispin.setScene(DemoMasterScene::new);
-            }
-        });
-
-        toggleRenderingTechnique = new Button(homeButtonFont, "Toggle Renderer");
-        toggleRenderingTechnique.setPosition(10, 10);
-        toggleRenderingTechnique.setSize(200, 200);
-        toggleRenderingTechnique.setBorder(new Border(Colour.BLACK));
-        toggleRenderingTechnique.setColour(Colour.LIGHT_GREY);
-        toggleRenderingTechnique.addTouchListener(e -> {
+        homeButton = Util.createBackButton(InstancingDemoSelectionScene::new);
+        toggleRenderingTechnique = Util.createStyledButton("Toggle Renderer", 10, 230, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 renderAsInstances = !renderAsInstances;
                 updateRenderInfoText();
             }
         });
 
-        toggleStaticRender = new Button(homeButtonFont, "Toggle Update");
-        toggleStaticRender.setPosition(10, 220);
-        toggleStaticRender.setSize(200, 200);
-        toggleStaticRender.setBorder(new Border(Colour.BLACK));
-        toggleStaticRender.setColour(Colour.LIGHT_GREY);
-        toggleStaticRender.addTouchListener(e -> {
+        toggleStaticRender = Util.createStyledButton("Toggle Update", 10, 450, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 staticRender = !staticRender;
                 updateRenderInfoText();

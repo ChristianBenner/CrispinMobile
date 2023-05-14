@@ -7,9 +7,11 @@ import com.crispin.crispinmobile.Physics.Collision;
 import com.crispin.crispinmobile.Physics.HitboxCircle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.Util;
 
 import java.util.Random;
 
@@ -25,6 +27,7 @@ public class CollisionDemo2D extends Scene {
     private HitboxCircle fixedCircle;
     private boolean spawnOnPointerLocation;
     private Vec2 pointerLocation;
+    private Button backButton;
 
     class Ball {
         HitboxCircle hitbox;
@@ -55,6 +58,8 @@ public class CollisionDemo2D extends Scene {
             balls[i] = new Ball(0f, 0f, BALL_RADII);
             resetBall(i);
         }
+
+        backButton = Util.createBackButton(DemoMasterScene::new);
     }
 
     // Calculate and apply the drag force to the balls
@@ -181,6 +186,8 @@ public class CollisionDemo2D extends Scene {
         for (int i = 0; i < NUM_BALLS; i++) {
             balls[i].hitbox.render(camera);
         }
+
+        backButton.draw(camera);
     }
 
     @Override

@@ -6,14 +6,17 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Data.Material;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -21,6 +24,8 @@ import java.util.List;
 
 public class MaterialDemo extends Scene {
     private static final long MATERIAL_TIME_MS = 4000L;
+    private Camera2D camera2D;
+    private Button backButton;
     private Model lightBulb;
     private Model lightBulb2;
     private Model torus;
@@ -36,6 +41,8 @@ public class MaterialDemo extends Scene {
 
     public MaterialDemo() {
         Crispin.setBackgroundColour(Colour.BLACK);
+        backButton = Util.createBackButton(DemoMasterScene::new);
+        camera2D = new Camera2D();
         materialList = createMaterialList();
         materialIterator = materialList.iterator();
         materialSetTimeMs = System.currentTimeMillis();
@@ -117,6 +124,8 @@ public class MaterialDemo extends Scene {
         if (torus != null) {
             torus.render(camera3D, lightGroup);
         }
+
+        backButton.draw(camera2D);
     }
 
     @Override

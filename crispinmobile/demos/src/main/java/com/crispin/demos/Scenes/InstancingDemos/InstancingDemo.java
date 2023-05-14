@@ -23,6 +23,7 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.DemoMasterScene;
+import com.crispin.demos.Util;
 
 import java.util.Random;
 
@@ -138,23 +139,8 @@ public class InstancingDemo extends Scene {
         Font buttonFont = new Font(R.raw.aileron_regular, 24);
         Font homeButtonFont = new Font(R.raw.aileron_regular, 36);
 
-        homeButton = new Button(homeButtonFont, "Home");
-        homeButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 10);
-        homeButton.setSize(200, 200);
-        homeButton.setBorder(new Border(Colour.BLACK));
-        homeButton.setColour(Colour.LIGHT_GREY);
-        homeButton.addTouchListener(e -> {
-            if(e.getEvent() == TouchEvent.Event.CLICK) {
-                Crispin.setScene(DemoMasterScene::new);
-            }
-        });
-
-        toggleTextureInstances = new Button(buttonFont, "Toggle Texture Instances");
-        toggleTextureInstances.setPosition(10, 10);
-        toggleTextureInstances.setSize(200, 200);
-        toggleTextureInstances.setBorder(new Border(Colour.BLACK));
-        toggleTextureInstances.setColour(Colour.LIGHT_GREY);
-        toggleTextureInstances.addTouchListener(e -> {
+        homeButton = Util.createBackButton(InstancingDemoSelectionScene::new);
+        toggleTextureInstances = Util.createStyledButton("Toggle Texture Instances", 10, 230, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 renderTextureInstances = !renderTextureInstances;
                 if(renderTextureInstances){
@@ -166,12 +152,7 @@ public class InstancingDemo extends Scene {
             }
         });
 
-        toggleGlobalColourInstances = new Button(buttonFont, "Toggle Global Colour Instances");
-        toggleGlobalColourInstances.setPosition(10, 230);
-        toggleGlobalColourInstances.setSize(200, 200);
-        toggleGlobalColourInstances.setBorder(new Border(Colour.BLACK));
-        toggleGlobalColourInstances.setColour(Colour.LIGHT_GREY);
-        toggleGlobalColourInstances.addTouchListener(e -> {
+        toggleGlobalColourInstances = Util.createStyledButton("Toggle Global Colour Instances",10, 450, e -> {
             if(e.getEvent() == TouchEvent.Event.CLICK) {
                 renderGlobalColourInstances = !renderGlobalColourInstances;
                 if(renderGlobalColourInstances){

@@ -17,6 +17,7 @@ import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 /**
  * A demonstration scene designed to show the touch capabilities of the engine
@@ -37,7 +38,7 @@ public class TouchDemo extends Scene {
 
     private Square touchLocationSprite;
 
-    private Button homeButton;
+    private Button backButton;
 
     /**
      * Construct the touch demo scene
@@ -55,17 +56,7 @@ public class TouchDemo extends Scene {
         touchLocationSprite = new Square(new Material(new Texture(R.drawable.touch_demo_circle)));
         touchLocationSprite.setScale(TOUCH_SPRITE_SIZE, TOUCH_SPRITE_SIZE);
 
-        Font homeButtonFont = new Font(com.crispin.demos.R.raw.aileron_regular, 36);
-        homeButton = new Button(homeButtonFont, "Back");
-        homeButton.setPosition(Crispin.getSurfaceWidth() - 10 - 200, 10);
-        homeButton.setSize(200, 200);
-        homeButton.setBorder(new Border(Colour.BLACK));
-        homeButton.setColour(Colour.LIGHT_GREY);
-        homeButton.addTouchListener(e -> {
-            if(e.getEvent() == TouchEvent.Event.CLICK) {
-                Crispin.setScene(DemoMasterScene::new);
-            }
-        });
+        backButton = Util.createBackButton(DemoMasterScene::new);
     }
 
     /**
@@ -106,7 +97,7 @@ public class TouchDemo extends Scene {
             }
         }
 
-        homeButton.draw(camera2D);
+        backButton.draw(camera2D);
     }
 
     @Override

@@ -10,7 +10,9 @@ import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
+import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.OBJModelLoader;
@@ -18,12 +20,15 @@ import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
+import com.crispin.demos.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class RenderBatchDemo extends Scene {
+    private Camera2D camera2D;
+    private Button backButton;
     private RenderBatch renderBatch;
     private ArrayList<Pair<Float, ModelProperties>> modelProperties;
     private Camera camera;
@@ -32,6 +37,9 @@ public class RenderBatchDemo extends Scene {
 
     public RenderBatchDemo() {
         Crispin.setBackgroundColour(Colour.BLACK);
+
+        camera2D = new Camera2D();
+        backButton = Util.createBackButton(DemoMasterScene::new);
 
         camera = new Camera();
         camera.setPosition(0.0f, 0.0f, 16.0f);
@@ -100,6 +108,7 @@ public class RenderBatchDemo extends Scene {
     @Override
     public void render() {
         renderBatch.render();
+        backButton.draw(camera2D);
     }
 
     @Override

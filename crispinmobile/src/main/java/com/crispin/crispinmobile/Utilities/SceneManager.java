@@ -72,9 +72,6 @@ public class SceneManager implements GLSurfaceView.Renderer {
     // Number of frames to skip before re-calculating delta time value
     private static final int FRAMES_TO_CALCULATE = 15;
 
-    // Max size of the touch event blocking queue
-    private static final int TOUCH_EVENT_BLOCKING_QUEUE_SIZE = 10;
-
     // Singleton instance of scene manager
     private static SceneManager sceneManagerInstance;
 
