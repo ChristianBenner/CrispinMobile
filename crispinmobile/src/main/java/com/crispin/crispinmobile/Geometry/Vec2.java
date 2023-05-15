@@ -203,11 +203,10 @@ public class Vec2 {
     }
 
     /**
-     * Rotate a vector by specified angle (in degrees) around a given origin.
+     * Rotate the vector by specified angle (in degrees) around a given origin.
      *
-     * @param angleDegrees Angle in degrees to rotate v
-     * @param origin Point to rotate the vector v around
-     * @return Rotated vector as Vec2
+     * @param angleDegrees Angle in degrees to rotate the vector
+     * @param origin Point to rotate the vector around
      * @since 1.0
      */
     public void rotate(float angleDegrees, Vec2 origin) {
@@ -228,7 +227,13 @@ public class Vec2 {
         y += origin.y;
     }
 
-    // todo
+    /**
+     * Rotate the vector by specified angle (in degrees). Assumes that the vector start is at the
+     * origin
+     *
+     * @param angleDegrees Angle in degrees to rotate the vector
+     * @since 1.0
+     */
     public void rotate(float angleDegrees) {
         double angleRad = Math.toRadians(angleDegrees);
 
