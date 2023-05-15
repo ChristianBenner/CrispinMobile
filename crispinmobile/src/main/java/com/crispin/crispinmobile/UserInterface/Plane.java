@@ -274,7 +274,6 @@ public class Plane implements UIElement {
     @Override
     public void setColour(Colour colour) {
         this.plane.setColour(colour);
-        this.setBorderAlpha(colour.alpha);
     }
 
     /**

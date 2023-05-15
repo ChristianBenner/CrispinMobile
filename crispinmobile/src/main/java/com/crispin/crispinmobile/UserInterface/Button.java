@@ -157,8 +157,7 @@ public class Button extends InteractiveUI {
     }
 
     @Override
-    public void setPosition(float x,
-                            float y) {
+    public void setPosition(float x, float y) {
         this.position.x = x;
         this.position.y = y;
         updatePosition();
@@ -215,7 +214,8 @@ public class Button extends InteractiveUI {
         this.size.h = height;
 
         if (text != null) {
-            this.text = new Text(font, textString, true, true, width);
+//            this.text = new Text(font, textString, true, true, width);
+            this.text.setMaxLineWidth(width);
         }
 
         updatePosition();
@@ -252,7 +252,7 @@ public class Button extends InteractiveUI {
     }
 
     public void setTextColour(Colour colour) {
-        colourText = colour;
+        colourText = new Colour(colour);
 
         if (text != null) {
             text.setColour(colourText);
@@ -260,7 +260,7 @@ public class Button extends InteractiveUI {
     }
 
     public void setBorderColour(Colour colour) {
-        colourBorder = colour;
+        colourBorder = new Colour(colour);
         plane.setBorderColour(colourBorder);
     }
 
@@ -271,7 +271,7 @@ public class Button extends InteractiveUI {
 
     @Override
     public void setColour(Colour colour) {
-        colourBackground = colour;
+        colourBackground = new Colour(colour);
         this.plane.setColour(colourBackground);
     }
 

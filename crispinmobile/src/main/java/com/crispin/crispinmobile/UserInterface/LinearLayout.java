@@ -233,7 +233,6 @@ public class LinearLayout extends Plane {
     }
 
     public void add(UIElement uiObject) {
-        uiObject.setOpacity(super.getOpacity());
         this.uiObjects.add(uiObject);
         positionUIObject(uiObject);
     }

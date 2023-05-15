@@ -1,5 +1,6 @@
 package com.crispin.crispinmobile.Physics;
 
+import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Line;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
@@ -17,17 +18,22 @@ public class HitboxPolygon {
     float[] points;
     float[] axes;
 
+    float centerX;
+    float centerY;
+    int numPoints;
+
     // Assumes two components (xy)
     public HitboxPolygon(float[] data) {
         this.data = data;
         this.points = data;
+        this.numPoints = data.length / 2;
 
         // Allocate now so it does not need to be allocate every collision calculation
         this.axes = new float[data.length];
         calculateAxes();
     }
 
-    public boolean isColliding(HitboxPolygon other) {
+    public Vec2 isColliding(HitboxPolygon other) {
         return Collision.isColliding(this, other);
     }
 
@@ -42,12 +48,23 @@ public class HitboxPolygon {
             this.points = transformedPoints;
         }
 
+        centerX = 0f;
+        centerY = 0f;
+
         float[] m = modelMatrix.getFloats();
         for (int i = 0; i < data.length; i += 2) {
             // Cheaper way to transform just 2 co-ordinates with the matrix
             transformedPoints[i] = m[0] * data[i] + m[4] * data[i + 1] + m[12];
             transformedPoints[i + 1] = m[1] * data[i] + m[5] * data[i + 1] + m[13];
+
+            // Sum the vertex co-ordinates for center calculation
+            centerX += transformedPoints[i];
+            centerY += transformedPoints[i + 1];
         }
+
+        // Divide by the number of vertices to get the average
+        centerX /= numPoints;
+        centerY /= numPoints;
 
         calculateAxes();
     }
@@ -75,6 +92,8 @@ public class HitboxPolygon {
             int next = (i + 2) % points.length;
             float edgeX = points[next] - points[i];
             float edgeY = -(points[next + 1] - points[i + 1]);
+
+            // Normalise the axis
             float length = (float) Math.sqrt(Math.abs((edgeY * edgeY) + (edgeX * edgeX)));
             axes[i] = edgeY / length;
             axes[i + 1] = edgeX / length;

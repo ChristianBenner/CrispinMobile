@@ -203,6 +203,43 @@ public class Vec2 {
     }
 
     /**
+     * Rotate a vector by specified angle (in degrees) around a given origin.
+     *
+     * @param angleDegrees Angle in degrees to rotate v
+     * @param origin Point to rotate the vector v around
+     * @return Rotated vector as Vec2
+     * @since 1.0
+     */
+    public void rotate(float angleDegrees, Vec2 origin) {
+        double angleRad = Math.toRadians(angleDegrees);
+
+        // Subtract the origin so the vector is working at 0,0
+        x -= origin.x;
+        y -= origin.y;
+
+        //  x2 = x1cos(a) - y1sin(a)
+        x = (float)((x * Math.cos(angleRad)) - (y * Math.sin(angleRad)));
+
+        //  y2 = x1sin(a) + y1cos(a)
+        y = (float)((x * Math.sin(angleRad)) + (y * Math.cos(angleRad)));
+
+        // Add origin back
+        x += origin.x;
+        y += origin.y;
+    }
+
+    // todo
+    public void rotate(float angleDegrees) {
+        double angleRad = Math.toRadians(angleDegrees);
+
+        //  x2 = x1cos(a) - y1sin(a)
+        x = (float)((x * Math.cos(angleRad)) - (y * Math.sin(angleRad)));
+
+        //  y2 = x1sin(a) + y1cos(a)
+        y = (float)((x * Math.sin(angleRad)) + (y * Math.cos(angleRad)));
+    }
+
+    /**
      * Get a string that contains the direction data that can be used in a log
      *
      * @return String in the format 'Vec2[x:X,y:Y]'

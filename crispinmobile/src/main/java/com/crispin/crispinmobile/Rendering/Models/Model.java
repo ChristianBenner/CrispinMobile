@@ -81,6 +81,9 @@ public class Model {
     // Point rotation
     private final Rotation3D rotationPointAngle;
 
+    // Should we update model matrix i.e. position, scale or rotation has changed since last update
+    private boolean updateModelMatrix;
+
     // Material to apply to the object
     protected Material material;
 
@@ -108,6 +111,7 @@ public class Model {
         this.hasCustomShader = false;
         this.renderWireframe = false;
         this.wireframeLineWidth = DEFAULT_WIREFRAME_LINE_WIDTH;
+        this.updateModelMatrix = true;
     }
 
     public Model(Mesh mesh) {
@@ -129,6 +133,7 @@ public class Model {
     }
 
     public ModelMatrix getModelMatrix() {
+        updateModelMatrix();
         return modelMatrix;
     }
 
@@ -168,6 +173,7 @@ public class Model {
         this.position.x = x;
         this.position.y = y;
         this.position.z = z;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -180,6 +186,7 @@ public class Model {
     public void setPosition(float x, float y) {
         this.position.x = x;
         this.position.y = y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -199,7 +206,10 @@ public class Model {
      * @since 1.0
      */
     public void setPosition(Vec3 position) {
-        setPosition(position.x, position.y, position.z);
+        this.position.x = position.x;
+        this.position.y = position.y;
+        this.position.z = position.z;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -211,6 +221,7 @@ public class Model {
     public void setPosition(Vec2 position) {
         this.position.x = position.x;
         this.position.y = position.y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -225,6 +236,7 @@ public class Model {
         this.scale.w = w;
         this.scale.h = h;
         this.scale.l = l;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -237,6 +249,7 @@ public class Model {
     public void setScale(float w, float h) {
         this.scale.w = w;
         this.scale.h = h;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -247,6 +260,7 @@ public class Model {
      */
     public void setScaleX(float x) {
         this.scale.w = x;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -257,6 +271,7 @@ public class Model {
      */
     public void setScaleY(float y) {
         this.scale.h = y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -267,6 +282,45 @@ public class Model {
      */
     public void setScaleZ(float z) {
         this.scale.l = z;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the scale
+     *
+     * @param scale The scale to apply to the object in all dimensions (xyz)
+     * @since 1.0
+     */
+    public void setScale(float scale) {
+        this.scale.w = scale;
+        this.scale.h = scale;
+        this.scale.l = scale;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the scale
+     *
+     * @param scale The scale to apply to the object
+     * @since 1.0
+     */
+    public void setScale(Scale3D scale) {
+        this.scale.w = scale.w;
+        this.scale.h = scale.h;
+        this.scale.l = scale.l;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the scale
+     *
+     * @param scale The scale to apply to the object
+     * @since 1.0
+     */
+    public void setScale(Scale2D scale) {
+        this.scale.w = scale.w;
+        this.scale.h = scale.h;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -277,46 +331,6 @@ public class Model {
      */
     public Scale3D getScale() {
         return this.scale;
-    }
-
-    /**
-     * Set the scale
-     *
-     * @param scale The scale to apply to the object in all dimensions (xyz)
-     * @since 1.0
-     */
-    public void setScale(float scale) {
-        setScale(scale, scale, scale);
-    }
-
-    /**
-     * Set the scale
-     *
-     * @param scale The scale to apply to the object
-     * @since 1.0
-     */
-    public void setScale(Scale3D scale) {
-        setScale(scale.w, scale.h, scale.l);
-    }
-
-    /**
-     * Set the scale
-     *
-     * @param scale The scale to apply to the object
-     * @since 1.0
-     */
-    public void setScale(Scale2D scale) {
-        setScale(scale.w, scale.h);
-    }
-
-    /**
-     * Set the rotation
-     *
-     * @param rotation The new rotation
-     * @since 1.0
-     */
-    public void setRotation(Rotation3D rotation) {
-        setRotation(rotation.angle, rotation.x, rotation.y, rotation.z);
     }
 
     /**
@@ -333,6 +347,21 @@ public class Model {
         this.rotation.x = x;
         this.rotation.y = y;
         this.rotation.z = z;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the rotation
+     *
+     * @param rotation The new rotation
+     * @since 1.0
+     */
+    public void setRotation(Rotation3D rotation) {
+        this.rotation.angle = rotation.angle;
+        this.rotation.x = rotation.x;
+        this.rotation.y = rotation.y;
+        this.rotation.z = rotation.z;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -342,7 +371,10 @@ public class Model {
      * @since 1.0
      */
     public void setRotation(Rotation2D rotation) {
-        setRotation(rotation.angle, rotation.x, rotation.y);
+        this.rotation.angle = rotation.angle;
+        this.rotation.x = rotation.x;
+        this.rotation.y = rotation.y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -357,6 +389,7 @@ public class Model {
         this.rotation.angle = angle;
         this.rotation.x = x;
         this.rotation.y = y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -367,46 +400,6 @@ public class Model {
      */
     public Rotation3D getRotation() {
         return this.rotation;
-    }
-
-    /**
-     * Set the rotation around point
-     *
-     * @param point    The point to rotate around
-     * @param rotation The rotation to make
-     * @since 1.0
-     */
-    public void setRotationAroundPoint(Vec3 point, Rotation3D rotation) {
-        setRotationAroundPoint(point.x, point.y, point.z, rotation.angle, rotation.x, rotation.y,
-                rotation.z);
-    }
-
-    /**
-     * Set the rotation around point
-     *
-     * @param point     The point to rotate around
-     * @param angle     The angle to rotate
-     * @param rotationX The x axis multiplier
-     * @param rotationY The y axis multiplier
-     * @param rotationZ The z axis multiplier
-     * @since 1.0
-     */
-    public void setRotationAroundPoint(Vec3 point, float angle, float rotationX, float rotationY,
-                                       float rotationZ) {
-        setRotationAroundPoint(point.x, point.y, point.z, angle, rotationX, rotationY, rotationZ);
-    }
-
-    /**
-     * Set the rotation around point
-     *
-     * @param x        The x position to rotate around
-     * @param y        The x position to rotate around
-     * @param z        The x position to rotate around
-     * @param rotation The rotation to make
-     * @since 1.0
-     */
-    public void setRotationAroundPoint(float x, float y, float z, Rotation3D rotation) {
-        setRotationAroundPoint(x, y, z, rotation.angle, rotation.x, rotation.y, rotation.z);
     }
 
     /**
@@ -430,16 +423,67 @@ public class Model {
         this.rotationPointAngle.x = rotationX;
         this.rotationPointAngle.y = rotationY;
         this.rotationPointAngle.z = rotationZ;
+        this.updateModelMatrix = true;
     }
 
     /**
-     * Translate the render objects position
+     * Set the rotation around point
      *
-     * @param point The point to translate by
+     * @param x        The x position to rotate around
+     * @param y        The x position to rotate around
+     * @param z        The x position to rotate around
+     * @param rotation The rotation to make
      * @since 1.0
      */
-    public void translate(Vec3 point) {
-        this.position.translate(point);
+    public void setRotationAroundPoint(float x, float y, float z, Rotation3D rotation) {
+        this.rotationPoint.x = x;
+        this.rotationPoint.y = y;
+        this.rotationPoint.z = z;
+        this.rotationPointAngle.angle = rotation.angle;
+        this.rotationPointAngle.x = rotation.x;
+        this.rotationPointAngle.y = rotation.y;
+        this.rotationPointAngle.z = rotation.z;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the rotation around point
+     *
+     * @param point    The point to rotate around
+     * @param rotation The rotation to make
+     * @since 1.0
+     */
+    public void setRotationAroundPoint(Vec3 point, Rotation3D rotation) {
+        this.rotationPoint.x = point.x;
+        this.rotationPoint.y = point.y;
+        this.rotationPoint.z = point.z;
+        this.rotationPointAngle.angle = rotation.angle;
+        this.rotationPointAngle.x = rotation.x;
+        this.rotationPointAngle.y = rotation.y;
+        this.rotationPointAngle.z = rotation.z;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the rotation around point
+     *
+     * @param point     The point to rotate around
+     * @param angle     The angle to rotate
+     * @param rotationX The x axis multiplier
+     * @param rotationY The y axis multiplier
+     * @param rotationZ The z axis multiplier
+     * @since 1.0
+     */
+    public void setRotationAroundPoint(Vec3 point, float angle, float rotationX, float rotationY,
+                                       float rotationZ) {
+        this.rotationPoint.x = point.x;
+        this.rotationPoint.y = point.y;
+        this.rotationPoint.z = point.z;
+        this.rotationPointAngle.angle = angle;
+        this.rotationPointAngle.x = rotationX;
+        this.rotationPointAngle.y = rotationY;
+        this.rotationPointAngle.z = rotationZ;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -454,6 +498,20 @@ public class Model {
         this.position.x += x;
         this.position.y += y;
         this.position.z += z;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Translate the render objects position
+     *
+     * @param point The point to translate by
+     * @since 1.0
+     */
+    public void translate(Vec3 point) {
+        this.position.x += point.x;
+        this.position.y += point.y;
+        this.position.z += point.z;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -465,6 +523,7 @@ public class Model {
     public void translate(Vec2 point) {
         this.position.x += point.x;
         this.position.y += point.y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -477,6 +536,7 @@ public class Model {
     public void translate(float x, float y) {
         this.position.x += x;
         this.position.y += y;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -591,17 +651,21 @@ public class Model {
      * @since 1.0
      */
     protected void updateModelMatrix() {
+        // Only update the model matrix when there is a reason to do so i.e. position, scale or
+        // rotation has changed since last time so this flag is set to true
+        if(!updateModelMatrix) {
+            return;
+        }
+        updateModelMatrix = false;
+
         modelMatrix.reset();
         modelMatrix.translate(position);
-
         if (rotation.angle != 0.0f) {
             modelMatrix.rotate(rotation);
         }
-
         if (rotationPointAngle.angle != 0.0f) {
             modelMatrix.rotateAroundPoint(rotationPoint, rotationPointAngle);
         }
-
         modelMatrix.scale(scale);
     }
 

@@ -344,6 +344,9 @@ public class Text implements UIElement {
      * @since 1.0
      */
     private void generateWrappedWords(boolean centerText) {
+        // Reset the height so that it gets recalculated properly
+        height = 0f;
+
         // Save a queue with all the words in
         Queue<Word> words = new LinkedList<>();
 
@@ -459,6 +462,9 @@ public class Text implements UIElement {
      * @since 1.0
      */
     private void generateCentered() {
+        // Reset the height so that it gets recalculated properly
+        height = 0f;
+
         // The first task is to calculate the width of each line. To do this we need to add as many
         // characters to a virtual line before it exceeds the maximum line length.
         // Then we use the width of each line to calculate a starting position for each character
@@ -576,6 +582,9 @@ public class Text implements UIElement {
      * @since 1.0
      */
     private void generate() {
+        // Reset the height so that it gets recalculated properly
+        height = 0f;
+
         // This is text that is not wrapped or centered. Start from the position and just keep
         // adding more letters until the max line width is met (if there is line width defined)
 

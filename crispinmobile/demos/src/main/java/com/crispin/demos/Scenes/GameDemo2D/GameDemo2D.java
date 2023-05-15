@@ -4,6 +4,7 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
+import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Physics.HitboxRectangle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
@@ -36,7 +37,7 @@ public class GameDemo2D extends Scene {
     private Joystick aimJoystick;
 
     private Player player;
-    private HitboxRectangle playerHitbox;
+    private HitboxPolygon playerHitbox;
 
     private Square mapBase;
 
@@ -55,8 +56,13 @@ public class GameDemo2D extends Scene {
 
         aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
 
-        player = new Player(0f, 0f, PLAYER_SIZE);
-        playerHitbox = new HitboxRectangle();
+        player = new Player(5000f, 5000f, PLAYER_SIZE);
+        playerHitbox = new HitboxPolygon(new float[]{
+                0.25f, 0.2f,
+                0.25f, 0.8f,
+                0.75f, 0.8f,
+                0.75f, 0.2f,
+        });
 
         Material grassRepeatMaterial = new Material(R.drawable.grass_tile);
         grassRepeatMaterial.setUvMultiplier(100f, 100f);
@@ -74,13 +80,29 @@ public class GameDemo2D extends Scene {
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
         buildingHitbox = new HitboxRectangle();
+        buildingHitbox.transform(building.getModelMatrix());
     }
 
     @Override
     public void update(float deltaTime) {
         player.update(movementJoystick.getDirection(), aimJoystick.getDirection());
 
-        buildingHitbox.transform(building.getModelMatrix());
+        playerHitbox.transform(player.getModelMatrix());
+
+        Vec2 minimumTranslation = playerHitbox.isColliding(buildingHitbox);
+        if(minimumTranslation != null) {
+            // A collision has occurred, move the player away by the MTV
+            player.translate(minimumTranslation.x, minimumTranslation.y);
+            playerHitbox.transform(player.getModelMatrix());
+        }
+
+        for(int i = 0; i < NUM_CRATES; i++) {
+            Vec2 mtv = playerHitbox.isColliding(crateHitboxes[i]);
+            if(mtv != null) {
+                player.translate(mtv.x, mtv.y);
+                playerHitbox.transform(player.getModelMatrix());
+            }
+        }
 
         camera.setPosition(getCenteredCameraPosition());
     }
@@ -91,23 +113,6 @@ public class GameDemo2D extends Scene {
         crates.render(camera);
         building.render(camera);
         player.render(camera);
-
-        // at the moment the model matrix for the player only gets updated on render
-        // call. Should add a member variable called modelMatrixUpdate to Model class that gets set
-        // to true on all operations that may require a model matrix update. Only update on render
-        // when needed, and also update on retrieval of model matrix if needed.
-        playerHitbox.transform(player.getModelMatrix());
-        mapBase.setColour(Colour.WHITE);
-        if(playerHitbox.isColliding(buildingHitbox)) {
-            mapBase.setColour(Colour.RED);
-        }
-
-        for(int i = 0; i < NUM_CRATES; i++) {
-            if(playerHitbox.isColliding(crateHitboxes[i])) {
-                mapBase.setColour(Colour.RED);
-            }
-        }
-
         playerHitbox.render(camera);
 
         // UI

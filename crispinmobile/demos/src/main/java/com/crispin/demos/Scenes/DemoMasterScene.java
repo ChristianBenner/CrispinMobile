@@ -20,11 +20,14 @@ import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.UserInterface.TouchType;
+import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
+import com.crispin.demos.BackgroundShader;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.GameDemo2D.GameDemo2D;
 import com.crispin.demos.Scenes.InstancingDemos.InstancingDemoSelectionScene;
+import com.crispin.demos.Util;
 
 public class DemoMasterScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
@@ -42,39 +45,11 @@ public class DemoMasterScene extends Scene {
     private BackgroundShader backgroundShader;
     private float time;
 
-    class BackgroundShader extends Shader {
-        private int timeUniformHandle = UNDEFINED_HANDLE;
-        private int centerUniformHandle = UNDEFINED_HANDLE;
-
-        public BackgroundShader() {
-            super("BackgroundShader", R.raw.background_vert, R.raw.background_frag);
-
-            positionAttributeHandle = getAttribute("aPosition");
-            matrixUniformHandle = getUniform("uMatrix");
-
-            timeUniformHandle = getUniform("uTime");
-            centerUniformHandle = getUniform("uCenter");
-        }
-
-        public void setTime(float time) {
-            super.enable();
-            glUniform1f(timeUniformHandle, time);
-            super.disable();
-        }
-
-        public void setCenter(float x, float y) {
-            super.enable();
-            glUniform2f(centerUniformHandle, x, y);
-            super.disable();
-        }
-    }
-
     public DemoMasterScene() {
-        System.out.println("WIDTH: " + Crispin.getSurfaceWidth() + ", HEIGHT: " + Crispin.getSurfaceHeight());
         Crispin.setBackgroundColour(Colour.DARK_GREY);
         camera2D = new Camera2D(0.0f, 0.0f, SURFACE_WIDTH, SURFACE_HEIGHT);
 
-        backgroundShader = new BackgroundShader();
+        backgroundShader = new BackgroundShader(R.raw.background_vert, R.raw.background_frag);
         backgroundShader.setCenter(Crispin.getSurfaceWidth() / 2f, Crispin.getSurfaceHeight() / 2f);
         time = 0.0f;
 
@@ -85,17 +60,17 @@ public class DemoMasterScene extends Scene {
 
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));
-        linearLayout.add(createDemoButton("Materials", MaterialDemo::new));
-        linearLayout.add(createDemoButton("Lighting", LightingDemo::new));
-        linearLayout.add(createDemoButton("Object Load", ObjLoadDemo::new));
-        linearLayout.add(createDemoButton("Text", TextDemo::new));
-        linearLayout.add(createDemoButton("SpotLight", SpotLightDemo::new));
-        linearLayout.add(createDemoButton("RenderBatch", RenderBatchDemo::new));
-        linearLayout.add(createDemoButton("Instance Rendering Demos", InstancingDemoSelectionScene::new));
-        linearLayout.add(createDemoButton("Normal Map Demo", NormalMapDemo::new));
-        linearLayout.add(createDemoButton("Touch Demo", TouchDemo::new));
-        linearLayout.add(createDemoButton("2D Game Demo", GameDemo2D::new));
-        linearLayout.add(createDemoButton("2D Collision Demo", CollisionDemo2D::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Materials", MaterialDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Lighting", LightingDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Object Load", ObjLoadDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Text", TextDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "SpotLight", SpotLightDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "RenderBatch", RenderBatchDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering Demos", InstancingDemoSelectionScene::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Normal Map Demo", NormalMapDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Touch Demo", TouchDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Game Demo", GameDemo2D::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Collision Demo", CollisionDemo2D::new));
 
         Font titleFont = new Font(R.raw.aileron_bold, 72);
         selectDemoText = new Text(titleFont, "Select a Demo", true, true, SURFACE_WIDTH);
@@ -106,20 +81,6 @@ public class DemoMasterScene extends Scene {
         titleBackground.setColour(new Colour(0f, 0f, 0f, 0.3f));
         titleBackground.setPosition((Crispin.getSurfaceWidth() / 2f) - (selectDemoText.getWidth() / 2f) - PADDING, selectDemoText.getPosition().y - PADDING);
         titleBackground.setScale(selectDemoText.getWidth() + PADDING + PADDING, selectDemoText.getHeight() + PADDING + PADDING);
-    }
-
-    private Button createDemoButton(String text, final Constructor sceneConstructor) {
-        Button demoButton = new Button(FontCache.getFont(R.raw.aileron_regular, 48), text);
-        demoButton.setBorder(new Border(Colour.WHITE, 5));
-        demoButton.setColour(new Colour(211, 124, 65));
-        demoButton.setTextColour(Colour.WHITE);
-        demoButton.setSize(BUTTON_SIZE, BUTTON_SIZE);
-        demoButton.addTouchListener(e -> {
-            if (e.getEvent() == TouchEvent.Event.CLICK) {
-                Crispin.setScene(sceneConstructor);
-            }
-        });
-        return demoButton;
     }
 
     @Override

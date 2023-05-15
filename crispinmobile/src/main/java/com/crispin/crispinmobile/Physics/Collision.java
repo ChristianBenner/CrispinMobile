@@ -7,7 +7,7 @@ public class Collision {
     public static Vec2 isColliding(HitboxCircle circle, HitboxCircle other) {
         // Get the distance between the two center points of the circles
         float distance = distance(circle.centerX, circle.centerY, other.centerX, other.centerY);
-        if(distance < circle.radius + other.radius) {
+        if (distance < circle.radius + other.radius) {
             // Scale the vector between the circles by the intercept multiplier
             float in = ((circle.radius + other.radius) - distance) / distance;
             float translateX = (other.centerX - circle.centerX) * in;
@@ -60,29 +60,77 @@ public class Collision {
     }
 
     // Using SAT collision algorithm
-    public static boolean isColliding(HitboxPolygon polygon, HitboxPolygon other) {
-        float[] projectionMyAxis = new float[2];
-        float[] projectionOtherAxis = new float[2];
+    public static Vec2 isColliding(HitboxPolygon polygon, HitboxPolygon other) {
+        float[] polygonProjection = new float[2];
+        float[] otherProjection = new float[2];
+
+        float minOverlap = Float.MAX_VALUE;
+
+        // The axis that contained the smallest overlap
+        float minOverlapAxisX = 0f;
+        float minOverlapAxisY = 0f;
 
         // Collision check using this polygons axes
         for (int i = 0; i < polygon.axes.length; i += 2) {
-            projectPolygon(projectionMyAxis, polygon.axes[i], polygon.axes[i + 1], polygon.points);
-            projectPolygon(projectionOtherAxis, polygon.axes[i], polygon.axes[i + 1], other.points);
-            if (!overlap(projectionMyAxis, projectionOtherAxis)) {
-                return false;
+            projectPolygon(polygonProjection, polygon.axes[i], polygon.axes[i + 1], polygon.points);
+            projectPolygon(otherProjection, polygon.axes[i], polygon.axes[i + 1], other.points);
+            if (!overlap(polygonProjection, otherProjection)) {
+                return null;
+            } else {
+                float overlap = calculateOverlap(polygonProjection, otherProjection);
+                if (overlap < minOverlap) {
+                    // The new smallest overlap (which is so far the shortest distance to seperate
+                    // the two polygons
+                    minOverlap = overlap;
+
+                    // The axis that contained the smallest overlap
+                    minOverlapAxisX = polygon.axes[i];
+                    minOverlapAxisY = polygon.axes[i + 1];
+                }
             }
         }
 
         // Collision check using other polygons axes
         for (int i = 0; i < other.axes.length; i += 2) {
-            projectPolygon(projectionMyAxis, other.axes[i], other.axes[i + 1], polygon.points);
-            projectPolygon(projectionOtherAxis, other.axes[i], other.axes[i + 1], other.points);
-            if (!overlap(projectionMyAxis, projectionOtherAxis)) {
-                return false;
+            projectPolygon(polygonProjection, other.axes[i], other.axes[i + 1], polygon.points);
+            projectPolygon(otherProjection, other.axes[i], other.axes[i + 1], other.points);
+            if (!overlap(polygonProjection, otherProjection)) {
+                return null;
+            } else {
+                float overlap = calculateOverlap(polygonProjection, otherProjection);
+                if (overlap < minOverlap) {
+                    // The new smallest overlap (which is so far the shortest distance to seperate
+                    // the two polygons
+                    minOverlap = overlap;
+
+                    // The axis that contained the smallest overlap
+                    minOverlapAxisX = other.axes[i];
+                    minOverlapAxisY = other.axes[i + 1];
+                }
             }
         }
 
-        return true;
+        // Calculate the shortest vector for separation (minimum translaction vector)
+        // All the axis are normalised so they represent the direction in which to move the polygon.
+        // The minOverlapAxisX, Y contains the direction in which the smallest overlap occurred so
+        // we can multiply the size of the smallest overlap to get the MTV;
+        float minimumTranslationX = minOverlapAxisX * minOverlap;
+        float minimumTranslationY = minOverlapAxisY * minOverlap;
+
+        // Determine the correct direction for the MTV
+        float centerToCenterX = polygon.centerX - other.centerX;
+        float centerToCenterY = polygon.centerY - other.centerY;
+        float dotProduct = centerToCenterX * minimumTranslationX + centerToCenterY * minimumTranslationY;
+        if (dotProduct < 0) {
+            minimumTranslationX = -minimumTranslationX;
+            minimumTranslationY = -minimumTranslationY;
+        }
+
+        return new Vec2(minimumTranslationX, minimumTranslationY);
+    }
+
+    private static float calculateOverlap(float[] proj1, float[] proj2) {
+        return Math.min(proj2[1] - proj1[0], proj1[1] - proj2[0]);
     }
 
     private static void projectPolygon(float[] projectionOut, float axisX, float axisY, float[] polygon) {
@@ -102,7 +150,7 @@ public class Collision {
     }
 
     private static boolean overlap(float[] proj1, float[] proj2) {
-        return !(proj1[1] < proj2[0] || proj2[1] < proj1[0]);
+        return !(proj1[1] <= proj2[0] || proj2[1] <= proj1[0]);
     }
 
     private static float dotProduct(float x1, float y1, float x2, float y2) {

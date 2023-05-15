@@ -6,6 +6,7 @@ import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.UserInterface.TouchListener;
+import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 
@@ -40,5 +41,19 @@ public class Util {
         button.setTextColour(new Colour(255, 255, 255, 150));
         button.addTouchListener(touchListener);
         return button;
+    }
+
+    public static Button createDemoButton(float size, String text, final Scene.Constructor sceneConstructor) {
+        Button demoButton = new Button(FontCache.getFont(R.raw.aileron_regular, 48), text);
+        demoButton.setBorder(new Border(new Colour(50, 50, 50, 150), 5));
+        demoButton.setColour(new Colour(100, 100, 100, 150));
+        demoButton.setTextColour(Colour.WHITE);
+        demoButton.setSize(size, size);
+        demoButton.addTouchListener(e -> {
+            if (e.getEvent() == TouchEvent.Event.CLICK) {
+                Crispin.setScene(sceneConstructor);
+            }
+        });
+        return demoButton;
     }
 }

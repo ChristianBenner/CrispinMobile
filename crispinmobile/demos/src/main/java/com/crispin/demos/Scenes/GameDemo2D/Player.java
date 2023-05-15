@@ -152,10 +152,14 @@ public class Player {
     }
 
     public void translate(Vec2 translation) {
-        legsSprite.translate(translation);
-        legsSidestepUpSprite.translate(translation);
-        legsSidestepDownSprite.translate(translation);
-        torsoSprite.translate(translation);
+        translate(translation.x, translation.y);
+    }
+
+    public void translate(float x, float y) {
+        legsSprite.translate(x, y);
+        legsSidestepUpSprite.translate(x, y);
+        legsSidestepDownSprite.translate(x, y);
+        torsoSprite.translate(x, y);
     }
 
     public Vec2 getSize() {

@@ -373,9 +373,51 @@ public class Geometry {
         return new Vec2(v.x / length, v.y / length);
     }
 
-//    public static Vec2 rotate(Vec2 v, float angleDegrees) {
-//
-//    }
+    /**
+     * Rotate a vector by specified angle (in degrees). Assumes that the vector start is at the
+     * origin
+     *
+     * @param v Vec2
+     * @param angleDegrees Angle in degrees to rotate v
+     * @return Rotated vector as Vec2
+     * @since 1.0
+     */
+    public static Vec2 rotate(Vec2 v, float angleDegrees) {
+        double angleRad = Math.toRadians(angleDegrees);
+
+        //  x2 = x1cos(a) - y1sin(a)
+        float rx = (float)((v.x * Math.cos(angleRad)) - (v.y * Math.sin(angleRad)));
+
+        //  y2 = x1sin(a) + y1cos(a)
+        float ry = (float)((v.x * Math.sin(angleRad)) + (v.y * Math.cos(angleRad)));
+        return new Vec2(rx, ry);
+    }
+
+    /**
+     * Rotate a vector by specified angle (in degrees) around a given origin.
+     *
+     * @param v Vec2
+     * @param angleDegrees Angle in degrees to rotate v
+     * @param origin Point to rotate the vector v around
+     * @return Rotated vector as Vec2
+     * @since 1.0
+     */
+    public static Vec2 rotate(Vec2 v, float angleDegrees, Vec2 origin) {
+        // Subtract the origin so the vector is working at 0,0
+        float x = v.x - origin.x;
+        float y = v.y - origin.y;
+
+        double angleRad = Math.toRadians(angleDegrees);
+
+        //  x2 = x1cos(a) - y1sin(a)
+        float rx = (float)((x * Math.cos(angleRad)) - (y * Math.sin(angleRad)));
+
+        //  y2 = x1sin(a) + y1cos(a)
+        float ry = (float)((x * Math.sin(angleRad)) + (y * Math.cos(angleRad)));
+
+        // Add origin back
+        return new Vec2(rx + origin.x, ry + origin.y);
+    }
 
     /**
      * Get a direction from a vector
