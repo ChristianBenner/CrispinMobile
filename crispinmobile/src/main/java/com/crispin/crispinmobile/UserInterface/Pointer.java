@@ -6,11 +6,13 @@ public class Pointer {
     private Vec2 position;
     private InteractiveElement element;
     private boolean consumedByUI;
+    private int pointerId;
 
-    public Pointer(Vec2 position) {
+    public Pointer(Vec2 position, int pointerId) {
         this.position = new Vec2(position);
         this.element = null;
         this.consumedByUI = false;
+        this.pointerId = pointerId;
     }
 
     public void click(InteractiveElement element) {
@@ -42,5 +44,9 @@ public class Pointer {
 
     public Vec2 getPosition() {
         return this.position;
+    }
+
+    public int getPointerId() {
+        return pointerId;
     }
 }

@@ -2,6 +2,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import android.opengl.Matrix;
 
+import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
@@ -102,6 +103,13 @@ public class ModelMatrix {
     public Vec3 getPosition() {
         // m00 m10 m20 m30 m01 m11 m21 m31 m02 m12 m22 m32 m03 m13 m23 m33
         return new Vec3(modelMatrix[12], modelMatrix[13], modelMatrix[14]);
+    }
+
+    public Vec2 transformPoint(Vec2 point) {
+        float[] result = new float[4];
+        float[] p = new float[]{point.x, point.y, 0f, 1f};
+        Matrix.multiplyMV(result, 0, modelMatrix, 0, p, 0);
+        return new Vec2(result[0], result[1]);
     }
 
     // normal render call (no matrix in param)

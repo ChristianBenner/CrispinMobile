@@ -19,6 +19,10 @@ import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.R;
 import com.crispin.demos.Util;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Random;
+
 /**
  * A demonstration scene designed to show the touch capabilities of the engine
  *
@@ -33,12 +37,21 @@ public class TouchDemo extends Scene {
     // 2-dimensional camera
     private final Camera2D camera2D;
 
-    private Vec2[] touchLocations;
+    class PositionAndColour {
+        Vec2 position = new Vec2();
+        Colour colour = new Colour();
+    }
+
+    private PositionAndColour[] touchLocations;
     int index;
 
     private Square touchLocationSprite;
 
     private Button backButton;
+
+    private HashMap<Integer, Colour> pointerColourMap;
+
+    private Random random;
 
     /**
      * Construct the touch demo scene
@@ -48,7 +61,11 @@ public class TouchDemo extends Scene {
     public TouchDemo() {
         Crispin.setBackgroundColour(Colour.DARK_GREY);
 
-        touchLocations = new Vec2[DRAW_CAP];
+        touchLocations = new PositionAndColour[DRAW_CAP];
+        for(int i = 0; i < touchLocations.length; i++) {
+            touchLocations[i] = new PositionAndColour();
+        }
+
         index = 0;
 
         camera2D = new Camera2D();
@@ -57,6 +74,9 @@ public class TouchDemo extends Scene {
         touchLocationSprite.setScale(TOUCH_SPRITE_SIZE, TOUCH_SPRITE_SIZE);
 
         backButton = Util.createBackButton(DemoMasterScene::new);
+
+        pointerColourMap = new HashMap<>();
+        random = new Random();
     }
 
     /**
@@ -91,8 +111,9 @@ public class TouchDemo extends Scene {
             }
 
             if(touchLocations[i] != null) {
-                touchLocationSprite.setPosition(touchLocations[i].x - (TOUCH_SPRITE_SIZE / 2f),
-                        touchLocations[i].y - (TOUCH_SPRITE_SIZE / 2f));
+                touchLocationSprite.setColour(touchLocations[i].colour);
+                touchLocationSprite.setPosition(touchLocations[i].position.x - (TOUCH_SPRITE_SIZE / 2f),
+                        touchLocations[i].position.y - (TOUCH_SPRITE_SIZE / 2f));
                 touchLocationSprite.render(camera2D);
             }
         }
@@ -106,13 +127,18 @@ public class TouchDemo extends Scene {
 
         switch (touchType) {
             case DOWN:
+                pointerColourMap.put(pointer.getPointerId(), new Colour(random.nextFloat(),
+                        random.nextFloat(), random.nextFloat()));
             case MOVE:
-                touchLocations[index] = position;
+                touchLocations[index].colour = pointerColourMap.get(pointer.getPointerId());
+                touchLocations[index].position = position;
                 index++;
                 if(index >= DRAW_CAP) {
                     index = 0;
                 }
                 break;
+            case UP:
+                pointerColourMap.remove(pointer.getPointerId());
         }
     }
 }

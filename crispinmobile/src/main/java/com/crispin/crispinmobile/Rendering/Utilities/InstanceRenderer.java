@@ -2,6 +2,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_STREAM_DRAW;
+import static android.opengl.GLES20.glBufferSubData;
 import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES30.GL_ARRAY_BUFFER;
 import static android.opengl.GLES30.GL_CULL_FACE;
@@ -31,6 +32,7 @@ import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
+import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader;
@@ -110,6 +112,11 @@ public class InstanceRenderer {
         uploadModelMatrices(modelMatrices);
     }
 
+    public InstanceRenderer(Mesh mesh, boolean lightingSupport, ModelProperties[] modelProperties) {
+        this(mesh, lightingSupport, false);
+        uploadModelMatrices(modelProperties);
+    }
+
     public InstanceRenderer(Mesh mesh, boolean lightingSupport, FloatBuffer buffer, int instances) {
         this(mesh, lightingSupport, false);
         uploadModelMatrices(buffer, instances);
@@ -178,6 +185,44 @@ public class InstanceRenderer {
         }
 
         uploadModelMatrices(buffer, count);
+    }
+
+    public void uploadModelMatrices(ModelProperties[] modelProperties) {
+        int count = modelProperties.length;
+
+        FloatBuffer buffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX * count);
+        for(int i = 0; i < count; i++) {
+            buffer.put(modelProperties[i].getModelMatrix().getFloats());
+        }
+
+        uploadModelMatrices(buffer, count);
+    }
+
+    public void uploadModelMatrix(ModelMatrix modelMatrix, int index) {
+        FloatBuffer buffer = FloatBuffer.allocate(NUM_FLOATS_MATRIX);
+        buffer.put(modelMatrix.getFloats());
+        buffer.position(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, matricesVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, index * NUM_BYTES_MATRIX, NUM_BYTES_MATRIX, buffer);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+//        glBindVertexArray(mesh.vao);
+//        int h = shader.modelMatrixAttributeHandle;
+//        glEnableVertexAttribArray(h);
+//        glVertexAttribPointer(h, 4, GL_FLOAT, false, NUM_BYTES_MATRIX, 0);
+//        glEnableVertexAttribArray(h + 1);
+//        glVertexAttribPointer(h + 1, 4, GL_FLOAT, false, NUM_BYTES_MATRIX, NUM_BYTES_VEC4);
+//        glEnableVertexAttribArray(h + 2);
+//        glVertexAttribPointer(h + 2, 4, GL_FLOAT, false, NUM_BYTES_MATRIX, 2 * NUM_BYTES_VEC4);
+//        glEnableVertexAttribArray(h + 3);
+//        glVertexAttribPointer(h + 3, 4, GL_FLOAT, false, NUM_BYTES_MATRIX, 3 * NUM_BYTES_VEC4);
+//
+//        glVertexAttribDivisor(h, 1);
+//        glVertexAttribDivisor(h + 1, 1);
+//        glVertexAttribDivisor(h + 2, 1);
+//        glVertexAttribDivisor(h + 3, 1);
+
+        glBindVertexArray(0);
     }
 
     public void uploadColourData(FloatBuffer colourBuffer, int instances) {

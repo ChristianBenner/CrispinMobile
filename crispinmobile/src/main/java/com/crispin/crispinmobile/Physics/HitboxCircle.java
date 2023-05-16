@@ -24,11 +24,11 @@ public class HitboxCircle {
     }
 
     public Vec2 isColliding(HitboxCircle other) {
-        return Collision.isColliding(this, other);
+        return Collision.isCollidingMTV(this, other);
     }
 
     public boolean isColliding(HitboxPolygon polygon) {
-        return Collision.isColliding(polygon, this);
+        return Collision.isCollidingMTV(polygon, this);
     }
 
     public Vec2 getCenter() {

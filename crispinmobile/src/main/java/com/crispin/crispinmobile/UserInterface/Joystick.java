@@ -20,6 +20,7 @@ public class Joystick {
     private Vec2 outerOffset;
     private float baseRadius;
     private float joystickRadius;
+    private boolean isDown;
 
     public Joystick(Vec2 position, float size, int baseTexture, int movableTexture) {
         this.baseRadius = size / 2f;
@@ -40,9 +41,11 @@ public class Joystick {
             switch (e.getEvent()) {
                 case DOWN:
                     drag(e.getPosition());
+                    isDown = true;
                     break;
                 case RELEASE:
                     release();
+                    isDown = false;
                     break;
             }
         });
@@ -52,6 +55,10 @@ public class Joystick {
 
     public Joystick(Vec2 position, float size) {
         this(position, size, R.drawable.joy_stick_outer, R.drawable.joy_stick_inner);
+    }
+
+    public boolean isDown() {
+        return isDown;
     }
 
     public void setJoystickOffset(Vec2 offset) {

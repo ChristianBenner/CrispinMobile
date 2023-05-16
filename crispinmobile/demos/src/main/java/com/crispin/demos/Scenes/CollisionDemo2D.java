@@ -122,7 +122,7 @@ public class CollisionDemo2D extends Scene {
             }
 
             // How far the ball needs to be moved away from fixed circle to no longer be colliding
-            Vec2 collisionVec = Collision.isColliding(fixedCircle, balls[i].hitbox);
+            Vec2 collisionVec = Collision.isCollidingMTV(fixedCircle, balls[i].hitbox);
             if (collisionVec != null) {
                 // Move the ball out of the fixed circle
                 balls[i].hitbox.translate(collisionVec.x, collisionVec.y);
@@ -139,7 +139,7 @@ public class CollisionDemo2D extends Scene {
     }
 
     public static void handleCollision(Ball ball1, Ball ball2) {
-        Vec2 collisionVector = Collision.isColliding(ball1.hitbox, ball2.hitbox);
+        Vec2 collisionVector = Collision.isCollidingMTV(ball1.hitbox, ball2.hitbox);
         if (collisionVector != null) {
             // Move the balls out of each-other first
             ball1.hitbox.translate(-collisionVector.x / 2f, -collisionVector.y / 2f);

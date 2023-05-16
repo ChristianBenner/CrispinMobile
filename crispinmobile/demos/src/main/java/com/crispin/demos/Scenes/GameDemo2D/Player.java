@@ -3,10 +3,12 @@ package com.crispin.demos.Scenes.GameDemo2D;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
+import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Models.AnimatedSquare;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
+import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 
@@ -16,18 +18,27 @@ public class Player {
     private static final int ANIMATION_RUN = 0;
     private static final int ANIMATION_SIDESTEP_UP = 1;
     private static final int ANIMATION_SIDESTEP_DOWN = 2;
+
+    private static final int MAX_AMMO = 30;
+    private static final long RELOAD_TIME_MS = 1500;
+
     private Square torsoSprite;
     private AnimatedSquare legsSprite;
     private AnimatedSquare legsSidestepUpSprite;
     private AnimatedSquare legsSidestepDownSprite;
     private float size;
     private float movementSpeed;
-
+    private HitboxPolygon hitbox;
     private int animation;
+    private int ammo;
+    private boolean reloading;
+    private long reloadStart;
 
     public Player(float x, float y, float size) {
         this.size = size;
+        this.ammo = MAX_AMMO;
         this.animation = ANIMATION_RUN;
+        this.reloading = false;
 
         torsoSprite = new Square(TextureCache.loadTexture(R.drawable.player_top_down));
         torsoSprite.setPosition(x, y);
@@ -44,13 +55,57 @@ public class Player {
         legsSidestepDownSprite = new AnimatedSquare(R.drawable.player_top_down_legs_sidestep_down, 32, 500);
         legsSidestepDownSprite.setPosition(x, y);
         legsSidestepDownSprite.setScale(size, size);
+
+        hitbox = new HitboxPolygon(new float[]{
+                0.4f, 0.2f, // Bottom left
+                0.4f, 0.8f, // Top left
+                0.6f, 0.8f, // Top right
+                1.0f, 0.2f, // Bottom Right
+        });
+    }
+
+    public boolean spendAmmo() {
+        if (ammo <= 0){
+            return false;
+        }
+        ammo--;
+        return true;
+    }
+
+    public int getAmmo() {
+        return ammo;
+    }
+
+    public int getMaxAmmo() {
+        return MAX_AMMO;
+    }
+
+    public void reload() {
+        if(reloading) {
+            return;
+        }
+
+        Audio.getInstance().playSound(R.raw.pistol_reload);
+        reloadStart = System.currentTimeMillis();
+        reloading = true;
     }
 
     public ModelMatrix getModelMatrix() {
         return torsoSprite.getModelMatrix();
     }
 
+    public HitboxPolygon getHitbox() {
+        return hitbox;
+    }
+
     public void update(Vec2 movement, Vec2 aim) {
+        if(reloading) {
+            if(System.currentTimeMillis() - reloadStart >= RELOAD_TIME_MS) {
+                reloading = false;
+                ammo = MAX_AMMO;
+            }
+        }
+
         // In any further math we don't want to alter the actual joystick vector, so use new vectors
         Vec2 moveCalc = new Vec2(movement);
         Vec2 aimCalc = new Vec2(aim);
@@ -122,6 +177,7 @@ public class Player {
         legsSidestepUpSprite.translate(translate);
         legsSidestepDownSprite.translate(translate);
         torsoSprite.translate(translate);
+        hitbox.transform(getModelMatrix());
     }
 
     public void render(Camera2D camera) {

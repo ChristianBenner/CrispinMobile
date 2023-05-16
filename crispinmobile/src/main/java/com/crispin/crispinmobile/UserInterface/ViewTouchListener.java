@@ -29,7 +29,7 @@ public class ViewTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN:
                 Vec2 downPositionCorrected = toSceneCoordinates(event.getX(pointerIndex), event.getY(pointerIndex));
-                Pointer newPointer = new Pointer(downPositionCorrected);
+                Pointer newPointer = new Pointer(downPositionCorrected, pointerId);
                 pointers.put(pointerId, newPointer);
 
                 glSurfaceView.queueEvent(() -> {

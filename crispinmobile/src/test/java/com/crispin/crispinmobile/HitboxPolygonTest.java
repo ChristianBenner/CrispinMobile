@@ -7,7 +7,6 @@ import static org.junit.Assert.*;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Physics.Collision;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;
-import com.crispin.crispinmobile.Physics.HitboxRectangle;
 
 public class HitboxPolygonTest {
     private static final int NUM_RUNS = 10000;
@@ -63,7 +62,7 @@ public class HitboxPolygonTest {
 
         // MTV is the minimum translation to move the rect1 away from rect2. In this case we expect
         // rect1 to be pushed downwards by -0.2y
-        Vec2 mtv = Collision.isColliding(rect1, rect2);
+        Vec2 mtv = Collision.isCollidingMTV(rect1, rect2);
         System.out.println("COLLIDING: " + mtv);
         assertNotNull(mtv);
         assertEquals(expectedMtvX, mtv.x, 0.001f);
@@ -106,7 +105,7 @@ public class HitboxPolygonTest {
     public void CustomCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertNotNull(p1.isColliding(p2));
+            assertNotNull(p1.isCollidingMTV(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomCollisionPerformanceCheck MS: " + (timeEnd - timeStart));
@@ -115,7 +114,7 @@ public class HitboxPolygonTest {
     public void CustomNonCollisionPerformanceCheck(HitboxPolygon p1, HitboxPolygon p2) {
         long timeStart = System.currentTimeMillis();
         for(int i = 0; i < NUM_RUNS; i++) {
-            assertNull(p1.isColliding(p2));
+            assertNull(p1.isCollidingMTV(p2));
         }
         long timeEnd = System.currentTimeMillis();
         System.out.println("\tCustomNonCollisionPerformanceCheck MS: " + (timeEnd - timeStart));

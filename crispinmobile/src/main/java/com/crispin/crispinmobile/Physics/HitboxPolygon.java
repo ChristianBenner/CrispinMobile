@@ -33,12 +33,12 @@ public class HitboxPolygon {
         calculateAxes();
     }
 
-    public Vec2 isColliding(HitboxPolygon other) {
-        return Collision.isColliding(this, other);
+    public Vec2 isCollidingMTV(HitboxPolygon other) {
+        return Collision.isCollidingMTV(this, other);
     }
 
-    public boolean isColliding(HitboxCircle circle) {
-        return Collision.isColliding(this, circle);
+    public boolean isCollidingMTV(HitboxCircle circle) {
+        return Collision.isCollidingMTV(this, circle);
     }
 
     public void transform(ModelMatrix modelMatrix) {

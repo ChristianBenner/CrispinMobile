@@ -3,8 +3,14 @@ package com.crispin.crispinmobile.Physics;
 import com.crispin.crispinmobile.Geometry.Vec2;
 
 public class Collision {
+    public static boolean isColliding(HitboxCircle circle, HitboxCircle other) {
+        // Get the distance between the two center points of the circles
+        float distance = distance(circle.centerX, circle.centerY, other.centerX, other.centerY);
+        return distance < circle.radius + other.radius;
+    }
+
     // Return the shortest vector to translate the other circle away
-    public static Vec2 isColliding(HitboxCircle circle, HitboxCircle other) {
+    public static Vec2 isCollidingMTV(HitboxCircle circle, HitboxCircle other) {
         // Get the distance between the two center points of the circles
         float distance = distance(circle.centerX, circle.centerY, other.centerX, other.centerY);
         if (distance < circle.radius + other.radius) {
@@ -17,8 +23,12 @@ public class Collision {
         return null;
     }
 
-    // Is colliding with circle check
     public static boolean isColliding(HitboxPolygon polygon, HitboxCircle circle) {
+        return isCollidingMTV(polygon, circle);
+    }
+
+    // Is colliding with circle check. todo: calc MTV
+    public static boolean isCollidingMTV(HitboxPolygon polygon, HitboxCircle circle) {
         for (int i = 0; i < polygon.points.length; i += 2) {
             int next = (i + 2) % polygon.points.length;
 
@@ -59,8 +69,12 @@ public class Collision {
         return false;
     }
 
+    public static boolean isColliding(HitboxPolygon polygon, HitboxPolygon other) {
+        return isCollidingMTV(polygon, other) != null;
+    }
+
     // Using SAT collision algorithm
-    public static Vec2 isColliding(HitboxPolygon polygon, HitboxPolygon other) {
+    public static Vec2 isCollidingMTV(HitboxPolygon polygon, HitboxPolygon other) {
         float[] polygonProjection = new float[2];
         float[] otherProjection = new float[2];
 

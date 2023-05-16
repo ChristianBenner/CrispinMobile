@@ -9,35 +9,42 @@ import com.crispin.crispinmobile.Physics.HitboxRectangle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.DefaultMesh.SquareMesh;
+import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
-import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Joystick;
 import com.crispin.crispinmobile.UserInterface.Pointer;
+import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchType;
+import com.crispin.crispinmobile.Utilities.Audio;
+import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.DemoMasterScene;
 import com.crispin.demos.Util;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class GameDemo2D extends Scene {
     private static final float PLAYER_SIZE = 128f;
     private static final int NUM_CRATES = 100;
+    private static final float TEXT_PADDING = 20f;
 
     private Camera2D camera;
     private Camera2D uiCamera;
     private Button backButton;
+    private Text ammo;
 
     private Joystick movementJoystick;
     private Joystick aimJoystick;
 
     private Player player;
-    private HitboxPolygon playerHitbox;
+
+    private Vec2 bulletSpawnPoint;
 
     private Square mapBase;
 
@@ -46,9 +53,27 @@ public class GameDemo2D extends Scene {
     private InstanceRenderer crates;
     private HitboxRectangle[] crateHitboxes;
 
+    private ModelProperties[] crateModelProperties;
+    private Random random;
+
+    class Bullet{
+        public Vec2 velocity;
+        public Square sprite;
+        public long spawnTime;
+        public HitboxPolygon hitboxRectangle;
+    }
+
+    private ArrayList<Bullet> bullets;
+    private ArrayList<Zombie> zombies;
+
     public GameDemo2D() {
+        Audio.getInstance().initMusicChannel();
+        Audio.getInstance().initSoundChannel(8);
+        Audio.getInstance().playMusic(R.raw.demo_music);
+
         camera = new Camera2D();
         uiCamera = new Camera2D();
+        random = new Random();
 
         backButton = Util.createBackButton(DemoMasterScene::new, 10f, Crispin.getSurfaceHeight() - 10f - Util.BACK_BUTTON_SIZE);
 
@@ -57,67 +82,249 @@ public class GameDemo2D extends Scene {
         aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
 
         player = new Player(5000f, 5000f, PLAYER_SIZE);
-        playerHitbox = new HitboxPolygon(new float[]{
-                0.25f, 0.2f,
-                0.25f, 0.8f,
-                0.75f, 0.8f,
-                0.75f, 0.2f,
-        });
 
-        Material grassRepeatMaterial = new Material(R.drawable.grass_tile);
+
+        bulletSpawnPoint = new Vec2(31f/32f, 9f/32f);
+
+        Material grassRepeatMaterial = new Material(R.drawable.dirt_tile);
         grassRepeatMaterial.setUvMultiplier(100f, 100f);
         mapBase = new Square(grassRepeatMaterial);
         mapBase.setScale(10000f);
 
-        ModelMatrix[] crateModelMatrixes = generateRandomModelTransformations(NUM_CRATES, 100f, 200f);
-        crates = new InstanceRenderer(new SquareMesh(true), false, crateModelMatrixes);
+        crateModelProperties = generateRandomModelProperties(NUM_CRATES, 100f, 200f);
+        crates = new InstanceRenderer(new SquareMesh(true), false, crateModelProperties);
         crates.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
         crateHitboxes = new HitboxRectangle[NUM_CRATES];
         for(int i = 0; i < NUM_CRATES; i++) {
             crateHitboxes[i] = new HitboxRectangle();
-            crateHitboxes[i].transform(crateModelMatrixes[i]);
+            crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
         }
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
         buildingHitbox = new HitboxRectangle();
         buildingHitbox.transform(building.getModelMatrix());
+
+        bullets = new ArrayList<>();
+
+        zombies = new ArrayList<>();
+        spawnZombies(100);
+
+        ammo = new Text(FontCache.getFont(R.raw.aileron_bold, 56), String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
+        ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
+    }
+
+    public void spawnZombies(int count) {
+        for(int i = 0; i < count; i++) {
+            float x = random.nextBoolean() ? random.nextFloat() * 4000f : 6000f + random.nextFloat() * 4000f;
+            float y = random.nextBoolean() ? random.nextFloat() * 4000f : 6000f + random.nextFloat() * 4000f;
+            zombies.add(new Zombie(x, y, PLAYER_SIZE));
+        }
     }
 
     @Override
     public void update(float deltaTime) {
         player.update(movementJoystick.getDirection(), aimJoystick.getDirection());
+        ammo.setText(String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
+        ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
 
-        playerHitbox.transform(player.getModelMatrix());
+        HitboxPolygon playerHitbox = player.getHitbox();
 
-        Vec2 minimumTranslation = playerHitbox.isColliding(buildingHitbox);
-        if(minimumTranslation != null) {
+        // Update all zombies
+        for(int n = 0; n < zombies.size(); n++) {
+            Zombie z = zombies.get(n);
+            HitboxPolygon zombieHitbox = z.getHitbox();
+            if(!z.isAlive()) {
+                continue;
+            }
+
+            z.update(Geometry.normalize(Geometry.minus(player.getPosition(), z.getPosition())));
+
+            Vec2 playerZombieMtv = zombieHitbox.isCollidingMTV(playerHitbox);
+            if(playerZombieMtv != null) {
+                z.translate(playerZombieMtv.x, playerZombieMtv.y);
+            }
+
+            for(int i = 0; i < zombies.size(); i++) {
+                if(i == n) {
+                    continue;
+                }
+                Zombie other = zombies.get(i);
+                if(!other.isAlive()) {
+                    continue;
+                }
+
+                Vec2 mtv = zombieHitbox.isCollidingMTV(other.getHitbox());
+                if (mtv != null) {
+                    mtv.scale(0.5f);
+                    z.translate(mtv.x, mtv.y);
+                    zombieHitbox.transform(z.getModelMatrix());
+                    other.translate(-mtv.x, -mtv.y);
+                    other.getHitbox().transform(other.getModelMatrix());
+                }
+            }
+
+            for(int i = 0; i < NUM_CRATES; i++) {
+                Vec2 mtv = zombieHitbox.isCollidingMTV(crateHitboxes[i]);
+                if (mtv != null) {
+                    mtv.scale(0.5f);
+                    z.translate(mtv.x, mtv.y);
+                    zombieHitbox.transform(z.getModelMatrix());
+                    crateModelProperties[i].translate(-mtv.x, -mtv.y);
+                    crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
+                    crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                }
+            }
+
+            // Zombie building collision
+            Vec2 zombieBuildingMtv = building.isColliding(zombieHitbox);
+            if(zombieBuildingMtv != null) {
+                // A collision has occurred, move the zombie away by the MTV
+                z.translate(zombieBuildingMtv.x, zombieBuildingMtv.y);
+                zombieHitbox.transform(z.getModelMatrix());
+            }
+        }
+
+        // Player collisions
+        Vec2 playerBuildingMtv = building.isColliding(playerHitbox);
+        if(playerBuildingMtv != null) {
             // A collision has occurred, move the player away by the MTV
-            player.translate(minimumTranslation.x, minimumTranslation.y);
+            player.translate(playerBuildingMtv.x, playerBuildingMtv.y);
             playerHitbox.transform(player.getModelMatrix());
         }
 
         for(int i = 0; i < NUM_CRATES; i++) {
-            Vec2 mtv = playerHitbox.isColliding(crateHitboxes[i]);
+            Vec2 mtv = playerHitbox.isCollidingMTV(crateHitboxes[i]);
             if(mtv != null) {
-                player.translate(mtv.x, mtv.y);
-                playerHitbox.transform(player.getModelMatrix());
+//                player.translate(mtv.x, mtv.y);
+//                playerHitbox.transform(player.getModelMatrix());
+
+                crateModelProperties[i].translate(-mtv.x, -mtv.y);
+                crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
+                crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+            }
+
+            for(int n = 0; n < NUM_CRATES; n++) {
+                if(n == i) {
+                    continue;
+                }
+                Vec2 crateMtv = crateHitboxes[i].isCollidingMTV(crateHitboxes[n]);
+                if(crateMtv != null) {
+                    crateMtv.scale(0.5f);
+                    crateModelProperties[i].translate(crateMtv.x, crateMtv.y);
+                    crateModelProperties[n].translate(-crateMtv.x, -crateMtv.y);
+                    crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
+                    crateHitboxes[n].transform(crateModelProperties[n].getModelMatrix());
+                    crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                    crates.uploadModelMatrix(crateModelProperties[n].getModelMatrix(), n);
+                }
+            }
+        }
+
+        // Update bullet pos, check for collisions and check for end of life
+        for(int i = bullets.size() - 1; i >= 0; --i) {
+            Bullet bullet = bullets.get(i);
+            bullet.sprite.translate(bullet.velocity);
+
+            // Bullet should only survive for a second
+            if(System.currentTimeMillis() - bullet.spawnTime > 1000) {
+                bullets.remove(i);
+                continue;
+            }
+
+            boolean consumeBullet = false;
+
+            // Collide with boxes and building
+            // Update hitbox
+            bullet.hitboxRectangle.transform(bullet.sprite.getModelMatrix());
+            for(int n = 0; n < NUM_CRATES && !consumeBullet; n++) {
+                if(bullet.hitboxRectangle.isCollidingMTV(crateHitboxes[n]) != null) {
+                    consumeBullet = true;
+                }
+            }
+            if(consumeBullet) {
+                bullets.remove(i);
+                continue;
+            }
+
+            // Zombie collision
+            for(int n = 0; n < zombies.size() && !consumeBullet; n++) {
+                Zombie zombie = zombies.get(n);
+                if(zombie.isAlive() && bullet.hitboxRectangle.isCollidingMTV(zombie.getHitbox()) != null) {
+                    zombie.kill();
+                    consumeBullet = true;
+                }
+            }
+            if(consumeBullet) {
+                bullets.remove(i);
+                continue;
+            }
+
+            if(building.isColliding(bullet.hitboxRectangle) != null) {
+                bullets.remove(i);
+                continue;
+            }
+        }
+
+        // one bullet per second
+        if(aimJoystick.getDirection().getMagnitude() > 0.1f && System.currentTimeMillis() - timeMs > 100) {
+            if(player.spendAmmo()) {
+                timeMs = System.currentTimeMillis();
+
+                // Spawn bullet
+                //  Vec2 bulletStart = player.getModelMatrix().transformPoint(new Vec2(bulletSpawnPoint.x - 0.1f, bulletSpawnPoint.y));
+                Vec2 bulletSpawnTransformed = player.getModelMatrix().transformPoint(bulletSpawnPoint);
+                Vec2 bulletDirection = Geometry.normalize(aimJoystick.getDirection());
+
+                Bullet bullet = new Bullet();
+                bullet.velocity = Geometry.scaleVector(bulletDirection, 60f);
+                bullet.sprite = new Square(false);
+                bullet.sprite.setColour(Colour.YELLOW);
+                bullet.sprite.setScale(14f, 8f);
+                bullet.sprite.setPosition(bulletSpawnTransformed.x - 7f, bulletSpawnTransformed.y - 4f);
+                bullet.sprite.setRotationAroundPoint(7f, 4f, 0f, (float)Math.toDegrees(Math.atan2(bulletDirection.y, bulletDirection.x)), 0f, 0f, 1f);
+                bullet.spawnTime = System.currentTimeMillis();
+                bullet.hitboxRectangle = new HitboxPolygon(new float[]{
+                        -2f, 0f,
+                        1f, 0f,
+                        1f, 1f,
+                        -2f, 1f,
+                });
+                bullet.hitboxRectangle.transform(bullet.sprite.getModelMatrix());
+                bullets.add(bullet);
+
+                Audio.getInstance().playSound(R.raw.pistol_shot);
+            } else {
+                player.reload();
             }
         }
 
         camera.setPosition(getCenteredCameraPosition());
     }
 
+    long timeMs = System.currentTimeMillis();
+
     @Override
     public void render() {
         mapBase.render(camera);
-        crates.render(camera);
         building.render(camera);
+
+        for(int i = 0; i < bullets.size(); i++) {
+            bullets.get(i).sprite.render(camera);
+        }
+
+        for(int i = 0; i < zombies.size(); i++) {
+            zombies.get(i).render(camera);
+        }
+
         player.render(camera);
-        playerHitbox.render(camera);
+
+        crates.render(camera);
+    //    playerHitbox.render(camera);
 
         // UI
         movementJoystick.render(uiCamera);
         aimJoystick.render(uiCamera);
+        ammo.draw(uiCamera);
 
         backButton.draw(uiCamera);
     }
@@ -125,21 +332,19 @@ public class GameDemo2D extends Scene {
     @Override
     public void touch(TouchType touchType, Pointer pointer) {}
 
-    private ModelMatrix[] generateRandomModelTransformations(int count, float minScale, float maxScale) {
-        Random r = new Random();
-        ModelMatrix[] matrices = new ModelMatrix[count];
+    private ModelProperties[] generateRandomModelProperties(int count, float minScale, float maxScale) {
+        ModelProperties[] properties = new ModelProperties[count];
         for(int i = 0; i < count; i++) {
-            float x = r.nextFloat() * 10000f;
-            float y = r.nextFloat() * 10000f;
-            float scale = minScale + (r.nextFloat() * (maxScale - minScale));
-            ModelMatrix modelMatrix = new ModelMatrix();
-            modelMatrix.translate(x, y);
-            modelMatrix.scale(scale, scale);
-            modelMatrix.rotate(r.nextFloat() * 360f, 0f, 0f, 1f);
-            matrices[i] = modelMatrix;
+            float x = random.nextFloat() * 10000f;
+            float y = random.nextFloat() * 10000f;
+            float scale = minScale + (random.nextFloat() * (maxScale - minScale));
+            properties[i] = new ModelProperties();
+            properties[i].setPosition(x, y);
+            properties[i].setScale(scale, scale);
+            properties[i].setRotation(random.nextFloat() * 360f, 0f, 0f, 1f);
         }
 
-        return matrices;
+        return properties;
     }
 
     private Vec2 getCenteredCameraPosition() {
