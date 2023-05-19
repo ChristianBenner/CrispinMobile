@@ -33,6 +33,10 @@ public class HitboxPolygon {
         calculateAxes();
     }
 
+    public float[] getTransformedPoints() {
+        return transformedPoints;
+    }
+
     public Vec2 isCollidingMTV(HitboxPolygon other) {
         return Collision.isCollidingMTV(this, other);
     }

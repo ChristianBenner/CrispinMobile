@@ -162,17 +162,17 @@ public class LightingDemo extends Scene {
                 useMaterialShader = !useMaterialShader;
                 if (torus != null) {
                     if (useMaterialShader) {
-                        torus.useCustomShader(new LightingTextureShader());
+                        torus.setShader(new LightingTextureShader());
                     } else {
-                        torus.useCustomShader(new LightingShader());
+                        torus.setShader(new LightingShader());
                     }
                 }
 
                 if (lightBulb != null) {
                     if (useMaterialShader) {
-                        lightBulb.useCustomShader(new LightingTextureShader());
+                        lightBulb.setShader(new LightingTextureShader());
                     } else {
-                        lightBulb.useCustomShader(new LightingShader());
+                        lightBulb.setShader(new LightingShader());
                     }
                 }
             }

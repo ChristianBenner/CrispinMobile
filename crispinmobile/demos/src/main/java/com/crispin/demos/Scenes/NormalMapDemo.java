@@ -3,8 +3,6 @@ package com.crispin.demos.Scenes;
 import static android.opengl.GLES20.glGenTextures;
 import static android.opengl.GLES20.glUniform3f;
 
-import android.view.MotionEvent;
-
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
@@ -105,7 +103,7 @@ public class NormalMapDemo extends Scene {
 //        cube = new Model(new CubeMesh(true, true), material);
         cube.setPosition(0f, 0f, -8f);
         cube.setRotation(45f, 1f, 1f, 1f);
-        cube.useCustomShader(normalMapShader);
+        cube.setShader(normalMapShader);
 
         light = new Model(new CubeMesh(false, false));
         light.setColour(Colour.YELLOW);

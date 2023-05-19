@@ -7,7 +7,10 @@ import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Physics.HitboxRectangle;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
+import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.demos.R;
 
@@ -57,6 +60,14 @@ public class Building {
         setPosition(position);
     }
 
+    // todo: temp only? resolve in model class
+    public void setShader(Shader shader) {
+        for(int i = 0; i < walls.length; i++) {
+            walls[i].setShader(shader);
+        }
+        floor.setShader(shader);
+    }
+
     public ModelMatrix getModelMatrix() {
         return floor.getModelMatrix();
     }
@@ -90,10 +101,10 @@ public class Building {
         return size;
     }
 
-    public void render(Camera2D camera2D) {
+    public void render(Camera2D camera2D, LightGroup lightGroup) {
         floor.render(camera2D);
         for (int i = 0; i < walls.length; i++) {
-            walls[i].render(camera2D);
+            walls[i].render(camera2D, lightGroup);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
 import static android.opengl.GLES20.GL_DEPTH_TEST;
+import static android.opengl.GLES20.GL_FRAMEBUFFER;
 import static android.opengl.GLES20.glDrawElements;
 import static android.opengl.GLES20.glEnable;
 import static android.opengl.GLES20.glLineWidth;
@@ -20,6 +21,7 @@ import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDL
 import android.opengl.GLES30;
 import android.opengl.Matrix;
 
+import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Rotation2D;
 import com.crispin.crispinmobile.Geometry.Rotation3D;
 import com.crispin.crispinmobile.Geometry.Scale2D;
@@ -61,7 +63,7 @@ public class Model {
     private static final float DEFAULT_WIREFRAME_LINE_WIDTH = 5f;
 
     // The mesh
-    private final Mesh mesh;
+    private Mesh mesh;
 
     // The model matrix
     protected final ModelMatrix modelMatrix;
@@ -130,6 +132,15 @@ public class Model {
                  int elementsPerNormal) {
         this(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
                 elementsPerTexel, elementsPerNormal, new Material());
+    }
+
+    public void setMesh(Mesh mesh) {
+        this.mesh = mesh;
+        if(shader != null) {
+            mesh.setAttributePointers(shader.positionAttributeHandle, shader.textureAttributeHandle,
+                    shader.normalAttributeHandle, shader.tangentAttributeHandle,
+                    shader.bitangentAttributeHandle);
+        }
     }
 
     public ModelMatrix getModelMatrix() {
@@ -677,7 +688,7 @@ public class Model {
      *
      * @since 1.0
      */
-    public void useCustomShader(Shader customShader) {
+    public void setShader(Shader customShader) {
         // Check if the shader being assigned has been freeTypeInitialised
         if (customShader != null) {
             hasCustomShader = true;
@@ -690,7 +701,46 @@ public class Model {
         }
     }
 
-    public void render(Camera2D camera) {
+    // todo: this is proof of concept - implement in a better way. Returns texture ID
+    int framebuffer = -1;
+    int fbTexture = -1;
+    public int renderToTextureTest(Camera2D camera) {
+        if(framebuffer == -1) {
+            int[] genBufferTemp = new int[1];
+            GLES30.glGenFramebuffers(1, genBufferTemp, 0);
+            framebuffer = genBufferTemp[0];
+        }
+
+        // Generate texture to render into
+        if(fbTexture == -1) {
+            GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+            int[] genTextureTemp = new int[1];
+            GLES30.glGenTextures(1, genTextureTemp, 0);
+            fbTexture = genTextureTemp[0];
+            GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
+            GLES30.glTexImage2D(GL_TEXTURE_2D, 0, GLES30.GL_RGB, Crispin.getSurfaceWidth(),
+                    Crispin.getSurfaceHeight(), 0, GLES30.GL_RGB, GLES30.GL_UNSIGNED_BYTE,
+                    null);
+            GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR);
+            GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
+            GLES30.glBindTexture(GL_TEXTURE_2D, 0);
+            GLES30.glFramebufferTexture2D(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbTexture, 0);
+        }
+
+        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
+        GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
+        GLES30.glClearColor(0f, 0f, 0f, 1f);
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        // Draw to framebuffer
+        render(camera);
+
+        // Set frame buffer back to default/0
+        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, 0);
+        return fbTexture;
+    }
+
+    public void render(Camera2D camera, final LightGroup lightGroup) {
         // Check if depth is enabled, and disable it
         final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
         if(DEPTH_ENABLED) {
@@ -705,13 +755,47 @@ public class Model {
         }
 
         shader.enable();
+        setLightUniforms(lightGroup);
 
-        float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
-        Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
-                modelMatrix.getFloats(), 0);
 
-        glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT_SINGLE, false,
-                modelViewMatrix, 0);
+        if (shader.validHandle(shader.getMatrixUniformHandle())) {
+            float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
+                    modelMatrix.getFloats(), 0);
+
+            glUniformMatrix4fv(shader.getMatrixUniformHandle(), UNIFORM_UPLOAD_COUNT_SINGLE, false,
+                    modelViewMatrix, 0);
+        }
+
+        if (shader.validHandle(shader.getProjectionMatrixUniformHandle())) {
+            float[] emptyMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
+            Matrix.setIdentityM(emptyMatrix, 0);
+            glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    emptyMatrix,
+                    0);
+        }
+
+        if (shader.validHandle(shader.getViewMatrixUniformHandle())) {
+            glUniformMatrix4fv(shader.getViewMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    camera.getOrthoMatrix(),
+                    0);
+        }
+
+        if (shader.validHandle(shader.getModelMatrixUniformHandle())) {
+            glUniformMatrix4fv(shader.getModelMatrixUniformHandle(),
+                    UNIFORM_UPLOAD_COUNT_SINGLE,
+                    false,
+                    modelMatrix.getFloats(),
+                    0);
+        }
+
+//        viewMatrixUniformHandle = getUniform("uView");
+//        modelMatrixAttributeHandle = getUniform("uModel");
+
 
         // Set all material uniforms
         shader.setMaterialUniforms(material);
@@ -750,6 +834,10 @@ public class Model {
         }
     }
 
+    public void render(Camera2D camera) {
+        render(camera, null);
+    }
+
     public void render(Camera camera, final LightGroup lightGroup) {
         updateModelMatrix();
 
@@ -759,35 +847,7 @@ public class Model {
         }
 
         shader.enable();
-
-        if (lightGroup != null) {
-            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
-            if (directionalLight != null) {
-                shader.setDirectionalLightUniforms(directionalLight);
-            }
-
-            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
-            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
-                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
-            }
-
-            // Iterate through point lights, uploading each to the shader
-            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
-                final PointLight pointLight = pointLights.get(i);
-                shader.setPointLightUniforms(i, pointLight);
-            }
-
-            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
-            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
-                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
-            }
-
-            // Iterate through spot lights, uploading each to the shader
-            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
-                final SpotLight spotLight = spotLights.get(i);
-                shader.setSpotLightUniforms(i, spotLight);
-            }
-        }
+        setLightUniforms(lightGroup);
 
         // Set all material uniforms
         shader.setMaterialUniforms(material);
@@ -869,6 +929,37 @@ public class Model {
         render(camera, null);
     }
 
+    private void setLightUniforms(LightGroup lightGroup) {
+        if (lightGroup != null) {
+            final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
+            if (directionalLight != null) {
+                shader.setDirectionalLightUniforms(directionalLight);
+            }
+
+            final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
+            if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
+                glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
+            }
+
+            // Iterate through point lights, uploading each to the shader
+            for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
+                final PointLight pointLight = pointLights.get(i);
+                shader.setPointLightUniforms(i, pointLight);
+            }
+
+            final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
+            if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
+                glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
+            }
+
+            // Iterate through spot lights, uploading each to the shader
+            for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
+                final SpotLight spotLight = spotLights.get(i);
+                shader.setSpotLightUniforms(i, spotLight);
+            }
+        }
+    }
+
     /**
      * Update the shader by automatically deciding what built in GLSL program to use depending on
      * the data that is present on the render object. For example, if the object has position data,
@@ -877,6 +968,10 @@ public class Model {
      * @since 1.0
      */
     protected void updateShader() {
+        if(shader != null) {
+            return;
+        }
+
         // If their has not been a custom shader allocated to the render object, automatically
         // allocate one
         if (hasCustomShader) {

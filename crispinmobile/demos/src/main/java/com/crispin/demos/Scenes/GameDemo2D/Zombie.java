@@ -5,7 +5,9 @@ import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Models.AnimatedSquare;
 import com.crispin.crispinmobile.Rendering.Models.Square;
+import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
+import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
@@ -85,12 +87,17 @@ public class Zombie {
         hitbox.transform(getModelMatrix());
     }
 
-    public void render(Camera2D camera) {
+    public void setShader(Shader shader) {
+        legsSprite.setShader(shader);
+        torsoSprite.setShader(shader);
+    }
+
+    public void render(Camera2D camera, LightGroup lightGroup) {
         if(!alive) {
-            legsSprite.render(camera);
+            legsSprite.render(camera, lightGroup);
         }
 
-        torsoSprite.render(camera);
+        torsoSprite.render(camera, lightGroup);
     }
 
     public Vec2 getPosition() {

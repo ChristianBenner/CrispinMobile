@@ -1,27 +1,16 @@
 package com.crispin.demos.Scenes;
 
-import static android.opengl.GLES20.glUniform1f;
-import static android.opengl.GLES20.glUniform2f;
-import static android.opengl.GLES20.glUniform4f;
-
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
-import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
-import com.crispin.crispinmobile.Rendering.Shaders.Shader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.UserInterface.Border;
-import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
-import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.UserInterface.TouchType;
-import com.crispin.crispinmobile.Utilities.Audio;
-import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.BackgroundShader;
 import com.crispin.demos.R;
@@ -56,7 +45,7 @@ public class DemoMasterScene extends Scene {
         background = new Square();
         background.setPosition(0f, 0f);
         background.setScale(Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
-        background.useCustomShader(backgroundShader);
+        background.setShader(backgroundShader);
 
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));

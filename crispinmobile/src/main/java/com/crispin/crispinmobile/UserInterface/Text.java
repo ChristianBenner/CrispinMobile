@@ -437,7 +437,7 @@ public class Text implements UIElement {
 
                     FontSquare square = new FontSquare(new Material(theChar.texture, colour),
                             new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
-                    square.useCustomShader(textShader);
+                    square.setShader(textShader);
                     square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
                     squares.add(square);
 
@@ -559,7 +559,7 @@ public class Text implements UIElement {
                         colour), new Vec3(position, 0.0f), new Vec2(CHAR_X, CHAR_Y));
 
                 // Force the use of the text shader (optimised for text rendering)
-                square.useCustomShader(textShader);
+                square.setShader(textShader);
 
                 // Scale the square to the width and height of the character
                 square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
@@ -656,7 +656,7 @@ public class Text implements UIElement {
                     new Vec2(CHAR_X, CHAR_Y));
 
             // Force the use of the text shader (optimised for text rendering)
-            square.useCustomShader(textShader);
+            square.setShader(textShader);
 
             // Scale the square to the width and height of the character
             square.setScale(new Scale2D(CHAR_WIDTH, CHAR_HEIGHT));
