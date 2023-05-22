@@ -45,6 +45,7 @@ public class GameDemo2D extends Scene {
     private static int WEAPON_FIRE_MIN_WAIT_MS = 1000 / WEAPON_FIRE_RATE_HZ;
     // Relative to the vertex positions defined for the player mesh (square 0-1 in both x and y)
     private static final Vec2 BULLET_SPAWN_POINT = new Vec2(31f/32f, 9f/32f);
+    private static final int BULLETS_BETWEEN_TRACER = 5;
 
     // UI
     private Camera2D camera;
@@ -83,6 +84,7 @@ public class GameDemo2D extends Scene {
 
     // Other
     private Random random;
+    private int bulletsUntilTracer;
 
     private long lastShotTimeMs = System.currentTimeMillis();
 
@@ -112,7 +114,7 @@ public class GameDemo2D extends Scene {
         light.setLinearAttenuation(1f);
         light.setQuadraticAttenuation(10f);
         light.setAmbientStrength(0.0f);
-        light.setColour(Colour.GREEN);
+//        light.setColour(Colour.GREEN);
 
         Material grassRepeatMaterial = new Material(R.drawable.dirt_tile);
         grassRepeatMaterial.setUvMultiplier(100f, 100f);
@@ -150,6 +152,8 @@ public class GameDemo2D extends Scene {
         ammo.setColour(Colour.WHITE);
 
         shadowMap = new ShadowMap();
+
+        bulletsUntilTracer = BULLETS_BETWEEN_TRACER;
     }
 
     private void spawnZombies(int count) {
@@ -331,7 +335,7 @@ public class GameDemo2D extends Scene {
                 Vec2 bulletDirection = Geometry.normalize(aimJoystick.getDirection());
 
                 Bullet bullet = new Bullet();
-                bullet.velocity = Geometry.scaleVector(bulletDirection, 60f);
+                bullet.velocity = Geometry.scaleVector(bulletDirection, 100f);
                 bullet.sprite = new Square(false);
                 bullet.sprite.setColour(Colour.YELLOW);
                 bullet.sprite.setScale(14f, 8f);
@@ -348,11 +352,20 @@ public class GameDemo2D extends Scene {
 
                 bullet.light = new PointLight();
                 bullet.light.setPosition(bullet.sprite.getPosition());
-                bullet.light.setConstantAttenuation(400f);
+                bullet.light.setConstantAttenuation(100f);
                 bullet.light.setLinearAttenuation(1f);
                 bullet.light.setQuadraticAttenuation(10f);
                 bullet.light.setAmbientStrength(0f);
-                bullet.light.setColour(Colour.RED);
+
+                if(bulletsUntilTracer <= 0) {
+                    bulletsUntilTracer = BULLETS_BETWEEN_TRACER;
+                    bullet.light.setConstantAttenuation(400f);
+                    bullet.light.setColour(new Colour(0.196f, 0.80f, 0.196f));
+                    bullet.sprite.setColour(new Colour(0.196f, 0.80f, 0.196f));
+                } else {
+                    bulletsUntilTracer--;
+                }
+//                bullet.light.setColour(Colour.RED);
                 lightGroup.add(bullet.light);
 
                 // todo - temp only, improve
