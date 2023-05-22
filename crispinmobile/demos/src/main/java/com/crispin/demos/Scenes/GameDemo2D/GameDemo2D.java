@@ -33,6 +33,7 @@ import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Models.ShadowModel;
 import com.crispin.crispinmobile.Rendering.Models.Square;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceShadowShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.LightingTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.ShadowShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
@@ -87,7 +88,8 @@ public class GameDemo2D extends Scene {
     private Building building;
     private HitboxRectangle buildingHitbox;
     private InstanceRenderer crates;
-    private Model[] crateShadows;
+    private InstanceRenderer crateShadows;
+//    private Model[] crateShadows;
     private HitboxRectangle[] crateHitboxes;
 
     private ModelProperties[] crateModelProperties;
@@ -108,7 +110,7 @@ public class GameDemo2D extends Scene {
     private int[] fbTexture;
     private static final int SHADOW_MAP_SIZE = 512;
     private static final int MAX_SHADOW_MAPS = 10;
-    private ShadowShader2D shadowShader2D;
+    private InstanceShadowShader2D shadowShader2D;
 
     public GameDemo2D() {
         Audio.getInstance().initMusicChannel();
@@ -162,18 +164,23 @@ public class GameDemo2D extends Scene {
         crateModelProperties = generateRandomModelProperties(NUM_CRATES, 100f, 200f);
         crates = new InstanceRenderer(new SquareMesh(true), false, crateModelProperties);
         crates.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
+
+        shadowShader2D = new InstanceShadowShader2D();
+        crateShadows = new InstanceRenderer(Square.getShadowMesh(), false, crateModelProperties);
+        crateShadows.setShader(shadowShader2D);
+
         crateHitboxes = new HitboxRectangle[NUM_CRATES];
-        crateShadows = new Model[NUM_CRATES];
-        shadowShader2D = new ShadowShader2D();
+//        crateShadows = new Model[NUM_CRATES];
+
         for(int i = 0; i < NUM_CRATES; i++) {
             crateHitboxes[i] = new HitboxRectangle();
             crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
 
-            crateShadows[i] = new Model(Square.getShadowMesh(), null, null, Mesh.RenderMethod.TRIANGLES, 3, 0, 0);
-            crateShadows[i].setPosition(crateModelProperties[i].getPosition());
-            crateShadows[i].setScale(crateModelProperties[i].getScale());
-            crateShadows[i].setRotation(crateModelProperties[i].getRotation());
-            crateShadows[i].setShader(shadowShader2D); // todo: instance render shadows
+//            crateShadows[i] = new Model(Square.getShadowMesh(), null, null, Mesh.RenderMethod.TRIANGLES, 3, 0, 0);
+//            crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+//            crateShadows[i].setScale(crateModelProperties[i].getScale());
+//            crateShadows[i].setRotation(crateModelProperties[i].getRotation());
+//            crateShadows[i].setShader(shadowShader2D); // todo: instance render shadows
         }
 
 
@@ -291,9 +298,10 @@ public class GameDemo2D extends Scene {
                     crateModelProperties[i].translate(-mtv.x, -mtv.y);
                     crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
                     crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
-                    crateShadows[i].setPosition(crateModelProperties[i].getPosition());
-                    crateShadows[i].setScale(crateModelProperties[i].getScale());
-                    crateShadows[i].setRotation(crateModelProperties[i].getRotation());
+                    crateShadows.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+//                    crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+//                    crateShadows[i].setScale(crateModelProperties[i].getScale());
+//                    crateShadows[i].setRotation(crateModelProperties[i].getRotation());
                 }
             }
 
@@ -323,9 +331,7 @@ public class GameDemo2D extends Scene {
                 crateModelProperties[i].translate(-mtv.x, -mtv.y);
                 crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
                 crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
-                crateShadows[i].setPosition(crateModelProperties[i].getPosition());
-                crateShadows[i].setScale(crateModelProperties[i].getScale());
-                crateShadows[i].setRotation(crateModelProperties[i].getRotation());
+                crateShadows.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
             }
 
             for(int n = 0; n < NUM_CRATES; n++) {
@@ -341,12 +347,8 @@ public class GameDemo2D extends Scene {
                     crateHitboxes[n].transform(crateModelProperties[n].getModelMatrix());
                     crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
                     crates.uploadModelMatrix(crateModelProperties[n].getModelMatrix(), n);
-                    crateShadows[i].setPosition(crateModelProperties[i].getPosition());
-                    crateShadows[i].setScale(crateModelProperties[i].getScale());
-                    crateShadows[i].setRotation(crateModelProperties[i].getRotation());
-                    crateShadows[n].setPosition(crateModelProperties[n].getPosition());
-                    crateShadows[n].setScale(crateModelProperties[n].getScale());
-                    crateShadows[n].setRotation(crateModelProperties[n].getRotation());
+                    crateShadows.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                    crateShadows.uploadModelMatrix(crateModelProperties[n].getModelMatrix(), n);
                 }
             }
         }
@@ -512,17 +514,21 @@ public class GameDemo2D extends Scene {
             GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
             lightingTextureShader.setShadowTexture(fbTexture[0]);
 
-            for(int i = 0; i < NUM_CRATES; i++) {
-                float lx = light.getPosition().x;
-                float ly = light.getPosition().y;
-                float ld = light.getConstantAttenuation(); // light diameter // todo: temp
+            shadowShader2D.setLightPos(light.getPosition2D());
+            crateShadows.render(camera);
 
-                // If the crate is in range, then render shadow
-                if(Math.abs(crateShadows[i].getPosition().x - lx) < ld && Math.abs(crateShadows[i].getPosition().y - ly) < ld) {
-                    shadowShader2D.setLightPos(light.getPosition2D());
-                    crateShadows[i].render(camera);
-                }
-            }
+//            crateShadows.render(camera);
+//            for(int i = 0; i < NUM_CRATES; i++) {
+//                float lx = light.getPosition().x;
+//                float ly = light.getPosition().y;
+//                float ld = light.getConstantAttenuation(); // light diameter // todo: temp
+//
+//                // If the crate is in range, then render shadow
+//                if(Math.abs(crateShadows[i].getPosition().x - lx) < ld && Math.abs(crateShadows[i].getPosition().y - ly) < ld) {
+//                    shadowShader2D.setLightPos(light.getPosition2D());
+//                    crateShadows[i].render(camera);
+//                }
+//            }
         }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -541,6 +547,7 @@ public class GameDemo2D extends Scene {
 
         player.render(camera);
         crates.render(camera);
+
 
 //        secondShadowTestCrate.render(camera);
 //        secondShadowTestMask.render(camera);

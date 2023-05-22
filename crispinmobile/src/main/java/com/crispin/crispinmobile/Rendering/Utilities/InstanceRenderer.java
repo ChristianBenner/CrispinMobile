@@ -74,6 +74,7 @@ public class InstanceRenderer {
     private float[] default2DViewMatrix;
     private int matricesVBO;
     private int colourVBO;
+    private boolean customShader;
 
     public InstanceRenderer(Mesh mesh, boolean lightingSupport, boolean instancedColour) {
         this.mesh = mesh;
@@ -143,6 +144,12 @@ public class InstanceRenderer {
         this(mesh, lightingSupport, true);
         uploadModelMatrices(modelMatrices);
         uploadColourData(colours);
+    }
+
+    public void setShader(Shader shader) {
+        customShader = true;
+        this.shader = shader;
+        setVertexAttributeArrays();
     }
 
     public void uploadModelMatrices(FloatBuffer buffer, int instances) {
@@ -334,6 +341,10 @@ public class InstanceRenderer {
     }
 
     protected void determineShader() {
+        if(customShader) {
+            return;
+        }
+
         if(instancedColour) {
             if(mesh.supportsTexture() && lightingSupport) {
                 if(mesh.elementsPerPosition == 2) {
@@ -419,7 +430,7 @@ public class InstanceRenderer {
 
         // Set view matrices
         glUniformMatrix4fv(shader.getProjectionMatrixUniformHandle(),1,false, projectionMatrix, 0);
-        glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false,viewMatrix, 0);
+        glUniformMatrix4fv(shader.getViewMatrixUniformHandle(), 1, false, viewMatrix, 0);
     }
 
     private void setVertexAttributeArrays() {
