@@ -1,11 +1,11 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import static android.opengl.GLES20.GL_DEPTH_TEST;
-import static android.opengl.GLES20.GL_FRAMEBUFFER;
-import static android.opengl.GLES20.glDrawElements;
-import static android.opengl.GLES20.glEnable;
-import static android.opengl.GLES20.glLineWidth;
-import static android.opengl.GLES20.glUniform4f;
+import static android.opengl.GLES30.GL_DEPTH_TEST;
+import static android.opengl.GLES30.GL_FRAMEBUFFER;
+import static android.opengl.GLES30.glEnable;
+import static android.opengl.GLES30.glLineWidth;
+import static android.opengl.GLES30.glUniform2f;
+import static android.opengl.GLES30.glUniform4f;
 import static android.opengl.GLES30.GL_LINES;
 import static android.opengl.GLES30.GL_POINTS;
 import static android.opengl.GLES30.GL_TEXTURE_2D;
@@ -757,7 +757,6 @@ public class Model {
         shader.enable();
         setLightUniforms(lightGroup);
 
-
         if (shader.validHandle(shader.getMatrixUniformHandle())) {
             float[] modelViewMatrix = new float[NUM_VALUES_PER_VIEW_MATRIX];
             Matrix.multiplyMM(modelViewMatrix, 0, camera.getOrthoMatrix(), 0,
@@ -793,6 +792,9 @@ public class Model {
                     0);
         }
 
+        if (shader.validHandle(shader.getViewDimensionUniformHandle())) {
+            glUniform2f(shader.getViewDimensionUniformHandle(), Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
+        }
 //        viewMatrixUniformHandle = getUniform("uView");
 //        modelMatrixAttributeHandle = getUniform("uModel");
 
@@ -894,6 +896,10 @@ public class Model {
                     false,
                     modelMatrix.getFloats(),
                     0);
+        }
+
+        if (shader.validHandle(shader.getViewDimensionUniformHandle())) {
+            glUniform2f(shader.getViewDimensionUniformHandle(), Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
         }
 
         GLES30.glBindVertexArray(mesh.vao);

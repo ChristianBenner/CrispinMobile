@@ -63,6 +63,9 @@ public class Shader {
     // View position uniform handle
     public int viewPositionUniformHandle;
 
+    // View dimension uniform handle
+    public int viewDimensionUniformHandle;
+
     // Position attribute handle
     public int positionAttributeHandle;
 
@@ -151,6 +154,7 @@ public class Shader {
         viewMatrixUniformHandle = UNDEFINED_HANDLE;
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
+        viewDimensionUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
         numSpotLightsUniformHandle = UNDEFINED_HANDLE;
         modelMatrixAttributeHandle = UNDEFINED_HANDLE;
@@ -529,6 +533,16 @@ public class Shader {
      */
     public int getViewPositionUniformHandle() {
         return viewPositionUniformHandle;
+    }
+
+    /**
+     * Get the view dimension uniform handle
+     *
+     * @return Integer ID of the view dimension uniform handle
+     * @since 1.0
+     */
+    public int getViewDimensionUniformHandle() {
+        return viewDimensionUniformHandle;
     }
 
     /**

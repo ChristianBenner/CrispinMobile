@@ -18,7 +18,6 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
-import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Pointer;
@@ -28,7 +27,6 @@ import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
-import com.crispin.demos.Scenes.DemoMasterScene;
 import com.crispin.demos.Util;
 
 import java.util.Random;
@@ -78,7 +76,7 @@ public class InstancingVsBatchDemo extends Scene {
         directionalLight.setAmbientStrength(0.4f);
         directionalLight.setDiffuseStrength(1.0f);
         directionalLight.setSpecularStrength(0.4f);
-        lightGroup.addLight(directionalLight);
+        lightGroup.add(directionalLight);
 
         this.modelMatrices = new float[NUM_FLOATS_MATRIX * NUM_INSTANCES];
         this.colourData = new float[NUM_FLOATS_COLOUR * NUM_INSTANCES];

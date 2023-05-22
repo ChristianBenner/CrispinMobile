@@ -33,7 +33,7 @@ public class ObjLoadDemo extends Scene {
         backButton = Util.createBackButton(DemoMasterScene::new);
 
         lights = new LightGroup();
-        lights.addLight(new DirectionalLight(0f, 0f, -1f));
+        lights.add(new DirectionalLight(0f, 0f, -1f));
 
         // Load the monkey model. Note that we are using the ThreadedOBJLoader here. This means that
         // the application can continue whilst loading the model. This is especially useful for

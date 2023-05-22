@@ -1,7 +1,5 @@
 package com.crispin.demos.Scenes.InstancingDemos;
 
-import android.view.MotionEvent;
-
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -12,7 +10,6 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
-import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Pointer;
@@ -107,7 +104,7 @@ public class InstancingDemo2D extends Scene {
         pointLight.setQuadraticAttenuation(0.00001f);
         pointLight.setConstantAttenuation(1f);
 
-        lightGroup.addLight(pointLight);
+        lightGroup.add(pointLight);
         renderers[RENDER_UNIQUE_COLOUR_TEXTURE_LIGHTING].setLightGroup(lightGroup);
         renderers[RENDER_TEXTURE_LIGHTING].setLightGroup(lightGroup);
         renderers[RENDER_COLOUR_LIGHTING].setLightGroup(lightGroup);

@@ -47,7 +47,7 @@ public class LightGroup {
      * @version %I%, %G%
      * @since 1.0
      */
-    public void addLight(DirectionalLight directionalLight) {
+    public void add(DirectionalLight directionalLight) {
         this.directionalLight = directionalLight;
     }
 
@@ -82,7 +82,7 @@ public class LightGroup {
      * @version %I%, %G%
      * @since 1.0
      */
-    public void addLight(PointLight pointLight) {
+    public void add(PointLight pointLight) {
         this.pointLights.add(pointLight);
     }
 
@@ -94,7 +94,7 @@ public class LightGroup {
      * @version %I%, %G%
      * @since 1.0
      */
-    public void removePointLight(PointLight pointLight) {
+    public void remove(PointLight pointLight) {
         this.pointLights.remove(pointLight);
     }
 
@@ -129,7 +129,7 @@ public class LightGroup {
      * @version %I%, %G%
      * @since 1.0
      */
-    public void addLight(SpotLight spotLight) {
+    public void add(SpotLight spotLight) {
         this.spotLights.add(spotLight);
     }
 
@@ -141,7 +141,7 @@ public class LightGroup {
      * @version %I%, %G%
      * @since 1.0
      */
-    public void removeSpotLight(SpotLight spotLight) {
+    public void remove(SpotLight spotLight) {
         this.spotLights.remove(spotLight);
     }
 

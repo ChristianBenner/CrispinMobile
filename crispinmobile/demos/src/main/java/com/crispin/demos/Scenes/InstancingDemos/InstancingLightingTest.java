@@ -1,7 +1,6 @@
 package com.crispin.demos.Scenes.InstancingDemos;
 
 import android.opengl.Matrix;
-import android.view.MotionEvent;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
@@ -70,7 +69,7 @@ public class InstancingLightingTest extends Scene {
         pl.setSpecularStrength(3.0f);
         pl.setDiffuseStrength(1.3f);
         pl.setAmbientStrength(1.0f);
-        lightGroup.addLight(pl);
+        lightGroup.add(pl);
         renderer.setLightGroup(lightGroup);
 
 

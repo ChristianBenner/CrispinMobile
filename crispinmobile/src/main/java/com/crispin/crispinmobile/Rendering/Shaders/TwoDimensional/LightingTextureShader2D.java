@@ -1,14 +1,14 @@
 package com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional;
 
-import static android.opengl.GLES20.GL_TEXTURE0;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
 import static android.opengl.GLES20.glActiveTexture;
 import static android.opengl.GLES20.glBindTexture;
 import static android.opengl.GLES20.glUniform1i;
+import static android.opengl.GLES30.GL_TEXTURE_2D_ARRAY;
 
 import android.opengl.GLES30;
 
 import com.crispin.crispinmobile.R;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
@@ -36,7 +36,7 @@ public class LightingTextureShader2D extends Shader {
     private static final String TAG = "LightingTextureShader2D";
 
     // Shader texture
-    private int shadowTextureUniformHandle = UNDEFINED_HANDLE;
+    public int shadowTextureUniformHandle = UNDEFINED_HANDLE;
 
     /**
      * Create the TextureShader. This compiles the pre-defined vertex and fragment shader's, and
@@ -57,19 +57,29 @@ public class LightingTextureShader2D extends Shader {
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
 
         viewMatrixUniformHandle = getUniform("uView");
+        viewDimensionUniformHandle = getUniform("uViewDimension");
         modelMatrixUniformHandle = getUniform("uModel");
+
         shadowTextureUniformHandle = getUniform("uShadow");
 
         // Fragment uniforms
         numPointLightsUniformHandle = getUniform("uNumPointLights");
 
+        final String parent = "uDirectionalLight.";
+        DirectionalLightHandles directionalLightHandles = new DirectionalLightHandles();
+        directionalLightHandles.directionUniformHandle = getUniform(parent + "direction");
+        directionalLightHandles.colourUniformHandle = getUniform(parent + "colour");
+        directionalLightHandles.ambientUniformHandle = getUniform(parent + "ambient");
+        directionalLightHandles.diffuseUniformHandle = getUniform(parent + "diffuse");
+        directionalLightHandles.specularUniformHandle = getUniform(parent + "specular");
+        super.directionalLightHandles = directionalLightHandles;
         initPointLightHandles();
     }
 
     public void setShadowTexture(int textureHandle) {
         super.enable();
         glActiveTexture(GLES30.GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D, textureHandle);
+        glBindTexture(GL_TEXTURE_2D_ARRAY, textureHandle);
         glUniform1i(shadowTextureUniformHandle, 3);
         super.disable();
     }

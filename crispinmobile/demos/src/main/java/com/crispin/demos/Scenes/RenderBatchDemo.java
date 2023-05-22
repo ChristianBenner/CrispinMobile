@@ -54,7 +54,7 @@ public class RenderBatchDemo extends Scene {
       //  lightGroup.addLight(directionalLight);
 
         pointLight = new PointLight();
-        lightGroup.addLight(pointLight);
+        lightGroup.add(pointLight);
 
         renderBatch = new RenderBatch();
         renderBatch.setCamera(camera);

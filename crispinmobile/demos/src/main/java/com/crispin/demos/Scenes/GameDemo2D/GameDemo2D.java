@@ -1,7 +1,21 @@
 package com.crispin.demos.Scenes.GameDemo2D;
 
-import static android.opengl.GLES20.GL_FRAMEBUFFER;
-import static android.opengl.GLES20.GL_TEXTURE_2D;
+import static android.opengl.GLES20.glViewport;
+import static android.opengl.GLES30.GL_LINEAR;
+import static android.opengl.GLES30.GL_RGB;
+import static android.opengl.GLES30.GL_TEXTURE_MAG_FILTER;
+import static android.opengl.GLES30.GL_TEXTURE_MIN_FILTER;
+import static android.opengl.GLES30.GL_UNSIGNED_BYTE;
+import static android.opengl.GLES30.glBindFramebuffer;
+import static android.opengl.GLES30.glBindTexture;
+import static android.opengl.GLES30.glFramebufferTexture2D;
+import static android.opengl.GLES30.glGenFramebuffers;
+import static android.opengl.GLES30.glGenTextures;
+import static android.opengl.GLES30.glTexParameteri;
+import static android.opengl.GLES30.GL_COLOR_ATTACHMENT0;
+import static android.opengl.GLES30.GL_FRAMEBUFFER;
+import static android.opengl.GLES30.GL_TEXTURE_2D_ARRAY;
+import static android.opengl.GLES30.glTexImage3D;
 
 import android.opengl.GLES30;
 
@@ -17,9 +31,11 @@ import com.crispin.crispinmobile.Rendering.DefaultMesh.SquareMesh;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
+import com.crispin.crispinmobile.Rendering.Models.ShadowModel;
 import com.crispin.crispinmobile.Rendering.Models.Square;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.LightingTextureShader2D;
+import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.ShadowShader2D;
+import com.crispin.crispinmobile.Rendering.Shaders.UniformColourShader;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
@@ -33,7 +49,6 @@ import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Audio;
 import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.crispinmobile.Utilities.ShaderCache;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 import com.crispin.demos.Scenes.DemoMasterScene;
@@ -72,6 +87,7 @@ public class GameDemo2D extends Scene {
     private Building building;
     private HitboxRectangle buildingHitbox;
     private InstanceRenderer crates;
+    private Model[] crateShadows;
     private HitboxRectangle[] crateHitboxes;
 
     private ModelProperties[] crateModelProperties;
@@ -79,16 +95,20 @@ public class GameDemo2D extends Scene {
     private LightGroup lightGroup;
     private PointLight light;
 
+//    private Square secondShadowTestCrate;
+//    private Model secondShadowTestMask;
+
     private ArrayList<Bullet> bullets;
     private ArrayList<Zombie> zombies;
 
-    private HitboxRectangle crateTest;
-    private HitboxRectangle crateTest2;
-    private Model shadowTest;
-    private Model shadowTest2;
+
+//    private Model shadowTest;
     private LightingTextureShader2D lightingTextureShader;
-    private int framebuffer = -1;
-    private int fbTexture = -1;
+    private int[] framebuffer;
+    private int[] fbTexture;
+    private static final int SHADOW_MAP_SIZE = 512;
+    private static final int MAX_SHADOW_MAPS = 10;
+    private ShadowShader2D shadowShader2D;
 
     public GameDemo2D() {
         Audio.getInstance().initMusicChannel();
@@ -100,6 +120,7 @@ public class GameDemo2D extends Scene {
         random = new Random();
         lightingTextureShader = new LightingTextureShader2D();
 
+        System.out.println(Crispin.getSurfaceWidth() + ", " + Crispin.getSurfaceHeight());
         backButton = Util.createBackButton(DemoMasterScene::new, 10f, Crispin.getSurfaceHeight() - 10f - Util.BACK_BUTTON_SIZE);
 
         movementJoystick = new Joystick(new Vec2(100f, 100f), 400f);
@@ -108,14 +129,25 @@ public class GameDemo2D extends Scene {
 
         player = new Player(5000f, 5000f, PLAYER_SIZE);
 
-        lightGroup = new LightGroup();
-        light = new PointLight();
-        lightGroup.addLight(light);
-        light.setConstantAttenuation(1f);
-        light.setQuadraticAttenuation(0.00007f);
-        light.setLinearAttenuation(0.000005f);
-        light.setAmbientStrength(0f);
 
+        lightGroup = new LightGroup();
+//        DirectionalLight directionalLight = new DirectionalLight(0f, -1f, -1f);
+//        directionalLight.setColour(new Colour(1f, 0f, 0f));
+////        directionalLight.setColour(new Colour(0.76f, 0.773f, 0.80f));
+////        directionalLight.setAmbientStrength(1f);
+//        directionalLight.setDiffuseStrength(0.3f);
+//        lightGroup.addLight(directionalLight);
+
+        light = new PointLight();
+        lightGroup.add(light);
+        light.setConstantAttenuation(800f);
+        light.setLinearAttenuation(1f);
+        light.setQuadraticAttenuation(10f);
+//        light.setConstantAttenuation(1f);
+//        light.setQuadraticAttenuation(0.00007f);
+//        light.setLinearAttenuation(0.000005f);
+        light.setAmbientStrength(0.0f);
+        light.setColour(Colour.GREEN);
       // atten = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
 
 //
@@ -131,25 +163,35 @@ public class GameDemo2D extends Scene {
         crates = new InstanceRenderer(new SquareMesh(true), false, crateModelProperties);
         crates.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
         crateHitboxes = new HitboxRectangle[NUM_CRATES];
+        crateShadows = new Model[NUM_CRATES];
+        shadowShader2D = new ShadowShader2D();
         for(int i = 0; i < NUM_CRATES; i++) {
             crateHitboxes[i] = new HitboxRectangle();
             crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
+
+            crateShadows[i] = new Model(Square.getShadowMesh(), null, null, Mesh.RenderMethod.TRIANGLES, 3, 0, 0);
+            crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+            crateShadows[i].setScale(crateModelProperties[i].getScale());
+            crateShadows[i].setRotation(crateModelProperties[i].getRotation());
+            crateShadows[i].setShader(shadowShader2D); // todo: instance render shadows
         }
 
 
-        ModelMatrix modelMatrix = new ModelMatrix();
-        modelMatrix.reset();
-        modelMatrix.translate(4800f, 4800f);
-        modelMatrix.scale(200f, 200f);
-        crateTest = new HitboxRectangle();
-        crateTest.transform(modelMatrix);
 
-        ModelMatrix modelMatrix2 = new ModelMatrix();
-        modelMatrix2.reset();
-        modelMatrix2.translate(5000f, 4400f);
-        modelMatrix2.scale(200f, 200f);
-        crateTest2 = new HitboxRectangle();
-        crateTest2.transform(modelMatrix2);
+//        secondShadowTestCrate = new Square(false);
+//        secondShadowTestCrate.setPosition(5000f, 4800f);
+//        secondShadowTestCrate.setScale(200f, 200f);
+//        secondShadowTestCrate.setColour(Colour.MAGENTA);
+//
+//        secondShadowTestMask = new Model(Square.getShadowMesh(), null, null, Mesh.RenderMethod.TRIANGLES, 3, 0, 0);
+//
+//        // Simple line test
+//        secondShadowTestMask.setPosition(secondShadowTestCrate.getPosition());
+//        secondShadowTestMask.setScale(secondShadowTestCrate.getScale());
+
+
+
+
 
         building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
         building.setShader(lightingTextureShader);
@@ -159,32 +201,28 @@ public class GameDemo2D extends Scene {
         bullets = new ArrayList<>();
 
         zombies = new ArrayList<>();
-        spawnZombies(100);
+//        spawnZombies(100);
 
         ammo = new Text(FontCache.getFont(R.raw.aileron_bold, 56), String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
         ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
 
-        shadowTest = new Model(null);
-        shadowTest2 = new Model(null);
+//        shadowTest = new Model(null);
 
+        // Create the frame buffers and texture array for the shadow maps
+        framebuffer = new int[MAX_SHADOW_MAPS];
+        fbTexture = new int[1];
+        glGenFramebuffers(MAX_SHADOW_MAPS, framebuffer, 0);
+        glGenTextures(1, fbTexture, 0);
 
-        int[] genBufferTemp = new int[1];
-        GLES30.glGenFramebuffers(1, genBufferTemp, 0);
-        framebuffer = genBufferTemp[0];
-
-        // Generate texture to render into
-        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        int[] genTextureTemp = new int[1];
-        GLES30.glGenTextures(1, genTextureTemp, 0);
-        fbTexture = genTextureTemp[0];
-        GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
-        GLES30.glTexImage2D(GL_TEXTURE_2D, 0, GLES30.GL_RGB, Crispin.getSurfaceWidth(),
-                Crispin.getSurfaceHeight(), 0, GLES30.GL_RGB, GLES30.GL_UNSIGNED_BYTE,
-                null);
-        GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR);
-        GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
-        GLES30.glBindTexture(GL_TEXTURE_2D, 0);
-        GLES30.glFramebufferTexture2D(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbTexture, 0);
+        for(int i = 0; i < MAX_SHADOW_MAPS; i++) {
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[i]);
+            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_ARRAY, fbTexture[0], 0);
+            glBindTexture(GL_TEXTURE_2D_ARRAY, fbTexture[0]);
+            glTexImage3D(GL_TEXTURE_2D_ARRAY, i, GL_RGB, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE, MAX_SHADOW_MAPS, 0, GL_RGB, GL_UNSIGNED_BYTE, null);
+            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glBindTexture(GL_TEXTURE_2D_ARRAY, 0);
+        }
     }
 
     public void spawnZombies(int count) {
@@ -204,6 +242,7 @@ public class GameDemo2D extends Scene {
         float cx = player.getPosition().x + (player.getSize().x / 2f);
         float cy = player.getPosition().y + (player.getSize().y / 2f);
         light.setPosition(cx, cy);
+        shadowShader2D.setLightPos(light.getPosition2D());
 
         ammo.setText(String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
         ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
@@ -253,6 +292,9 @@ public class GameDemo2D extends Scene {
                     crateModelProperties[i].translate(-mtv.x, -mtv.y);
                     crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
                     crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                    crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+                    crateShadows[i].setScale(crateModelProperties[i].getScale());
+                    crateShadows[i].setRotation(crateModelProperties[i].getRotation());
                 }
             }
 
@@ -282,6 +324,9 @@ public class GameDemo2D extends Scene {
                 crateModelProperties[i].translate(-mtv.x, -mtv.y);
                 crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
                 crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+                crateShadows[i].setScale(crateModelProperties[i].getScale());
+                crateShadows[i].setRotation(crateModelProperties[i].getRotation());
             }
 
             for(int n = 0; n < NUM_CRATES; n++) {
@@ -297,6 +342,12 @@ public class GameDemo2D extends Scene {
                     crateHitboxes[n].transform(crateModelProperties[n].getModelMatrix());
                     crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
                     crates.uploadModelMatrix(crateModelProperties[n].getModelMatrix(), n);
+                    crateShadows[i].setPosition(crateModelProperties[i].getPosition());
+                    crateShadows[i].setScale(crateModelProperties[i].getScale());
+                    crateShadows[i].setRotation(crateModelProperties[i].getRotation());
+                    crateShadows[n].setPosition(crateModelProperties[n].getPosition());
+                    crateShadows[n].setScale(crateModelProperties[n].getScale());
+                    crateShadows[n].setRotation(crateModelProperties[n].getRotation());
                 }
             }
         }
@@ -310,7 +361,7 @@ public class GameDemo2D extends Scene {
             // Bullet should only survive for a second
             if(System.currentTimeMillis() - bullet.spawnTime > 1000) {
                 bullets.remove(i);
-                lightGroup.removePointLight(bullet.light);
+                lightGroup.remove(bullet.light);
                 continue;
             }
 
@@ -326,7 +377,7 @@ public class GameDemo2D extends Scene {
             }
             if(consumeBullet) {
                 bullets.remove(i);
-                lightGroup.removePointLight(bullet.light);
+                lightGroup.remove(bullet.light);
                 continue;
             }
 
@@ -340,13 +391,13 @@ public class GameDemo2D extends Scene {
             }
             if(consumeBullet) {
                 bullets.remove(i);
-                lightGroup.removePointLight(bullet.light);
+                lightGroup.remove(bullet.light);
                 continue;
             }
 
             if(building.isColliding(bullet.hitboxRectangle) != null) {
                 bullets.remove(i);
-                lightGroup.removePointLight(bullet.light);
+                lightGroup.remove(bullet.light);
                 continue;
             }
         }
@@ -379,11 +430,14 @@ public class GameDemo2D extends Scene {
 
                 bullet.light = new PointLight();
                 bullet.light.setPosition(bullet.sprite.getPosition());
-                bullet.light.setConstantAttenuation(1f);
-                bullet.light.setQuadraticAttenuation(0.00007f);
-                bullet.light.setLinearAttenuation(0.000005f);
+                bullet.light.setConstantAttenuation(400f);
+                bullet.light.setLinearAttenuation(1f);
+                bullet.light.setQuadraticAttenuation(10f);
+//                bullet.light.setQuadraticAttenuation(0.00007f);
+//                bullet.light.setLinearAttenuation(0.000005f);
                 bullet.light.setAmbientStrength(0f);
-                lightGroup.addLight(bullet.light);
+                bullet.light.setColour(Colour.RED);
+                lightGroup.add(bullet.light);
 
                 // todo - temp only, improve
                 bullet.sprite.setShader(lightingTextureShader);
@@ -400,11 +454,11 @@ public class GameDemo2D extends Scene {
 
     long timeMs = System.currentTimeMillis();
 
-    private Mesh calcMaskMesh(HitboxPolygon polygon) {
+    private Mesh calcMaskMesh(HitboxPolygon polygon, Vec2 lightPos) {
         // For each edge calculate
         float[] points = polygon.getTransformedPoints();
-        float cx = player.getPosition().x + (player.getSize().x / 2f);
-        float cy = player.getPosition().y + (player.getSize().y / 2f);
+        float cx = lightPos.x;
+        float cy = lightPos.y;
 
         float[] positionBuffer = new float[points.length * 6];
 
@@ -416,10 +470,10 @@ public class GameDemo2D extends Scene {
             float y2 = points[next + 1];
 
             // Get vector player -> point
-            Vec2 maskPoint1 = Geometry.scaleVector(new Vec2(x - cx, y - cy), 3f);
+            Vec2 maskPoint1 = Geometry.scaleVector(new Vec2(x - cx, y - cy), 100f);
             maskPoint1.x += x;
             maskPoint1.y += y;
-            Vec2 maskPoint2 = Geometry.scaleVector(new Vec2(x2 - cx, y2 - cy), 3f);
+            Vec2 maskPoint2 = Geometry.scaleVector(new Vec2(x2 - cx, y2 - cy), 100f);
             maskPoint2.x += x2;
             maskPoint2.y += y2;
 
@@ -446,78 +500,35 @@ public class GameDemo2D extends Scene {
                 2, 0, 0);
     }
 
-    private HitboxPolygon[] calcMask(HitboxPolygon polygon) {
-        // For each edge calculate
-        float[] points = polygon.getTransformedPoints();
-        HitboxPolygon[] masks = new HitboxPolygon[points.length / 2];
-        Mesh shadowMesh = null;
-        float cx = player.getPosition().x + (player.getSize().x / 2f);
-        float cy = player.getPosition().y + (player.getSize().y / 2f);
-
-        float[] positionBuffer = new float[points.length * 4];
-
-        for(int i = 0; i < points.length; i += 2) {
-            int next = (i + 2) % points.length;
-            float x = points[i];
-            float y = points[i + 1];
-            float x2 = points[next];
-            float y2 = points[next + 1];
-
-            // Get vector player -> point
-            Vec2 maskPoint1 = Geometry.scaleVector(new Vec2(x - cx, y - cy), 3f);
-            maskPoint1.x += x;
-            maskPoint1.y += y;
-            Vec2 maskPoint2 = Geometry.scaleVector(new Vec2(x2 - cx, y2 - cy), 3f);
-            maskPoint2.x += x2;
-            maskPoint2.y += y2;
-
-            masks[i / 2] = new HitboxPolygon(new float[]{
-                    x, y,
-                    x2, y2,
-                    maskPoint2.x, maskPoint2.y,
-                    maskPoint1.x, maskPoint2.y,
-            });
-
-            int mi = i * 2;
-            positionBuffer[mi] = x;
-            positionBuffer[mi + 1] = y;
-            positionBuffer[mi + 2] = x;
-            positionBuffer[mi + 3] = y;
-            positionBuffer[mi + 4] = maskPoint2.x;
-            positionBuffer[mi + 5] = maskPoint2.y;
-            positionBuffer[mi + 6] = maskPoint1.x;
-            positionBuffer[mi + 7] = maskPoint2.y;
-        }
-
-        shadowMesh = new Mesh(positionBuffer, null, null,
-                Mesh.RenderMethod.TRIANGLES, 2,
-                0, 0);
-        return masks;
-    }
-
     @Override
     public void render() {
-        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
-        GLES30.glClearColor(0f, 0f, 0f, 1f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-        shadowTest.setMesh(calcMaskMesh(crateTest));
-        shadowTest.setColour(Colour.WHITE);
-        shadowTest.render(camera);
+        // todo: alter below to render new GPU accelerated shadows to texture
+//        for(int n = 0; n < lightGroup.getPointLights().size() && n < MAX_SHADOW_MAPS; n++) {
+//            PointLight light = lightGroup.getPointLights().get(n);
+//
+//            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[n]);
+//            glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+//            GLES30.glFramebufferTextureLayer(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, fbTexture[0], 0, n);
+//            GLES30.glClearColor(0f, 0f, 0f, 1f);
+//            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+//            lightingTextureShader.setShadowTexture(fbTexture[0]);
+//
+//            for(int i = 0; i < crateHitboxes.length; i++) {
+//                float lx = light.getPosition().x;
+//                float ly = light.getPosition().y;
+//                float ld = light.getConstantAttenuation(); // light diameter // todo: temp
+//                if(Math.abs(crateHitboxes[i].getTransformedPoints()[0] - lx) < ld &&
+//                        Math.abs(crateHitboxes[i].getTransformedPoints()[1] - ly) < ld) {
+//                    shadowTest.setMesh(calcMaskMesh(crateHitboxes[i], light.getPosition2D()));
+//                    shadowTest.setColour(Colour.WHITE);
+//                    shadowTest.render(camera);
+//                }
+//            }
+//        }
 
-        shadowTest2.setMesh(calcMaskMesh(crateTest2));
-        shadowTest2.setColour(Colour.WHITE);
-        shadowTest2.render(camera);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-        lightingTextureShader.setShadowTexture(fbTexture);
-        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-        // todo: we need to pass in the texture we want to render too, because this is one texture per shadow approach at the moment
-//        shadowTest2.setMesh(calcMaskMesh(crateTest2));
-//        shadowTest2.setColour(Colour.WHITE);
-//        int id2 = shadowTest2.renderToTextureTest(camera);
-//        lightingTextureShader.setShadowTexture(id2);
-
+        glViewport(0, 0, Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
         mapBase.render(camera, lightGroup);
         building.render(camera, lightGroup);
 
@@ -532,7 +543,15 @@ public class GameDemo2D extends Scene {
         player.render(camera);
         crates.render(camera);
 
+        for(int i = 0; i < NUM_CRATES; i++) {
+            crateShadows[i].render(camera);
+        }
+
+//        secondShadowTestCrate.render(camera);
+//        secondShadowTestMask.render(camera);
+
 //        crateTest.render(camera);
+
 
 
 

@@ -111,7 +111,7 @@ public class NormalMapDemo extends Scene {
 
         lightGroup = new LightGroup();
         pointLight = new PointLight();
-        lightGroup.addLight(pointLight);
+        lightGroup.add(pointLight);
 
         camera = new Camera();
     }

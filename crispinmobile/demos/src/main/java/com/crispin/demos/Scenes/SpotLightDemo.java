@@ -60,16 +60,16 @@ public class SpotLightDemo extends Scene {
         spotLight.setDirection(new Vec3(0.0f, -1.0f, 0.0f));
         spotLight.size = (float)Math.cos(Math.toRadians(10.5));
         spotLight.outerSize = (float)Math.cos(Math.toRadians(11.5));
-        lightGroup.addLight(spotLight);
+        lightGroup.add(spotLight);
 
         DirectionalLight directionalLight = new DirectionalLight(1.0f, -1.0f, -0.4f);
         directionalLight.ambientStrength = 0.1f;
         directionalLight.diffuseStrength = 0.4f;
-        lightGroup.addLight(directionalLight);
+        lightGroup.add(directionalLight);
 
         lightBulbGroup = new LightGroup();
         lightBulbLight = new PointLight();
-        lightBulbGroup.addLight(lightBulbLight);
+        lightBulbGroup.add(lightBulbLight);
 
         ThreadedOBJLoader.loadModel(R.raw.torch, mesh -> {
             this.torch = new Model(mesh);

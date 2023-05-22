@@ -14,7 +14,6 @@ import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
-import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Pointer;
@@ -126,7 +125,7 @@ public class InstancingDemo3D extends Scene {
             pointLight.setLinearAttenuation(1.5f);
             pointLight.setColour(Colour.WHITE);
 
-            lightGroup.addLight(pointLight);
+            lightGroup.add(pointLight);
         }
 
         renderers[RENDER_UNIQUE_COLOUR_TEXTURE_LIGHTING].setLightGroup(lightGroup);

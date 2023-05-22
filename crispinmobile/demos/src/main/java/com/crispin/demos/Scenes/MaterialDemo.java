@@ -74,10 +74,10 @@ public class MaterialDemo extends Scene {
         lightGroup = new LightGroup();
 
         pointLight = new PointLight();
-        lightGroup.addLight(pointLight);
+        lightGroup.add(pointLight);
 
         pointLight2 = new PointLight();
-        lightGroup.addLight(pointLight2);
+        lightGroup.add(pointLight2);
 
         camera3D = new Camera();
         camera3D.setPosition(new Vec3(0.0f, 1.0f, 5.0f));
