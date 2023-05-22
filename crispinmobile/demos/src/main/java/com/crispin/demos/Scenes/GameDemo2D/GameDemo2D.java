@@ -205,7 +205,7 @@ public class GameDemo2D extends Scene {
 
         ammo = new Text(FontCache.getFont(R.raw.aileron_bold, 56), String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
         ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
-
+        ammo.setColour(Colour.WHITE);
 //        shadowTest = new Model(null);
 
         // Create the frame buffers and texture array for the shadow maps
@@ -242,7 +242,6 @@ public class GameDemo2D extends Scene {
         float cx = player.getPosition().x + (player.getSize().x / 2f);
         float cy = player.getPosition().y + (player.getSize().y / 2f);
         light.setPosition(cx, cy);
-        shadowShader2D.setLightPos(light.getPosition2D());
 
         ammo.setText(String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
         ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
@@ -502,29 +501,29 @@ public class GameDemo2D extends Scene {
 
     @Override
     public void render() {
-        // todo: alter below to render new GPU accelerated shadows to texture
-//        for(int n = 0; n < lightGroup.getPointLights().size() && n < MAX_SHADOW_MAPS; n++) {
-//            PointLight light = lightGroup.getPointLights().get(n);
-//
-//            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[n]);
-//            glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
-//            GLES30.glFramebufferTextureLayer(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, fbTexture[0], 0, n);
-//            GLES30.glClearColor(0f, 0f, 0f, 1f);
-//            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-//            lightingTextureShader.setShadowTexture(fbTexture[0]);
-//
-//            for(int i = 0; i < crateHitboxes.length; i++) {
-//                float lx = light.getPosition().x;
-//                float ly = light.getPosition().y;
-//                float ld = light.getConstantAttenuation(); // light diameter // todo: temp
-//                if(Math.abs(crateHitboxes[i].getTransformedPoints()[0] - lx) < ld &&
-//                        Math.abs(crateHitboxes[i].getTransformedPoints()[1] - ly) < ld) {
-//                    shadowTest.setMesh(calcMaskMesh(crateHitboxes[i], light.getPosition2D()));
-//                    shadowTest.setColour(Colour.WHITE);
-//                    shadowTest.render(camera);
-//                }
-//            }
-//        }
+        // Render GPU accelerate shadows to texture
+        for(int n = 0; n < lightGroup.getPointLights().size() && n < MAX_SHADOW_MAPS; n++) {
+            PointLight light = lightGroup.getPointLights().get(n);
+
+            glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[n]);
+            glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
+            GLES30.glFramebufferTextureLayer(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, fbTexture[0], 0, n);
+            GLES30.glClearColor(0f, 0f, 0f, 1f);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+            lightingTextureShader.setShadowTexture(fbTexture[0]);
+
+            for(int i = 0; i < NUM_CRATES; i++) {
+                float lx = light.getPosition().x;
+                float ly = light.getPosition().y;
+                float ld = light.getConstantAttenuation(); // light diameter // todo: temp
+
+                // If the crate is in range, then render shadow
+                if(Math.abs(crateShadows[i].getPosition().x - lx) < ld && Math.abs(crateShadows[i].getPosition().y - ly) < ld) {
+                    shadowShader2D.setLightPos(light.getPosition2D());
+                    crateShadows[i].render(camera);
+                }
+            }
+        }
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -542,10 +541,6 @@ public class GameDemo2D extends Scene {
 
         player.render(camera);
         crates.render(camera);
-
-        for(int i = 0; i < NUM_CRATES; i++) {
-            crateShadows[i].render(camera);
-        }
 
 //        secondShadowTestCrate.render(camera);
 //        secondShadowTestMask.render(camera);
