@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos.InstancingDemos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Scale2D;
@@ -14,11 +14,10 @@ import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.demos.BackgroundShader;
 import com.crispin.demos.R;
-import com.crispin.demos.Scenes.GameDemo2D.GameDemo2D;
-import com.crispin.demos.Scenes.InstancingDemos.InstancingDemoSelectionScene;
+import com.crispin.demos.DemoMasterScene;
 import com.crispin.demos.Util;
 
-public class DemoMasterScene extends Scene {
+public class InstancingDemoSelectionScene extends Scene {
     private final float SURFACE_WIDTH = Crispin.getSurfaceWidth();
     private final float SURFACE_HEIGHT = Crispin.getSurfaceHeight();
     private final float PADDING = 20.0f;
@@ -29,16 +28,16 @@ public class DemoMasterScene extends Scene {
     private final Camera2D camera2D;
     private final LinearLayout linearLayout;
     private final Text selectDemoText;
-    private final Square titleBackground;
     private Square background;
     private BackgroundShader backgroundShader;
     private float time;
+    private final Square titleBackground;
 
-    public DemoMasterScene() {
+    public InstancingDemoSelectionScene() {
         Crispin.setBackgroundColour(Colour.DARK_GREY);
         camera2D = new Camera2D(0.0f, 0.0f, SURFACE_WIDTH, SURFACE_HEIGHT);
 
-        backgroundShader = new BackgroundShader(R.raw.background_vert, R.raw.background_frag);
+        backgroundShader = new BackgroundShader(R.raw.background_vert, R.raw.background_two_frag);
         backgroundShader.setCenter(Crispin.getSurfaceWidth() / 2f, Crispin.getSurfaceHeight() / 2f);
         time = 0.0f;
 
@@ -49,20 +48,15 @@ public class DemoMasterScene extends Scene {
 
         linearLayout = new LinearLayout(new Vec2(0.0f, 0.0f), new Scale2D(SURFACE_WIDTH, SURFACE_HEIGHT));
         linearLayout.setPadding(new Scale2D(PADDING, PADDING));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Materials", MaterialDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Lighting", LightingDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Object Load", ObjLoadDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Text", TextDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "SpotLight", SpotLightDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "RenderBatch", RenderBatchDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering Demos", InstancingDemoSelectionScene::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Normal Map Demo", NormalMapDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Touch Demo", TouchDemo::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Game Demo", GameDemo2D::new));
-        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Collision Demo", CollisionDemo2D::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Back", DemoMasterScene::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering", InstancingDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Vs Batch Rendering", InstancingVsBatchDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering 2D", InstancingDemo2D::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering 3D", InstancingDemo3D::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Lighting Test", InstancingLightingTest::new));
 
         Font titleFont = new Font(R.raw.aileron_bold, 72);
-        selectDemoText = new Text(titleFont, "Select a Demo", true, true, SURFACE_WIDTH);
+        selectDemoText = new Text(titleFont, "Instance Rendering Demos", true, true, SURFACE_WIDTH);
         selectDemoText.setColour(Colour.WHITE);
         selectDemoText.setPosition(0.0f, SURFACE_HEIGHT - selectDemoText.getHeight() - PADDING - PADDING);
 

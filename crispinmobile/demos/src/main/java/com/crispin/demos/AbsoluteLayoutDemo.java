@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;

@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
@@ -18,8 +18,6 @@ import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
-import com.crispin.demos.R;
-import com.crispin.demos.Util;
 
 public class SpotLightDemo extends Scene {
     private Camera2D camera2D;

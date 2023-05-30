@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import static android.opengl.GLES20.glGenTextures;
 import static android.opengl.GLES20.glUniform3f;
@@ -18,8 +18,6 @@ import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.R;
-import com.crispin.demos.Util;
 
 public class NormalMapDemo extends Scene {
     class NormalMapShader extends Shader {

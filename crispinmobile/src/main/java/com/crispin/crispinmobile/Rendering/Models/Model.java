@@ -438,6 +438,25 @@ public class Model {
     }
 
     /**
+     * Set the rotation around point in 2D space
+     *
+     * @param x         The x position to rotate around
+     * @param y         The x position to rotate around
+     * @param angle     The angle to rotate
+     * @since 1.0
+     */
+    public void setRotationAroundPoint(float x, float y, float angle) {
+        this.rotationPoint.x = x;
+        this.rotationPoint.y = y;
+        this.rotationPoint.z = 0f;
+        this.rotationPointAngle.angle = angle;
+        this.rotationPointAngle.x = 0f;
+        this.rotationPointAngle.y = 0f;
+        this.rotationPointAngle.z = 1f;
+        this.updateModelMatrix = true;
+    }
+
+    /**
      * Set the rotation around point
      *
      * @param x        The x position to rotate around
@@ -671,11 +690,11 @@ public class Model {
 
         modelMatrix.reset();
         modelMatrix.translate(position);
-        if (rotation.angle != 0.0f) {
-            modelMatrix.rotate(rotation);
-        }
         if (rotationPointAngle.angle != 0.0f) {
             modelMatrix.rotateAroundPoint(rotationPoint, rotationPointAngle);
+        }
+        if (rotation.angle != 0.0f) {
+            modelMatrix.rotate(rotation);
         }
         modelMatrix.scale(scale);
     }

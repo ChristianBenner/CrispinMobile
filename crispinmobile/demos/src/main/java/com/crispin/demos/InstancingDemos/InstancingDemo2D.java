@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.InstancingDemos;
+package com.crispin.demos.InstancingDemos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;

@@ -35,9 +35,6 @@ public class LightingTextureShader2D extends Shader {
     // Tag for the logger
     private static final String TAG = "LightingTextureShader2D";
 
-    // Shader texture
-    public int shadowTextureUniformHandle = UNDEFINED_HANDLE;
-
     /**
      * Create the TextureShader. This compiles the pre-defined vertex and fragment shader's, and
      * links the attributes to the shader base class for a common form of user interaction.
@@ -52,15 +49,13 @@ public class LightingTextureShader2D extends Shader {
         materialHandles = new MaterialHandles();
         materialHandles.colourUniformHandle = getUniform("uColour");
         materialHandles.uvMultiplierUniformHandle = getUniform("uUvMultiplier");
+        materialHandles.uvOffsetUniformHandle = getUniform("uUVOffset");
         materialHandles.textureUniformHandle = getUniform("uTexture");
         materialHandles.ambientUniformHandle = getUniform("uMaterial.ambient");
         materialHandles.diffuseUniformHandle = getUniform("uMaterial.diffuse");
 
         viewMatrixUniformHandle = getUniform("uView");
-        viewDimensionUniformHandle = getUniform("uViewDimension");
         modelMatrixUniformHandle = getUniform("uModel");
-
-        shadowTextureUniformHandle = getUniform("uShadow");
 
         // Fragment uniforms
         numPointLightsUniformHandle = getUniform("uNumPointLights");
@@ -74,14 +69,6 @@ public class LightingTextureShader2D extends Shader {
         directionalLightHandles.specularUniformHandle = getUniform(parent + "specular");
         super.directionalLightHandles = directionalLightHandles;
         initPointLightHandles();
-    }
-
-    public void setShadowTexture(int textureHandle) {
-        super.enable();
-        glActiveTexture(GLES30.GL_TEXTURE3);
-        glBindTexture(GL_TEXTURE_2D_ARRAY, textureHandle);
-        glUniform1i(shadowTextureUniformHandle, 3);
-        super.disable();
     }
 
     private void initPointLightHandles() {

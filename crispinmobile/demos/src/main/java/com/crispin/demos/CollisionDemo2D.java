@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
@@ -11,7 +11,6 @@ import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.Util;
 
 import java.util.Random;
 

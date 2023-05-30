@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.GameDemo2D;
+package com.crispin.demos.GameDemo2D;
 
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;

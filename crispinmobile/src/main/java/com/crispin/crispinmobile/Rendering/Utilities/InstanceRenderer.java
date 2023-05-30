@@ -3,6 +3,7 @@ package com.crispin.crispinmobile.Rendering.Utilities;
 import static android.opengl.GLES20.GL_DEPTH_TEST;
 import static android.opengl.GLES20.GL_STREAM_DRAW;
 import static android.opengl.GLES20.glBufferSubData;
+import static android.opengl.GLES20.glUniform2f;
 import static android.opengl.GLES20.glUniform3f;
 import static android.opengl.GLES30.GL_ARRAY_BUFFER;
 import static android.opengl.GLES30.GL_CULL_FACE;
@@ -25,6 +26,7 @@ import static com.crispin.crispinmobile.Rendering.Shaders.Shader.UNDEFINED_HANDL
 import android.opengl.GLES30;
 import android.opengl.Matrix;
 
+import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec3;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
@@ -33,6 +35,7 @@ import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
+import com.crispin.crispinmobile.Rendering.Models.ShadowModel;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceColourLightingTextureShader;
@@ -423,6 +426,12 @@ public class InstanceRenderer {
                 final SpotLight spotLight = spotLights.get(i);
                 shader.setSpotLightUniforms(i, spotLight);
             }
+        }
+
+        // View dimension should be set to the view width, height
+        if (shader.validHandle(shader.getViewDimensionUniformHandle())) {
+            glUniform2f(shader.getViewDimensionUniformHandle(), Crispin.getSurfaceWidth(),
+                    Crispin.getSurfaceHeight());
         }
 
         // Set all material uniforms

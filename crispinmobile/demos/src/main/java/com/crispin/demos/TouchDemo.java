@@ -1,6 +1,4 @@
-package com.crispin.demos.Scenes;
-
-import android.view.MotionEvent;
+package com.crispin.demos;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -9,18 +7,12 @@ import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
-import com.crispin.crispinmobile.UserInterface.Border;
 import com.crispin.crispinmobile.UserInterface.Button;
-import com.crispin.crispinmobile.UserInterface.Font;
 import com.crispin.crispinmobile.UserInterface.Pointer;
-import com.crispin.crispinmobile.UserInterface.TouchEvent;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.R;
-import com.crispin.demos.Util;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Random;
 
 /**

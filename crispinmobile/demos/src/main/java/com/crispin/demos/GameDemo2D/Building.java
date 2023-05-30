@@ -1,52 +1,67 @@
-package com.crispin.demos.Scenes.GameDemo2D;
+package com.crispin.demos.GameDemo2D;
 
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Physics.Collision;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Physics.HitboxRectangle;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Models.Square;
-import com.crispin.crispinmobile.Rendering.Shaders.LightingTextureShader;
 import com.crispin.crispinmobile.Rendering.Shaders.Shader;
+import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.ShadowShader2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 import com.crispin.demos.R;
 
 public class Building {
-    private static final float WALL_THICKNESS = 15f;
-    private static final float DOOR_WIDTH = 150f;
+    private static final float WALL_THICKNESS = 0.2f;
+    private static final float DOOR_WIDTH = 1.5f;
 
     private Square[] walls;
+    private Model[] wallShadows;
     private HitboxRectangle[] wallHitbox;
     private Square floor;
     private Scale2D size;
+    private ShadowShader2D shadowShader2D;
 
     public Building(Vec2 position, Scale2D size) {
         this.size = size;
+
+        shadowShader2D = new ShadowShader2D();
+
+        wallShadows = new Model[5];
+        for(int i = 0; i < 5; i++) {
+            wallShadows[i] = new Model(Square.getShadowMesh());
+            wallShadows[i].setShader(shadowShader2D);
+        }
 
         walls = new Square[5];
 
         // left vertical wall
         walls[0] = new Square(R.drawable.crate_texture);
         walls[0].setScale(new Scale2D(WALL_THICKNESS, size.h));
+        wallShadows[0].setScale(new Scale2D(WALL_THICKNESS, size.h));
 
         // right vertical wall
         walls[1] = new Square(R.drawable.crate_texture);
         walls[1].setScale(new Scale2D(WALL_THICKNESS, size.h));
+        wallShadows[1].setScale(new Scale2D(WALL_THICKNESS, size.h));
 
         // bottom left horizontal wall
         walls[2] = new Square(R.drawable.crate_texture);
         walls[2].setScale(new Scale2D((size.w / 2f) - (DOOR_WIDTH / 2f), WALL_THICKNESS));
+        wallShadows[2].setScale(new Scale2D((size.w / 2f) - (DOOR_WIDTH / 2f), WALL_THICKNESS));
 
         // bottom right horizontal wall
         walls[3] = new Square(R.drawable.crate_texture);
         walls[3].setScale(new Scale2D((size.w / 2f) - (DOOR_WIDTH / 2f), WALL_THICKNESS));
+        wallShadows[3].setScale(new Scale2D((size.w / 2f) - (DOOR_WIDTH / 2f), WALL_THICKNESS));
 
         // top horizontal wall
         walls[4] = new Square(R.drawable.crate_texture);
         walls[4].setScale(new Scale2D(size.w, WALL_THICKNESS));
+        wallShadows[4].setScale(new Scale2D(size.w, WALL_THICKNESS));
 
         wallHitbox = new HitboxRectangle[walls.length];
         for(int i = 0; i < walls.length; i++) {
@@ -54,17 +69,20 @@ public class Building {
         }
 
         floor = new Square(R.drawable.brick_tile);
-        floor.getMaterial().setUvMultiplier(size.w / 64f, size.h / 64f);
+        floor.getMaterial().setUvMultiplier(size.w * 2f, size.h * 2f);
         floor.setScale(size);
 
         setPosition(position);
     }
 
     // todo: temp only? resolve in model class
-    public void setShader(Shader shader) {
+    public void setWallShader(Shader shader) {
         for(int i = 0; i < walls.length; i++) {
             walls[i].setShader(shader);
         }
+    }
+
+    public void setFloorShader(Shader shader) {
         floor.setShader(shader);
     }
 
@@ -74,16 +92,22 @@ public class Building {
 
     public void setPosition(Vec2 position) {
         walls[0].setPosition(position);
+        wallShadows[0].setPosition(position);
         walls[1].setPosition(position.x + size.w - WALL_THICKNESS, position.y);
+        wallShadows[1].setPosition(position.x + size.w - WALL_THICKNESS, position.y);
         walls[2].setPosition(position);
+        wallShadows[2].setPosition(position);
         walls[3].setPosition(position.x + (size.w / 2f) + (DOOR_WIDTH / 2f), position.y);
+        wallShadows[3].setPosition(position.x + (size.w / 2f) + (DOOR_WIDTH / 2f), position.y);
         walls[4].setPosition(position.x, position.y + size.h - WALL_THICKNESS);
+        wallShadows[4].setPosition(position.x, position.y + size.h - WALL_THICKNESS);
 
         // Rotate all the walls around the center of the building
         for(int i = 0; i < walls.length; i++) {
             float rx = -(walls[i].getPosition().x - position.x);
             float ry = -(walls[i].getPosition().y - position.y);
             walls[i].setRotationAroundPoint(rx, ry, 0f, 45f, 0f, 0f, 1f);
+            wallShadows[i].setRotationAroundPoint(rx, ry, 0f, 45f, 0f, 0f, 1f);
         }
         floor.setRotation(45f, 0f, 0f, 1f);
 
@@ -105,6 +129,13 @@ public class Building {
         floor.render(camera2D);
         for (int i = 0; i < walls.length; i++) {
             walls[i].render(camera2D, lightGroup);
+        }
+    }
+
+    public void renderShadow(Camera2D camera2D, Vec2 lightPos) {
+        shadowShader2D.setLightPos(lightPos);
+        for (int i = 0; i < walls.length; i++) {
+            wallShadows[i].render(camera2D);
         }
     }
 

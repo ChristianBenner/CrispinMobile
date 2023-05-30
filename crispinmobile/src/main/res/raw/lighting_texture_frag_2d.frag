@@ -32,10 +32,7 @@ in vec3 vFragPos;
 in vec2 vTextureCoordinates;
 
 uniform vec4 uColour;
-uniform vec2 uViewDimension;
 uniform sampler2D uTexture;
-uniform sampler2DArray uShadow;
-uniform sampler2D uSpecularMap;
 uniform Material uMaterial;
 
 uniform DirectionalLight uDirectionalLight;
@@ -44,25 +41,18 @@ uniform int uNumPointLights;
 
 out vec4 FragColor;
 
-vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal);
-vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, float shadow);
+vec3 CalculateDirectionalLight(DirectionalLight light);
+vec3 CalculatePointLight(PointLight light, vec3 fragPos);
 
 void main()
 {
     vec3 lightCalc = vec3(0.0);
 
-    // the normal is straight upwards for 2D
-    vec3 normal = vec3(0.0, 0.0, 1.0);
-
-//    lightCalc = CalculateDirectionalLight(uDirectionalLight, normal);
-
-    // Frag pos on screen / texture size to determine what pixel in the shadow texture to compare against
-    vec2 shadowTexCoord = gl_FragCoord.xy / uViewDimension;
+//    lightCalc = CalculateDirectionalLight(uDirectionalLight);
 
     // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
-        float shadowStrength = texture(uShadow, vec3(shadowTexCoord, i)).r;
-        lightCalc += CalculatePointLight(uPointLights[i], normal, vFragPos, shadowStrength);
+        lightCalc += CalculatePointLight(uPointLights[i], vFragPos);
     }
 
     FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
@@ -75,10 +65,9 @@ void main()
  * not represent an entity in world space, but instead lights objects from a given direction.
  *
  * @param light             DirectionalLight
- * @param normal            Direction of the face
  * @return                  vec3 containing the colour data from the directional light calculation
  */
-vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal) {
+vec3 CalculateDirectionalLight(DirectionalLight light) {
     // Direction that the light is travelling from the source to the frag
     vec3 lightDirection = normalize(-light.direction);
 
@@ -86,8 +75,7 @@ vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal) {
     vec3 ambient = uMaterial.ambient * light.ambient * light.colour;
 
     // Diffuse lighting calculation
-    float normalDiffuseStrength = max(dot(normal, lightDirection), 0.0);
-    vec3 diffuse = uMaterial.diffuse * normalDiffuseStrength * light.colour * light.diffuse;
+    vec3 diffuse = uMaterial.diffuse * light.colour * light.diffuse;
 
     return ambient + diffuse;
 }
@@ -99,25 +87,21 @@ vec3 CalculateDirectionalLight(DirectionalLight light, vec3 normal) {
  * that reflect light).
  *
  * @param light             PointLight
- * @param normal            Direction of the face
  * @param fragPos           Position of the fragment
  * @return                  vec3 containing the colour data from the point light calculation
  */
-vec3 CalculatePointLight(PointLight light, vec3 normal, vec3 fragPos, float shadow) {
+vec3 CalculatePointLight(PointLight light, vec3 fragPos) {
     // Calculate the distance of the light from the point
     float distance = length(light.position - fragPos);
 
 //    float attenuation = 1.0 / (light.constant + (light.linear * distance) + (light.quadratic * (distance * distance)));
     float attenuation = max(0.0, 1.0 - (distance / light.constant));
 
-    // Direction that the light is travelling from the source to the frag
-    vec3 lightDirection = normalize(light.position - fragPos);
-
     // Ambient lighting calculation
     vec3 ambient = uMaterial.ambient * light.colour * light.ambient;
 
     // Diffuse lighting calculation
-    vec3 diffuse = uMaterial.diffuse * light.colour * attenuation * light.diffuse * max(0.0, (1.0 - shadow));
+    vec3 diffuse = uMaterial.diffuse * light.colour * attenuation * light.diffuse;
 
     return ambient + diffuse;
 }

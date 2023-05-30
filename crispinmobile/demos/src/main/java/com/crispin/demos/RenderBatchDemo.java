@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import android.util.Pair;
 
@@ -19,8 +19,6 @@ import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
-import com.crispin.demos.R;
-import com.crispin.demos.Util;
 
 import java.util.ArrayList;
 import java.util.List;

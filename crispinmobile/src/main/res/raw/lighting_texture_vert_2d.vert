@@ -5,13 +5,14 @@ layout (location = 1) in vec2 aTextureCoordinates;
 uniform mat4 uView;
 uniform mat4 uModel;
 uniform vec2 uUvMultiplier;
+uniform vec2 uUVOffset;
 
 out vec3 vFragPos;
 out vec2 vTextureCoordinates;
 
 void main() {
     vFragPos = vec3(uModel * aPosition);
-    vTextureCoordinates = uUvMultiplier * vec2(aTextureCoordinates.s, aTextureCoordinates.t);
+    vTextureCoordinates = uUVOffset + (uUvMultiplier * aTextureCoordinates.st);
     gl_Position = uView * uModel * aPosition;
 }
 

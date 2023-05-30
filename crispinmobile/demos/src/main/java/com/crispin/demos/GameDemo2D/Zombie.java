@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.GameDemo2D;
+package com.crispin.demos.GameDemo2D;
 
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -15,8 +15,9 @@ import com.crispin.demos.R;
 import java.util.Random;
 
 public class Zombie {
-    private static final float MAX_MOVEMENT_SPEED = 7.0f;
-    private static final float MIN_MOVEMENT_SPEED = 4.0f;
+    private static final float MAX_MOVEMENT_SPEED = 0.04f;
+    private static final float MIN_MOVEMENT_SPEED = 0.01f;
+    private static final long ATTACK_WAIT_MS = 1000;
 
     private Square torsoSprite;
     private AnimatedSquare legsSprite;
@@ -25,10 +26,12 @@ public class Zombie {
     private HitboxPolygon hitbox;
     private boolean alive;
     private Random random;
+    private long lastAttackTimeMs;
 
     public Zombie(float x, float y, float size) {
         this.size = size;
         this.alive = true;
+        this.lastAttackTimeMs = System.currentTimeMillis();
 
         torsoSprite = new Square(TextureCache.loadTexture(R.drawable.zombie_top_down));
         torsoSprite.setPosition(x, y);
@@ -92,8 +95,19 @@ public class Zombie {
         torsoSprite.setShader(shader);
     }
 
+    // returns true if has attacked, else false. Each attack has to have amount of time between or
+    // the zombie will inflict damage as fast as the game updates
+    public boolean attack() {
+        if(System.currentTimeMillis() > lastAttackTimeMs + ATTACK_WAIT_MS) {
+            lastAttackTimeMs = System.currentTimeMillis();
+            return true;
+        }
+
+        return false;
+    }
+
     public void render(Camera2D camera, LightGroup lightGroup) {
-        if(!alive) {
+        if(alive) {
             legsSprite.render(camera, lightGroup);
         }
 

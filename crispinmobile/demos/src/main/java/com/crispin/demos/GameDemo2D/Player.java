@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.GameDemo2D;
+package com.crispin.demos.GameDemo2D;
 
 import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -13,7 +13,7 @@ import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
 
 public class Player {
-    private static final float MAX_MOVEMENT_SPEED = 10.0f;
+    private static final float MAX_MOVEMENT_SPEED = 0.1f;
 
     private static final int ANIMATION_RUN = 0;
     private static final int ANIMATION_SIDESTEP_UP = 1;
@@ -21,6 +21,7 @@ public class Player {
 
     private static final int MAX_AMMO = 30;
     private static final long RELOAD_TIME_MS = 1500;
+    private static final int HEALTH_MAX = 5;
 
     private Square torsoSprite;
     private AnimatedSquare legsSprite;
@@ -33,12 +34,14 @@ public class Player {
     private int ammo;
     private boolean reloading;
     private long reloadStart;
+    private int health;
 
     public Player(float x, float y, float size) {
         this.size = size;
         this.ammo = MAX_AMMO;
         this.animation = ANIMATION_RUN;
         this.reloading = false;
+        this.health = HEALTH_MAX;
 
         torsoSprite = new Square(TextureCache.loadTexture(R.drawable.player_top_down));
         torsoSprite.setPosition(x, y);
@@ -62,6 +65,21 @@ public class Player {
                 0.6f, 0.8f, // Top right
                 1.0f, 0.2f, // Bottom Right
         });
+    }
+
+    public void damage() {
+        health--;
+        if(!isAlive()) {
+            torsoSprite.setTexture(TextureCache.loadTexture(R.drawable.player_down));
+        }
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public boolean isAlive() {
+        return health > 0;
     }
 
     public boolean spendAmmo() {
@@ -99,6 +117,10 @@ public class Player {
     }
 
     public void update(Vec2 movement, Vec2 aim) {
+        if(!isAlive()) {
+            return;
+        }
+
         if(reloading) {
             if(System.currentTimeMillis() - reloadStart >= RELOAD_TIME_MS) {
                 reloading = false;
@@ -181,16 +203,18 @@ public class Player {
     }
 
     public void render(Camera2D camera) {
-        switch (animation) {
-            case ANIMATION_RUN:
-                legsSprite.render(camera);
-                break;
-            case ANIMATION_SIDESTEP_UP:
-                legsSidestepUpSprite.render(camera);
-                break;
-            case ANIMATION_SIDESTEP_DOWN:
-                legsSidestepDownSprite.render(camera);
-                break;
+        if(isAlive()) {
+            switch (animation) {
+                case ANIMATION_RUN:
+                    legsSprite.render(camera);
+                    break;
+                case ANIMATION_SIDESTEP_UP:
+                    legsSidestepUpSprite.render(camera);
+                    break;
+                case ANIMATION_SIDESTEP_DOWN:
+                    legsSidestepDownSprite.render(camera);
+                    break;
+            }
         }
 
         torsoSprite.render(camera);

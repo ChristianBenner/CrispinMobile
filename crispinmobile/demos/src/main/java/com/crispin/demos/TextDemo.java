@@ -1,19 +1,15 @@
-package com.crispin.demos.Scenes;
+package com.crispin.demos;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Geometry.Scale2D;
-import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Font;
-import com.crispin.crispinmobile.UserInterface.LinearLayout;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.Util;
 
 /**
  * A demonstration scene designed to show the usage of text in the Crispin engine

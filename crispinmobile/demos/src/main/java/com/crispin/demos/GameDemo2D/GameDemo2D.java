@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.GameDemo2D;
+package com.crispin.demos.GameDemo2D;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
@@ -12,7 +12,9 @@ import com.crispin.crispinmobile.Rendering.DefaultMesh.SquareMesh;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.ModelProperties;
 import com.crispin.crispinmobile.Rendering.Models.Square;
+import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceLightingTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.InstanceShaders.InstanceShadowShader2D;
+import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.LightingShadowTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional.LightingTextureShader2D;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.InstanceRenderer;
@@ -28,7 +30,7 @@ import com.crispin.crispinmobile.Utilities.FontCache;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 import com.crispin.demos.R;
-import com.crispin.demos.Scenes.DemoMasterScene;
+import com.crispin.demos.DemoMasterScene;
 import com.crispin.demos.Util;
 
 import java.util.ArrayList;
@@ -36,9 +38,9 @@ import java.util.Random;
 
 public class GameDemo2D extends Scene {
     // Constants
-    private static final float PLAYER_SIZE = 128f;
+    private static final float PLAYER_SIZE = 1f;
     // World space co-ordinates
-    private static final Vec2 PLAYER_SPAWN_POINT = new Vec2(5000f, 5000f);
+    private static final Vec2 PLAYER_SPAWN_POINT = new Vec2(0f, 0f);
     private static final int NUM_CRATES = 100;
     private static final float TEXT_PADDING = 20f;
     private static int WEAPON_FIRE_RATE_HZ = 8;
@@ -54,10 +56,16 @@ public class GameDemo2D extends Scene {
     private Text ammo;
     private Joystick movementJoystick;
     private Joystick aimJoystick;
+    private ArrayList<Square> healthBar;
 
     // Shaders
-    private LightingTextureShader2D lightingTextureShader;
+    // Use to draw objects with lighting effects and shadows applied to them
+    private LightingShadowTextureShader2D lightShadowShader;
+    // Use to draw objects with lighting effects but not shadows applied to them
+    private LightingTextureShader2D lightShader;
+    // Use to draw the shadows themselves with instance renderer
     private InstanceShadowShader2D shadowShader2D;
+    private InstanceLightingTextureShader2D instanceShader;
 
     // Entities
     private Player player;
@@ -88,42 +96,76 @@ public class GameDemo2D extends Scene {
 
     private long lastShotTimeMs = System.currentTimeMillis();
 
+    private static final long WAVE_DURATION_MS = 10000;
+    private long lastWaveMs = System.currentTimeMillis();
+
     public GameDemo2D() {
         Audio.getInstance().initMusicChannel();
         Audio.getInstance().initSoundChannel(8);
         Audio.getInstance().playMusic(R.raw.demo_music);
 
-        camera = new Camera2D();
+        // Desired width of the view in world-space co-ordinates. This means that the amount of
+        // world visible on every device should be the same despite the resolution
+        double desiredWidth = 10.0;
+        double viewRatio = (double)Crispin.getSurfaceWidth() / (double)Crispin.getSurfaceHeight();
+        // The resulting height in world-space co-ordinates adjusted with the view ratio so that it
+        // does not appear stretched
+        double resultingHeight = desiredWidth / viewRatio;
+
+        camera = new Camera2D(0f, 0f, (float)desiredWidth, (float)resultingHeight);
         uiCamera = new Camera2D();
         random = new Random();
-        lightingTextureShader = new LightingTextureShader2D();
+        lightShadowShader = new LightingShadowTextureShader2D();
+        lightShader = new LightingTextureShader2D();
+        instanceShader = new InstanceLightingTextureShader2D();
 
-        System.out.println(Crispin.getSurfaceWidth() + ", " + Crispin.getSurfaceHeight());
         backButton = Util.createBackButton(DemoMasterScene::new, 10f, Crispin.getSurfaceHeight() - 10f - Util.BACK_BUTTON_SIZE);
-
-        movementJoystick = new Joystick(new Vec2(100f, 100f), 400f);
-
-        aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
 
         player = new Player(PLAYER_SPAWN_POINT.x, PLAYER_SPAWN_POINT.y, PLAYER_SIZE);
 
+        movementJoystick = new Joystick(new Vec2(100f, 100f), 400f);
+        aimJoystick = new Joystick(new Vec2(Crispin.getSurfaceWidth() - 500f, 100f), 400f);
+        healthBar = new ArrayList<>();
+        final float padding = 20f;
+        final float scale = 80f;
+        final float ypos = Crispin.getSurfaceHeight() - scale - padding;
+        for(int i = 0; i < player.getHealth(); i++) {
+            Square heart = new Square(R.drawable.heart_ui);
+            heart.setPosition(padding + (scale * i) + (padding * i), ypos);
+            heart.setScale(scale);
+            healthBar.add(heart);
+        }
+
         lightGroup = new LightGroup();
         light = new PointLight();
-        lightGroup.add(light);
-        light.setConstantAttenuation(800f);
+        light.setConstantAttenuation(4f);
         light.setLinearAttenuation(1f);
         light.setQuadraticAttenuation(10f);
         light.setAmbientStrength(0.0f);
+        lightGroup.add(light);
+
+        PointLight buildingLight = new PointLight();
+        buildingLight.setPosition(2f, 8f);
+        buildingLight.setConstantAttenuation(5f);
+        buildingLight.setLinearAttenuation(1f);
+        buildingLight.setQuadraticAttenuation(10f);
+        buildingLight.setAmbientStrength(0.0f);
+        buildingLight.setColour(Colour.RED);
+        lightGroup.add(buildingLight);
+
 //        light.setColour(Colour.GREEN);
 
         Material grassRepeatMaterial = new Material(R.drawable.dirt_tile);
-        grassRepeatMaterial.setUvMultiplier(100f, 100f);
+        grassRepeatMaterial.setUvMultiplier(600f, 600f);
         mapBase = new Square(grassRepeatMaterial);
-        mapBase.setScale(10000f);
-        mapBase.setShader(lightingTextureShader);
+        mapBase.setScale(300f);
+        mapBase.setPosition(-150f, -150f);
+        mapBase.setShader(lightShadowShader);
 
-        crateModelProperties = generateRandomModelProperties(NUM_CRATES, 100f, 200f);
-        crates = new InstanceRenderer(new SquareMesh(true), false, crateModelProperties);
+        crateModelProperties = generateRandomModelProperties(NUM_CRATES, 0.5f, 2f);
+        crates = new InstanceRenderer(new SquareMesh(true), true, crateModelProperties);
+        crates.setLightGroup(lightGroup);
+        crates.setShader(instanceShader);
         crates.setTexture(TextureCache.loadTexture(R.drawable.crate_texture));
 
         shadowShader2D = new InstanceShadowShader2D();
@@ -137,15 +179,16 @@ public class GameDemo2D extends Scene {
             crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
         }
 
-        building = new Building(new Vec2(5200f, 5200f), new Scale2D(750f, 400f));
-        building.setShader(lightingTextureShader);
+
+        building = new Building(new Vec2(0f, 3f), new Scale2D(6f, 4f));
+        building.setWallShader(lightShader);
+        building.setFloorShader(lightShadowShader);
         buildingHitbox = new HitboxRectangle();
         buildingHitbox.transform(building.getModelMatrix());
 
         bullets = new ArrayList<>();
 
         zombies = new ArrayList<>();
-        spawnZombies(100);
 
         ammo = new Text(FontCache.getFont(R.raw.aileron_bold, 56), String.format("Ammo %d/%d", player.getAmmo(), player.getMaxAmmo()));
         ammo.setPosition(Crispin.getSurfaceWidth() - ammo.getWidth() - TEXT_PADDING, Crispin.getSurfaceHeight() - TEXT_PADDING - ammo.getHeight());
@@ -158,16 +201,21 @@ public class GameDemo2D extends Scene {
 
     private void spawnZombies(int count) {
         for(int i = 0; i < count; i++) {
-            float x = random.nextBoolean() ? random.nextFloat() * 4000f : 6000f + random.nextFloat() * 4000f;
-            float y = random.nextBoolean() ? random.nextFloat() * 4000f : 6000f + random.nextFloat() * 4000f;
+            float x = random.nextBoolean() ? random.nextFloat() * 1f : 20f + random.nextFloat() * 40f;
+            float y = random.nextBoolean() ? random.nextFloat() * 1f : 20f + random.nextFloat() * 40f;
             Zombie z = new Zombie(x, y, PLAYER_SIZE);
-            z.setShader(lightingTextureShader);
+            z.setShader(lightShadowShader);
             zombies.add(z);
         }
     }
 
     @Override
     public void update(float deltaTime) {
+        if(System.currentTimeMillis() > lastWaveMs + WAVE_DURATION_MS) {
+            lastWaveMs = System.currentTimeMillis();
+            spawnZombies(10);
+        }
+
         player.update(movementJoystick.getDirection(), aimJoystick.getDirection());
 
         float cx = player.getPosition().x + (player.getSize().x / 2f);
@@ -191,7 +239,20 @@ public class GameDemo2D extends Scene {
 
             Vec2 playerZombieMtv = zombieHitbox.isCollidingMTV(playerHitbox);
             if(playerZombieMtv != null) {
-                z.translate(playerZombieMtv.x, playerZombieMtv.y);
+                if(player.isAlive()) {
+                    z.translate(playerZombieMtv.x, playerZombieMtv.y);
+
+                    // See if the zombie should do damage
+                    if(z.attack()) {
+                        player.damage();
+                        if(player.getHealth() == 0) {
+                            // Death sound
+                            Audio.getInstance().playSound(R.raw.injured);
+                        } else {
+                            Audio.getInstance().playSound(R.raw.hurt);
+                        }
+                    }
+                }
             }
 
             for(int i = 0; i < zombies.size(); i++) {
@@ -250,6 +311,14 @@ public class GameDemo2D extends Scene {
 //                playerHitbox.transform(player.getModelMatrix());
 
                 crateModelProperties[i].translate(-mtv.x, -mtv.y);
+                crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
+                crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+                crateShadows.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
+            }
+
+            Vec2 buildingMtv = building.isColliding(crateHitboxes[i]);
+            if(buildingMtv != null) {
+                crateModelProperties[i].translate(buildingMtv.x, buildingMtv.y);
                 crateHitboxes[i].transform(crateModelProperties[i].getModelMatrix());
                 crates.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
                 crateShadows.uploadModelMatrix(crateModelProperties[i].getModelMatrix(), i);
@@ -325,7 +394,7 @@ public class GameDemo2D extends Scene {
         }
 
         // one bullet per second but only if the aim joystick is pulled all the way out
-        if(aimJoystick.getDirection().getMagnitude() > 0.7f &&
+        if(player.isAlive() && aimJoystick.getDirection().getMagnitude() > 0.5f &&
                 System.currentTimeMillis() - lastShotTimeMs > WEAPON_FIRE_MIN_WAIT_MS) {
             if(player.spendAmmo()) {
                 lastShotTimeMs = System.currentTimeMillis();
@@ -335,12 +404,13 @@ public class GameDemo2D extends Scene {
                 Vec2 bulletDirection = Geometry.normalize(aimJoystick.getDirection());
 
                 Bullet bullet = new Bullet();
-                bullet.velocity = Geometry.scaleVector(bulletDirection, 100f);
+                bullet.velocity = Geometry.scaleVector(bulletDirection, 0.5f);
                 bullet.sprite = new Square(false);
                 bullet.sprite.setColour(Colour.YELLOW);
-                bullet.sprite.setScale(14f, 8f);
-                bullet.sprite.setPosition(bulletSpawnTransformed.x - 7f, bulletSpawnTransformed.y - 4f);
-                bullet.sprite.setRotationAroundPoint(7f, 4f, 0f, (float)Math.toDegrees(Math.atan2(bulletDirection.y, bulletDirection.x)), 0f, 0f, 1f);
+                bullet.sprite.setScale(0.1f, 0.04f);
+                bullet.sprite.setPosition(bulletSpawnTransformed.x, bulletSpawnTransformed.y);
+              //  bullet.sprite.setPosition(bulletSpawnTransformed.x - 7f, bulletSpawnTransformed.y - 4f);
+                bullet.sprite.setRotationAroundPoint(0f, 0f, 0f, (float)Math.toDegrees(Math.atan2(bulletDirection.y, bulletDirection.x)), 0f, 0f, 1f);
                 bullet.spawnTime = System.currentTimeMillis();
                 bullet.hitboxRectangle = new HitboxPolygon(new float[]{
                         -2f, 0f,
@@ -352,14 +422,14 @@ public class GameDemo2D extends Scene {
 
                 bullet.light = new PointLight();
                 bullet.light.setPosition(bullet.sprite.getPosition());
-                bullet.light.setConstantAttenuation(100f);
+                bullet.light.setConstantAttenuation(1f);
                 bullet.light.setLinearAttenuation(1f);
                 bullet.light.setQuadraticAttenuation(10f);
                 bullet.light.setAmbientStrength(0f);
 
                 if(bulletsUntilTracer <= 0) {
                     bulletsUntilTracer = BULLETS_BETWEEN_TRACER;
-                    bullet.light.setConstantAttenuation(400f);
+                    bullet.light.setConstantAttenuation(4f);
                     bullet.light.setColour(new Colour(0.196f, 0.80f, 0.196f));
                     bullet.sprite.setColour(new Colour(0.196f, 0.80f, 0.196f));
                 } else {
@@ -369,7 +439,7 @@ public class GameDemo2D extends Scene {
                 lightGroup.add(bullet.light);
 
                 // todo - temp only, improve
-                bullet.sprite.setShader(lightingTextureShader);
+                bullet.sprite.setShader(lightShadowShader);
                 bullets.add(bullet);
 
                 Audio.getInstance().playSound(R.raw.pistol_shot);
@@ -389,9 +459,11 @@ public class GameDemo2D extends Scene {
             shadowMap.start(n);
             shadowShader2D.setLightPos(light.getPosition2D());
             crateShadows.render(camera);
+            building.renderShadow(camera, light.getPosition2D());
             shadowMap.end();
         }
-        lightingTextureShader.setShadowTexture(shadowMap.getShadowMap());
+        lightShadowShader.setShadowTexture(shadowMap.getShadowMap());
+        instanceShader.setShadowTexture(shadowMap.getShadowMap());
 
         mapBase.render(camera, lightGroup);
         building.render(camera, lightGroup);
@@ -400,17 +472,23 @@ public class GameDemo2D extends Scene {
             bullets.get(i).sprite.render(camera, lightGroup);
         }
 
+        player.render(camera);
         for(int i = 0; i < zombies.size(); i++) {
             zombies.get(i).render(camera, lightGroup);
         }
 
-        player.render(camera);
         crates.render(camera);
 
         // UI
         movementJoystick.render(uiCamera);
         aimJoystick.render(uiCamera);
         ammo.draw(uiCamera);
+        for(int i = 0; i < healthBar.size(); i++){
+            if(i >= player.getHealth()) {
+                healthBar.get(i).setColour(Colour.GREY);
+            }
+            healthBar.get(i).render(uiCamera);
+        }
 
         backButton.draw(uiCamera);
     }
@@ -421,8 +499,8 @@ public class GameDemo2D extends Scene {
     private ModelProperties[] generateRandomModelProperties(int count, float minScale, float maxScale) {
         ModelProperties[] properties = new ModelProperties[count];
         for(int i = 0; i < count; i++) {
-            float x = random.nextFloat() * 10000f;
-            float y = random.nextFloat() * 10000f;
+            float x = random.nextFloat() * 100f;
+            float y = random.nextFloat() * 100f;
             float scale = minScale + (random.nextFloat() * (maxScale - minScale));
             properties[i] = new ModelProperties();
             properties[i].setPosition(x, y);
@@ -435,7 +513,7 @@ public class GameDemo2D extends Scene {
 
     private Vec2 getCenteredCameraPosition() {
         return Geometry.minus(new Vec2(player.getPosition()), new Vec2(
-                (Crispin.getSurfaceWidth() / 2f) - (player.getSize().x / 2f),
-                (Crispin.getSurfaceHeight() / 2f) - (player.getSize().y / 2f)));
+                (camera.getRight() / 2f) - (player.getSize().x / 2f),
+                (camera.getTop() / 2f) - (player.getSize().y / 2f)));
     }
 }

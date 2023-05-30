@@ -1,4 +1,4 @@
-package com.crispin.demos.Scenes.InstancingDemos;
+package com.crispin.demos.InstancingDemos;
 
 import android.opengl.Matrix;
 

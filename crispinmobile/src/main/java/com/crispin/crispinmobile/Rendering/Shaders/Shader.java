@@ -102,6 +102,9 @@ public class Shader {
     // Model matrix uniform handle
     public int modelMatrixUniformHandle;
 
+    // Shadow texture uniform handle
+    public int shadowTextureUniformHandle;
+
     // Number of point lights
     public int numPointLightsUniformHandle;
 
@@ -155,6 +158,7 @@ public class Shader {
         modelMatrixUniformHandle = UNDEFINED_HANDLE;
         viewPositionUniformHandle = UNDEFINED_HANDLE;
         viewDimensionUniformHandle = UNDEFINED_HANDLE;
+        shadowTextureUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
         numSpotLightsUniformHandle = UNDEFINED_HANDLE;
         modelMatrixAttributeHandle = UNDEFINED_HANDLE;
