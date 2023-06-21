@@ -21,6 +21,7 @@ import android.hardware.lights.Light;
 import android.opengl.GLES30;
 
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Models.ShadowModel;
 

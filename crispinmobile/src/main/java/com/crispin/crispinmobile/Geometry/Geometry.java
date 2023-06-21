@@ -444,4 +444,100 @@ public class Geometry {
             return Direction2D.NONE;
         }
     }
+
+    /**
+     * Create a quadratic bezier curve with one anchor point
+     *
+     * @param start Vec2
+     * @param anchor Vec2
+     * @param end Vec2
+     * @param steps Vec2
+     * @return Array of Vec2 points on the curve of size (steps + 1)
+     * @since 1.0
+     */
+    public static Vec2[] createBezierCurve(Vec2 start, Vec2 anchor, Vec2 end, int steps) {
+        if (steps < 1) {
+            return null;
+        }
+
+        Vec2[] points = new Vec2[steps + 1];
+
+        Vec2 p0 = start;
+        Vec2 p1 = anchor;
+        Vec2 p2 = end;
+
+        points[0] = p0;
+        points[steps] = new Vec2(p2);
+
+        // Interpolate
+        for (int i = 1; i < steps; i++) {
+            float pAx = p0.x + ((i * (p1.x - p0.x)) / steps);
+            float pAy = p0.y + ((i * (p1.y - p0.y)) / steps);
+            float pBx = p1.x + ((i * (p2.x - p1.x)) / steps);
+            float pBy = p1.y + ((i * (p2.y - p1.y)) / steps);
+            float pFx = pAx + ((i * (pBx - pAx)) / steps);
+            float pFy = pAy + ((i * (pBy - pAy)) / steps);
+            points[i] = new Vec2(pFx, pFy);
+        }
+
+        return points;
+    }
+
+    /**
+     * Create a cubic bezier curve with two anchor points
+     *
+     * @param start Vec2
+     * @param anchor Vec2
+     * @param anchor2 Vec2
+     * @param end Vec2
+     * @param steps Vec2
+     * @return Array of Vec2 points on the curve of size (steps + 1)
+     * @since 1.0
+     */
+    public static Vec2[] createBezierCurve(Vec2 start, Vec2 anchor, Vec2 anchor2, Vec2 end, int steps) {
+        if (steps < 1) {
+            return null;
+        }
+
+        Vec2[] points = new Vec2[steps + 1];
+
+        Vec2 p0 = start;
+        Vec2 p1 = anchor;
+        Vec2 p2 = anchor2;
+        Vec2 p3 = end;
+
+        points[0] = p0;
+        points[steps] = new Vec2(p3);
+
+        // Interpolate
+        for (int i = 1; i < steps; i++) {
+            // pA is the interpolated point between p0 and p1
+            float pAx = p0.x + ((i * (p1.x - p0.x)) / steps);
+            float pAy = p0.y + ((i * (p1.y - p0.y)) / steps);
+
+            // pB is the interpolated point between p1 and p2
+            float pBx = p1.x + ((i * (p2.x - p1.x)) / steps);
+            float pBy = p1.y + ((i * (p2.y - p1.y)) / steps);
+
+            // pC is the interpolated point between p2 and p3
+            float pCx = p2.x + ((i * (p3.x - p2.x)) / steps);
+            float pCy = p2.y + ((i * (p3.y - p2.y)) / steps);
+
+
+            // pN is the interpolated point between pA and pB
+            float pNx = pAx + ((i * (pBx - pAx)) / steps);
+            float pNy = pAy + ((i * (pBy - pAy)) / steps);
+
+            // pL is the interpolated point between pB and pC
+            float pLx = pBx + ((i * (pCx - pBx)) / steps);
+            float pLy = pBy + ((i * (pCy - pBy)) / steps);
+
+            // pF is the final interpolated point between pN and pL
+            float pFx = pNx + ((i * (pLx - pNx)) / steps);
+            float pFy = pNy + ((i * (pLy - pNy)) / steps);
+            points[i] = new Vec2(pFx, pFy);
+        }
+
+        return points;
+    }
 }

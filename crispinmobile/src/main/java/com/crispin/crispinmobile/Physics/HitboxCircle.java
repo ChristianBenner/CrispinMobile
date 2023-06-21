@@ -6,7 +6,7 @@ import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
-public class HitboxCircle {
+public class HitboxCircle implements Hitbox {
     float centerX;
     float centerY;
     float radius;
@@ -23,12 +23,24 @@ public class HitboxCircle {
         this(center.x, center.y, radius);
     }
 
-    public Vec2 isColliding(HitboxCircle other) {
-        return Collision.isCollidingMTV(this, other);
+    @Override
+    public boolean isColliding(HitboxPolygon hitbox) {
+        return Collision.isColliding(hitbox, this);
     }
 
-    public boolean isColliding(HitboxPolygon polygon) {
-        return Collision.isCollidingMTV(polygon, this);
+    @Override
+    public boolean isColliding(HitboxCircle hitbox) {
+        return Collision.isColliding(this, hitbox);
+    }
+
+    @Override
+    public Vec2 isCollidingMTV(HitboxPolygon hitbox) {
+        return Collision.isCollidingMTV(hitbox, this);
+    }
+
+    @Override
+    public Vec2 isCollidingMTV(HitboxCircle hitbox) {
+        return Collision.isCollidingMTV(this, hitbox);
     }
 
     public Vec2 getCenter() {

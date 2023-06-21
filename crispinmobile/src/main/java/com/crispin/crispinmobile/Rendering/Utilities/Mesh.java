@@ -53,6 +53,8 @@ public class Mesh {
         POINTS,
         LINES,
         TRIANGLES,
+        TRIANGLE_FAN,
+        TRIANGLE_STRIP,
         NONE
     }
 

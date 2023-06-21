@@ -1,5 +1,9 @@
 #version 300 es
+#ifdef GL_ES
 precision highp float;
+precision mediump int;
+precision mediump sampler2DArray;
+#endif
 
 struct Material {
     vec3 ambient;
@@ -47,7 +51,8 @@ void main()
         lightCalc += CalculatePointLight(uPointLights[i], vFragPos, shadowStrength);
     }
 
-    FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
+ //   FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
+    FragColor = (vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour);
 }
 
 /**

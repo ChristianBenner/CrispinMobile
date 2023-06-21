@@ -112,6 +112,20 @@ public class ModelMatrix {
         return new Vec2(result[0], result[1]);
     }
 
+    public Vec2 transformPoint(float x, float y) {
+        float[] result = new float[4];
+        float[] p = new float[]{x, y, 0f, 1f};
+        Matrix.multiplyMV(result, 0, modelMatrix, 0, p, 0);
+        return new Vec2(result[0], result[1]);
+    }
+
+    public Vec3 transformPoint(float x, float y, float z) {
+        float[] result = new float[4];
+        float[] p = new float[]{x, y, z, 1f};
+        Matrix.multiplyMV(result, 0, modelMatrix, 0, p, 0);
+        return new Vec3(result[0], result[1], result[2]);
+    }
+
     // normal render call (no matrix in param)
     // - resetidentity
     // - transform

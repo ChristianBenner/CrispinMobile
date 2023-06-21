@@ -93,7 +93,7 @@ public abstract class InteractiveUI implements UIElement, InteractiveElement {
             dragEvent(position);
 
             // Send the drag touch event
-            final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.DOWN, position);
+            final TouchEvent DOWN_EVENT = new TouchEvent(this, TouchEvent.Event.MOVE, position);
             for (final TouchListener buttonListener : touchListeners) {
                 buttonListener.touchEvent(DOWN_EVENT);
             }

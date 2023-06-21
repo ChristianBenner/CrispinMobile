@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import static android.opengl.GLES20.GL_TRIANGLE_FAN;
+import static android.opengl.GLES20.GL_TRIANGLE_STRIP;
 import static android.opengl.GLES30.GL_DEPTH_TEST;
 import static android.opengl.GLES30.GL_FRAMEBUFFER;
 import static android.opengl.GLES30.glEnable;
@@ -28,6 +30,9 @@ import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Scale3D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Geometry.Vec3;
+import com.crispin.crispinmobile.Physics.Hitbox;
+import com.crispin.crispinmobile.Physics.HitboxCircle;
+import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
@@ -101,6 +106,9 @@ public class Model {
     // Width of the wireframe lines
     private float wireframeLineWidth;
 
+    // Hitbox
+    private Hitbox hitbox;
+
     public Model(Mesh mesh, Material material) {
         this.mesh = mesh;
         this.modelMatrix = new ModelMatrix();
@@ -132,6 +140,36 @@ public class Model {
                  int elementsPerNormal) {
         this(positionBuffer, texelBuffer, normalBuffer, renderMethod, elementsPerPosition,
                 elementsPerTexel, elementsPerNormal, new Material());
+    }
+
+    public void setHitbox(Hitbox hitbox) {
+        this.hitbox = hitbox;
+    }
+
+    public boolean isColliding(Model model) {
+        Hitbox other = model.getHitbox();
+        if (other instanceof HitboxPolygon) {
+            return hitbox.isColliding((HitboxPolygon)other);
+        } else if (other instanceof HitboxCircle) {
+            return hitbox.isColliding((HitboxCircle) other);
+        }
+
+        return false;
+    }
+
+    public Vec2 isCollidingMTV(Model model) {
+        Hitbox other = model.getHitbox();
+        if (other instanceof HitboxPolygon) {
+            return hitbox.isCollidingMTV((HitboxPolygon)other);
+        } else if (other instanceof HitboxCircle) {
+            return hitbox.isCollidingMTV((HitboxCircle) other);
+        }
+
+        return null;
+    }
+
+    public Hitbox getHitbox() {
+        return hitbox;
     }
 
     public void setMesh(Mesh mesh) {
@@ -345,6 +383,20 @@ public class Model {
     }
 
     /**
+     * Set the rotation in z axis (for 2D sprites)
+     *
+     * @param angle The new rotation angle
+     * @since 1.0
+     */
+    public void setRotation(float angle) {
+        this.rotation.angle = angle;
+        this.rotation.x = 0f;
+        this.rotation.y = 0f;
+        this.rotation.z = 1f;
+        this.updateModelMatrix = true;
+    }
+
+    /**
      * Set the rotation
      *
      * @param angle The new rotation angle
@@ -448,6 +500,24 @@ public class Model {
     public void setRotationAroundPoint(float x, float y, float angle) {
         this.rotationPoint.x = x;
         this.rotationPoint.y = y;
+        this.rotationPoint.z = 0f;
+        this.rotationPointAngle.angle = angle;
+        this.rotationPointAngle.x = 0f;
+        this.rotationPointAngle.y = 0f;
+        this.rotationPointAngle.z = 1f;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the rotation around point in 2D space
+     *
+     * @param point Vec2
+     * @param angle The angle to rotate
+     * @since 1.0
+     */
+    public void setRotationAroundPoint(Vec2 point, float angle) {
+        this.rotationPoint.x = point.x;
+        this.rotationPoint.y = point.y;
         this.rotationPoint.z = 0f;
         this.rotationPointAngle.angle = angle;
         this.rotationPointAngle.x = 0f;
@@ -720,45 +790,6 @@ public class Model {
         }
     }
 
-    // todo: this is proof of concept - implement in a better way. Returns texture ID
-    int framebuffer = -1;
-    int fbTexture = -1;
-    public int renderToTextureTest(Camera2D camera) {
-        if(framebuffer == -1) {
-            int[] genBufferTemp = new int[1];
-            GLES30.glGenFramebuffers(1, genBufferTemp, 0);
-            framebuffer = genBufferTemp[0];
-        }
-
-        // Generate texture to render into
-        if(fbTexture == -1) {
-            GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-            int[] genTextureTemp = new int[1];
-            GLES30.glGenTextures(1, genTextureTemp, 0);
-            fbTexture = genTextureTemp[0];
-            GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
-            GLES30.glTexImage2D(GL_TEXTURE_2D, 0, GLES30.GL_RGB, Crispin.getSurfaceWidth(),
-                    Crispin.getSurfaceHeight(), 0, GLES30.GL_RGB, GLES30.GL_UNSIGNED_BYTE,
-                    null);
-            GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR);
-            GLES30.glTexParameteri(GL_TEXTURE_2D, GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
-            GLES30.glBindTexture(GL_TEXTURE_2D, 0);
-            GLES30.glFramebufferTexture2D(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fbTexture, 0);
-        }
-
-        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, framebuffer);
-        GLES30.glBindTexture(GL_TEXTURE_2D, fbTexture);
-        GLES30.glClearColor(0f, 0f, 0f, 1f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-
-        // Draw to framebuffer
-        render(camera);
-
-        // Set frame buffer back to default/0
-        GLES30.glBindFramebuffer(GL_FRAMEBUFFER, 0);
-        return fbTexture;
-    }
-
     public void render(Camera2D camera, final LightGroup lightGroup) {
         // Check if depth is enabled, and disable it
         final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
@@ -832,6 +863,12 @@ public class Model {
                 break;
             case TRIANGLES:
                 glDrawArrays(GL_TRIANGLES, 0, mesh.vertexCount);
+                break;
+            case TRIANGLE_FAN:
+                glDrawArrays(GL_TRIANGLE_FAN, 0, mesh.vertexCount);
+                break;
+            case TRIANGLE_STRIP:
+                glDrawArrays(GL_TRIANGLE_STRIP, 0, mesh.vertexCount);
                 break;
         }
         glBindTexture(GL_TEXTURE_2D, 0);

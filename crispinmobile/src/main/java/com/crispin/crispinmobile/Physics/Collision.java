@@ -24,11 +24,15 @@ public class Collision {
     }
 
     public static boolean isColliding(HitboxPolygon polygon, HitboxCircle circle) {
-        return isCollidingMTV(polygon, circle);
+        return isCollidingMTV(polygon, circle) != null;
     }
 
     // Is colliding with circle check. todo: calc MTV
-    public static boolean isCollidingMTV(HitboxPolygon polygon, HitboxCircle circle) {
+    public static Vec2 isCollidingMTV(HitboxPolygon polygon, HitboxCircle circle) {
+//        boolean collision = false;
+//
+//        Vec2 mtv = new Vec2();
+
         for (int i = 0; i < polygon.points.length; i += 2) {
             int next = (i + 2) % polygon.points.length;
 
@@ -43,8 +47,14 @@ public class Collision {
                 float distanceToStart = distance(circle.getCenter().x, circle.getCenter().y, polygon.points[i], polygon.points[i + 1]);
 
                 if (distanceToStart < circle.getRadius()) {
+//                    float distance = circle.getRadius() - distanceToStart;
+//                    if(!collision || distance > mtv.getMagnitude()) {
+//                        mtv.x = circle.getCenter().x - polygon.points[i];
+//                        mtv.y = circle.getCenter().y - polygon.points[i + 1];
+//                    }
+
                     // collision detected
-                    return true;
+                    return new Vec2();
                 }
             } else if (dotProductToPointEdge > edgeVectorX * edgeVectorX + edgeVectorY * edgeVectorY) {
                 // the circle center is past the edge end point, check distance to edge end point
@@ -52,7 +62,7 @@ public class Collision {
 
                 if (distanceToEnd < circle.getRadius()) {
                     // collision detected
-                    return true;
+                    return new Vec2();
                 }
             } else {
                 // the circle center is between the edge start and end points, calculate distance to edge
@@ -60,13 +70,13 @@ public class Collision {
 
                 if (perpendicularDistance < circle.getRadius()) {
                     // collision detected
-                    return true;
+                    return new Vec2();
                 }
             }
         }
 
         // no collision detected
-        return false;
+        return null;
     }
 
     public static boolean isColliding(HitboxPolygon polygon, HitboxPolygon other) {

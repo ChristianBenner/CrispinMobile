@@ -23,7 +23,7 @@ public class TouchEvent extends EventObject {
 
     public enum Event {
         CLICK,
-        DOWN,
+        MOVE,
         RELEASE
     }
 }

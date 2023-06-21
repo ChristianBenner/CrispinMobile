@@ -1,5 +1,8 @@
 #version 300 es
+#ifdef GL_ES
 precision mediump float;
+precision mediump int;
+#endif
 
 struct Material {
     vec3 ambient;

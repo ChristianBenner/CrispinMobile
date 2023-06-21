@@ -1,4 +1,9 @@
 #version 300 es
+#ifdef GL_ES
+precision mediump float;
+precision mediump int;
+precision mediump sampler2DArray;
+#endif
 
 layout (location = 0) in vec4 aPosition;
 layout (location = 1) in vec2 aTextureCoordinates;

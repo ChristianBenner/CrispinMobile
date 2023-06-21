@@ -6,9 +6,12 @@ import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
+import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
+import com.crispin.crispinmobile.Utilities.ModelLoading.MeshData;
+import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
 
@@ -37,11 +40,16 @@ public class ObjLoadDemo extends Scene {
         // the application can continue whilst loading the model. This is especially useful for
         // loading large models in some situations. If you do not wish to use a threaded loader,
         // call OBJModelLoader.readObjFile(resourceId) instead.
-        ThreadedOBJLoader.loadModel(R.raw.monkey, mesh -> {
-            this.monkey = new Model(mesh);
-            this.monkey.setColour(1.0f, 0.5f, 0.31f);
-            this.monkey.setScale(0.5f);
-        });
+//        ThreadedOBJLoader.loadModel(R.raw.monkey, mesh -> {
+//            this.monkey = new Model(mesh);
+//            this.monkey.setColour(1.0f, 0.5f, 0.31f);
+//            this.monkey.setScale(0.5f);
+//        });
+
+        MeshData[] meshes = OBJModelLoader.readObjFile2(R.raw.monkey);
+        monkey = new Model(meshes[0].mesh);
+        monkey.setColour(1.0f, 0.5f, 0.31f);
+        monkey.setScale(0.5f);
 
         // Create the model camera and move it forward in-front of the origin
         modelCamera = new Camera();

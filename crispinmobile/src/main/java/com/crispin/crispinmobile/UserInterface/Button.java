@@ -33,9 +33,9 @@ public class Button extends InteractiveUI {
     public Button(Font font, String textString) {
         this.font = font;
         this.textString = textString;
-        this.colourBorder = DEFAULT_COLOUR_BORDER;
-        this.colourBackground = DEFAULT_COLOUR_BACKGROUND;
-        this.colourText = DEFAULT_COLOUR_TEXT;
+        this.colourBorder = new Colour(DEFAULT_COLOUR_BORDER);
+        this.colourBackground = new Colour(DEFAULT_COLOUR_BACKGROUND);
+        this.colourText = new Colour(DEFAULT_COLOUR_TEXT);
         this.disabledColourBorder = DEFAULT_DISABLED_COLOUR_BORDER;
         this.disabledColourBackground = DEFAULT_DISABLED_COLOUR_BACKGROUND;
         this.disabledColourText = DEFAULT_DISABLED_COLOUR_TEXT;

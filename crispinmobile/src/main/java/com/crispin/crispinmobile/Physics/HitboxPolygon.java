@@ -6,7 +6,7 @@ import com.crispin.crispinmobile.Rendering.Models.Line;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 
-public class HitboxPolygon {
+public class HitboxPolygon implements Hitbox {
     private float[] data;
     private float[] transformedPoints;
 
@@ -37,12 +37,31 @@ public class HitboxPolygon {
         return transformedPoints;
     }
 
-    public Vec2 isCollidingMTV(HitboxPolygon other) {
-        return Collision.isCollidingMTV(this, other);
+    @Override
+    public boolean isColliding(HitboxPolygon hitbox) {
+        return Collision.isColliding(this, hitbox);
     }
 
-    public boolean isCollidingMTV(HitboxCircle circle) {
-        return Collision.isCollidingMTV(this, circle);
+    @Override
+    public boolean isColliding(HitboxCircle hitbox) {
+        return Collision.isColliding(this, hitbox);
+    }
+
+    @Override
+    public Vec2 isCollidingMTV(HitboxPolygon hitbox) {
+        return Collision.isCollidingMTV(this, hitbox);
+    }
+
+    @Override
+    public Vec2 isCollidingMTV(HitboxCircle hitbox) {
+        return Collision.isCollidingMTV(this, hitbox);
+    }
+
+    public void transform(float x, float y, float w, float h) {
+        ModelMatrix modelMatrix = new ModelMatrix();
+        modelMatrix.translate(x, y);
+        modelMatrix.scale(w, h);
+        transform(modelMatrix);
     }
 
     public void transform(ModelMatrix modelMatrix) {

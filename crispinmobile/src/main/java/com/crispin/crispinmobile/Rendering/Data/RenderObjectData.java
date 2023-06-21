@@ -234,6 +234,18 @@ public class RenderObjectData {
     }
 
     /**
+     * Add some position data to be processed later
+     *
+     * @param positionData The position data as float[]
+     * @since 1.0
+     */
+    public void addPositionData(float[] positionData) {
+        for(int i = 0; i < positionData.length; i++) {
+            positionDataArray.add(positionData[i]);
+        }
+    }
+
+    /**
      * Add some texel data to be processed later
      *
      * @param texelData The texel data as a float
@@ -244,6 +256,18 @@ public class RenderObjectData {
     }
 
     /**
+     * Add some texel data to be processed later
+     *
+     * @param texelData The texel data as float[]
+     * @since 1.0
+     */
+    public void addTexelData(float[] texelData) {
+        for(int i = 0; i < texelData.length; i++) {
+            texelDataArray.add(texelData[i]);
+        }
+    }
+
+    /**
      * Add some normal data to be processed later
      *
      * @param normalData The normal data as a float
@@ -251,6 +275,18 @@ public class RenderObjectData {
      */
     public void addNormalData(float normalData) {
         normalDataArray.add(normalData);
+    }
+
+    /**
+     * Add some normal data to be processed later
+     *
+     * @param normalData The normal data as float[]
+     * @since 1.0
+     */
+    public void addNormalData(float[] normalData) {
+        for(int i = 0; i < normalData.length; i++) {
+            normalDataArray.add(normalData[i]);
+        }
     }
 
     /**

@@ -51,6 +51,16 @@ public class Scale3D {
     }
 
     /**
+     * Get the 2D scale comprising of width and height components
+     *
+     * @return 2D scale comprising of width and height components
+     * @since 1.0
+     */
+    public Scale2D toScale2D() {
+        return new Scale2D(w, h);
+    }
+
+    /**
      * Get a string that contains the scale data that can be used in a log
      *
      * @return String in the format 'Scale3D[w:W,h:H,l:L]'

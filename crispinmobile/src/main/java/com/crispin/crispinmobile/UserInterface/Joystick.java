@@ -4,8 +4,6 @@ import com.crispin.crispinmobile.Geometry.Geometry;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
@@ -39,7 +37,7 @@ public class Joystick {
         joystick.setSize(movableSize);
         joystick.addTouchListener(e -> {
             switch (e.getEvent()) {
-                case DOWN:
+                case MOVE:
                     drag(e.getPosition());
                     isDown = true;
                     break;
