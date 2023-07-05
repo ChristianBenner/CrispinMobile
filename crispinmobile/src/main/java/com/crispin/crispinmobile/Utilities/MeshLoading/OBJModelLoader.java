@@ -1,12 +1,13 @@
-package com.crispin.crispinmobile.Utilities;
+package com.crispin.crispinmobile.Utilities.MeshLoading;
 
 import android.content.res.Resources;
 
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Data.RenderObjectData;
+import com.crispin.crispinmobile.Rendering.Models.ShadowMeshUtil;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
-import com.crispin.crispinmobile.Utilities.ModelLoading.FaceIndexData;
-import com.crispin.crispinmobile.Utilities.ModelLoading.MeshData;
+import com.crispin.crispinmobile.Utilities.Logger;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,8 +15,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
 
 /**
  * Designed to read OBJ model files and produce a RenderObject that can be drawn on a
@@ -195,8 +194,6 @@ public class OBJModelLoader {
         return floats;
     }
 
-
-
     public static FaceIndexData parseFaceElements(String[] split, int index) {
         FaceIndexData face = new FaceIndexData();
         for (int i = index, n = 0; i < split.length; i++, n++) {
@@ -220,10 +217,18 @@ public class OBJModelLoader {
         return face;
     }
 
-    private static MeshData[] process(BufferedReader reader) throws IOException {
+    private static ArrayList<MeshData> process(BufferedReader reader, boolean loadAll) throws IOException {
+        return process(reader, null, loadAll);
+    }
+
+    // Properties allow specific meshes and shadow meshes to be loaded
+    private static ArrayList<MeshData> process(BufferedReader reader, MeshLoadProperties properties, boolean loadAll) throws IOException {
+        boolean propertiesProvided = properties != null;
+
         class ObjectData {
             String name;
-            String material;
+            String materialLibrary;
+            String materialName;
             ArrayList<FaceIndexData> faceIndices = new ArrayList<>();
         }
 
@@ -236,6 +241,7 @@ public class OBJModelLoader {
         int texelComponentsPerVertex = 0;
         int normalComponentsPerVertex = 0;
         int verticesPerFace = 0;
+        String materialLibrary = "";
 
         while (reader.ready()) {
             String[] split = reader.readLine().split(" ");
@@ -277,10 +283,11 @@ public class OBJModelLoader {
                     temp.faceIndices.add(faceIndexData);
                     break;
                 case TYPE_DEFINE_MATERIAL_LIBRARY:
-
+                    materialLibrary = split[1];
                     break;
                 case TYPE_USE_MATERIAL:
-
+                    temp.materialName = split[1];
+                    temp.materialLibrary = materialLibrary;
                     break;
                 // Ignore
                 case TYPE_COMMENT:
@@ -290,9 +297,38 @@ public class OBJModelLoader {
         }
 
         // Process objects
-        MeshData[] meshes = new MeshData[objectData.size()];
+        ArrayList<MeshData> meshes = new ArrayList<>();
         for(int o = 0; o < objectData.size(); o++) {
             ObjectData object = objectData.get(o);
+
+            MeshLoadProperty meshLoadProperty;
+
+            // If properties have been provided and the object name is not in the property map,
+            // we don't want to load it
+            if(propertiesProvided) {
+                if(properties.containsKey(object.name)) {
+                    meshLoadProperty = properties.get(object.name);
+
+                    // If the property specifies not to load either mesh, skip
+                    if(!meshLoadProperty.loadMesh && !meshLoadProperty.loadShadowMesh) {
+                        continue;
+                    }
+                } else if(loadAll) {
+                    // If the model property was not found but load all is specified, then load mesh
+                    // only (as default)
+                    meshLoadProperty = new MeshLoadProperty();
+                    meshLoadProperty.loadMesh = true;
+                    meshLoadProperty.loadShadowMesh = false;
+                } else {
+                    continue;
+                }
+            } else {
+                // No mesh properties, by default only load the mesh not shadow mesh
+                meshLoadProperty = new MeshLoadProperty();
+                meshLoadProperty.loadMesh = true;
+                meshLoadProperty.loadShadowMesh = false;
+            }
+
             if(object.faceIndices.size() == 0) {
                 continue;
             }
@@ -347,7 +383,7 @@ public class OBJModelLoader {
             }
 
             // Set the render method depending on how much face data appears in a line
-            Mesh.RenderMethod renderMethod;
+            Mesh.RenderMethod renderMethod = Mesh.RenderMethod.TRIANGLES;;
             switch (numVerticesPerFace) {
                 case ONE_FACE_DATA_ELEMENT:
                     renderMethod = Mesh.RenderMethod.POINTS;
@@ -369,26 +405,58 @@ public class OBJModelLoader {
 
             MeshData meshData = new MeshData();
             meshData.name = object.name;
-            meshData.material = object.material;
-            meshData.mesh = new Mesh(positionBuffer, texelBuffer, normalBuffer,
-                    Mesh.RenderMethod.TRIANGLES, positionComponentsPerVertex,
-                    texelComponentsPerVertex, normalComponentsPerVertex);
-            meshes[o] = meshData;
+            meshData.materialName = object.materialName;
+            meshData.materialLibrary = object.materialLibrary;
+
+            if(meshLoadProperty.loadMesh || loadAll) {
+                meshData.mesh = new Mesh(positionBuffer, texelBuffer, normalBuffer, renderMethod,
+                        positionComponentsPerVertex, texelComponentsPerVertex, normalComponentsPerVertex);
+            }
+
+            if(meshLoadProperty.loadShadowMesh || meshLoadProperty.createHitbox) {
+                // If there is a Z component, we need to create a new buffer that contains only x
+                // and y components
+                if(positionComponentsPerVertex == 3) {
+                    float[] xyPositionBuffer = new float[(positionBufferSize / 3) * 2];
+                    for(int i = 0, xyI = 0; i < positionBufferSize; i += 3, xyI += 2) {
+                        xyPositionBuffer[xyI] = positionBuffer[i];
+                        xyPositionBuffer[xyI + 1] = positionBuffer[i + 1];
+                        // do not copy z component
+                    }
+
+                    if(meshLoadProperty.loadShadowMesh) {
+                        meshData.shadowMesh = ShadowMeshUtil.createShadowMesh2D(xyPositionBuffer);
+                    }
+
+                    if(meshLoadProperty.createHitbox) {
+                        meshData.hitboxPolygon = new HitboxPolygon(xyPositionBuffer);
+                    }
+                } else {
+                    if(meshLoadProperty.loadShadowMesh) {
+                        meshData.shadowMesh = ShadowMeshUtil.createShadowMesh2D(positionBuffer);
+                    }
+
+                    if(meshLoadProperty.createHitbox) {
+                        meshData.hitboxPolygon = new HitboxPolygon(positionBuffer);
+                    }
+                }
+            }
+
+            meshes.add(meshData);
         }
 
         return meshes;
     }
 
-
     /**
      * Read an OBJ file from a resource ID
      *
      * @param resourceId The OBJ model file resource ID
-     * @return A RenderObject built from the model data. The model can be rendered to a scene
+     * @return Array of mesh data containing name, material and mesh
      * @see Mesh
      * @since 1.0
      */
-    public static MeshData[] readObjFile2(int resourceId) {
+    public static ArrayList<MeshData> read(int resourceId, MeshLoadProperties meshLoadProperties) {
         // Attempt to open and read an OBJ file
         try {
             // Measure how long it takes to load load and read the model file
@@ -400,7 +468,7 @@ public class OBJModelLoader {
             inputStream.reset();
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            MeshData[] meshes = process(reader);
+            ArrayList<MeshData> meshes = process(reader, meshLoadProperties, meshLoadProperties.loadAll);
 
             // End of time measurement
             long end = System.nanoTime();
@@ -416,6 +484,31 @@ public class OBJModelLoader {
         return null;
     }
 
+    public static HashMap<String, MeshData> read(int resourceId) {
+        return readToMap(resourceId, null);
+    }
+
+    /**
+     * Read an OBJ file from a resource ID
+     *
+     * @param resourceId The OBJ model file resource ID
+     * @return HashMap of mesh data allowing easy retrieval of specific mesh names
+     * @see Mesh
+     * @since 1.0
+     */
+    public static HashMap<String, MeshData> readToMap(int resourceId, MeshLoadProperties meshLoadProperties) {
+        ArrayList<MeshData> meshes = read(resourceId, meshLoadProperties);
+        HashMap<String, MeshData> map = new HashMap<>();
+        for(int i = 0; i < meshes.size(); i++) {
+            MeshData meshData = meshes.get(i);
+            map.put(meshData.name, meshData);
+        }
+        return map;
+    }
+
+    public static HashMap<String, MeshData> readToMap(int resourceId) {
+        return readToMap(resourceId, null);
+    }
 
 //    private static Mesh[] processWavefront(byte[] bytes) {
 //        String type = null;
@@ -459,218 +552,6 @@ public class OBJModelLoader {
     private static float indexRangeToFloat(byte[] bytes, int startIndex, int endIndex) {
         return Float.parseFloat(new String(bytes, startIndex, endIndex - startIndex));
     }
-
-    /**
-     * Process the OBJ model
-     *
-     * @param bytes The model file as an array of bytes
-     * @return A Mesh built from the model data. The model can be rendered to a scene
-     * @see Mesh
-     * @since 1.0
-     */
-    private static Mesh processObj2(byte[] bytes) {
-        RenderObjectData renderObjectData = new RenderObjectData();
-
-        // Keep track of the type of data we are looking at
-        byte lineType = 0;
-
-        // Keep the number of different position elements in the face data
-        int numberPositionDataElements = 0;
-
-        // Whether or not to count the number of data elements in the position data
-        boolean countPositionDataElements = true;
-
-        // Keep the number of different normal elements in the face data
-        int numberNormalDataElements = 0;
-
-        // Whether or not to count the number of data elements in the normal data
-        boolean countNormalDataElements = true;
-
-        // Keep the number of different texel elements in the face data
-        int numberTexelDataElements = 0;
-
-        // Whether or not to count the number of data elements in the texel data
-        boolean countTexelDataElements = true;
-
-        // Keep the number of different elements in the face data
-        int numberFaceDataElements = 0;
-
-        // Keep the number of slashes in the face data
-        int numberFaceDataSeparators = 0;
-
-        // Keep the number of face data per line (this will help to determine the render method)
-        int numberFaceDataPerLine = 0;
-
-        // Whether or not to count the number of data elements and separators in the face data
-        boolean countFaceDataElements = true;
-
-        // Whether or not to count the number of face data per line
-        boolean countFaceDataPerLine = true;
-
-        // Iterate through all the bytes in the file
-        for (int i = 0; i < bytes.length; i++) {
-            final byte c = bytes[i];
-
-            // Check if the byte represents line feed or new line '/r' or '/n'
-            if (c == ASCII_NEW_LINE || c == ASCII_CARRIAGE_RETURN) {
-                // Reset the line type for a new line
-                lineType = 0;
-                if (numberPositionDataElements > 0) {
-                    countPositionDataElements = false;
-                }
-                if (numberTexelDataElements > 0) {
-                    countTexelDataElements = false;
-                }
-                if (numberNormalDataElements > 0) {
-                    countNormalDataElements = false;
-                }
-                if (numberFaceDataPerLine > 0) {
-                    countFaceDataPerLine = false;
-                }
-                continue;
-            }
-
-            // Look at the line type so we know what we are processing
-            switch (lineType) {
-                case 0:
-                    lineType = c;
-                    break;
-                case 'v':
-                    // Normal or texel in use instead
-                    if (bytes[i - 1] == 'v' && (c == 't' || c == 'n')) {
-                        lineType = c;
-                    } else if (isNumericChar(c)) {
-                        int floatEndIndex = findFloatEndIndex(bytes, i);
-                        float f = indexRangeToFloat(bytes, i, floatEndIndex);
-                        i = floatEndIndex - 1; // attempt to pass non-numerical char next time
-
-                        renderObjectData.addPositionData(f);
-                        if (countPositionDataElements) {
-                            numberPositionDataElements++;
-                        }
-                    }
-                    break;
-                case 't':
-
-                    break;
-                case 'n':
-
-                    break;
-            }
-        }
-
-        return null;
-    }
-
-
-//                case TEXEL:
-//                    if (isNumericChar(c)) {
-//                        // Check that a start index hasn't already been defined
-//                        if (dataStartIndex == NO_START_INDEX) {
-//                            dataStartIndex = i;
-//
-//                            if (!countTexelDataElements && numberTexelDataElements == 0) {
-//                                countTexelDataElements = true;
-//                            }
-//                        }
-//                    } else {
-//                        // Check if there is a start index before continuing
-//                        if (dataStartIndex != NO_START_INDEX) {
-//                            // We are processing a float and have found the end of it, parse it
-//                            renderObjectData.addTexelData(Float.parseFloat(new String(bytes,
-//                                    dataStartIndex,
-//                                    i - dataStartIndex)));
-//                            dataStartIndex = NO_START_INDEX;
-//
-//                            if (countTexelDataElements) {
-//                                numberTexelDataElements++;
-//                            }
-//                        }
-//                    }
-//                    break;
-//                case NORMAL:
-//                    if (isNumericChar(c)) {
-//                        // Check that a start index hasn't already been defined
-//                        if (dataStartIndex == NO_START_INDEX) {
-//                            dataStartIndex = i;
-//
-//                            if (!countNormalDataElements && numberNormalDataElements == 0) {
-//                                countNormalDataElements = true;
-//                            }
-//                        }
-//                    } else {
-//                        // Check if there is a start index before continuing
-//                        if (dataStartIndex != NO_START_INDEX) {
-//                            // We are processing a float and have found the end of it, parse it
-//                            renderObjectData.addNormalData(Float.parseFloat(new String(bytes,
-//                                    dataStartIndex,
-//                                    i - dataStartIndex)));
-//                            dataStartIndex = NO_START_INDEX;
-//
-//                            if (countNormalDataElements) {
-//                                numberNormalDataElements++;
-//                            }
-//                        }
-//                    }
-//                    break;
-//                case FACE:
-//                    // Now we have to parse integers
-//                    if (c >= ASCII_0 && c <= ASCII_9) {
-//                        // Check that a start index hasn't already been defined
-//                        if (dataStartIndex == NO_START_INDEX) {
-//                            dataStartIndex = i;
-//
-//                            // Check if we should position counting the amount of face data per line
-//                            if (!countFaceDataPerLine && numberFaceDataPerLine == 0) {
-//                                countFaceDataPerLine = true;
-//                            }
-//
-//                            // Check if we should position counting the number of face data elements
-//                            // and separators
-//                            if (!countFaceDataElements &&
-//                                    numberFaceDataElements == 0 &&
-//                                    numberFaceDataSeparators == 0) {
-//                                countFaceDataElements = true;
-//                            }
-//                        }
-//                    } else {
-//                        // Increment the number of face data separators if one is found
-//                        if (c == ASCII_FORWARD_SLASH && countFaceDataElements) // forward slash
-//                        {
-//                            numberFaceDataSeparators++;
-//                        }
-//
-//                        // Check if there is a start index before continuing
-//                        if (dataStartIndex != NO_START_INDEX) {
-//                            // We are processing an int and have found the end of it, parse it
-//                            renderObjectData.addFaceData(Integer.parseInt(new String(bytes,
-//                                    dataStartIndex,
-//                                    i - dataStartIndex)));
-//
-//                            dataStartIndex = NO_START_INDEX;
-//
-//                            // If we have finished processing a chunk of face data
-//                            if (c != ASCII_FORWARD_SLASH && countFaceDataPerLine) {
-//                                numberFaceDataPerLine++;
-//                            }
-//
-//                            // Add face data elements if counting is enabled as we have found one
-//                            if (countFaceDataElements) {
-//                                numberFaceDataElements++;
-//                            }
-//                        }
-//
-//                        // If a space has been detected, stop counting face data elements
-//                        if (c == ASCII_SPACE) // space
-//                        {
-//                            countFaceDataElements = false;
-//                        }
-//                    }
-//                    break;
-//            }
-//        }
-//    }
-
 
     /**
      * Process the OBJ model

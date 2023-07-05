@@ -17,13 +17,9 @@ import static android.opengl.GLES20.glViewport;
 import static android.opengl.GLES30.GL_TEXTURE_2D_ARRAY;
 import static android.opengl.GLES30.glTexImage3D;
 
-import android.hardware.lights.Light;
 import android.opengl.GLES30;
 
 import com.crispin.crispinmobile.Crispin;
-import com.crispin.crispinmobile.Rendering.Data.Colour;
-import com.crispin.crispinmobile.Rendering.Entities.PointLight;
-import com.crispin.crispinmobile.Rendering.Models.ShadowModel;
 
 // todo: investigate making this capable of rendering entire sets of models or instance renderers
 public class ShadowMap {

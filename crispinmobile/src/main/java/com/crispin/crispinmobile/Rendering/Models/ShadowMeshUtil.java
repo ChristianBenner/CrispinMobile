@@ -1,16 +1,16 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
-import com.crispin.crispinmobile.Geometry.Rotation3D;
-import com.crispin.crispinmobile.Geometry.Scale3D;
-import com.crispin.crispinmobile.Geometry.Vec2;
-import com.crispin.crispinmobile.Geometry.Vec3;
-import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
-import com.crispin.crispinmobile.Rendering.Utilities.ModelMatrix;
 
-public class ShadowModel {
+public class ShadowMeshUtil {
+    public static Mesh createShadowMesh2D(float[] positionData) {
+        return new Mesh(ShadowMeshUtil.createShadowVertices2D(positionData), null,
+                null, Mesh.RenderMethod.TRIANGLES, 3, 0,
+                0);
+    }
+
     // positionBuffer must be 2D (x, y co-ordinates)
-    public static float[] createShadowMesh2D(float[] positionBuffer) {
+    public static float[] createShadowVertices2D(float[] positionBuffer) {
         // With the position data that's come in, create multiple vertices, one will be used to
         // calculate the far side of the shadow. The z buffer of '1' represents the point is the far
         // side of the shadow so that the vertex shader can calculate the shadow and therefor it is

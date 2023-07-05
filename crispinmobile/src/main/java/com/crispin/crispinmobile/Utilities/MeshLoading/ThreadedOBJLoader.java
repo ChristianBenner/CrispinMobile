@@ -1,7 +1,8 @@
-package com.crispin.crispinmobile.Utilities;
+package com.crispin.crispinmobile.Utilities.MeshLoading;
 
-import com.crispin.crispinmobile.Rendering.Models.Model;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
+import com.crispin.crispinmobile.Utilities.LoadListener;
+
 
 /**
  * A class that is currently under development. It is used to load OBJ models on another thread (in

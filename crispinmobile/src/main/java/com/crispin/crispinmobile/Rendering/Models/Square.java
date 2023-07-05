@@ -128,7 +128,7 @@ public class Square extends Model {
     }
 
     public static Mesh getShadowMesh() {
-        return new Mesh(ShadowModel.createShadowMesh2D(POSITION_DATA), null,
+        return new Mesh(ShadowMeshUtil.createShadowVertices2D(POSITION_DATA), null,
                 null, Mesh.RenderMethod.TRIANGLES, 3, 0,
                 0);
     }
