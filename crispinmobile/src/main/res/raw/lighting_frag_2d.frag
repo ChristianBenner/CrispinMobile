@@ -29,12 +29,8 @@ struct DirectionalLight {
 #define MAX_NUM_POINT_LIGHTS 10
 
 in vec3 vFragPos;
-in vec2 vTextureCoordinates;
 
 uniform vec4 uColour;
-uniform vec2 uViewDimension;
-uniform sampler2D uTexture;
-uniform sampler2DArray uShadow;
 uniform Material uMaterial;
 
 uniform DirectionalLight uDirectionalLight;
@@ -44,7 +40,7 @@ uniform int uNumPointLights;
 out vec4 FragColor;
 
 vec3 CalculateDirectionalLight(DirectionalLight light);
-vec3 CalculatePointLight(PointLight light, vec3 fragPos, float shadow);
+vec3 CalculatePointLight(PointLight light, vec3 fragPos);
 
 void main()
 {
@@ -52,20 +48,19 @@ void main()
 
     lightCalc = CalculateDirectionalLight(uDirectionalLight);
 
-    // Frag pos on screen / texture size to determine what pixel in the shadow texture to compare against
-    vec2 shadowTexCoord = gl_FragCoord.xy / uViewDimension;
-
     // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
-        float shadowStrength = texture(uShadow, vec3(shadowTexCoord, i)).r;
-        lightCalc += CalculatePointLight(uPointLights[i], vFragPos, shadowStrength);
+        lightCalc += CalculatePointLight(uPointLights[i], vFragPos);
     }
 
-    FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
+    FragColor = vec4(lightCalc, 1.0) * uColour;
 }
 
 /**
- * Calculate the effect of a directional light. In 2D space this just acts as ambient lighting
+ * Calculate the effect of a directional light. Includes calculation for ambience (constantly lit
+ * areas despite the direction), diffusion (strength affected by the normal/direction of the face)
+ * and specular highlights (glints that reflect light). A directional light has no position and does
+ * not represent an entity in world space, but instead lights objects from a given direction.
  *
  * @param light             DirectionalLight
  * @return                  vec3 containing the colour data from the directional light calculation
@@ -86,7 +81,7 @@ vec3 CalculateDirectionalLight(DirectionalLight light) {
  * @param fragPos           Position of the fragment
  * @return                  vec3 containing the colour data from the point light calculation
  */
-vec3 CalculatePointLight(PointLight light, vec3 fragPos, float shadow) {
+vec3 CalculatePointLight(PointLight light, vec3 fragPos) {
     // Calculate the distance of the light from the point
     float distance = length(light.position - fragPos);
 
@@ -97,7 +92,7 @@ vec3 CalculatePointLight(PointLight light, vec3 fragPos, float shadow) {
     vec3 ambient = uMaterial.ambient * light.colour * light.ambient;
 
     // Diffuse lighting calculation
-    vec3 diffuse = uMaterial.diffuse * light.colour * attenuation * light.diffuse * max(0.0, shadow);
+    vec3 diffuse = uMaterial.diffuse * light.colour * attenuation * light.diffuse;
 
     return ambient + diffuse;
 }

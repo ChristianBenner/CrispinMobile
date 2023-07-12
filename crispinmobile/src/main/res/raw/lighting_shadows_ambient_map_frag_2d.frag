@@ -29,11 +29,9 @@ struct DirectionalLight {
 #define MAX_NUM_POINT_LIGHTS 10
 
 in vec3 vFragPos;
-in vec2 vTextureCoordinates;
 
 uniform vec4 uColour;
 uniform vec2 uViewDimension;
-uniform sampler2D uTexture;
 uniform sampler2DArray uShadow;
 uniform Material uMaterial;
 
@@ -50,10 +48,12 @@ void main()
 {
     vec3 lightCalc = vec3(0.0);
 
-    lightCalc = CalculateDirectionalLight(uDirectionalLight);
-
     // Frag pos on screen / texture size to determine what pixel in the shadow texture to compare against
     vec2 shadowTexCoord = gl_FragCoord.xy / uViewDimension;
+
+    float ambient = 1.0 - texture(uShadow, vec3(shadowTexCoord, 0)).r;
+    lightCalc = vec3(ambient);
+    //lightCalc = CalculateDirectionalLight(uDirectionalLight);
 
     // Calculate all the point lights
     for(int i = 0; i < MAX_NUM_POINT_LIGHTS && i < uNumPointLights; i++) {
@@ -61,7 +61,7 @@ void main()
         lightCalc += CalculatePointLight(uPointLights[i], vFragPos, shadowStrength);
     }
 
-    FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
+    FragColor = vec4(lightCalc, 1.0) * uColour;
 }
 
 /**

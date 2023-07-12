@@ -21,6 +21,14 @@ struct PointLight {
     float quadratic;
 };
 
+struct DirectionalLight {
+    vec3 direction;
+    vec3 colour;
+    float ambient;
+    float diffuse;
+    float specular;
+};
+
 #define MAX_NUM_POINT_LIGHTS 10
 
 in vec3 vFragPos;
@@ -34,15 +42,21 @@ uniform vec2 uViewDimension;
 uniform sampler2D uTexture;
 uniform sampler2DArray uShadow;
 uniform Material uMaterial;
+
+uniform DirectionalLight uDirectionalLight;
 uniform PointLight uPointLights[MAX_NUM_POINT_LIGHTS];
 uniform int uNumPointLights;
 
+vec3 CalculateDirectionalLight(DirectionalLight light);
 vec3 CalculatePointLight(PointLight light, vec3 fragPos, float shadow);
 
 void main()
 {
     vec3 lightCalc = vec3(0.0);
 
+    lightCalc = CalculateDirectionalLight(uDirectionalLight);
+
+    // Frag pos on screen / texture size to determine what pixel in the shadow texture to compare against
     vec2 shadowTexCoord = gl_FragCoord.xy / uViewDimension;
 
     // Calculate all the point lights
@@ -53,6 +67,18 @@ void main()
 
  //   FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
     FragColor = (vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour);
+}
+
+/**
+ * Calculate the effect of a directional light. In 2D space this just acts as ambient lighting
+ *
+ * @param light             DirectionalLight
+ * @return                  vec3 containing the colour data from the directional light calculation
+ */
+vec3 CalculateDirectionalLight(DirectionalLight light) {
+    // Ambient lighting calculation
+    vec3 ambient = uMaterial.ambient * light.ambient * light.colour;
+    return ambient;
 }
 
 /**

@@ -36,6 +36,7 @@ import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.EmissiveEdge;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.LightingShader;
@@ -996,24 +997,37 @@ public class Model {
             final DirectionalLight directionalLight = lightGroup.getDirectionalLight();
             if (directionalLight != null) {
                 shader.setDirectionalLightUniforms(directionalLight);
+            } else {
+                shader.clearDirectionalLightUniforms();
             }
 
+            // Point lights
             final ArrayList<PointLight> pointLights = lightGroup.getPointLights();
             if (shader.validHandle(shader.getNumPointLightsUniformHandle())) {
                 glUniform1i(shader.getNumPointLightsUniformHandle(), pointLights.size());
             }
-
             // Iterate through point lights, uploading each to the shader
             for (int i = 0; i < pointLights.size() && i < shader.getMaxPointLights(); i++) {
                 final PointLight pointLight = pointLights.get(i);
                 shader.setPointLightUniforms(i, pointLight);
             }
 
+            // Emissive edges
+            final ArrayList<EmissiveEdge> emissiveEdges = lightGroup.getEmissiveEdges();
+            if (shader.validHandle(shader.getNumEmissiveEdgesUniformHandle())) {
+                glUniform1i(shader.getNumEmissiveEdgesUniformHandle(), emissiveEdges.size());
+            }
+            // Iterate through emissive edges, uploading each to the shader
+            for (int i = 0; i < emissiveEdges.size() && i < shader.getMaxEmissiveEdges(); i++) {
+                final EmissiveEdge emissiveEdge = emissiveEdges.get(i);
+                shader.setEmissiveEdgeUniforms(i, emissiveEdge);
+            }
+
+            // Spot lights
             final ArrayList<SpotLight> spotLights = lightGroup.getSpotLights();
             if (shader.validHandle(shader.getNumSpotLightsUniformHandle())) {
                 glUniform1i(shader.getNumSpotLightsUniformHandle(), spotLights.size());
             }
-
             // Iterate through spot lights, uploading each to the shader
             for (int i = 0; i < spotLights.size() && i < shader.getMaxSpotLights(); i++) {
                 final SpotLight spotLight = spotLights.get(i);

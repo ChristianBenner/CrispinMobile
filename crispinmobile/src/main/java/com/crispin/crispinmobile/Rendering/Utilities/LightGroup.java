@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.EmissiveEdge;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 
@@ -23,7 +24,10 @@ public class LightGroup {
     // List of point lights as multiple can be used for one render target
     private final ArrayList<PointLight> pointLights;
 
-    // Light of spot lights as multiple can be used for one render target
+    // List of emissive edges as multiple can be used for one render target
+    private final ArrayList<EmissiveEdge> emissiveEdges;
+
+    // List of spot lights as multiple can be used for one render target
     private final ArrayList<SpotLight> spotLights;
 
     /**
@@ -36,6 +40,7 @@ public class LightGroup {
      */
     public LightGroup() {
         pointLights = new ArrayList<>();
+        emissiveEdges = new ArrayList<>();
         spotLights = new ArrayList<>();
     }
 
@@ -119,6 +124,53 @@ public class LightGroup {
      */
     public final ArrayList<PointLight> getPointLights() {
         return pointLights;
+    }
+
+    /**
+     * Adds an emissive edge to the group
+     *
+     * @param emissiveEdge Emssive edge to add to the group
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
+     */
+    public void add(EmissiveEdge emissiveEdge) {
+        this.emissiveEdges.add(emissiveEdge);
+    }
+
+    /**
+     * Remove an emmisive edge from the group
+     *
+     * @param emissiveEdge Emssive edge to remove from the group
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
+     */
+    public void remove(EmissiveEdge emissiveEdge) {
+        this.emissiveEdges.remove(emissiveEdge);
+    }
+
+    /**
+     * Removes all the groups emissive edges
+     *
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
+     */
+    public void clearEmissiveEdges() {
+        this.emissiveEdges.clear();
+    }
+
+    /**
+     * Retrieves all emissive edges
+     *
+     * @return ArrayList of EmissiveEdges
+     * @author Christian Benner
+     * @version %I%, %G%
+     * @since 1.0
+     */
+    public final ArrayList<EmissiveEdge> getEmissiveEdges() {
+        return emissiveEdges;
     }
 
     /**

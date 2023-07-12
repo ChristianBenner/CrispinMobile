@@ -63,4 +63,26 @@ public class DirectionalLightHandles {
             glUniform1f(specularUniformHandle, light.specularStrength);
         }
     }
+
+    public void clearUniforms() {
+        if (directionUniformHandle != UNDEFINED_HANDLE) {
+            glUniform3f(directionUniformHandle, 0f, 0f, 0f);
+        }
+
+        if (colourUniformHandle != UNDEFINED_HANDLE) {
+            glUniform3f(colourUniformHandle, 0f, 0f, 0f);
+        }
+
+        if (ambientUniformHandle != UNDEFINED_HANDLE) {
+            glUniform1f(ambientUniformHandle, 0f);
+        }
+
+        if (diffuseUniformHandle != UNDEFINED_HANDLE) {
+            glUniform1f(diffuseUniformHandle, 0f);
+        }
+
+        if (specularUniformHandle != UNDEFINED_HANDLE) {
+            glUniform1f(specularUniformHandle, 0f);
+        }
+    }
 }

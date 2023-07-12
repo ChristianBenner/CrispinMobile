@@ -29,11 +29,9 @@ struct DirectionalLight {
 #define MAX_NUM_POINT_LIGHTS 10
 
 in vec3 vFragPos;
-in vec2 vTextureCoordinates;
 
 uniform vec4 uColour;
 uniform vec2 uViewDimension;
-uniform sampler2D uTexture;
 uniform sampler2DArray uShadow;
 uniform Material uMaterial;
 
@@ -61,7 +59,7 @@ void main()
         lightCalc += CalculatePointLight(uPointLights[i], vFragPos, shadowStrength);
     }
 
-    FragColor = vec4(lightCalc, 1.0) * texture(uTexture, vTextureCoordinates) * uColour;
+    FragColor = vec4(lightCalc, 1.0) * uColour;
 }
 
 /**

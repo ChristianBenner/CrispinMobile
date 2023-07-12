@@ -1,6 +1,5 @@
 package com.crispin.crispinmobile.Rendering.Shaders.TwoDimensional;
 
-import static android.opengl.GLES20.glUniform1i;
 import static android.opengl.GLES20.glUniform2f;
 
 import com.crispin.crispinmobile.Geometry.Vec2;
@@ -16,15 +15,15 @@ import com.crispin.crispinmobile.Rendering.Shaders.Shader;
  * @see Shader
  * @since 1.0
  */
-public class ShadowShader2D extends Shader {
+public class ShadowLengthShader2D extends Shader {
     // The resource ID of the vertex file
-    public static final int VERTEX_FILE = R.raw.shadow_vert_2d;
+    public static final int VERTEX_FILE = R.raw.shadow_with_length_vert_2d;
 
     // The resource ID of the fragment file
-    public static final int FRAGMENT_FILE = R.raw.shadow_frag_2d;
+    public static final int FRAGMENT_FILE = R.raw.shadow_with_length_frag_2d;
 
     // Tag for the logger
-    private static final String TAG = "ShadowShader2D";
+    private static final String TAG = "ShadowLengthShader2D";
 
     // Position of the light
     public int lightPositionUniformHandle = UNDEFINED_HANDLE;
@@ -35,7 +34,7 @@ public class ShadowShader2D extends Shader {
      *
      * @since 1.0
      */
-    public ShadowShader2D() {
+    public ShadowLengthShader2D() {
         super(TAG, VERTEX_FILE, FRAGMENT_FILE);
         positionAttributeHandle = getAttribute("aPosition");
         viewMatrixUniformHandle = getUniform("uView");

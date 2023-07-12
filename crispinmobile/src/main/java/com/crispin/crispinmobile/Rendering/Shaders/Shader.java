@@ -24,9 +24,11 @@ import static android.opengl.GLES30.glShaderSource;
 import static android.opengl.GLES30.glUseProgram;
 
 import com.crispin.crispinmobile.Rendering.Entities.DirectionalLight;
+import com.crispin.crispinmobile.Rendering.Entities.EmissiveEdge;
 import com.crispin.crispinmobile.Rendering.Entities.PointLight;
 import com.crispin.crispinmobile.Rendering.Entities.SpotLight;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.DirectionalLightHandles;
+import com.crispin.crispinmobile.Rendering.Shaders.Handles.EmissiveEdgeHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.MaterialHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.PointLightHandles;
 import com.crispin.crispinmobile.Rendering.Shaders.Handles.SpotLightHandles;
@@ -108,6 +110,9 @@ public class Shader {
     // Number of point lights
     public int numPointLightsUniformHandle;
 
+    // Number of emissive edges
+    public int numEmissiveEdgesUniformHandle;
+
     // Number of spot lights
     public int numSpotLightsUniformHandle;
 
@@ -116,6 +121,9 @@ public class Shader {
 
     // Handles for all the shader point lights
     public PointLightHandles[] pointLightHandles;
+
+    // Handles for all the shader point lights
+    public EmissiveEdgeHandles[] emissiveEdgeHandles;
 
     // Handles for all the shader spot lights
     public SpotLightHandles[] spotLightHandles;
@@ -160,6 +168,7 @@ public class Shader {
         viewDimensionUniformHandle = UNDEFINED_HANDLE;
         shadowTextureUniformHandle = UNDEFINED_HANDLE;
         numPointLightsUniformHandle = UNDEFINED_HANDLE;
+        numEmissiveEdgesUniformHandle = UNDEFINED_HANDLE;
         numSpotLightsUniformHandle = UNDEFINED_HANDLE;
         modelMatrixAttributeHandle = UNDEFINED_HANDLE;
     }
@@ -560,13 +569,23 @@ public class Shader {
     }
 
     /**
-     * Get the num point uniform handle
+     * Get the num point lights uniform handle
      *
      * @return Integer ID of the num point lights uniform handle
      * @since 1.0
      */
     public int getNumPointLightsUniformHandle() {
         return numPointLightsUniformHandle;
+    }
+
+    /**
+     * Get the num emissive edges uniform handle
+     *
+     * @return Integer ID of the num emissive edges uniform handle
+     * @since 1.0
+     */
+    public int getNumEmissiveEdgesUniformHandle() {
+        return numEmissiveEdgesUniformHandle;
     }
 
     /**
@@ -591,6 +610,20 @@ public class Shader {
         }
 
         return pointLightHandles.length;
+    }
+
+    /**
+     * Get the maximum number of emissive edges that the shader supports
+     *
+     * @return Max number of emissive edges the shader can handle
+     * @since 1.0
+     */
+    public int getMaxEmissiveEdges() {
+        if (emissiveEdgeHandles == null) {
+            return 0;
+        }
+
+        return emissiveEdgeHandles.length;
     }
 
     /**
@@ -619,6 +652,17 @@ public class Shader {
     }
 
     /**
+     * Clear all the directional light uniforms
+     *
+     * @since 1.0
+     */
+    public void clearDirectionalLightUniforms() {
+        if (directionalLightHandles != null) {
+            directionalLightHandles.clearUniforms();
+        }
+    }
+
+    /**
      * Set all the uniforms for an index and given point light
      *
      * @since 1.0
@@ -626,6 +670,17 @@ public class Shader {
     public void setPointLightUniforms(int index, PointLight pointLight) {
         if (pointLightHandles != null && index < pointLightHandles.length) {
             pointLightHandles[index].setUniforms(pointLight);
+        }
+    }
+
+    /**
+     * Set all the uniforms for an index and given emissive edge
+     *
+     * @since 1.0
+     */
+    public void setEmissiveEdgeUniforms(int index, EmissiveEdge emissiveEdge) {
+        if (emissiveEdgeHandles != null && index < emissiveEdgeHandles.length) {
+            emissiveEdgeHandles[index].setUniforms(emissiveEdge);
         }
     }
 
