@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Utilities.MeshLoading;
+package com.crispin.crispinmobile.MeshLoading;
 
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
 import com.crispin.crispinmobile.Utilities.LoadListener;

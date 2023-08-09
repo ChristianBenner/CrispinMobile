@@ -4,6 +4,7 @@ import android.graphics.Point;
 import android.opengl.Matrix;
 
 import com.crispin.crispinmobile.Rendering.Utilities.Camera;
+import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 
 import java.util.Vector;
 
@@ -443,6 +444,39 @@ public class Geometry {
         } else {
             return Direction2D.NONE;
         }
+    }
+
+    /**
+     * Convert from world space to UI space for 2D co-ordinate
+     *
+     * @param worldCamera
+     * @param uiCamera
+     * @param x x co-ordinate
+     * @param y y co-ordinate
+     * @return x, y co-ordinates as Vec2
+     * @since 1.0
+     */
+    public static Vec2 worldSpaceToUISpace2D(Camera2D worldCamera, Camera2D uiCamera, float x, float y) {
+        float[] ndc = new float[4];
+        float[] inverseUI = new float[16];
+        float[] uiSpace = new float[4];
+        Matrix.multiplyMV(ndc, 0, worldCamera.getOrthoMatrix(), 0, new float[]{x, y, 0f, 1f}, 0);
+        Matrix.invertM(inverseUI, 0, uiCamera.getOrthoMatrix(), 0);
+        Matrix.multiplyMV(uiSpace, 0, inverseUI, 0, ndc, 0);
+        return new Vec2(uiSpace[0], uiSpace[1]);
+    }
+
+    /**
+     * Convert from world space to UI space for 2D co-ordinate
+     *
+     * @param worldCamera
+     * @param uiCamera
+     * @param position Vec2 position
+     * @return x, y co-ordinates as Vec2
+     * @since 1.0
+     */
+    public static Vec2 worldSpaceToUISpace2D(Camera2D worldCamera, Camera2D uiCamera, Vec2 position) {
+        return worldSpaceToUISpace2D(worldCamera, uiCamera, position.x, position.y);
     }
 
     /**

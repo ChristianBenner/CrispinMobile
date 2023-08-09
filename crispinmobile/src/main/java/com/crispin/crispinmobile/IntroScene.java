@@ -3,6 +3,7 @@ package com.crispin.crispinmobile;
 import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.TextureResource;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Data.TextureOptions;
@@ -68,7 +69,7 @@ public class IntroScene extends Scene {
         textureOptions.minFilter = TextureOptions.LINEAR_FILTER;
         textureOptions.magFilter = TextureOptions.LINEAR_FILTER;
 
-        Texture texture = new Texture(resourceId, textureOptions);
+        Texture texture = new TextureResource(resourceId, textureOptions);
         float widthToHeightRatio = (float) texture.getWidth() / (float) texture.getHeight();
         int width = Crispin.getSurfaceWidth();
         int height = (int) (width / widthToHeightRatio);

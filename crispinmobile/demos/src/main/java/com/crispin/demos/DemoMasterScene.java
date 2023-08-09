@@ -50,6 +50,7 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Lighting", LightingDemo::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Object Load", ObjLoadDemo::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Text", TextDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Text Re-write", TextRewriteDemo::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "SpotLight", SpotLightDemo::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "RenderBatch", RenderBatchDemo::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Instance Rendering Demos", InstancingDemoSelectionScene::new));
@@ -58,6 +59,7 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Game Demo", GameDemo2D::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Collision Demo", CollisionDemo2D::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Camera Test", Camera2DTest::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Bound Box Demo", BoundBoxDemo::new));
 
         Font titleFont = new Font(R.raw.aileron_bold, 72);
         selectDemoText = new Text(titleFont, "Select a Demo", true, true, SURFACE_WIDTH);

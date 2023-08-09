@@ -15,12 +15,14 @@ import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
-import com.crispin.crispinmobile.Utilities.OBJModelLoader;
 import com.crispin.crispinmobile.Rendering.Utilities.RenderBatch;
+import com.crispin.crispinmobile.MeshLoading.MeshData;
+import com.crispin.crispinmobile.MeshLoading.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
 import com.crispin.crispinmobile.Utilities.TextureCache;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -56,7 +58,9 @@ public class RenderBatchDemo extends Scene {
 
         renderBatch = new RenderBatch();
         renderBatch.setCamera(camera);
-        renderBatch.setMesh(OBJModelLoader.readObjFile(R.raw.torus_uv));
+
+        HashMap<String, MeshData> meshes = OBJModelLoader.read(R.raw.torus_uv);
+        renderBatch.setMesh(meshes.get("torus").mesh);
         renderBatch.setShader(shader);
         renderBatch.setLightGroup(lightGroup);
      //   renderBatch.setRenderObject(OBJModelLoader.readObjFile(R.raw.torus_uv));

@@ -105,6 +105,10 @@ public class Button extends InteractiveUI {
         plane.setColour(disabledColourBackground);
     }
 
+    public void setText(String text) {
+        this.text.setText(text);
+    }
+
     public Colour getDisabledBorderColour() {
         return disabledColourBorder;
     }

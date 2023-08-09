@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Utilities.MeshLoading;
+package com.crispin.crispinmobile.MeshLoading;
 
 import android.content.res.Resources;
 
@@ -11,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 
 /**
  * Read material template library files (.mtl)

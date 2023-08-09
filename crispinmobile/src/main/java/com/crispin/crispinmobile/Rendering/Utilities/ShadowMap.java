@@ -59,6 +59,8 @@ public class ShadowMap {
         glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[n]);
         glViewport(0, 0, SHADOW_MAP_SIZE, SHADOW_MAP_SIZE);
         GLES30.glFramebufferTextureLayer(GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0, fbTexture[0], 0, n);
+
+        // Todo: does this clear the entire display too? may need to just clear color attachment on framebuffer
         GLES30.glClearColor(1f, 1f, 1f, 1f);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
     }

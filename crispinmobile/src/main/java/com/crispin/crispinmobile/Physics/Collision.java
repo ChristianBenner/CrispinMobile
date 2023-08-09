@@ -3,6 +3,10 @@ package com.crispin.crispinmobile.Physics;
 import com.crispin.crispinmobile.Geometry.Vec2;
 
 public class Collision {
+    public static boolean isColliding(BoundBox2D boundBox2D, BoundBox2D other) {
+        return boundBox2D.collidesWith(other);
+    }
+
     public static boolean isColliding(HitboxCircle circle, HitboxCircle other) {
         // Get the distance between the two center points of the circles
         float distance = distance(circle.centerX, circle.centerY, other.centerX, other.centerY);

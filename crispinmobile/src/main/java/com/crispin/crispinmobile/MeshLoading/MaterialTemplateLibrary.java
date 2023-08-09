@@ -1,6 +1,5 @@
-package com.crispin.crispinmobile.Utilities.MeshLoading;
+package com.crispin.crispinmobile.MeshLoading;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MaterialTemplateLibrary extends HashMap<String, MaterialData> {}

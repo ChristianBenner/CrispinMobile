@@ -17,9 +17,9 @@ public class HitboxRectangle extends HitboxPolygon {
     public HitboxRectangle(float x, float y, float w, float h) {
         super(new float[]{
                 x, y,
-                x, h,
-                w, h,
-                w, y
+                x, y + h,
+                x + w, y + h,
+                x + w, y
         });
     }
 }

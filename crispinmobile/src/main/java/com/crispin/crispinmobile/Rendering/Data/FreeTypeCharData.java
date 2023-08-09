@@ -46,14 +46,11 @@ public class FreeTypeCharData {
      * @param textureOptions Options to apply to the texture data
      * @since 1.0
      */
-    public FreeTypeCharData(byte[] fontBytes,
-                            int fontSize,
-                            byte asciiChar,
+    public FreeTypeCharData(byte[] fontBytes, int fontSize, byte asciiChar,
                             TextureOptions textureOptions) {
         // Get the character texture data. The character texture must be loaded first before the
         // other properties such as width and height can be accessed.
-        final byte[] CHAR_BYTES = CrispinNativeInterface.loadCharacter(fontBytes,
-                asciiChar,
+        final byte[] freeTypeCharTextureBytes = CrispinNativeInterface.loadCharacter(fontBytes, asciiChar,
                 fontSize);
 
         width = CrispinNativeInterface.getFaceWidth();
@@ -65,10 +62,7 @@ public class FreeTypeCharData {
         CrispinNativeInterface.freeFace();
 
         // Create the texture
-        texture = new Texture(CHAR_BYTES,
-                width,
-                height,
-                textureOptions);
+        texture = new TextureResource(freeTypeCharTextureBytes, width, height, textureOptions);
     }
 
     /**

@@ -9,10 +9,11 @@ import com.crispin.crispinmobile.Rendering.Utilities.LightGroup;
 import com.crispin.crispinmobile.UserInterface.Button;
 import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.TouchType;
-import com.crispin.crispinmobile.Utilities.MeshLoading.MeshData;
-import com.crispin.crispinmobile.Utilities.OBJModelLoader;
+import com.crispin.crispinmobile.MeshLoading.MeshData;
+import com.crispin.crispinmobile.MeshLoading.OBJModelLoader;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.crispinmobile.Utilities.ThreadedOBJLoader;
+
+import java.util.HashMap;
 
 public class ObjLoadDemo extends Scene {
     // UI Camera
@@ -45,8 +46,8 @@ public class ObjLoadDemo extends Scene {
 //            this.monkey.setScale(0.5f);
 //        });
 
-        MeshData[] meshes = OBJModelLoader.readObjFile2(R.raw.monkey);
-        monkey = new Model(meshes[0].mesh);
+        HashMap<String, MeshData> meshes = OBJModelLoader.read(R.raw.monkey);
+        monkey = new Model(meshes.get("monkey").mesh);
         monkey.setColour(1.0f, 0.5f, 0.31f);
         monkey.setScale(0.5f);
 

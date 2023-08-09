@@ -4,6 +4,7 @@ import com.crispin.crispinmobile.Geometry.Scale2D;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.R;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
+import com.crispin.crispinmobile.Rendering.Data.TextureResource;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Utilities.UIHandler;
@@ -52,8 +53,8 @@ public class Dropdown extends InteractiveUI {
         disabledBorderFlags = NO_BORDERS;
 
         // Load textures for the expanding and collapsing of the dropdown
-        expandIcon = new Texture(R.drawable.expandicon);
-        collapseIcon = new Texture(R.drawable.collapseicon);
+        expandIcon = new TextureResource(R.drawable.expandicon);
+        collapseIcon = new TextureResource(R.drawable.collapseicon);
 
         // Create the base box (this is not a selectable item in the list)
         baseBox = new Plane(position, itemSize);
@@ -97,7 +98,7 @@ public class Dropdown extends InteractiveUI {
     }
 
     public void setStateIcons(int expandIcon, int collapseIcon) {
-        setStateIcons(new Texture(expandIcon), new Texture(collapseIcon));
+        setStateIcons(new TextureResource(expandIcon), new TextureResource(collapseIcon));
     }
 
     private void updatePosition() {

@@ -1,5 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
@@ -66,6 +67,16 @@ public class Square extends Model {
                 Mesh.RenderMethod.TRIANGLES, NUMBER_POSITION_COMPONENTS,
                 renderTexels ? NUMBER_TEXEL_COMPONENTS : 0,
                 (byte)0, material);
+    }
+
+    /**
+     * Create a square of a specified colour
+     *
+     * @param colour Colour of the square
+     * @since 1.0
+     */
+    public Square(Colour colour) {
+        this(new Material(colour), false);
     }
 
     /**

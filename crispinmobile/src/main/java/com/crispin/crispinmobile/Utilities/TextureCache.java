@@ -1,6 +1,7 @@
 package com.crispin.crispinmobile.Utilities;
 
 import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Rendering.Data.TextureResource;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class TextureCache {
             return getTexture(resourceId);
         }
 
-        Texture newTexture = new Texture(resourceId);
+        Texture newTexture = new TextureResource(resourceId);
         return newTexture;
     }
 

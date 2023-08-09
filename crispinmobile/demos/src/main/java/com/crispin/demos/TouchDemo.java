@@ -4,7 +4,7 @@ import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Vec2;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
-import com.crispin.crispinmobile.Rendering.Data.Texture;
+import com.crispin.crispinmobile.Rendering.Data.TextureResource;
 import com.crispin.crispinmobile.Rendering.Models.Square;
 import com.crispin.crispinmobile.Rendering.Utilities.Camera2D;
 import com.crispin.crispinmobile.UserInterface.Button;
@@ -62,7 +62,7 @@ public class TouchDemo extends Scene {
 
         camera2D = new Camera2D();
 
-        touchLocationSprite = new Square(new Material(new Texture(R.drawable.touch_demo_circle)));
+        touchLocationSprite = new Square(new Material(new TextureResource(R.drawable.touch_demo_circle)));
         touchLocationSprite.setScale(TOUCH_SPRITE_SIZE, TOUCH_SPRITE_SIZE);
 
         backButton = Util.createBackButton(DemoMasterScene::new);

@@ -47,8 +47,7 @@ public class Font {
         characters = new HashMap<>();
         this.size = size;
 
-        byte[] sixtyTest;
-        sixtyTest = FileResourceReader.readRawResource(resourceId);
+        byte[] fontResourceBytes = FileResourceReader.readRawResource(resourceId);
 
         // Texture options of the character textures
         TextureOptions textureOptions = new TextureOptions();
@@ -61,7 +60,7 @@ public class Font {
         // Iterate through the ASCII range loading each character into the FreeTypeCharData map
         for (char i = ASCII_START_INDEX; i < ASCII_END_INDEX; i++) {
             // Load the character and store in the map
-            characters.put(i, new FreeTypeCharData(sixtyTest, size, (byte) i, textureOptions));
+            characters.put(i, new FreeTypeCharData(fontResourceBytes, size, (byte) i, textureOptions));
         }
 
         // If special characters have been provided, load them
@@ -69,7 +68,7 @@ public class Font {
             // Load the special characters
             for (Character specialCharacter : specialCharacters) {
                 // Load the character and store in the map
-                characters.put(specialCharacter, new FreeTypeCharData(sixtyTest, size,
+                characters.put(specialCharacter, new FreeTypeCharData(fontResourceBytes, size,
                         (byte) ((char) specialCharacter), textureOptions));
             }
         }

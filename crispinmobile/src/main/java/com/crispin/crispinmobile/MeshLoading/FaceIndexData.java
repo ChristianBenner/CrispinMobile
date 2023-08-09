@@ -1,4 +1,4 @@
-package com.crispin.crispinmobile.Utilities.MeshLoading;
+package com.crispin.crispinmobile.MeshLoading;
 
 public class FaceIndexData {
     public int[] positionIndices;

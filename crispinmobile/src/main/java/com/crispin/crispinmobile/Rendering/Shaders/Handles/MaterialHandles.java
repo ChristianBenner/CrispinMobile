@@ -85,25 +85,25 @@ public class MaterialHandles {
 
         if (textureUniformHandle != UNDEFINED_HANDLE && material.hasTexture()) {
             glActiveTexture(GL_TEXTURE0);
-            glBindTexture(GL_TEXTURE_2D, material.texture.getId());
+            glBindTexture(GL_TEXTURE_2D, material.texture.getGlTextureID());
             glUniform1i(textureUniformHandle, 0);
         }
 
         if (diffuseMapUniformHandle != UNDEFINED_HANDLE && material.hasDiffuseMap()) {
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.diffuseMap.getId());
+            glBindTexture(GL_TEXTURE_2D, material.diffuseMap.getGlTextureID());
             glUniform1i(diffuseMapUniformHandle, 1);
         }
 
         if (specularMapUniformHandle != UNDEFINED_HANDLE && material.hasSpecularMap()) {
             glActiveTexture(GL_TEXTURE1);
-            glBindTexture(GL_TEXTURE_2D, material.specularMap.getId());
+            glBindTexture(GL_TEXTURE_2D, material.specularMap.getGlTextureID());
             glUniform1i(specularMapUniformHandle, 1);
         }
 
         if (normalMapUniformHandle != UNDEFINED_HANDLE && material.hasNormalMap()) {
             glActiveTexture(GL_TEXTURE2);
-            glBindTexture(GL_TEXTURE_2D, material.normalMap.getId());
+            glBindTexture(GL_TEXTURE_2D, material.normalMap.getGlTextureID());
             glUniform1i(normalMapUniformHandle, 2);
         }
 

@@ -1,8 +1,9 @@
-package com.crispin.crispinmobile.Utilities.MeshLoading;
+package com.crispin.crispinmobile.MeshLoading;
 
 import android.content.res.Resources;
 
 import com.crispin.crispinmobile.Crispin;
+import com.crispin.crispinmobile.Physics.BoundBox2D;
 import com.crispin.crispinmobile.Physics.HitboxPolygon;
 import com.crispin.crispinmobile.Rendering.Data.RenderObjectData;
 import com.crispin.crispinmobile.Rendering.Models.ShadowMeshUtil;
@@ -413,7 +414,7 @@ public class OBJModelLoader {
                         positionComponentsPerVertex, texelComponentsPerVertex, normalComponentsPerVertex);
             }
 
-            if(meshLoadProperty.loadShadowMesh || meshLoadProperty.createHitbox) {
+            if(meshLoadProperty.loadShadowMesh || meshLoadProperty.createHitbox || meshLoadProperty.createBoundbox || properties.createBoundBox) {
                 // If there is a Z component, we need to create a new buffer that contains only x
                 // and y components
                 if(positionComponentsPerVertex == 3) {
@@ -431,6 +432,11 @@ public class OBJModelLoader {
                     if(meshLoadProperty.createHitbox) {
                         meshData.hitboxPolygon = new HitboxPolygon(xyPositionBuffer);
                     }
+
+                    if(meshLoadProperty.createBoundbox || properties.createBoundBox) {
+                        // todo: at the moment this is only 2D bound box for x, y
+                        meshData.boundBox2D = createBoundBox2D(positionBuffer, positionComponentsPerVertex);
+                    }
                 } else {
                     if(meshLoadProperty.loadShadowMesh) {
                         meshData.shadowMesh = ShadowMeshUtil.createShadowMesh2D(positionBuffer);
@@ -438,6 +444,10 @@ public class OBJModelLoader {
 
                     if(meshLoadProperty.createHitbox) {
                         meshData.hitboxPolygon = new HitboxPolygon(positionBuffer);
+                    }
+
+                    if(meshLoadProperty.createBoundbox || properties.createBoundBox) {
+                        meshData.boundBox2D = createBoundBox2D(positionBuffer, positionComponentsPerVertex);
                     }
                 }
             }
@@ -447,6 +457,90 @@ public class OBJModelLoader {
 
         return meshes;
     }
+
+    /**
+     * Create a 2D bound box for the given position buffer
+     *
+     * @param positionBuffer position data
+     * @param positionComponentsPerVertex Number of components per vertex i.e. 3 for xyz
+     * @return HitboxRectangle representing bound box
+     * @since 1.0
+     */
+    public static BoundBox2D createBoundBox2D(float[] positionBuffer, int positionComponentsPerVertex) {
+        // Iterate through the position buffer and discover what the lowest and highest values are
+        // for the object.
+        float lx = 0f;
+        float hx = 0f;
+        float ly = 0f;
+        float hy = 0f;
+
+        for(int i = 0; i < positionBuffer.length; i += positionComponentsPerVertex) {
+            float x = positionBuffer[i];
+            float y = positionBuffer[i + 1];
+
+            if(i == 0) {
+                lx = x; hx = x; ly = y; hy = y;
+                continue;
+            }
+
+            if(x < lx) { lx = x; }
+            if(x > hx) { hx = x; }
+            if(y < ly) { ly = y; }
+            if(y > hy) { hy = y; }
+        }
+
+        return new BoundBox2D(lx, ly, hx - lx, hy - ly);
+    }
+
+    /* todo: implement 3D bound box with a 3D HitboxCube
+    public static HitboxRectangle createBoundBox3D(float[] positionBuffer, int positionComponentsPerVertex) {
+        // Iterate through the position buffer and discover what the lowest and highest values are
+        // for the object.
+        float lx = 0f;
+        float hx = 0f;
+        float ly = 0f;
+        float hy = 0f;
+        float lz = 0f;
+        float hz = 0f;
+
+        for(int i = 0; i < positionBuffer.length; i += positionComponentsPerVertex) {
+            float x = positionBuffer[i];
+            float y = positionBuffer[i + 1];
+            float z = positionComponentsPerVertex >= 3 ? positionBuffer[i + 2] : 0f;
+
+            if(i == 0) {
+                lx = x;
+                hx = x;
+                ly = y;
+                hy = y;
+                lz = z;
+                hz = z;
+                continue;
+            }
+
+            if(x < lx) {
+                lx = x;
+            }
+            if(x > hx) {
+                hx = x;
+            }
+            if(y < ly) {
+                ly = y;
+            }
+            if(y > hy) {
+                hy = y;
+            }
+            if(z < lz) {
+                lz = z;
+            }
+            if(z > hz) {
+                hz = z;
+            }
+        }
+
+        return new HitboxRectangle(lx, ly, hx - lx, hy - ly);
+    }
+    */
 
     /**
      * Read an OBJ file from a resource ID
@@ -509,31 +603,6 @@ public class OBJModelLoader {
     public static HashMap<String, MeshData> readToMap(int resourceId) {
         return readToMap(resourceId, null);
     }
-
-//    private static Mesh[] processWavefront(byte[] bytes) {
-//        String type = null;
-//        StringBuilder t = new StringBuilder();
-//        int lineStartIndex = -1;
-//
-//        // Get line
-//        for(int i = 0; i < bytes.length; i++) {
-//            byte c = bytes[i];
-//            if(lineStartIndex == -1) {
-//                lineStartIndex = i;
-//            }
-//
-//            if(c == ASCII_SPACE && t.length() == 0) {
-//                type = new String(bytes, lineStartIndex, i - lineStartIndex);
-//            }
-//
-//            // Check if the byte represents line feed or new line '/r' or '/n'
-//            if (c == ASCII_NEW_LINE || c == ASCII_CARRIAGE_RETURN) {
-//                type = null;
-//                lineStartIndex = -1;
-//            }
-//        }
-//    }
-
 
     private static boolean isNumericChar(byte c) {
         return (c >= ASCII_0 && c <= ASCII_9) || c == ASCII_POINT || c == ASCII_MINUS;
