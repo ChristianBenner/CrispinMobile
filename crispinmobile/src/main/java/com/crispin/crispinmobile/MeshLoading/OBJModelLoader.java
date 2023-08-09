@@ -469,24 +469,18 @@ public class OBJModelLoader {
     public static BoundBox2D createBoundBox2D(float[] positionBuffer, int positionComponentsPerVertex) {
         // Iterate through the position buffer and discover what the lowest and highest values are
         // for the object.
-        float lx = 0f;
-        float hx = 0f;
-        float ly = 0f;
-        float hy = 0f;
+        float lx = positionBuffer[0];
+        float hx = positionBuffer[0];
+        float ly = positionBuffer[1];
+        float hy = positionBuffer[1];
 
-        for(int i = 0; i < positionBuffer.length; i += positionComponentsPerVertex) {
+        for(int i = positionComponentsPerVertex; i < positionBuffer.length; i += positionComponentsPerVertex) {
             float x = positionBuffer[i];
             float y = positionBuffer[i + 1];
-
-            if(i == 0) {
-                lx = x; hx = x; ly = y; hy = y;
-                continue;
-            }
-
-            if(x < lx) { lx = x; }
-            if(x > hx) { hx = x; }
-            if(y < ly) { ly = y; }
-            if(y > hy) { hy = y; }
+            lx = Math.min(lx, x);
+            hx = Math.max(hx, x);
+            ly = Math.min(ly, y);
+            hy = Math.max(hy, y);
         }
 
         return new BoundBox2D(lx, ly, hx - lx, hy - ly);
