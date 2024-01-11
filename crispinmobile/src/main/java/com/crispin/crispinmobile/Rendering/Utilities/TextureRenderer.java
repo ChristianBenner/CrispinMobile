@@ -1,5 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Utilities;
 
+import static android.opengl.GLES20.glClearColor;
 import static android.opengl.GLES30.GL_COLOR_ATTACHMENT0;
 import static android.opengl.GLES30.GL_FRAMEBUFFER;
 import static android.opengl.GLES30.GL_NEAREST;
@@ -51,7 +52,21 @@ public class TextureRenderer {
         return glTexture;
     }
 
+    // Clears by default each call
     public Texture draw(DrawCallInterface drawCallInterface) {
+        return draw(true, drawCallInterface);
+    }
+
+    public void clear() {
+        glBindFramebuffer(GL_FRAMEBUFFER, framebuffer[0]);
+        glBindTexture(GL_TEXTURE_2D, fbTexture[0]);
+//        glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+        glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_ALPHA_BITS);
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    }
+
+    public Texture draw(boolean clear, DrawCallInterface drawCallInterface) {
         int[] originalViewportDimensions = new int[4];
         glGetIntegerv(GL_VIEWPORT, originalViewportDimensions, 0);
 
@@ -59,7 +74,11 @@ public class TextureRenderer {
         glBindTexture(GL_TEXTURE_2D, fbTexture[0]);
 
         glViewport(0, 0, width, height);
-        glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_ALPHA_BITS);
+
+        if(clear) {
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GLES30.GL_COLOR_BUFFER_BIT | GLES30.GL_ALPHA_BITS);
+        }
 
         drawCallInterface.draw();
 

@@ -11,6 +11,13 @@ message("Adding freetype library")
 add_subdirectory(freetype)
 message("Added freetype library")
 
+message("Adding libsndfile library")
+# Set BUILD_TESTING to OFF as it fails to compile
+option(BUILD_TESTING "Build tests" OFF)
+add_subdirectory(libsndfile)
+include_directories(libsndfile/include)
+message("Added libsndfile library")
+
 message("Adding Oboe audio library")
 add_subdirectory(oboe)
 include_directories(oboe/include)

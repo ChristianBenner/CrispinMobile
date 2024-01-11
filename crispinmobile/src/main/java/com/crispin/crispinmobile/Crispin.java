@@ -83,6 +83,7 @@ public class Crispin {
             
             // Tell the application to use OpenGL ES 3.0
             glSurfaceView.setEGLContextClientVersion(OPENGL_ES_TARGET_VERSION);
+            //glSurfaceView.setEGLConfigChooser(8, 8, 8, 8, 16, 8);
 
             // Get the scene manager instance
             sceneManager = SceneManager.getInstance();

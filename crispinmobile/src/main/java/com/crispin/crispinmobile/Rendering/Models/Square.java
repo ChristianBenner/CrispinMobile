@@ -1,5 +1,6 @@
 package com.crispin.crispinmobile.Rendering.Models;
 
+import com.crispin.crispinmobile.Physics.BoundBox2D;
 import com.crispin.crispinmobile.Rendering.Data.Colour;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
@@ -17,6 +18,9 @@ import com.crispin.crispinmobile.Rendering.Utilities.Mesh;
  * @since 1.0
  */
 public class Square extends Model {
+    // Default bound box for a square (transform this with the model matrix to match shape)
+    public static BoundBox2D SQUARE_BOUND_BOX = new BoundBox2D(0f, 0f, 1f, 1f);
+
     // The number of position components in the position data (2 because its XYZ)
     private static final byte NUMBER_POSITION_COMPONENTS = 2;
 

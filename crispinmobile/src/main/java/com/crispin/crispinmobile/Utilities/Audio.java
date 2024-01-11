@@ -73,12 +73,9 @@ public class Audio {
         if (!exists) {
             int soundId = soundPool.load(Crispin.getApplicationContext(), resourceId, priority);
             soundList.put(resourceId, new Sound(soundId, false));
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int soundId, int status) {
-                    soundList.get(resourceId).setLoaded(true);
-                    soundPool.play(soundId, 1.0f, 1.0f, 0, 0, 1.0f);
-                }
+            soundPool.setOnLoadCompleteListener((soundPool, soundId1, status) -> {
+                soundList.get(resourceId).setLoaded(true);
+                soundPool.play(soundId1, 1.0f, 1.0f, 0, 0, 1.0f);
             });
         } else {
             if (!isLoaded) {

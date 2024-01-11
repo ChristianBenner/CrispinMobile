@@ -3,6 +3,8 @@ package com.crispin.crispinmobile.Rendering.Models;
 import com.crispin.crispinmobile.Rendering.Data.Material;
 import com.crispin.crispinmobile.Rendering.Data.Texture;
 
+import java.util.Random;
+
 public class AnimatedSquare extends Square {
     private final int animationDurationMs;
     private int spriteHeight;
@@ -40,6 +42,20 @@ public class AnimatedSquare extends Square {
         this.animationDurationMs = animationDurationMs;
 
         setSpriteHeight(spriteHeight);
+    }
+
+    public AnimatedSquare(int textureResource, int spriteHeight, int animationDurationMs, boolean randomStartFrame) {
+        super(textureResource);
+        this.repeat = true;
+        this.reverseFrameCount = false;
+        this.animationDurationMs = animationDurationMs;
+
+        setSpriteHeight(spriteHeight);
+
+        if(randomStartFrame) {
+            Random random = new Random(System.currentTimeMillis());
+            currentFrame = random.nextInt(frames);
+        }
     }
 
     // false to repeat the animation (go to frame 0 after the last frame)

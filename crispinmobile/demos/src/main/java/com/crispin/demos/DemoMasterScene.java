@@ -12,7 +12,7 @@ import com.crispin.crispinmobile.UserInterface.Pointer;
 import com.crispin.crispinmobile.UserInterface.Text;
 import com.crispin.crispinmobile.UserInterface.TouchType;
 import com.crispin.crispinmobile.Utilities.Scene;
-import com.crispin.demos.GameDemo2D.GameDemo2D;
+import com.crispin.demos.InstancingDemos.GameDemo2D.GameDemo2D;
 import com.crispin.demos.InstancingDemos.InstancingDemoSelectionScene;
 
 public class DemoMasterScene extends Scene {
@@ -60,6 +60,7 @@ public class DemoMasterScene extends Scene {
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Collision Demo", CollisionDemo2D::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "2D Camera Test", Camera2DTest::new));
         linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Bound Box Demo", BoundBoxDemo::new));
+        linearLayout.add(Util.createDemoButton(BUTTON_SIZE, "Audio Demo", AudioDemo::new));
 
         Font titleFont = new Font(R.raw.aileron_bold, 72);
         selectDemoText = new Text(titleFont, "Select a Demo", true, true, SURFACE_WIDTH);

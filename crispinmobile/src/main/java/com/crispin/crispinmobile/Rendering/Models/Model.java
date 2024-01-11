@@ -69,7 +69,7 @@ public class Model {
     private static final float DEFAULT_WIREFRAME_LINE_WIDTH = 5f;
 
     // The mesh
-    private Mesh mesh;
+    public Mesh mesh;
 
     // The model matrix
     protected final ModelMatrix modelMatrix;
@@ -209,6 +209,39 @@ public class Model {
      */
     public void setWireframeLineWidth(int width) {
         this.wireframeLineWidth = width;
+    }
+
+    /**
+     * Set the x co-ordinate
+     *
+     * @param x The new x-coordinate
+     * @since 1.0
+     */
+    public void setX(float x) {
+        this.position.x = x;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the y co-ordinate
+     *
+     * @param y The new y-coordinate
+     * @since 1.0
+     */
+    public void setY(float y) {
+        this.position.y = y;
+        this.updateModelMatrix = true;
+    }
+
+    /**
+     * Set the z co-ordinate
+     *
+     * @param z The new z-coordinate
+     * @since 1.0
+     */
+    public void setZ(float z) {
+        this.position.z = z;
+        this.updateModelMatrix = true;
     }
 
     /**
@@ -791,13 +824,11 @@ public class Model {
         }
     }
 
-    public void render(Camera2D camera, final LightGroup lightGroup) {
-        // Check if depth is enabled, and disable it
-        final boolean DEPTH_ENABLED = GLES30.glIsEnabled(GL_DEPTH_TEST);
-        if(DEPTH_ENABLED) {
-            GLES30.glDisable(GL_DEPTH_TEST);
-        }
+    public Shader getShader() {
+        return shader;
+    }
 
+    public void render(Camera2D camera, final LightGroup lightGroup) {
         updateModelMatrix();
 
         // If the shader is null, create a shader for the object
@@ -846,9 +877,6 @@ public class Model {
         if (shader.validHandle(shader.getViewDimensionUniformHandle())) {
             glUniform2f(shader.getViewDimensionUniformHandle(), Crispin.getSurfaceWidth(), Crispin.getSurfaceHeight());
         }
-//        viewMatrixUniformHandle = getUniform("uView");
-//        modelMatrixAttributeHandle = getUniform("uModel");
-
 
         // Set all material uniforms
         shader.setMaterialUniforms(material);
@@ -886,11 +914,6 @@ public class Model {
         GLES30.glBindVertexArray(0);
 
         shader.disable();
-
-        // If depth was enabled before calling the function then re-enable it
-        if (DEPTH_ENABLED) {
-            glEnable(GL_DEPTH_TEST);
-        }
     }
 
     public void render(Camera2D camera) {

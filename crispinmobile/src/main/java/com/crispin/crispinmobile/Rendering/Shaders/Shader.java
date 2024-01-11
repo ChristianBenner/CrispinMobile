@@ -132,7 +132,7 @@ public class Shader {
     public MaterialHandles materialHandles;
 
     // The ID of the OpenGL program
-    private int programId;
+    protected int programId;
 
     /**
      * Shader constructor. Create and compile the GLSL shader in Open GL ES memory and then register

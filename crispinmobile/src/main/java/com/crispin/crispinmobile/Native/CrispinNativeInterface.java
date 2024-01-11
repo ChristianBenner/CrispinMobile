@@ -1,5 +1,7 @@
 package com.crispin.crispinmobile.Native;
 
+import android.content.res.AssetManager;
+
 /**
  * The CrispinNativeInterface class provides static functions that are used to interact with the
  * Crispin Native Interface Library programmed in C. The Crispin Native Interface Library is used
@@ -85,4 +87,8 @@ public class CrispinNativeInterface {
      * @since 1.0
      */
     public static native int getFaceAdvance();
+
+    public static native void initAudioEngine();
+
+    public static native boolean loadAudio(AssetManager assetManager, String filename);
 }

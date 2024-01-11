@@ -1,4 +1,4 @@
-package com.crispin.demos.GameDemo2D;
+package com.crispin.demos.InstancingDemos.GameDemo2D;
 
 import com.crispin.crispinmobile.Crispin;
 import com.crispin.crispinmobile.Geometry.Geometry;
